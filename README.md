@@ -1,4 +1,4 @@
-﻿# Safety and You 247 Academy
+﻿# SA247 E-learning
 
-Live: https://nhandev8.github.io/sa247elearning/
+https://nhandev8.github.io/sa247elearning/
 
