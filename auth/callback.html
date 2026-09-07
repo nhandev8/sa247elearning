@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auth callback · SA247</title>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+</head>
+<body>
+  <p style="font-family:sans-serif;padding:2rem">Đang xác thực…</p>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (!window.sa247Auth?.ready) {
+        document.body.textContent = "Thiếu supabase config.";
+        return;
+      }
+      await sa247Auth.ensureClient();
+      const session = await sa247Auth.getSession();
+      location.replace(session ? "../dashboard/" : "login.html");
+    });
+  </script>
+</body>
+</html>

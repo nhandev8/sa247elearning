@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · SA247 E-Learning</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+</head>
+<body>
+  <main class="wrap" style="padding:4rem 0">
+    <p class="kicker">Dashboard học viên</p>
+    <h1 id="hello">Xin chào</h1>
+    <p class="lead" id="status">Checkpoint 2 — danh sách khóa đã mua sẽ hiện khi có enrollment.</p>
+    <div id="courses" class="program-grid"></div>
+    <p style="margin-top:2rem">
+      <a class="btn btn--line" href="../index.html">Về trang chủ</a>
+      <button class="btn btn--amber" type="button" id="logout">Đăng xuất</button>
+    </p>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (!window.sa247Auth?.ready) {
+        document.getElementById("status").textContent = "Chưa cấu hình Supabase.";
+        return;
+      }
+      const session = await sa247Auth.getSession();
+      if (!session) {
+        location.href = "../auth/login.html?next=../dashboard/";
+        return;
+      }
+      const name = session.user.user_metadata?.full_name || session.user.email;
+      document.getElementById("hello").textContent = "Xin chào " + name;
+      const sb = await sa247Auth.ensureClient();
+      const { data, error } = await sb
+        .from("enrollments")
+        .select("status, course:courses(code,slug,title)")
+        .eq("status", "active");
+      const box = document.getElementById("courses");
+      if (error) {
+        document.getElementById("status").textContent = error.message;
+        return;
+      }
+      if (!data?.length) {
+        document.getElementById("status").textContent =
+          "Bạn chưa mở khóa khóa nào (USER A). Học thử miễn phí trên trang khóa học.";
+        return;
+      }
+      document.getElementById("status").textContent = "Khóa học của tôi:";
+      box.innerHTML = data
+        .map((row) => {
+          const c = row.course;
+          return `<a class="program-card" href="../${c.slug}/"><span class="code">${c.code}</span><h3>${c.title}</h3><span class="go">Tiếp tục học →</span></a>`;
+        })
+        .join("");
+      document.getElementById("logout").onclick = async () => {
+        await sa247Auth.signOut();
+        location.href = "../index.html";
+      };
+    });
+  </script>
+</body>
+</html>

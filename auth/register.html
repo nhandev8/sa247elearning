@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký · SA247 E-Learning</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="wrap auth-box">
+    <p class="kicker">SA247 E-Learning</p>
+    <h1>Tạo tài khoản</h1>
+    <p class="lead">Đăng ký để theo dõi tiến độ và mở khóa khóa học (sau thanh toán — Checkpoint 3).</p>
+    <form id="reg-form" class="order-form">
+      <label>Họ và tên
+        <input name="full_name" type="text" autocomplete="name" />
+      </label>
+      <label>Email
+        <input name="email" type="email" required autocomplete="email" />
+      </label>
+      <label>Mật khẩu (tối thiểu 6 ký tự)
+        <input name="password" type="password" required minlength="6" autocomplete="new-password" />
+      </label>
+      <button class="btn btn--amber" type="submit">Đăng ký</button>
+      <p class="form-msg" id="msg" role="status"></p>
+    </form>
+    <p><a href="login.html">Đã có tài khoản? Đăng nhập</a></p>
+  </main>
+  <script>
+    document.getElementById("reg-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const msg = document.getElementById("msg");
+      msg.textContent = "Đang tạo tài khoản…";
+      if (!window.sa247Auth?.ready) {
+        msg.textContent = "Chưa cấu hình Supabase (URL + anon key).";
+        return;
+      }
+      const { data, error } = await sa247Auth.signUp(
+        fd.get("email"),
+        fd.get("password"),
+        fd.get("full_name")
+      );
+      if (error) {
+        msg.textContent = error.message;
+        return;
+      }
+      if (data?.user && !data.session) {
+        msg.textContent = "Kiểm tra email để xác nhận tài khoản (nếu bật confirm email).";
+        return;
+      }
+      location.href = "../dashboard/";
+    });
+  </script>
+</body>
+</html>
