@@ -1255,62 +1255,42 @@
   font-weight: 600;
   line-height: 1.7;
 }
-.category-grid {
-  margin-top: 2rem;
+.catalog {
+  margin-top: 2.25rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 2.75rem;
 }
-.category-card {
-  padding: 1.35rem 1.25rem;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--navy);
+.catalog-group__head {
+  margin-bottom: 1rem;
+  max-width: 44rem;
 }
-.category-card h3 {
-  margin: 0 0 0.55rem;
-  font-size: 1.2rem;
+.catalog-group__head h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
 }
-.category-card > p {
-  margin: 0 0 1rem;
+.catalog-group__head p {
+  margin: 0;
   color: var(--muted);
+  line-height: 1.55;
 }
-.category-card__links {
+.program-grid {
   display: grid;
-  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
 }
-.cat-prog {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 0.65rem;
-  align-items: center;
-  padding: 0.65rem 0.75rem;
-  background: var(--foam);
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+.program-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 52rem;
 }
-.cat-prog:hover {
-  border-color: var(--navy);
-  transform: translateY(-1px);
+.program-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.cat-prog .code {
-  font-weight: 800;
-  color: var(--navy);
-  font-size: 0.85rem;
+.modules .program-card {
+  min-height: 0;
 }
-.cat-prog__title {
-  font-size: 0.92rem;
-  font-weight: 600;
-  line-height: 1.35;
-}
-.cat-prog .go {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--green-deep);
-  white-space: nowrap;
+.modules .program-card .badge {
+  margin-top: 0.75rem;
 }
 .trial-heading {
   margin: 2rem 0 1rem;
@@ -1364,11 +1344,21 @@
   margin: 0;
   font-size: 1.05rem;
 }
+@media (max-width: 900px) {
+  .program-grid,
+  .program-grid--2,
+  .program-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+}
 @media (max-width: 800px) {
-  .category-grid,
   .trial-lesson-grid { grid-template-columns: 1fr; }
-  .cat-prog {
+}
+@media (max-width: 560px) {
+  .program-grid,
+  .program-grid--2,
+  .program-grid--3 {
     grid-template-columns: 1fr;
-    gap: 0.25rem;
   }
 }
