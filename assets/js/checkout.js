@@ -7,6 +7,8 @@
     bin: "VPB",
   };
 
+  let pollTimer = null;
+
   function vietQrUrl(amount, addInfo) {
     const base = `https://img.vietqr.io/image/${encodeURIComponent(BANK.bin)}-${encodeURIComponent(BANK.account)}-compact2.png`;
     const q = new URLSearchParams({
@@ -45,17 +47,80 @@
     return normalizeOrder(data);
   }
 
+  function stopPoll() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  function renderPaid(root, order, courseCode) {
+    stopPoll();
+    root.innerHTML = `
+      <div class="checkout-panel checkout-panel--paid">
+        <div class="price-tag">
+          <strong>Đã mở khóa</strong>
+          <span>${courseCode} · đơn ${order.order_code}</span>
+        </div>
+        <p class="checkout-lead">Thanh toán thành công. Bạn có thể vào học toàn bộ khóa hoặc xem trong Dashboard.</p>
+        <div class="contact__cta">
+          <a class="btn btn--amber" href="../dashboard/">Vào khóa học của tôi</a>
+          <a class="btn btn--line" href="#hoc-thu">Xem bài học</a>
+        </div>
+      </div>`;
+  }
+
+  function startPoll(root, order, courseCode) {
+    stopPoll();
+    const statusEl = () => root.querySelector("[data-status]");
+    let ticks = 0;
+    pollTimer = setInterval(async () => {
+      ticks += 1;
+      if (ticks > 120) {
+        stopPoll();
+        const el = statusEl();
+        if (el) {
+          el.innerHTML =
+            `Vẫn chờ xác nhận CK cho <code>${order.order_code}</code>. ` +
+            `Nếu đã CK, vào <a href="../dashboard/">Dashboard</a> hoặc liên hệ hỗ trợ.`;
+        }
+        return;
+      }
+      try {
+        const sb = await sa247Auth.ensureClient();
+        const { data } = await sb
+          .from("orders")
+          .select("order_code,status,amount,paid_at")
+          .eq("order_code", order.order_code)
+          .maybeSingle();
+        if (data?.status === "paid") {
+          renderPaid(root, data, courseCode);
+          return;
+        }
+        const el = statusEl();
+        if (el) {
+          el.textContent = `Đơn ${order.order_code} đang chờ thanh toán… (tự kiểm tra)`;
+        }
+      } catch (e) {
+        console.warn("[checkout poll]", e);
+      }
+    }, 5000);
+  }
+
   function renderCheckout(root, order, courseCode) {
+    if (order.status === "paid") {
+      renderPaid(root, order, courseCode);
+      return;
+    }
     const amount = order.amount;
     const code = order.order_code;
-    // Do not use .reveal here — opacity 0 forever after dynamic inject
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
           <strong>${fmtVnd(amount)}</strong>
           <span>1 khóa · ${courseCode} · thanh toán 1 lần</span>
         </div>
-        <p class="checkout-lead">Chuyển khoản đúng <b>số tiền</b> và <b>nội dung</b> bên dưới. Hệ thống tự mở khóa qua SePay (thường trong vài phút).</p>
+        <p class="checkout-lead">Chuyển khoản đúng <b>số tiền</b> và <b>nội dung</b> bên dưới. Sau khi có tiền, trang sẽ tự chuyển sang <b>Đã mở khóa</b> (cần SePay webhook).</p>
         <div class="checkout-grid">
           <div class="checkout-qr">
             <img src="${vietQrUrl(amount, code)}" alt="VietQR ${code}" width="280" height="280" />
@@ -70,8 +135,8 @@
             </dd></div>
           </dl>
         </div>
-        <p class="form-note">Không sửa nội dung chuyển khoản. Sau khi CK thành công, vào <a href="../dashboard/">Dashboard</a> hoặc tải lại trang khóa học.</p>
-        <p class="form-msg" data-status role="status">Đơn <code>${code}</code> đang chờ thanh toán.</p>
+        <p class="form-note">Không sửa nội dung CK. Theo dõi đơn tại <a href="../dashboard/#don-hang">Dashboard</a>.</p>
+        <p class="form-msg" data-status role="status">Đơn <code>${code}</code> đang chờ thanh toán…</p>
       </div>`;
     root.querySelector("[data-copy]")?.addEventListener("click", async (e) => {
       const v = e.currentTarget.getAttribute("data-copy");
@@ -83,6 +148,7 @@
       }
     });
     root.scrollIntoView({ behavior: "smooth", block: "start" });
+    startPoll(root, order, courseCode);
   }
 
   async function mount(selector) {
@@ -90,6 +156,46 @@
     if (!root) return;
     const courseCode = root.getAttribute("data-course-code");
     if (!courseCode) return;
+
+    // If already signed in with pending/paid order, restore panel
+    try {
+      if (window.sa247Auth?.ready) {
+        const session = await sa247Auth.getSession();
+        if (session) {
+          const sb = await sa247Auth.ensureClient();
+          const { data: enrolled } = await sb
+            .from("enrollments")
+            .select("id, course:courses!inner(code)")
+            .eq("status", "active")
+            .eq("courses.code", courseCode)
+            .maybeSingle();
+          if (enrolled) {
+            renderPaid(root, { order_code: courseCode, status: "paid" }, courseCode);
+            return;
+          }
+          const { data: pending } = await sb
+            .from("orders")
+            .select("order_code,status,amount,paid_at")
+            .eq("status", "pending")
+            .order("created_at", { ascending: false })
+            .limit(1);
+          // filter by course via join would be better
+          const { data: openOrders } = await sb
+            .from("orders")
+            .select("order_code,status,amount,paid_at,course:courses!inner(code)")
+            .eq("status", "pending")
+            .eq("courses.code", courseCode)
+            .order("created_at", { ascending: false })
+            .limit(1);
+          if (openOrders?.[0]) {
+            renderCheckout(root, openOrders[0], courseCode);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[checkout hydrate]", e);
+    }
 
     const btn = root.querySelector("[data-create-order]");
     const msg = root.querySelector("[data-msg]");
@@ -108,7 +214,8 @@
         if (msg) {
           const raw = err.message || "Không tạo được đơn.";
           if (/already enrolled/i.test(raw)) {
-            msg.textContent = "Bạn đã mở khóa khóa học này rồi. Vào Dashboard hoặc tải lại trang để học bài khóa.";
+            msg.innerHTML =
+              'Bạn đã mở khóa khóa học này rồi. <a href="../dashboard/">Vào Dashboard</a>.';
           } else if (/not authenticated/i.test(raw)) {
             msg.textContent = "Phiên đăng nhập hết hạn. Hãy đăng nhập lại.";
           } else {

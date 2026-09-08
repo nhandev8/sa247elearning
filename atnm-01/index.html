@@ -18,7 +18,12 @@
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
       <a class="nav__brand" href="../index.html">Safety and You <em>247</em> Academy</a>
-      <a class="nav__cta" href="#hoc-thu">Học thử miễn phí</a>
+      <div class="nav__actions">
+        <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Khóa của tôi</a>
+        <a class="nav__link" data-nav-login href="../auth/login.html">Đăng nhập</a>
+        <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="../index.html" hidden>Đăng xuất</button>
+        <a class="nav__cta" href="#hoc-thu">Học thử miễn phí</a>
+      </div>
     </div>
   </nav>
   <header class="hero" id="top">
@@ -300,10 +305,11 @@
       bin: "VPB"
     };
   </script>
-  <script src="../assets/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js" defer></script>
   <script src="../assets/js/checkout.js" defer></script>
   <script>window.SA247_ORDER_SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL";</script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/app-shell.js" defer></script>
   <script src="../assets/site.js" defer></script>
 </body>
 </html>

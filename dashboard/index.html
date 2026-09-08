@@ -3,62 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard · SA247 E-Learning</title>
+  <title>Khóa học của tôi · SA247</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/site.css" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/dashboard.js" defer></script>
 </head>
-<body>
-  <main class="wrap" style="padding:4rem 0">
-    <p class="kicker">Dashboard học viên</p>
-    <h1 id="hello">Xin chào</h1>
-    <p class="lead" id="status">Checkpoint 2 — danh sách khóa đã mua sẽ hiện khi có enrollment.</p>
-    <div id="courses" class="program-grid"></div>
-    <p style="margin-top:2rem">
-      <a class="btn btn--line" href="../index.html">Về trang chủ</a>
-      <button class="btn btn--amber" type="button" id="logout">Đăng xuất</button>
-    </p>
-  </main>
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      if (!window.sa247Auth?.ready) {
-        document.getElementById("status").textContent = "Chưa cấu hình Supabase.";
-        return;
-      }
-      const session = await sa247Auth.getSession();
-      if (!session) {
-        location.href = "../auth/login.html?next=../dashboard/";
-        return;
-      }
-      const name = session.user.user_metadata?.full_name || session.user.email;
-      document.getElementById("hello").textContent = "Xin chào " + name;
-      const sb = await sa247Auth.ensureClient();
-      const { data, error } = await sb
-        .from("enrollments")
-        .select("status, course:courses(code,slug,title)")
-        .eq("status", "active");
-      const box = document.getElementById("courses");
-      if (error) {
-        document.getElementById("status").textContent = error.message;
-        return;
-      }
-      if (!data?.length) {
-        document.getElementById("status").textContent =
-          "Bạn chưa mở khóa khóa nào (USER A). Học thử miễn phí trên trang khóa học.";
-        return;
-      }
-      document.getElementById("status").textContent = "Khóa học của tôi:";
-      box.innerHTML = data
-        .map((row) => {
-          const c = row.course;
-          return `<a class="program-card" href="../${c.slug}/"><span class="code">${c.code}</span><h3>${c.title}</h3><span class="go">Tiếp tục học →</span></a>`;
-        })
-        .join("");
-      document.getElementById("logout").onclick = async () => {
-        await sa247Auth.signOut();
-        location.href = "../index.html";
-      };
-    });
-  </script>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="app-side" aria-label="Menu học viên">
+      <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
+      <nav class="app-side__nav">
+        <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
+        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa học</a>
+        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
+        <a href="#don-hang"><span class="ico" aria-hidden="true">▤</span>Đơn thanh toán</a>
+        <a class="is-soon" href="#" aria-disabled="true" title="Sắp ra mắt"><span class="ico" aria-hidden="true">✓</span>Kỳ thi <small>sắp có</small></a>
+        <a class="is-soon" href="#" aria-disabled="true" title="Sắp ra mắt"><span class="ico" aria-hidden="true">◎</span>Chứng chỉ <small>sắp có</small></a>
+      </nav>
+      <div class="app-side__foot">
+        <p class="app-side__user" id="user-label">…</p>
+        <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-top">
+        <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
+        <h1>Khóa học của tôi</h1>
+      </header>
+
+      <main class="app-content">
+        <p class="lead" id="status">Đang tải…</p>
+        <div id="courses" class="program-grid program-grid--2"></div>
+
+        <section id="don-hang" class="app-section">
+          <h2>Đơn thanh toán</h2>
+          <p class="lead" id="orders-status">Đang tải đơn…</p>
+          <div id="orders" class="order-list"></div>
+        </section>
+      </main>
+    </div>
+  </div>
 </body>
 </html>
