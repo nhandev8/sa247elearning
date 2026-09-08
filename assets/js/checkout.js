@@ -21,6 +21,14 @@
     return Number(n).toLocaleString("vi-VN") + "đ";
   }
 
+  function normalizeOrder(data) {
+    const order = Array.isArray(data) ? data[0] : data;
+    if (!order || !order.order_code || order.amount == null) {
+      throw new Error("Không nhận được mã đơn từ server. Thử lại hoặc tải lại trang.");
+    }
+    return order;
+  }
+
   async function createOrder(courseCode) {
     if (!window.sa247Auth?.ready) {
       throw new Error("Chưa cấu hình Supabase.");
@@ -34,14 +42,15 @@
       p_course_code: courseCode,
     });
     if (error) throw new Error(error.message);
-    return data;
+    return normalizeOrder(data);
   }
 
   function renderCheckout(root, order, courseCode) {
     const amount = order.amount;
     const code = order.order_code;
+    // Do not use .reveal here — opacity 0 forever after dynamic inject
     root.innerHTML = `
-      <div class="checkout-panel reveal">
+      <div class="checkout-panel">
         <div class="price-tag">
           <strong>${fmtVnd(amount)}</strong>
           <span>1 khóa · ${courseCode} · thanh toán 1 lần</span>
@@ -73,6 +82,7 @@
         e.currentTarget.textContent = "Copy thủ công";
       }
     });
+    root.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function mount(selector) {
