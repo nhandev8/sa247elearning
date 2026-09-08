@@ -95,7 +95,16 @@
           location.href = `${login}?next=${next}`;
           return;
         }
-        if (msg) msg.textContent = err.message || "Không tạo được đơn.";
+        if (msg) {
+          const raw = err.message || "Không tạo được đơn.";
+          if (/already enrolled/i.test(raw)) {
+            msg.textContent = "Bạn đã mở khóa khóa học này rồi. Vào Dashboard hoặc tải lại trang để học bài khóa.";
+          } else if (/not authenticated/i.test(raw)) {
+            msg.textContent = "Phiên đăng nhập hết hạn. Hãy đăng nhập lại.";
+          } else {
+            msg.textContent = raw;
+          }
+        }
       }
     });
   }
