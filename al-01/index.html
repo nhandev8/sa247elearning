@@ -166,24 +166,30 @@
         <p class="kicker reveal">Mở khóa khóa học</p>
         <h2 class="title reveal">Tiếp tục với 199.000đ</h2>
         <p class="lead reveal">
-          Checkpoint 1 chỉ dựng giao diện. Thanh toán tự động + cấp quyền học nằm ở Checkpoint 2–3
-          (Supabase Auth · SePay · webhook).
+          Đăng nhập → tạo mã thanh toán → chuyển khoản VietQR đúng nội dung.
+          SePay báo có tiền → hệ thống tự mở khóa (Supabase enrollment).
         </p>
-        <div class="unlock-stub__panel reveal">
+        <div id="checkout-root" class="unlock-stub__panel reveal" data-course-code="AL-01" data-login-href="../auth/login.html">
           <div class="price-tag">
             <strong>199.000đ</strong>
             <span>1 khóa · AL-01 · thanh toán 1 lần</span>
           </div>
           <ol class="unlock-steps">
-            <li><b>Hiện tại:</b> học thử miễn phí các bài <code>is_free</code> phía trên.</li>
-            <li><b>Checkpoint 2:</b> đăng ký tài khoản · kiểm tra enrollment bằng RLS.</li>
-            <li><b>Checkpoint 3:</b> VietQR / SePay · tự mở khóa sau khi CK đúng mã đơn.</li>
+            <li>Đăng nhập / đăng ký tài khoản SA247.</li>
+            <li>Bấm tạo mã thanh toán (mỗi đơn một nội dung CK riêng).</li>
+            <li>CK đúng <b>199.000đ</b> + đúng nội dung → tự mở khóa.</li>
           </ol>
           <div class="contact__cta">
-            <a class="btn btn--amber" href="#hoc-thu">Quay lại học thử</a>
-            <a class="btn btn--line" href="tel:+84877787988">Tư vấn 08 77 78 79 88</a>
+            <button type="button" class="btn btn--amber" data-create-order>Tạo mã thanh toán 199k</button>
+            <a class="btn btn--line" href="../auth/login.html">Đăng nhập</a>
           </div>
-          <p class="form-note">Giá đọc từ cấu hình khóa (<code>price</code> / 199k). Không hard-code quyền học bằng JavaScript.</p>
+          <p class="form-msg" data-msg role="status"></p>
+          <p class="form-note">
+            NH: VPBank ·
+            HO HUU NHAN ·
+            STK 0877787988.
+            Giá từ catalog (199k). Không hard-code quyền học bằng JavaScript.
+          </p>
         </div>
       </div>
     </section>
@@ -235,6 +241,17 @@
       <span>Áp lực không nhìn thấy — hàng rào bảo vệ phải còn sống.</span>
     </div>
   </footer>
+  <script>
+    window.SA247_BANK = {
+      name: "VPBank",
+      owner: "HO HUU NHAN",
+      account: "0877787988",
+      bin: "VPB"
+    };
+  </script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/checkout.js" defer></script>
   <script>window.SA247_ORDER_SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL";</script>
   <script src="../assets/site.js" defer></script>
 </body>

@@ -1041,6 +1041,61 @@
   background: #fff;
   border: 1px solid var(--line);
 }
+.checkout-lead {
+  margin: 1rem 0 1.25rem;
+  color: var(--muted);
+  max-width: 48rem;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.checkout-qr {
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 0.65rem;
+}
+.checkout-qr img {
+  display: block;
+  width: 240px;
+  height: auto;
+}
+.checkout-meta {
+  margin: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+.checkout-meta > div {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.checkout-meta dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.checkout-meta dd {
+  margin: 0;
+  font-weight: 600;
+}
+.checkout-meta code,
+.checkout-code {
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+.btn--small {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+@media (max-width: 700px) {
+  .checkout-grid { grid-template-columns: 1fr; }
+  .checkout-meta > div { grid-template-columns: 1fr; gap: 0.15rem; }
+}
 .unlock-steps {
   margin: 1.25rem 0;
   padding-left: 1.2rem;
