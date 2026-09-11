@@ -21,7 +21,7 @@
         const session = await sa247Auth.getSession();
         signedIn = Boolean(session);
         if (signedIn) {
-          const profile = await sa247Auth.getProfile();
+          const profile = await sa247Auth.getProfile({ timeoutMs: 1500 });
           staff = sa247Auth.isStaffRole(profile?.role);
         }
       }

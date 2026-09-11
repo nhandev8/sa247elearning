@@ -12,7 +12,6 @@
   <main class="wrap auth-box">
     <p class="kicker">SA247 E-Learning</p>
     <h1>Đăng nhập</h1>
-    <p class="lead">Học viên vào khóa học của tôi · Quản trị vào bảng điều khiển ngay sau khi đăng nhập.</p>
     <form id="login-form" class="order-form">
       <label>Email
         <input name="email" type="email" required autocomplete="email" />
@@ -20,37 +19,41 @@
       <label>Mật khẩu
         <input name="password" type="password" required autocomplete="current-password" />
       </label>
-      <button class="btn btn--amber" type="submit">Đăng nhập</button>
+      <button class="btn btn--amber" type="submit" id="login-btn">Đăng nhập</button>
       <p class="form-msg" id="msg" role="status"></p>
     </form>
     <p><a href="register.html">Tạo tài khoản</a> · <a href="quen-mat-khau.html">Quên mật khẩu</a> · <a href="../index.html">Về trang chủ</a></p>
   </main>
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      if (!window.sa247Auth?.ready) return;
-      const session = await sa247Auth.getSession();
-      if (!session) return;
-      const next = new URLSearchParams(location.search).get("next");
-      location.href = await sa247Auth.homeAfterLogin(next);
-    });
-
     document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
       const msg = document.getElementById("msg");
+      const btn = document.getElementById("login-btn");
       msg.textContent = "Đang đăng nhập…";
+      btn.disabled = true;
       if (!window.sa247Auth?.ready) {
         msg.textContent = "Chưa cấu hình Supabase (URL + anon key).";
+        btn.disabled = false;
         return;
       }
-      const { error } = await sa247Auth.signIn(fd.get("email"), fd.get("password"));
-      if (error) {
-        msg.textContent = error.message;
-        return;
+      try {
+        // Warm client while user types is ideal; ensure before sign-in
+        await sa247Auth.ensureClient();
+        const { error } = await sa247Auth.signIn(fd.get("email"), fd.get("password"));
+        if (error) {
+          msg.textContent = error.message;
+          btn.disabled = false;
+          return;
+        }
+        msg.textContent = "Đang chuyển…";
+        const next = new URLSearchParams(location.search).get("next");
+        const dest = await sa247Auth.homeAfterLogin(next);
+        location.replace(dest);
+      } catch (err) {
+        msg.textContent = err?.message || "Đăng nhập lỗi. Thử lại.";
+        btn.disabled = false;
       }
-      msg.textContent = "Đăng nhập thành công — đang chuyển…";
-      const next = new URLSearchParams(location.search).get("next");
-      location.href = await sa247Auth.homeAfterLogin(next);
     });
   </script>
 </body>

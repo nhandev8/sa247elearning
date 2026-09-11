@@ -70,6 +70,41 @@
     return { data, error };
   }
 
+  const PROFILE_CACHE_KEY = "sa247_profile_v1";
+  let profileMem = null;
+
+  function readProfileCache() {
+    if (profileMem) return profileMem;
+    try {
+      const raw = sessionStorage.getItem(PROFILE_CACHE_KEY);
+      if (!raw) return null;
+      profileMem = JSON.parse(raw);
+      return profileMem;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeProfileCache(profile) {
+    profileMem = profile || null;
+    try {
+      if (profile) sessionStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(profile));
+      else sessionStorage.removeItem(PROFILE_CACHE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function withTimeout(promise, ms, fallback) {
+    let timer;
+    return Promise.race([
+      Promise.resolve(promise).finally(() => clearTimeout(timer)),
+      new Promise((resolve) => {
+        timer = setTimeout(() => resolve(fallback), ms);
+      }),
+    ]);
+  }
+
   window.sa247Auth = {
     ready: true,
     ensureClient,
@@ -86,26 +121,56 @@
     isStaffRole(role) {
       return window.sa247Auth.STAFF_ROLES.includes(role);
     },
-    async getProfile() {
+    async getProfile(opts) {
+      const timeoutMs = opts?.timeoutMs ?? 2500;
+      const cached = readProfileCache();
       const session = await getSession();
-      if (!session) return null;
-      const sb = await ensureClient();
-      const { data, error } = await sb
-        .from("profiles")
-        .select("id,full_name,role,phone")
-        .eq("id", session.user.id)
-        .maybeSingle();
-      if (error) {
-        console.warn("[SA247] profile", error.message);
+      if (!session) {
+        writeProfileCache(null);
         return null;
       }
-      return data;
+      if (cached && cached.id === session.user.id) {
+        // refresh in background, return cache immediately
+        ensureClient()
+          .then((sb) =>
+            sb
+              .from("profiles")
+              .select("id,full_name,role,phone")
+              .eq("id", session.user.id)
+              .maybeSingle()
+          )
+          .then(({ data, error }) => {
+            if (!error && data) writeProfileCache(data);
+          })
+          .catch(() => {});
+        return cached;
+      }
+
+      const sb = await ensureClient();
+      const result = await withTimeout(
+        sb
+          .from("profiles")
+          .select("id,full_name,role,phone")
+          .eq("id", session.user.id)
+          .maybeSingle()
+          .then(({ data, error }) => {
+            if (error) {
+              console.warn("[SA247] profile", error.message);
+              return null;
+            }
+            return data;
+          }),
+        timeoutMs,
+        cached
+      );
+      if (result) writeProfileCache(result);
+      return result;
     },
     /** Sau đăng nhập: staff → admin; học viên → dashboard (trừ khi next chỉ định trang khác). */
     async homeAfterLogin(explicitNext) {
-      const profile = await this.getProfile();
-      const staff = this.isStaffRole(profile?.role);
       const next = (explicitNext || "").trim();
+      const profile = await this.getProfile({ timeoutMs: 2000 });
+      const staff = this.isStaffRole(profile?.role);
       if (next) {
         const isDefaultDash =
           /\/dashboard\/?$/i.test(next) ||
@@ -113,13 +178,16 @@
           next.endsWith("dashboard/");
         if (!(staff && isDefaultDash)) return next;
       }
+      // Nếu profile timeout / lỗi: về dashboard (không treo)
       return staff ? "../admin/" : "../dashboard/";
     },
     async signIn(email, password) {
+      writeProfileCache(null);
       const sb = await ensureClient();
       return sb.auth.signInWithPassword({ email, password });
     },
     async signUp(email, password, fullName) {
+      writeProfileCache(null);
       const sb = await ensureClient();
       return sb.auth.signUp({
         email,
@@ -128,6 +196,7 @@
       });
     },
     async signOut() {
+      writeProfileCache(null);
       const sb = await ensureClient();
       return sb.auth.signOut();
     },
