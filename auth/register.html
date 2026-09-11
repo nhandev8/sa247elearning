@@ -26,12 +26,43 @@
       <button class="btn btn--amber" type="submit">Đăng ký</button>
       <p class="form-msg" id="msg" role="status"></p>
     </form>
-    <p><a href="login.html">Đã có tài khoản? Đăng nhập</a></p>
+    <p>
+      <a href="login.html">Đã có tài khoản? Đăng nhập</a>
+      ·
+      <a href="quen-mat-khau.html" id="link-forgot">Quên mật khẩu</a>
+    </p>
   </main>
   <script>
+    function alreadyRegisteredHtml(email) {
+      const q = email ? "?email=" + encodeURIComponent(email) : "";
+      return (
+        "Tài khoản với email này đã được đăng ký. " +
+        '<a href="login.html' +
+        q +
+        '">Đăng nhập</a> hoặc ' +
+        '<a href="quen-mat-khau.html' +
+        q +
+        '">quên mật khẩu</a> để đặt lại.'
+      );
+    }
+
+    const emailInput = document.querySelector('#reg-form input[name="email"]');
+    const forgotLink = document.getElementById("link-forgot");
+    if (emailInput && forgotLink) {
+      const syncForgot = () => {
+        const v = (emailInput.value || "").trim();
+        forgotLink.href = v
+          ? "quen-mat-khau.html?email=" + encodeURIComponent(v)
+          : "quen-mat-khau.html";
+      };
+      emailInput.addEventListener("input", syncForgot);
+      syncForgot();
+    }
+
     document.getElementById("reg-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
+      const email = String(fd.get("email") || "").trim();
       const msg = document.getElementById("msg");
       msg.textContent = "Đang tạo tài khoản…";
       if (!window.sa247Auth?.ready) {
@@ -39,15 +70,19 @@
         return;
       }
       const { data, error } = await sa247Auth.signUp(
-        fd.get("email"),
+        email,
         fd.get("password"),
         fd.get("full_name")
       );
       if (error) {
         const m = (error.message || "").toLowerCase();
-        if (m.includes("already") || m.includes("registered") || m.includes("exists")) {
-          msg.innerHTML =
-            'Email này đã có tài khoản. <a href="login.html">Đăng nhập</a> hoặc <a href="quen-mat-khau.html">quên mật khẩu</a>.';
+        if (
+          m.includes("already") ||
+          m.includes("registered") ||
+          m.includes("exists") ||
+          m.includes("user already")
+        ) {
+          msg.innerHTML = alreadyRegisteredHtml(email);
         } else if (m.includes("database error")) {
           msg.innerHTML =
             'Lỗi tạo hồ sơ. Thử lại sau vài giây hoặc <a href="login.html">đăng nhập</a> nếu đã đăng ký trước đó.';
@@ -56,8 +91,15 @@
         }
         return;
       }
+      // Supabase (confirm email bật): user đã tồn tại thường trả user giả, identities rỗng
+      const identities = data?.user?.identities;
+      if (data?.user && Array.isArray(identities) && identities.length === 0) {
+        msg.innerHTML = alreadyRegisteredHtml(email);
+        return;
+      }
       if (data?.user && !data.session) {
-        msg.textContent = "Kiểm tra email để xác nhận tài khoản (nếu hệ thống bật xác nhận email).";
+        msg.textContent =
+          "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản (nếu hệ thống bật xác nhận email).";
         return;
       }
       const dest = await sa247Auth.homeAfterLogin("../dashboard/", data?.session);

@@ -15,14 +15,20 @@
     <p class="lead">Nhập email đã đăng ký. Chúng tôi gửi link đặt lại mật khẩu (kiểm tra cả hộp thư spam).</p>
     <form id="reset-form" class="order-form">
       <label>Email
-        <input name="email" type="email" required autocomplete="email" />
+        <input name="email" id="reset-email" type="email" required autocomplete="email" />
       </label>
       <button class="btn btn--amber" type="submit">Gửi link đặt lại</button>
       <p class="form-msg" id="msg" role="status"></p>
     </form>
-    <p><a href="login.html">Quay lại đăng nhập</a> · <a href="../index.html">Trang chủ</a></p>
+    <p><a href="login.html">Quay lại đăng nhập</a> · <a href="register.html">Đăng ký</a> · <a href="../index.html">Trang chủ</a></p>
   </main>
   <script>
+    (function prefillEmail() {
+      const q = new URLSearchParams(location.search).get("email");
+      const input = document.getElementById("reset-email");
+      if (q && input) input.value = q;
+    })();
+
     document.getElementById("reset-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);

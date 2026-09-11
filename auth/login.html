@@ -14,7 +14,7 @@
     <h1>Đăng nhập</h1>
     <form id="login-form" class="order-form">
       <label>Email
-        <input name="email" type="email" required autocomplete="email" />
+        <input name="email" id="login-email" type="email" required autocomplete="email" />
       </label>
       <label>Mật khẩu
         <input name="password" type="password" required autocomplete="current-password" />
@@ -22,9 +22,32 @@
       <button class="btn btn--amber" type="submit" id="login-btn">Đăng nhập</button>
       <p class="form-msg" id="msg" role="status"></p>
     </form>
-    <p><a href="register.html">Tạo tài khoản</a> · <a href="quen-mat-khau.html">Quên mật khẩu</a> · <a href="../index.html">Về trang chủ</a></p>
+    <p>
+      <a href="register.html">Tạo tài khoản</a>
+      ·
+      <a href="quen-mat-khau.html" id="link-forgot">Quên mật khẩu</a>
+      ·
+      <a href="../index.html">Về trang chủ</a>
+    </p>
   </main>
   <script>
+    (function prefillEmail() {
+      const q = new URLSearchParams(location.search).get("email");
+      const input = document.getElementById("login-email");
+      if (q && input) input.value = q;
+      const forgot = document.getElementById("link-forgot");
+      if (forgot) {
+        const sync = () => {
+          const v = (input?.value || "").trim();
+          forgot.href = v
+            ? "quen-mat-khau.html?email=" + encodeURIComponent(v)
+            : "quen-mat-khau.html";
+        };
+        input?.addEventListener("input", sync);
+        sync();
+      }
+    })();
+
     // Warm Supabase client sớm — tránh chậm lúc bấm Đăng nhập
     document.addEventListener("DOMContentLoaded", () => {
       if (window.sa247Auth?.ready) sa247Auth.ensureClient().catch(() => {});
