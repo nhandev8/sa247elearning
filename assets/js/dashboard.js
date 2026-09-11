@@ -159,6 +159,24 @@
     el("user-label").textContent = name;
 
     const sb = await sa247Auth.ensureClient();
+    const profile = await sa247Auth.getProfile();
+    if (sa247Auth.isStaffRole(profile?.role)) {
+      const nav = document.querySelector(".app-side__nav");
+      if (nav && !nav.querySelector("[data-admin-link]")) {
+        nav.insertAdjacentHTML(
+          "beforeend",
+          `<a data-admin-link href="../admin/"><span class="ico" aria-hidden="true">⚙</span>Quản trị</a>`
+        );
+      }
+      const status = el("status");
+      if (status) {
+        status.insertAdjacentHTML(
+          "afterend",
+          `<p class="lead"><a class="btn btn--amber btn--small" href="../admin/">Mở bảng điều khiển quản trị →</a></p>`
+        );
+      }
+    }
+
     await Promise.all([loadCourses(sb, session.user.id), loadOrders(sb)]);
   });
 })();

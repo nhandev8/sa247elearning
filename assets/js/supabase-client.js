@@ -76,6 +76,45 @@
     getSession,
     hasCourseAccess,
     fetchLesson,
+    STAFF_ROLES: [
+      "admin",
+      "quan_tri_cao_nhat",
+      "quan_tri",
+      "quan_ly_noi_dung",
+      "giang_vien",
+    ],
+    isStaffRole(role) {
+      return window.sa247Auth.STAFF_ROLES.includes(role);
+    },
+    async getProfile() {
+      const session = await getSession();
+      if (!session) return null;
+      const sb = await ensureClient();
+      const { data, error } = await sb
+        .from("profiles")
+        .select("id,full_name,role,phone")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (error) {
+        console.warn("[SA247] profile", error.message);
+        return null;
+      }
+      return data;
+    },
+    /** Sau đăng nhập: staff → admin; học viên → dashboard (trừ khi next chỉ định trang khác). */
+    async homeAfterLogin(explicitNext) {
+      const profile = await this.getProfile();
+      const staff = this.isStaffRole(profile?.role);
+      const next = (explicitNext || "").trim();
+      if (next) {
+        const isDefaultDash =
+          /\/dashboard\/?$/i.test(next) ||
+          next === "../dashboard/" ||
+          next.endsWith("dashboard/");
+        if (!(staff && isDefaultDash)) return next;
+      }
+      return staff ? "../admin/" : "../dashboard/";
+    },
     async signIn(email, password) {
       const sb = await ensureClient();
       return sb.auth.signInWithPassword({ email, password });

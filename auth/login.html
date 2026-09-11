@@ -12,7 +12,7 @@
   <main class="wrap auth-box">
     <p class="kicker">SA247 E-Learning</p>
     <h1>Đăng nhập</h1>
-    <p class="lead">Checkpoint 2 — tài khoản học viên (Email + mật khẩu).</p>
+    <p class="lead">Học viên vào khóa học của tôi · Quản trị vào bảng điều khiển ngay sau khi đăng nhập.</p>
     <form id="login-form" class="order-form">
       <label>Email
         <input name="email" type="email" required autocomplete="email" />
@@ -26,6 +26,14 @@
     <p><a href="register.html">Tạo tài khoản</a> · <a href="quen-mat-khau.html">Quên mật khẩu</a> · <a href="../index.html">Về trang chủ</a></p>
   </main>
   <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (!window.sa247Auth?.ready) return;
+      const session = await sa247Auth.getSession();
+      if (!session) return;
+      const next = new URLSearchParams(location.search).get("next");
+      location.href = await sa247Auth.homeAfterLogin(next);
+    });
+
     document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -40,8 +48,9 @@
         msg.textContent = error.message;
         return;
       }
-      const next = new URLSearchParams(location.search).get("next") || "../dashboard/";
-      location.href = next;
+      msg.textContent = "Đăng nhập thành công — đang chuyển…";
+      const next = new URLSearchParams(location.search).get("next");
+      location.href = await sa247Auth.homeAfterLogin(next);
     });
   </script>
 </body>

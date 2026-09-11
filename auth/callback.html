@@ -43,11 +43,11 @@
         location.replace("doi-mat-khau.html?recovery=1");
         return;
       }
-      if (next && !/^https?:/i.test(next)) {
+      if (next && !/^https?:/i.test(next) && !/dashboard\/?$/i.test(next)) {
         location.replace(next);
         return;
       }
-      location.replace("../dashboard/");
+      location.replace(await sa247Auth.homeAfterLogin(next));
     });
   </script>
 </body>
