@@ -196,10 +196,14 @@
     async signUp(email, password, fullName) {
       writeProfileCache(null);
       const sb = await ensureClient();
+      const redirect = new URL("callback.html", location.href).href;
       return sb.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName || "" } },
+        options: {
+          data: { full_name: fullName || "" },
+          emailRedirectTo: redirect,
+        },
       });
     },
     async signOut() {
