@@ -6,12 +6,10 @@
     if (idx < 0) return 0;
     const rest = path.slice(idx + "/admin/".length);
     if (!rest || rest === "index.html") return 0;
-    // khoa-hoc/ or khoa-hoc/index.html → 1
     return rest.split("/").filter((p) => p && p !== "index.html").length;
   }
 
   function hrefFor(target) {
-    // target: '' | 'khoa-hoc/' | 'tai-khoan/' ...
     const d = depthFromAdmin();
     const prefix = d === 0 ? "./" : "../".repeat(d);
     if (!target) return prefix;
@@ -28,9 +26,9 @@
       items: [
         { target: "khoa-hoc/", label: "Tất cả khóa học", key: "khoa-hoc" },
         { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do" },
-        { label: "Ngân hàng câu hỏi", soon: true },
-        { label: "Bài kiểm tra", soon: true },
-        { label: "Chứng nhận", soon: true },
+        { target: "cau-hoi/", label: "Ngân hàng câu hỏi", key: "cau-hoi" },
+        { target: "bai-kiem-tra/", label: "Bài kiểm tra", key: "bai-kiem-tra" },
+        { target: "chung-nhan/", label: "Chứng nhận", key: "chung-nhan" },
       ],
     },
     {
@@ -39,7 +37,7 @@
         { target: "tai-khoan/", label: "Tất cả tài khoản", key: "tai-khoan" },
         { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
         { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
-        { label: "Nhật ký hoạt động", soon: true },
+        { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
       ],
     },
     {
@@ -47,14 +45,14 @@
       items: [
         { label: "Thư viện HSE", soon: true },
         { label: "Công cụ HSE", soon: true },
-        { label: "Thống kê", soon: true },
+        { target: "thong-ke/", label: "Thống kê", key: "thong-ke" },
       ],
     },
     {
       group: "Cài đặt",
       items: [
         { label: "Thông tin hệ thống", soon: true },
-        { label: "Phân quyền", soon: true },
+        { target: "phan-quyen/", label: "Phân quyền", key: "phan-quyen" },
       ],
     },
   ];
@@ -63,9 +61,15 @@
     const path = location.pathname.replace(/\\/g, "/");
     if (path.includes("/khoa-hoc")) return "khoa-hoc";
     if (path.includes("/tien-do")) return "tien-do";
+    if (path.includes("/cau-hoi")) return "cau-hoi";
+    if (path.includes("/bai-kiem-tra")) return "bai-kiem-tra";
+    if (path.includes("/chung-nhan")) return "chung-nhan";
     if (path.includes("/tai-khoan")) return "tai-khoan";
     if (path.includes("/quyen-hoc")) return "quyen-hoc";
     if (path.includes("/don-hang")) return "don-hang";
+    if (path.includes("/nhat-ky")) return "nhat-ky";
+    if (path.includes("/thong-ke")) return "thong-ke";
+    if (path.includes("/phan-quyen")) return "phan-quyen";
     return "home";
   }
 
@@ -99,6 +103,8 @@
     if (label) {
       label.textContent =
         (ctx.profile.full_name || "Quản trị viên") +
+        " · " +
+        sa247Admin.roleLabelVi(ctx.profile.role) +
         " · " +
         (ctx.session.user.email || "");
     }

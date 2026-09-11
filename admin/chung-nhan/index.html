@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tất cả khóa học · SA247 Quản trị</title>
+  <title>Chứng nhận · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/admin.css" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-khoa-hoc.js" defer></script>
+  <script src="../../assets/js/admin-chung-nhan.js" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -28,36 +26,43 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tất cả khóa học</h1>
+        <h1>Chứng nhận</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm tên khóa học hoặc mã khóa học…" />
-          <select id="filter">
-            <option value="all">Tất cả</option>
-            <option value="open">Đang mở</option>
-            <option value="draft">Bản nháp</option>
-          </select>
-          <button type="button" class="adm-btn adm-btn--primary" id="btn-create">Tạo khóa học</button>
-        </div>
         <p class="adm-msg" id="adm-status"></p>
-        <section class="adm-card" id="create-box" hidden style="margin-bottom:1rem"></section>
+        <h2>Chứng nhận đã cấp</h2>
         <div class="adm-table-wrap">
           <table class="adm-table">
             <thead>
               <tr>
-                <th>Tên khóa học</th>
-                <th>Mã khóa</th>
-                <th>Trạng thái</th>
-                <th>Học viên</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
+                <th>Mã chứng nhận</th>
+                <th>Họ tên</th>
+                <th>Khóa học</th>
+                <th>Điểm</th>
+                <th>Ngày cấp</th>
               </tr>
             </thead>
-            <tbody id="rows"></tbody>
+            <tbody id="cert-rows"></tbody>
           </table>
         </div>
-        <section class="adm-card" id="detail" hidden style="margin-top:1rem"></section>
+        <h2 style="margin-top:1.5rem">Mẫu chứng nhận theo khóa</h2>
+        <p class="adm-lead">Upsert mẫu chứng nhận — một mẫu cho mỗi khóa học.</p>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Khóa học</th>
+                <th>Tiêu đề mẫu</th>
+                <th>Tiền tố mã</th>
+                <th>Điểm đạt %</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tpl-rows"></tbody>
+          </table>
+        </div>
+        <p class="adm-msg" id="tpl-msg"></p>
       </main>
     </div>
   </div>

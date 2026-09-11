@@ -1,5 +1,13 @@
 /* SA247 quản trị — API / tiện ích tiếng Việt */
 (function () {
+  const STAFF_ROLES = [
+    "admin",
+    "quan_tri_cao_nhat",
+    "quan_tri",
+    "quan_ly_noi_dung",
+    "giang_vien",
+  ];
+
   function fmtVnd(n) {
     return Number(n || 0).toLocaleString("vi-VN") + "đ";
   }
@@ -34,10 +42,41 @@
     );
   }
 
+  function roleLabelVi(r) {
+    return (
+      {
+        admin: "Quản trị viên",
+        quan_tri_cao_nhat: "Quản trị cao nhất",
+        quan_tri: "Quản trị",
+        quan_ly_noi_dung: "Quản lý nội dung",
+        giang_vien: "Giảng viên",
+        hoc_vien: "Học viên",
+        student: "Học viên",
+      }[r] || r || "—"
+    );
+  }
+
   function courseStatusVi(c) {
     if (!c) return "—";
-    if (c.is_published === false) return "Bản nháp";
-    return "Đang mở";
+    const s = c.status || (c.is_published ? "dang_mo" : "ban_nhap");
+    return (
+      {
+        ban_nhap: "Bản nháp",
+        dang_hoan_thien: "Đang hoàn thiện",
+        dang_mo: "Đang mở",
+        sap_mo: "Sắp mở",
+        tam_dung: "Tạm dừng",
+        da_dong: "Đã đóng",
+      }[s] || s
+    );
+  }
+
+  function difficultyVi(d) {
+    return (
+      { co_ban: "Cơ bản", trung_binh: "Trung bình", nang_cao: "Nâng cao" }[d] ||
+      d ||
+      "—"
+    );
   }
 
   async function requireAdmin() {
@@ -57,18 +96,21 @@
       .eq("id", session.user.id)
       .maybeSingle();
     if (error) throw error;
-    if (!profile || profile.role !== "admin") {
+    if (!profile || !STAFF_ROLES.includes(profile.role)) {
       throw new Error("Tài khoản không có quyền quản trị.");
     }
     return { sb, session, profile };
   }
 
   window.sa247Admin = {
+    STAFF_ROLES,
     fmtVnd,
     fmtTime,
     statusOrderVi,
     statusEnrollVi,
+    roleLabelVi,
     courseStatusVi,
+    difficultyVi,
     requireAdmin,
   };
 })();

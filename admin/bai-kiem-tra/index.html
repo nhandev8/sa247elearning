@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tất cả khóa học · SA247 Quản trị</title>
+  <title>Bài kiểm tra · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/admin.css" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-khoa-hoc.js" defer></script>
+  <script src="../../assets/js/admin-bai-kiem-tra.js" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -28,36 +26,38 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tất cả khóa học</h1>
+        <h1>Bài kiểm tra</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm tên khóa học hoặc mã khóa học…" />
-          <select id="filter">
-            <option value="all">Tất cả</option>
-            <option value="open">Đang mở</option>
-            <option value="draft">Bản nháp</option>
-          </select>
-          <button type="button" class="adm-btn adm-btn--primary" id="btn-create">Tạo khóa học</button>
-        </div>
         <p class="adm-msg" id="adm-status"></p>
-        <section class="adm-card" id="create-box" hidden style="margin-bottom:1rem"></section>
+        <section class="adm-card" style="margin-bottom:1rem">
+          <h2>Tạo bài kiểm tra</h2>
+          <form class="adm-form" id="add-form">
+            <label>Khóa học <select name="course_id" id="form-course" required></select></label>
+            <label>Tiêu đề <input name="title" required placeholder="Bài kiểm tra cuối khóa" /></label>
+            <label>Điểm đạt (%) <input name="pass_percent" type="number" value="70" min="0" max="100" /></label>
+            <label>Số lần làm tối đa <input name="max_attempts" type="number" value="3" min="1" /></label>
+            <div><strong>Chọn câu hỏi từ ngân hàng</strong></div>
+            <div id="q-pick" class="adm-form"></div>
+            <button type="submit" class="adm-btn adm-btn--primary">Tạo bài kiểm tra</button>
+          </form>
+          <p class="adm-msg" id="form-msg"></p>
+        </section>
         <div class="adm-table-wrap">
           <table class="adm-table">
             <thead>
               <tr>
-                <th>Tên khóa học</th>
-                <th>Mã khóa</th>
+                <th>Tiêu đề</th>
+                <th>Khóa</th>
+                <th>Điểm đạt</th>
+                <th>Lần làm</th>
+                <th>Số câu</th>
                 <th>Trạng thái</th>
-                <th>Học viên</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
-        <section class="adm-card" id="detail" hidden style="margin-top:1rem"></section>
       </main>
     </div>
   </div>
