@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đổi mật khẩu · SA247 E-Learning</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="wrap auth-box">
+    <p class="kicker">SA247 E-Learning</p>
+    <h1>Đổi mật khẩu</h1>
+    <p class="lead" id="lead">Nhập mật khẩu hiện tại và mật khẩu mới (tối thiểu 6 ký tự).</p>
+    <form id="pw-form" class="order-form">
+      <div id="current-wrap">
+        <label>Mật khẩu hiện tại
+          <input name="current" type="password" autocomplete="current-password" />
+        </label>
+      </div>
+      <label>Mật khẩu mới
+        <input name="next" type="password" required minlength="6" autocomplete="new-password" />
+      </label>
+      <label>Nhập lại mật khẩu mới
+        <input name="confirm" type="password" required minlength="6" autocomplete="new-password" />
+      </label>
+      <button class="btn btn--amber" type="submit">Lưu mật khẩu mới</button>
+      <p class="form-msg" id="msg" role="status"></p>
+    </form>
+    <p id="links"><a href="../dashboard/">Về khóa học của tôi</a> · <a href="login.html">Đăng nhập</a></p>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(location.search);
+      const recovery = params.get("recovery") === "1";
+      const msg = document.getElementById("msg");
+      const lead = document.getElementById("lead");
+      const currentWrap = document.getElementById("current-wrap");
+      const currentInput = document.querySelector('input[name="current"]');
+
+      if (!window.sa247Auth?.ready) {
+        msg.textContent = "Chưa cấu hình Supabase.";
+        return;
+      }
+
+      await sa247Auth.ensureClient();
+      const session = await sa247Auth.getSession();
+      if (!session) {
+        location.href = "login.html?next=" + encodeURIComponent(location.href);
+        return;
+      }
+
+      if (recovery) {
+        lead.textContent = "Đặt mật khẩu mới cho tài khoản của bạn.";
+        currentWrap.hidden = true;
+        if (currentInput) currentInput.removeAttribute("required");
+      } else {
+        currentInput.required = true;
+      }
+
+      document.getElementById("pw-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const next = String(fd.get("next") || "");
+        const confirm = String(fd.get("confirm") || "");
+        if (next.length < 6) {
+          msg.textContent = "Mật khẩu mới cần ít nhất 6 ký tự.";
+          return;
+        }
+        if (next !== confirm) {
+          msg.textContent = "Hai mật khẩu mới không khớp.";
+          return;
+        }
+        msg.textContent = "Đang cập nhật…";
+        let result;
+        if (recovery) {
+          result = await sa247Auth.updatePassword(next);
+        } else {
+          result = await sa247Auth.changePassword(String(fd.get("current") || ""), next);
+        }
+        if (result.error) {
+          msg.textContent = result.error.message || "Không đổi được mật khẩu.";
+          return;
+        }
+        msg.textContent = "Đã đổi mật khẩu. Đang chuyển…";
+        const { data: profile } = await (await sa247Auth.ensureClient())
+          .from("profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .maybeSingle();
+        const staff = ["admin", "quan_tri_cao_nhat", "quan_tri", "quan_ly_noi_dung", "giang_vien"];
+        const go = staff.includes(profile?.role) ? "../admin/" : "../dashboard/";
+        setTimeout(() => { location.href = go; }, 800);
+      });
+    });
+  </script>
+</body>
+</html>

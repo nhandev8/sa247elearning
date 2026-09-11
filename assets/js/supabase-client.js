@@ -92,5 +92,39 @@
       const sb = await ensureClient();
       return sb.auth.signOut();
     },
+    /** Đổi mật khẩu khi đã đăng nhập: xác nhận mật khẩu hiện tại rồi cập nhật. */
+    async changePassword(currentPassword, newPassword) {
+      const sb = await ensureClient();
+      const session = await getSession();
+      if (!session?.user?.email) {
+        return { data: null, error: { message: "Bạn chưa đăng nhập." } };
+      }
+      const email = session.user.email;
+      const { error: reAuthError } = await sb.auth.signInWithPassword({
+        email,
+        password: currentPassword,
+      });
+      if (reAuthError) {
+        return {
+          data: null,
+          error: { message: "Mật khẩu hiện tại không đúng." },
+        };
+      }
+      return sb.auth.updateUser({ password: newPassword });
+    },
+    /** Đặt mật khẩu mới (sau link quên mật khẩu / recovery session). */
+    async updatePassword(newPassword) {
+      const sb = await ensureClient();
+      return sb.auth.updateUser({ password: newPassword });
+    },
+    /** Gửi email đặt lại mật khẩu. redirectTo = URL callback trên site. */
+    async requestPasswordReset(email, redirectTo) {
+      const sb = await ensureClient();
+      return sb.auth.resetPasswordForEmail(String(email || "").trim(), {
+        redirectTo:
+          redirectTo ||
+          new URL("callback.html", location.href).href,
+      });
+    },
   };
 })();

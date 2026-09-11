@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quên mật khẩu · SA247 E-Learning</title>
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="wrap auth-box">
+    <p class="kicker">SA247 E-Learning</p>
+    <h1>Quên mật khẩu</h1>
+    <p class="lead">Nhập email đã đăng ký. Chúng tôi gửi link đặt lại mật khẩu (kiểm tra cả hộp thư spam).</p>
+    <form id="reset-form" class="order-form">
+      <label>Email
+        <input name="email" type="email" required autocomplete="email" />
+      </label>
+      <button class="btn btn--amber" type="submit">Gửi link đặt lại</button>
+      <p class="form-msg" id="msg" role="status"></p>
+    </form>
+    <p><a href="login.html">Quay lại đăng nhập</a> · <a href="../index.html">Trang chủ</a></p>
+  </main>
+  <script>
+    document.getElementById("reset-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const msg = document.getElementById("msg");
+      msg.textContent = "Đang gửi…";
+      if (!window.sa247Auth?.ready) {
+        msg.textContent = "Chưa cấu hình Supabase.";
+        return;
+      }
+      const redirectTo = new URL("callback.html?next=doi-mat-khau.html%3Frecovery%3D1", location.href).href;
+      const { error } = await sa247Auth.requestPasswordReset(fd.get("email"), redirectTo);
+      if (error) {
+        msg.textContent = error.message;
+        return;
+      }
+      msg.textContent = "Nếu email tồn tại, link đặt lại đã được gửi. Mở email và làm theo hướng dẫn.";
+    });
+  </script>
+</body>
+</html>

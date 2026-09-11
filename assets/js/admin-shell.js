@@ -9,8 +9,10 @@
     return rest.split("/").filter((p) => p && p !== "index.html").length;
   }
 
-  function hrefFor(target) {
+  function hrefFor(target, opts) {
     const d = depthFromAdmin();
+    const upFromAdmin = "../".repeat(d + 1);
+    if (opts?.site) return upFromAdmin + target;
     const prefix = d === 0 ? "./" : "../".repeat(d);
     if (!target) return prefix;
     return prefix + target;
@@ -51,6 +53,12 @@
     {
       group: "Cài đặt",
       items: [
+        {
+          target: "auth/doi-mat-khau.html",
+          label: "Đổi mật khẩu",
+          key: "doi-mat-khau",
+          site: true,
+        },
         { label: "Thông tin hệ thống", soon: true },
         { target: "phan-quyen/", label: "Phân quyền", key: "phan-quyen" },
       ],
@@ -59,6 +67,7 @@
 
   function activeKey() {
     const path = location.pathname.replace(/\\/g, "/");
+    if (path.includes("/doi-mat-khau")) return "doi-mat-khau";
     if (path.includes("/khoa-hoc")) return "khoa-hoc";
     if (path.includes("/tien-do")) return "tien-do";
     if (path.includes("/cau-hoi")) return "cau-hoi";
@@ -82,7 +91,7 @@
             return `<a class="is-soon" href="#">${it.label} <small>(sắp có)</small></a>`;
           }
           const active = it.key === key ? "is-active" : "";
-          return `<a class="${active}" href="${hrefFor(it.target)}">${it.label}</a>`;
+          return `<a class="${active}" href="${hrefFor(it.target, { site: it.site })}">${it.label}</a>`;
         })
         .join("");
       return `<div class="adm-nav__group">${g.group}</div>${links}`;
