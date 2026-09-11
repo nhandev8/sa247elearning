@@ -20,7 +20,7 @@
   <meta property="og:description" content="ISO45001 giúp bạn hiểu và triển khai hệ thống quản lý OHS theo ISO 45001: bối cảnh, lãnh đạo, hoạch định, hỗ trợ, vận hành, đánh giá và cải tiến." />
 
 </head>
-<body>
+<body class="course-page">
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
       <a class="nav__brand" href="../index.html">Safety and You <em>247</em> Academy</a>
@@ -28,7 +28,7 @@
         <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Khóa học của tôi</a>
         <a class="nav__link" data-nav-login href="../auth/login.html">Đăng nhập</a>
         <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="../index.html" hidden>Đăng xuất</button>
-        <a class="nav__cta" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="nav__cta" href="#hoc-thu">Học thử</a>
       </div>
     </div>
   </nav>
@@ -40,12 +40,18 @@
     <div class="wrap hero__content">
       <p class="hero__brand">
         SA247 E-Learning
-        <span>ISO45001 · 6 mô-đun · lộ trình OHS</span>
+        <span>ISO45001</span>
       </p>
+      <div class="hero__meta" id="course-hero-meta">
+        <span>6 mô-đun</span>
+        <span>lộ trình OHS</span>
+        <span>Học thử miễn phí</span>
+      </div>
       <h1>ISO 45001 hệ thống quản lý OHS — lộ trình triển khai</h1>
       <p class="hero__lead">Bạn bị kéo vào “làm ISO” nhưng chỉ thấy giấy tờ. Chương trình này biến ISO 45001 thành lộ trình triển khai có thứ tự — gắn hiện trường, không chỉ audit.</p>
       <div class="hero__actions">
         <a class="btn btn--amber" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="btn btn--line" href="#learner-root">Vào lớp học</a>
         <a class="btn btn--line" href="#lo-trinh">Xem lộ trình</a>
       </div>
     </div>
@@ -113,7 +119,7 @@
       <div class="wrap">
         <p class="kicker reveal">Học thử miễn phí</p>
         <h2 class="title reveal">Bài mở đầu — xem trước không cần tài khoản</h2>
-        <p class="lead reveal">Hai bài đầu của mô-đun 1 mở miễn phí. Các bài sau giữ trạng thái khóa trên giao diện.</p>
+        <p class="lead reveal">Một số bài đầu mở miễn phí. Mục lục đầy đủ và lớp học lấy từ hệ thống bên dưới.</p>
         <div class="lesson-list">
           <article class="lesson-card lesson-card--free reveal">
             <header class="lesson-card__head">
@@ -121,7 +127,7 @@
               <span class="lesson-card__meta">M01-L01 · ≈ 10–15 phút</span>
             </header>
             <h3>M01 · Bài 1 — Bối cảnh tổ chức &amp; phạm vi HTQL OHS (học thử)</h3>
-            <div class="lesson-card__todo"><p>TODO: gắn youtube_video_id thật (Public/Unlisted).</p></div>
+            <div class="lesson-card__todo"><p>Video học thử sẽ hiện khi đã gắn youtube_video_id.</p></div>
           </article>
           <article class="lesson-card lesson-card--free reveal">
             <header class="lesson-card__head">
@@ -129,7 +135,7 @@
               <span class="lesson-card__meta">M01-L02 · ≈ 10–15 phút</span>
             </header>
             <h3>M01 · Bài 2 — tiếp nối Bối cảnh tổ chức &amp; phạm vi HTQL OHS (học thử)</h3>
-            <div class="lesson-card__todo"><p>TODO: gắn youtube_video_id thật (Public/Unlisted).</p></div>
+            <div class="lesson-card__todo"><p>Video học thử sẽ hiện khi đã gắn youtube_video_id.</p></div>
           </article>
         </div>
       </div>
@@ -137,61 +143,19 @@
     <section class="locked" id="noi-dung-khoa">
       <div class="wrap">
         <p class="kicker reveal">Nội dung khóa học</p>
-        <h2 class="title reveal">Đã khóa — dành cho học viên</h2>
-        <p class="lead reveal">Giao diện khóa (Checkpoint 1). Quyền xem thật sẽ kiểm tra enrollment trên Supabase (Checkpoint 2), không tin localStorage/DOM.</p>
-        <div class="lock-board">
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L03</b>
-            <span>M01 · Bài 3 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L04</b>
-            <span>M01 · Bài 4 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L05</b>
-            <span>M01 · Bài 5 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M02</b>
-            <span>Lãnh đạo, cam kết &amp; tham vấn người lao động</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M03</b>
-            <span>Hoạch định: rủi ro, cơ hội, mục tiêu</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M04</b>
-            <span>Hỗ trợ: năng lực, nhận thức, thông tin dạng văn bản</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M05</b>
-            <span>Vận hành &amp; sẵn sàng tình huống khẩn cấp</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M06</b>
-            <span>Đánh giá hiệu suất, audit, xem xét lãnh đạo &amp; cải tiến</span>
-          </div>
-        </div>
+        <h2 class="title reveal">Mục lục &amp; lớp học</h2>
+        <div id="live-curriculum" class="live-curriculum" hidden></div>
         <div class="trial-cta reveal" id="mo-khoa">
-          <h3>Bạn muốn tiếp tục khóa học?</h3>
-          <p>Mở toàn bộ nội dung khóa với <strong>199.000đ</strong> / khóa (hiển thị tại trang khóa — không quảng bá trên landing).</p>
+          <h3>Bạn muốn học toàn bộ?</h3>
+          <p>Mở khóa khóa học với <strong>199.000đ</strong> / khóa — giá chỉ hiện trên trang khóa / checkout.</p>
           <ul class="trial-cta__perks">
-            <li>Toàn bộ bài học theo lộ trình</li>
-            <li>Theo dõi tiến độ (Checkpoint 2)</li>
-            <li>Template Pro giao kèm sau thanh toán (Checkpoint 3)</li>
+            <li>Toàn bộ bài theo lộ trình</li>
+            <li>Lưu tiến độ · tiếp tục học</li>
+            <li>Quiz &amp; chứng chỉ (khi đủ điều kiện)</li>
           </ul>
           <a class="btn btn--amber" href="#goi-pro">Mở khóa khóa học · 199k</a>
         </div>
-        <div id="learner-root" class="learner-root reveal" data-course-code="ISO45001"></div>
+        <div id="learner-root" class="learner-root reveal" data-course-code="ISO45001" data-login-href="../auth/login.html"></div>
       </div>
     </section>
     <section class="pricing unlock-stub" id="goi-pro">
@@ -224,6 +188,14 @@
             Giá từ catalog (199k). Không hard-code quyền học bằng JavaScript.
           </p>
         </div>
+      </div>
+    </section>
+    <section class="trust-strip" id="tin-cay">
+      <div class="wrap">
+        <p class="kicker reveal">Cam kết học tập</p>
+        <h2 class="title reveal">Học thử → mở khóa → kiểm tra → chứng chỉ</h2>
+        <div id="course-trust" class="reveal"></div>
+        <p class="meta reveal"><a href="../quiz/">Làm quiz</a> · <a href="../verify/">Xác minh chứng chỉ</a> · <a href="../dashboard/">Khóa học của tôi</a></p>
       </div>
     </section>
     <section class="faq" id="faq">
@@ -268,6 +240,12 @@
       </div>
     </section>
   </main>
+  <div class="course-sticky" id="course-sticky-cta" hidden>
+    <div class="wrap course-sticky__inner">
+      <p data-sticky-label>Học thử miễn phí</p>
+      <a class="btn btn--amber btn--small" data-sticky-btn href="#hoc-thu">Học thử</a>
+    </div>
+  </div>
   <footer>
     <div class="wrap footer-brand">
       <strong>© Safety and You 247 Academy · ISO45001</strong>
@@ -280,6 +258,9 @@
       </span>
     </div>
   </footer>
+  <script type="application/json" id="sa247-course-boot">
+{"code": "ISO45001", "slug": "iso45001", "modules_count": 6, "lessons_count_label": "lộ trình OHS", "free_count": 2, "duration_label": "", "status": "dang_mo", "price": "199.000đ", "deliverables": ["Hướng dẫn học Pro ISO 45001", "Checklist gap assessment ISO 45001", "Mẫu ma trận các bên quan tâm", "Mẫu mục tiêu & chương trình OHS", "Kế hoạch audit nội bộ (khung)", "Bảng theo dõi sự không phù hợp / CAPA", "Checklist họp xem xét lãnh đạo", "Quiz + chứng nhận ISO45001 Pro"]}
+  </script>
   <script>
     window.SA247_BANK = {
       name: "VPBank",
@@ -290,6 +271,7 @@
   </script>
   <script src="../assets/js/checkout.js" defer></script>
   <script src="../assets/js/learn-player.js" defer></script>
+  <script src="../assets/js/course-page.js" defer></script>
   <script>window.SA247_ORDER_SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL";</script>
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>

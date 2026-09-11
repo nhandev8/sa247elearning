@@ -20,7 +20,7 @@
   <meta property="og:description" content="KTN-01 trang bị kiến thức kỹ thuật an toàn thiết bị nâng: phân loại, kiểm tra, vận hành, tín hiệu và kiểm soát rủi ro nâng hạ." />
 
 </head>
-<body>
+<body class="course-page">
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
       <a class="nav__brand" href="../index.html">Safety and You <em>247</em> Academy</a>
@@ -28,7 +28,7 @@
         <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Khóa học của tôi</a>
         <a class="nav__link" data-nav-login href="../auth/login.html">Đăng nhập</a>
         <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="../index.html" hidden>Đăng xuất</button>
-        <a class="nav__cta" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="nav__cta" href="#hoc-thu">Học thử</a>
       </div>
     </div>
   </nav>
@@ -40,12 +40,18 @@
     <div class="wrap hero__content">
       <p class="hero__brand">
         SA247 E-Learning
-        <span>KTN-01 · 6 mô-đun · kỹ thuật thiết bị nâng</span>
+        <span>KTN-01</span>
       </p>
+      <div class="hero__meta" id="course-hero-meta">
+        <span>6 mô-đun</span>
+        <span>kỹ thuật thiết bị nâng</span>
+        <span>Học thử miễn phí</span>
+      </div>
       <h1>Kỹ thuật an toàn thiết bị nâng</h1>
       <p class="hero__lead">Một cú nâng sai là sự cố nặng. KTN-01 giúp bạn hiểu thiết bị nâng đủ để kiểm soát — không chỉ “đứng nhìn cho có”.</p>
       <div class="hero__actions">
         <a class="btn btn--amber" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="btn btn--line" href="#learner-root">Vào lớp học</a>
         <a class="btn btn--line" href="#lo-trinh">Xem lộ trình</a>
       </div>
     </div>
@@ -113,7 +119,7 @@
       <div class="wrap">
         <p class="kicker reveal">Học thử miễn phí</p>
         <h2 class="title reveal">Bài mở đầu — xem trước không cần tài khoản</h2>
-        <p class="lead reveal">Hai bài đầu của mô-đun 1 mở miễn phí. Các bài sau giữ trạng thái khóa trên giao diện.</p>
+        <p class="lead reveal">Một số bài đầu mở miễn phí. Mục lục đầy đủ và lớp học lấy từ hệ thống bên dưới.</p>
         <div class="lesson-list">
           <article class="lesson-card lesson-card--free reveal">
             <header class="lesson-card__head">
@@ -121,7 +127,7 @@
               <span class="lesson-card__meta">M01-L01 · ≈ 10–15 phút</span>
             </header>
             <h3>M01 · Bài 1 — Tổng quan thiết bị nâng &amp; rủi ro tử vong (học thử)</h3>
-            <div class="lesson-card__todo"><p>TODO: gắn youtube_video_id thật (Public/Unlisted).</p></div>
+            <div class="lesson-card__todo"><p>Video học thử sẽ hiện khi đã gắn youtube_video_id.</p></div>
           </article>
           <article class="lesson-card lesson-card--free reveal">
             <header class="lesson-card__head">
@@ -129,7 +135,7 @@
               <span class="lesson-card__meta">M01-L02 · ≈ 10–15 phút</span>
             </header>
             <h3>M01 · Bài 2 — tiếp nối Tổng quan thiết bị nâng &amp; rủi ro tử vong (học thử)</h3>
-            <div class="lesson-card__todo"><p>TODO: gắn youtube_video_id thật (Public/Unlisted).</p></div>
+            <div class="lesson-card__todo"><p>Video học thử sẽ hiện khi đã gắn youtube_video_id.</p></div>
           </article>
         </div>
       </div>
@@ -137,61 +143,19 @@
     <section class="locked" id="noi-dung-khoa">
       <div class="wrap">
         <p class="kicker reveal">Nội dung khóa học</p>
-        <h2 class="title reveal">Đã khóa — dành cho học viên</h2>
-        <p class="lead reveal">Giao diện khóa (Checkpoint 1). Quyền xem thật sẽ kiểm tra enrollment trên Supabase (Checkpoint 2), không tin localStorage/DOM.</p>
-        <div class="lock-board">
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L03</b>
-            <span>M01 · Bài 3 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L04</b>
-            <span>M01 · Bài 4 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L05</b>
-            <span>M01 · Bài 5 — nội dung dành cho học viên</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M02</b>
-            <span>Cần cẩu, palang và giới hạn làm việc an toàn</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M03</b>
-            <span>Dây cáp, xích, móc &amp; phụ kiện nâng</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M04</b>
-            <span>Kiểm tra trước ca · kiểm định · bảo dưỡng</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M05</b>
-            <span>Tín hiệu, người báo hiệu &amp; vùng nguy hiểm</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M06</b>
-            <span>Kế hoạch nâng, dừng việc &amp; tình huống bất thường</span>
-          </div>
-        </div>
+        <h2 class="title reveal">Mục lục &amp; lớp học</h2>
+        <div id="live-curriculum" class="live-curriculum" hidden></div>
         <div class="trial-cta reveal" id="mo-khoa">
-          <h3>Bạn muốn tiếp tục khóa học?</h3>
-          <p>Mở toàn bộ nội dung khóa với <strong>199.000đ</strong> / khóa (hiển thị tại trang khóa — không quảng bá trên landing).</p>
+          <h3>Bạn muốn học toàn bộ?</h3>
+          <p>Mở khóa khóa học với <strong>199.000đ</strong> / khóa — giá chỉ hiện trên trang khóa / checkout.</p>
           <ul class="trial-cta__perks">
-            <li>Toàn bộ bài học theo lộ trình</li>
-            <li>Theo dõi tiến độ (Checkpoint 2)</li>
-            <li>Template Pro giao kèm sau thanh toán (Checkpoint 3)</li>
+            <li>Toàn bộ bài theo lộ trình</li>
+            <li>Lưu tiến độ · tiếp tục học</li>
+            <li>Quiz &amp; chứng chỉ (khi đủ điều kiện)</li>
           </ul>
           <a class="btn btn--amber" href="#goi-pro">Mở khóa khóa học · 199k</a>
         </div>
-        <div id="learner-root" class="learner-root reveal" data-course-code="KTN-01"></div>
+        <div id="learner-root" class="learner-root reveal" data-course-code="KTN-01" data-login-href="../auth/login.html"></div>
       </div>
     </section>
     <section class="pricing unlock-stub" id="goi-pro">
@@ -224,6 +188,14 @@
             Giá từ catalog (199k). Không hard-code quyền học bằng JavaScript.
           </p>
         </div>
+      </div>
+    </section>
+    <section class="trust-strip" id="tin-cay">
+      <div class="wrap">
+        <p class="kicker reveal">Cam kết học tập</p>
+        <h2 class="title reveal">Học thử → mở khóa → kiểm tra → chứng chỉ</h2>
+        <div id="course-trust" class="reveal"></div>
+        <p class="meta reveal"><a href="../quiz/">Làm quiz</a> · <a href="../verify/">Xác minh chứng chỉ</a> · <a href="../dashboard/">Khóa học của tôi</a></p>
       </div>
     </section>
     <section class="faq" id="faq">
@@ -268,6 +240,12 @@
       </div>
     </section>
   </main>
+  <div class="course-sticky" id="course-sticky-cta" hidden>
+    <div class="wrap course-sticky__inner">
+      <p data-sticky-label>Học thử miễn phí</p>
+      <a class="btn btn--amber btn--small" data-sticky-btn href="#hoc-thu">Học thử</a>
+    </div>
+  </div>
   <footer>
     <div class="wrap footer-brand">
       <strong>© Safety and You 247 Academy · KTN-01</strong>
@@ -280,6 +258,9 @@
       </span>
     </div>
   </footer>
+  <script type="application/json" id="sa247-course-boot">
+{"code": "KTN-01", "slug": "ktn-01", "modules_count": 6, "lessons_count_label": "kỹ thuật thiết bị nâng", "free_count": 2, "duration_label": "", "status": "dang_mo", "price": "199.000đ", "deliverables": ["Hướng dẫn học Pro KTN-01", "Checklist kiểm tra trước ca thiết bị nâng", "Checklist phụ kiện nâng (cáp, móc, shackle)", "Mẫu kế hoạch nâng (lift plan) cơ bản", "Bảng tín hiệu tay tham chiếu", "Tiêu chí loại bỏ phụ kiện", "Nhật ký bất thường thiết bị", "Quiz + chứng nhận KTN-01 Pro"]}
+  </script>
   <script>
     window.SA247_BANK = {
       name: "VPBank",
@@ -290,6 +271,7 @@
   </script>
   <script src="../assets/js/checkout.js" defer></script>
   <script src="../assets/js/learn-player.js" defer></script>
+  <script src="../assets/js/course-page.js" defer></script>
   <script>window.SA247_ORDER_SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL";</script>
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>

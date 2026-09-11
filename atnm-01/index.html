@@ -20,7 +20,7 @@
   <meta property="og:description" content="Bạn mới vào nghề HSE/ATVSLĐ và không biết bắt đầu từ đâu? ATNM-01 — lộ trình 10 mô-đun trên YouTube — giúp bạn có thứ tự, có bằng chứng, có kế hoạch 30-60-90 ngày." />
 
 </head>
-<body>
+<body class="course-page">
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
       <a class="nav__brand" href="../index.html">Safety and You <em>247</em> Academy</a>
@@ -28,7 +28,7 @@
         <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Khóa học của tôi</a>
         <a class="nav__link" data-nav-login href="../auth/login.html">Đăng nhập</a>
         <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="../index.html" hidden>Đăng xuất</button>
-        <a class="nav__cta" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="nav__cta" href="#hoc-thu">Học thử</a>
       </div>
     </div>
   </nav>
@@ -40,12 +40,18 @@
     <div class="wrap hero__content">
       <p class="hero__brand">
         SA247 E-Learning
-        <span>ATNM-01 · 10 mô-đun · 250 bài</span>
+        <span>ATNM-01</span>
       </p>
+      <div class="hero__meta" id="course-hero-meta">
+        <span>10 mô-đun</span>
+        <span>250 bài</span>
+        <span>Học thử miễn phí</span>
+      </div>
       <h1>Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy</h1>
       <p class="hero__lead">Bạn mới vào nghề ATVSLĐ/HSE. Sếp hỏi “làm gì tiếp theo?” — và bạn không có câu trả lời. ATNM-01 đưa bạn ra khỏi cảnh đoán mò.</p>
       <div class="hero__actions">
         <a class="btn btn--amber" href="#hoc-thu">Học thử miễn phí</a>
+        <a class="btn btn--line" href="#learner-root">Vào lớp học</a>
         <a class="btn btn--line" href="#lo-trinh">Xem lộ trình</a>
       </div>
     </div>
@@ -119,7 +125,7 @@
       <div class="wrap">
         <p class="kicker reveal">Học thử miễn phí</p>
         <h2 class="title reveal">Bài mở đầu — xem trước không cần tài khoản</h2>
-        <p class="lead reveal">Hai bài đầu của mô-đun 1 mở miễn phí. Các bài sau giữ trạng thái khóa trên giao diện.</p>
+        <p class="lead reveal">Một số bài đầu mở miễn phí. Mục lục đầy đủ và lớp học lấy từ hệ thống bên dưới.</p>
         <div class="lesson-list">
           <article class="lesson-card lesson-card--free reveal">
             <header class="lesson-card__head">
@@ -147,81 +153,19 @@
     <section class="locked" id="noi-dung-khoa">
       <div class="wrap">
         <p class="kicker reveal">Nội dung khóa học</p>
-        <h2 class="title reveal">Đã khóa — dành cho học viên</h2>
-        <p class="lead reveal">Giao diện khóa (Checkpoint 1). Quyền xem thật sẽ kiểm tra enrollment trên Supabase (Checkpoint 2), không tin localStorage/DOM.</p>
-        <div class="lock-board">
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L01.02</b>
-            <span>Bốn khái niệm hay bị dùng lẫn: mối nguy, rủi ro, tai nạn, sự cố | ATNM-01 · M01</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L01.03</b>
-            <span>Kim tự tháp sự cố và ý nghĩa quản lý | ATNM-01 · M01 | Safety and You 247 Academy</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M01-L01.04</b>
-            <span>Tảng băng chi phí tai nạn lao động | ATNM-01 · M01 | Safety and You 247 Academy</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M02</b>
-            <span>Pháp luật đại cương cho NV quản lý an toàn</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M03</b>
-            <span>Xây dựng hệ thống QLAT đáp ứng pháp luật</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M04</b>
-            <span>Đánh giá rủi ro cơ bản</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M05</b>
-            <span>Môi trường và rác thải</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M06</b>
-            <span>Quản lý PCCC</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M07</b>
-            <span>Soạn thảo quy trình, hướng dẫn công việc</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M08</b>
-            <span>Quản lý hóa chất</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M09</b>
-            <span>Tuyên truyền &amp; huấn luyện ATVSLĐ</span>
-          </div>
-          <div class="lock-item reveal">
-            <span class="lock-item__badge">Premium</span>
-            <b>M10</b>
-            <span>Nhận thức về 5S và Kaizen</span>
-          </div>
-        </div>
+        <h2 class="title reveal">Mục lục &amp; lớp học</h2>
+        <div id="live-curriculum" class="live-curriculum" hidden></div>
         <div class="trial-cta reveal" id="mo-khoa">
-          <h3>Bạn muốn tiếp tục khóa học?</h3>
-          <p>Mở toàn bộ nội dung khóa với <strong>199.000đ</strong> / khóa (hiển thị tại trang khóa — không quảng bá trên landing).</p>
+          <h3>Bạn muốn học toàn bộ?</h3>
+          <p>Mở khóa khóa học với <strong>199.000đ</strong> / khóa — giá chỉ hiện trên trang khóa / checkout.</p>
           <ul class="trial-cta__perks">
-            <li>Toàn bộ bài học theo lộ trình</li>
-            <li>Theo dõi tiến độ (Checkpoint 2)</li>
-            <li>Template Pro giao kèm sau thanh toán (Checkpoint 3)</li>
+            <li>Toàn bộ bài theo lộ trình</li>
+            <li>Lưu tiến độ · tiếp tục học</li>
+            <li>Quiz &amp; chứng chỉ (khi đủ điều kiện)</li>
           </ul>
           <a class="btn btn--amber" href="#goi-pro">Mở khóa khóa học · 199k</a>
         </div>
-        <div id="learner-root" class="learner-root reveal" data-course-code="ATNM-01"></div>
+        <div id="learner-root" class="learner-root reveal" data-course-code="ATNM-01" data-login-href="../auth/login.html"></div>
       </div>
     </section>
     <section class="pricing unlock-stub" id="goi-pro">
@@ -254,6 +198,14 @@
             Giá từ catalog (199k). Không hard-code quyền học bằng JavaScript.
           </p>
         </div>
+      </div>
+    </section>
+    <section class="trust-strip" id="tin-cay">
+      <div class="wrap">
+        <p class="kicker reveal">Cam kết học tập</p>
+        <h2 class="title reveal">Học thử → mở khóa → kiểm tra → chứng chỉ</h2>
+        <div id="course-trust" class="reveal"></div>
+        <p class="meta reveal"><a href="../quiz/">Làm quiz</a> · <a href="../verify/">Xác minh chứng chỉ</a> · <a href="../dashboard/">Khóa học của tôi</a></p>
       </div>
     </section>
     <section class="faq" id="faq">
@@ -298,6 +250,12 @@
       </div>
     </section>
   </main>
+  <div class="course-sticky" id="course-sticky-cta" hidden>
+    <div class="wrap course-sticky__inner">
+      <p data-sticky-label>Học thử miễn phí</p>
+      <a class="btn btn--amber btn--small" data-sticky-btn href="#hoc-thu">Học thử</a>
+    </div>
+  </div>
   <footer>
     <div class="wrap footer-brand">
       <strong>© Safety and You 247 Academy · ATNM-01</strong>
@@ -310,6 +268,9 @@
       </span>
     </div>
   </footer>
+  <script type="application/json" id="sa247-course-boot">
+{"code": "ATNM-01", "slug": "atnm-01", "modules_count": 10, "lessons_count_label": "250 bài", "free_count": 2, "duration_label": "", "status": "dang_mo", "price": "199.000đ", "deliverables": ["Hướng dẫn học Pro + lịch đề xuất 14 ngày", "BM01 — Bản đồ các bên liên quan ATVSLĐ", "BM02 — Khung kế hoạch 30–60–90 ngày", "BM03 — Sổ tay đi hiện trường", "BM04 — Checklist nhận diện mối nguy", "BM05 — Nhật ký công việc tuần", "Checklist việc cần làm ở mốc 30 / 60 / 90 ngày", "Quiz tổng hợp + mẫu chứng nhận hoàn thành ATNM-01 Pro"]}
+  </script>
   <script>
     window.SA247_BANK = {
       name: "VPBank",
@@ -320,6 +281,7 @@
   </script>
   <script src="../assets/js/checkout.js" defer></script>
   <script src="../assets/js/learn-player.js" defer></script>
+  <script src="../assets/js/course-page.js" defer></script>
   <script>window.SA247_ORDER_SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL";</script>
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>
