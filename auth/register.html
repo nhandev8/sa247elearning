@@ -98,8 +98,14 @@
         return;
       }
       if (data?.user && !data.session) {
-        msg.textContent =
-          "Đăng ký thành công. Kiểm tra email để xác nhận tài khoản (nếu hệ thống bật xác nhận email).";
+        msg.innerHTML =
+          "Đăng ký gần xong. Nếu chưa vào được, hãy " +
+          '<a href="login.html?email=' +
+          encodeURIComponent(email) +
+          '">đăng nhập</a> hoặc ' +
+          '<a href="quen-mat-khau.html?email=' +
+          encodeURIComponent(email) +
+          '">quên mật khẩu</a>.';
         return;
       }
       const dest = await sa247Auth.homeAfterLogin("../dashboard/", data?.session);

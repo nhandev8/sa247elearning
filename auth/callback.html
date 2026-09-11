@@ -15,29 +15,71 @@
     <p class="lead" id="msg">Vui lòng chờ trong giây lát.</p>
   </main>
   <script>
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
       const msg = document.getElementById("msg");
       if (!window.sa247Auth?.ready) {
         msg.textContent = "Thiếu supabase config.";
         return;
       }
-      await sa247Auth.ensureClient();
-      // PKCE / hash recovery: client detects session from URL
-      const session = await sa247Auth.getSession();
+
+      const sb = await sa247Auth.ensureClient();
       const params = new URLSearchParams(location.search);
       const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
       const next = params.get("next") || hash.get("next");
       const type = hash.get("type") || params.get("type");
+      const code = params.get("code");
+      const errDesc =
+        params.get("error_description") ||
+        hash.get("error_description") ||
+        params.get("error") ||
+        hash.get("error");
+
+      if (errDesc) {
+        msg.textContent = decodeURIComponent(errDesc.replace(/\+/g, " "));
+        setTimeout(() => {
+          location.replace("login.html");
+        }, 2500);
+        return;
+      }
+
+      // PKCE: trao đổi ?code= lấy session (confirm / recovery)
+      if (code) {
+        try {
+          const { error } = await sb.auth.exchangeCodeForSession(code);
+          if (error) console.warn("[SA247] exchangeCode", error.message);
+        } catch (e) {
+          console.warn("[SA247] exchangeCode", e);
+        }
+      }
+
+      let session = null;
+      for (let i = 0; i < 8; i++) {
+        session = await sa247Auth.getSession();
+        if (session) break;
+        await sleep(200);
+      }
+
       const isRecovery =
         type === "recovery" ||
         (next && next.includes("recovery=1")) ||
         (next && next.includes("doi-mat-khau"));
 
       if (!session) {
-        msg.textContent = "Không lấy được phiên đăng nhập. Thử đăng nhập lại.";
-        setTimeout(() => { location.replace("login.html"); }, 1200);
+        msg.textContent =
+          "Không lấy được phiên đăng nhập. Thử đăng nhập hoặc dùng lại link quên mật khẩu.";
+        setTimeout(() => {
+          location.replace("login.html");
+        }, 1800);
         return;
       }
+
+      msg.textContent = isRecovery
+        ? "Xác nhận thành công. Chuyển tới đặt mật khẩu…"
+        : "Xác nhận thành công. Đang vào tài khoản…";
 
       if (isRecovery) {
         location.replace("doi-mat-khau.html?recovery=1");
