@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tất cả tài khoản · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js" defer></script>
+  <script src="../../assets/js/admin-shell.js" defer></script>
+  <script src="../../assets/js/admin-tai-khoan.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Tất cả tài khoản</h1>
+      </header>
+      <main class="adm-content">
+        <div class="adm-toolbar">
+          <input type="search" id="q" placeholder="Tìm họ tên…" />
+          <select id="filter">
+            <option value="all">Tất cả</option>
+            <option value="student">Học viên</option>
+            <option value="admin">Quản trị viên</option>
+          </select>
+        </div>
+        <p class="adm-msg" id="adm-status"></p>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Họ tên</th>
+                <th>Vai trò</th>
+                <th>Điện thoại</th>
+                <th>Ngày đăng ký</th>
+                <th>Số quyền học</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <p class="adm-lead">Lưu ý: thư điện tử đăng nhập lấy từ Auth; bảng hồ sơ lưu họ tên / vai trò. Cấp quyền học tại mục <a href="../quyen-hoc/">Quyền học</a>.</p>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

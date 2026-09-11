@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tất cả khóa học · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js" defer></script>
+  <script src="../../assets/js/admin-shell.js" defer></script>
+  <script src="../../assets/js/admin-khoa-hoc.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Tất cả khóa học</h1>
+      </header>
+      <main class="adm-content">
+        <div class="adm-toolbar">
+          <input type="search" id="q" placeholder="Tìm tên khóa học hoặc mã khóa học…" />
+          <select id="filter">
+            <option value="all">Tất cả</option>
+            <option value="open">Đang mở</option>
+            <option value="draft">Bản nháp</option>
+          </select>
+        </div>
+        <p class="adm-msg" id="adm-status"></p>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Tên khóa học</th>
+                <th>Mã khóa</th>
+                <th>Trạng thái</th>
+                <th>Học viên</th>
+                <th>Ngày tạo</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <section class="adm-card" id="detail" hidden style="margin-top:1rem"></section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

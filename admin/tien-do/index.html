@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tiến độ học tập · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js" defer></script>
+  <script src="../../assets/js/admin-shell.js" defer></script>
+  <script src="../../assets/js/admin-tien-do.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Tiến độ học tập</h1>
+      </header>
+      <main class="adm-content">
+        <div class="adm-toolbar">
+          <label>Khóa học
+            <select id="course"></select>
+          </label>
+          <button type="button" class="adm-btn adm-btn--primary" id="load">Xem tiến độ</button>
+        </div>
+        <div class="adm-stats" id="summary"></div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Học viên</th>
+                <th>Đã hoàn thành</th>
+                <th>Tổng bài</th>
+                <th>Tiến độ</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

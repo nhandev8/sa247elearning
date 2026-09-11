@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quyền học · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js" defer></script>
+  <script src="../../assets/js/admin-shell.js" defer></script>
+  <script src="../../assets/js/admin-quyen-hoc.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Quyền học</h1>
+      </header>
+      <main class="adm-content">
+        <p class="adm-lead">Cốt lõi vận hành: Tài khoản → Quyền học → Khóa học. Cấp / thu hồi không cần sửa mã nguồn.</p>
+        <section class="adm-card" style="margin-bottom:1rem">
+          <h2>Cấp quyền học thủ công</h2>
+          <form class="adm-form" id="grant-form">
+            <label>Mã hồ sơ học viên (UUID)
+              <input name="user_id" required placeholder="dán id từ mục Tài khoản" />
+            </label>
+            <label>Khóa học
+              <select name="course_code" id="course-select" required></select>
+            </label>
+            <label>Ghi chú
+              <input name="note" placeholder="VD: cấp nội bộ / hỗ trợ" />
+            </label>
+            <button type="submit" class="adm-btn adm-btn--primary">Xác nhận cấp quyền</button>
+            <p class="adm-msg" id="grant-msg"></p>
+          </form>
+        </section>
+        <div class="adm-toolbar">
+          <input type="search" id="q" placeholder="Lọc theo mã khóa…" />
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Học viên</th>
+                <th>Khóa học</th>
+                <th>Trạng thái</th>
+                <th>Ngày cấp</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

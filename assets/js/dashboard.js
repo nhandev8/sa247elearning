@@ -159,6 +159,21 @@
     el("user-label").textContent = name;
 
     const sb = await sa247Auth.ensureClient();
+    const { data: profile } = await sb
+      .from("profiles")
+      .select("role,full_name")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    if (profile?.full_name) el("user-label").textContent = profile.full_name;
+    if (profile?.role === "admin") {
+      const nav = document.querySelector(".app-side__nav");
+      if (nav && !nav.querySelector("[data-admin-link]")) {
+        nav.insertAdjacentHTML(
+          "beforeend",
+          `<a data-admin-link href="../admin/"><span class="ico" aria-hidden="true">⚙</span>Quản trị</a>`
+        );
+      }
+    }
     await Promise.all([loadCourses(sb, session.user.id), loadOrders(sb)]);
   });
 })();

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bảng điều khiển · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/admin.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/admin-api.js" defer></script>
+  <script src="../assets/js/admin-shell.js" defer></script>
+  <script src="../assets/js/admin-bang-dieu-khien.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="./">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+        <a class="adm-btn adm-btn--line adm-btn--small" href="../index.html">Về trang học</a>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle" aria-label="Mở menu">☰</button>
+        <h1>Bảng điều khiển</h1>
+      </header>
+      <main class="adm-content">
+        <p class="adm-lead" id="adm-status">Đang tải tổng quan…</p>
+        <div class="adm-stats" id="adm-stats"></div>
+        <div class="adm-grid-2">
+          <section class="adm-card">
+            <h2>Việc cần xử lý</h2>
+            <ul class="adm-todo" id="adm-todo"></ul>
+          </section>
+          <section class="adm-card">
+            <h2>Hoạt động gần đây</h2>
+            <ul class="adm-todo" id="adm-recent"></ul>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
