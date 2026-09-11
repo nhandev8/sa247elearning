@@ -12,7 +12,7 @@
   <main class="wrap auth-box">
     <p class="kicker">SA247 E-Learning</p>
     <h1>Tạo tài khoản</h1>
-    <p class="lead">Đăng ký để theo dõi tiến độ và mở khóa khóa học (sau thanh toán — Checkpoint 3).</p>
+    <p class="lead">Tạo tài khoản để theo dõi tiến độ và mở khóa khóa học sau thanh toán.</p>
     <form id="reg-form" class="order-form">
       <label>Họ và tên
         <input name="full_name" type="text" autocomplete="name" />
@@ -44,14 +44,24 @@
         fd.get("full_name")
       );
       if (error) {
-        msg.textContent = error.message;
+        const m = (error.message || "").toLowerCase();
+        if (m.includes("already") || m.includes("registered") || m.includes("exists")) {
+          msg.innerHTML =
+            'Email này đã có tài khoản. <a href="login.html">Đăng nhập</a> hoặc <a href="quen-mat-khau.html">quên mật khẩu</a>.';
+        } else if (m.includes("database error")) {
+          msg.innerHTML =
+            'Lỗi tạo hồ sơ. Thử lại sau vài giây hoặc <a href="login.html">đăng nhập</a> nếu đã đăng ký trước đó.';
+        } else {
+          msg.textContent = error.message;
+        }
         return;
       }
       if (data?.user && !data.session) {
-        msg.textContent = "Kiểm tra email để xác nhận tài khoản (nếu bật confirm email).";
+        msg.textContent = "Kiểm tra email để xác nhận tài khoản (nếu hệ thống bật xác nhận email).";
         return;
       }
-      location.href = "../dashboard/";
+      const dest = await sa247Auth.homeAfterLogin("../dashboard/", data?.session);
+      location.replace(dest);
     });
   </script>
 </body>
