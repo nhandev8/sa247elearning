@@ -124,13 +124,15 @@
     async getProfile(opts) {
       const timeoutMs = opts?.timeoutMs ?? 2500;
       const cached = readProfileCache();
-      const session = await getSession();
+      let session = opts?.session || null;
       if (!session) {
+        session = await withTimeout(getSession(), Math.min(timeoutMs, 1500), null);
+      }
+      if (!session?.user?.id) {
         writeProfileCache(null);
         return null;
       }
       if (cached && cached.id === session.user.id) {
-        // refresh in background, return cache immediately
         ensureClient()
           .then((sb) =>
             sb
@@ -146,7 +148,8 @@
         return cached;
       }
 
-      const sb = await ensureClient();
+      const sb = await withTimeout(ensureClient(), 2000, null);
+      if (!sb) return cached;
       const result = await withTimeout(
         sb
           .from("profiles")
@@ -167,19 +170,23 @@
       return result;
     },
     /** Sau đăng nhập: staff → admin; học viên → dashboard (trừ khi next chỉ định trang khác). */
-    async homeAfterLogin(explicitNext) {
+    async homeAfterLogin(explicitNext, session) {
       const next = (explicitNext || "").trim();
-      const profile = await this.getProfile({ timeoutMs: 2000 });
+      const isDefaultDash =
+        !next ||
+        /\/dashboard\/?$/i.test(next) ||
+        next === "../dashboard/" ||
+        next.endsWith("dashboard/");
+      const fallback = next && !isDefaultDash ? next : "../dashboard/";
+
+      const profile = await this.getProfile({
+        session: session || undefined,
+        timeoutMs: 800,
+      });
       const staff = this.isStaffRole(profile?.role);
-      if (next) {
-        const isDefaultDash =
-          /\/dashboard\/?$/i.test(next) ||
-          next === "../dashboard/" ||
-          next.endsWith("dashboard/");
-        if (!(staff && isDefaultDash)) return next;
-      }
-      // Nếu profile timeout / lỗi: về dashboard (không treo)
-      return staff ? "../admin/" : "../dashboard/";
+      if (next && !isDefaultDash) return next;
+      if (staff) return "../admin/";
+      return fallback;
     },
     async signIn(email, password) {
       writeProfileCache(null);

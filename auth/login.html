@@ -25,6 +25,19 @@
     <p><a href="register.html">Tạo tài khoản</a> · <a href="quen-mat-khau.html">Quên mật khẩu</a> · <a href="../index.html">Về trang chủ</a></p>
   </main>
   <script>
+    // Warm Supabase client sớm — tránh chậm lúc bấm Đăng nhập
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.sa247Auth?.ready) sa247Auth.ensureClient().catch(() => {});
+    });
+
+    function go(url) {
+      try {
+        location.replace(url);
+      } catch {
+        location.href = url;
+      }
+    }
+
     document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -37,22 +50,34 @@
         btn.disabled = false;
         return;
       }
+
+      const next = new URLSearchParams(location.search).get("next");
+      const fallback = next && !/dashboard\/?$/i.test(next) ? next : "../dashboard/";
+      // Failsafe: luôn chuyển trang trong ≤1.2s dù profile treo
+      const hardTimer = setTimeout(() => go(fallback), 1200);
+
       try {
-        // Warm client while user types is ideal; ensure before sign-in
         await sa247Auth.ensureClient();
-        const { error } = await sa247Auth.signIn(fd.get("email"), fd.get("password"));
+        const { data, error } = await sa247Auth.signIn(fd.get("email"), fd.get("password"));
         if (error) {
+          clearTimeout(hardTimer);
           msg.textContent = error.message;
           btn.disabled = false;
           return;
         }
         msg.textContent = "Đang chuyển…";
-        const next = new URLSearchParams(location.search).get("next");
-        const dest = await sa247Auth.homeAfterLogin(next);
-        location.replace(dest);
+        const dest = await Promise.race([
+          sa247Auth.homeAfterLogin(next, data?.session),
+          new Promise((resolve) => setTimeout(() => resolve(fallback), 900)),
+        ]);
+        clearTimeout(hardTimer);
+        go(dest || fallback);
       } catch (err) {
+        clearTimeout(hardTimer);
         msg.textContent = err?.message || "Đăng nhập lỗi. Thử lại.";
         btn.disabled = false;
+        // Vẫn cố vào trang đích nếu đã có session
+        setTimeout(() => go(fallback), 400);
       }
     });
   </script>
