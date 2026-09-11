@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nhandev8.github.io/sa247elearning/sitemap.xml

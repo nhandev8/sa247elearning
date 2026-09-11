@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Khóa học của tôi · SA247</title>
+  <title>Quiz ATNM-01 · SA247</title>
+  <meta name="description" content="Quiz hoàn thành khóa ATNM-01 Pro — đạt từ 70% để nhận Certificate ID." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -11,7 +12,7 @@
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>
   <script src="../assets/js/app-shell.js" defer></script>
-  <script src="../assets/js/dashboard.js" defer></script>
+  <script src="../assets/js/quiz.js" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
@@ -19,33 +20,31 @@
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
         <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
-        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa học</a>
-        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
-        <a href="#don-hang"><span class="ico" aria-hidden="true">▤</span>Đơn thanh toán</a>
-        <a href="../quiz/"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
-        <a href="../verify/"><span class="ico" aria-hidden="true">◎</span>Chứng chỉ</a>
+        <a href="../dashboard/"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
+        <a class="is-active" href="./"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
+        <a href="../verify/"><span class="ico" aria-hidden="true">◎</span>Xác minh chứng chỉ</a>
       </nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
-        <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
+        <a class="btn btn--line btn--small" href="../auth/login.html">Đăng nhập</a>
       </div>
     </aside>
-
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Khóa học của tôi</h1>
+        <h1>Quiz · ATNM-01</h1>
       </header>
-
       <main class="app-content">
-        <p class="lead" id="status">Đang tải…</p>
-        <div id="courses" class="program-grid program-grid--2"></div>
-
-        <section id="don-hang" class="app-section">
-          <h2>Đơn thanh toán</h2>
-          <p class="lead" id="orders-status">Đang tải đơn…</p>
-          <div id="orders" class="order-list"></div>
-        </section>
+        <p class="lead" id="quiz-status">Đang tải…</p>
+        <form id="quiz-form" class="quiz-form" hidden>
+          <label class="quiz-name">
+            Họ tên trên chứng chỉ
+            <input type="text" name="full_name" required maxlength="120" placeholder="VD: Nguyễn Văn A" />
+          </label>
+          <div id="quiz-questions"></div>
+          <button type="submit" class="btn btn--amber">Nộp bài</button>
+        </form>
+        <div id="quiz-result" class="quiz-result" hidden></div>
       </main>
     </div>
   </div>

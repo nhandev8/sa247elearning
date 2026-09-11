@@ -32,10 +32,31 @@
     });
   }
 
-  async function loadCourses(sb) {
+  async function courseProgress(sb, userId, courseId) {
+    const { data: modules } = await sb
+      .from("modules")
+      .select("id,lessons(id)")
+      .eq("course_id", courseId);
+    const lessonIds = [];
+    (modules || []).forEach((m) =>
+      (m.lessons || []).forEach((l) => lessonIds.push(l.id))
+    );
+    if (!lessonIds.length) return { done: 0, total: 0, pct: 0 };
+    const { data: prog } = await sb
+      .from("lesson_progress")
+      .select("lesson_id,completed")
+      .eq("user_id", userId)
+      .in("lesson_id", lessonIds)
+      .eq("completed", true);
+    const done = (prog || []).length;
+    const total = lessonIds.length;
+    return { done, total, pct: Math.round((done / total) * 100) };
+  }
+
+  async function loadCourses(sb, userId) {
     const { data, error } = await sb
       .from("enrollments")
-      .select("status, enrolled_at, course:courses(code,slug,title)")
+      .select("status, enrolled_at, course:courses(id,code,slug,title)")
       .eq("status", "active")
       .order("enrolled_at", { ascending: false });
 
@@ -47,22 +68,31 @@
     }
     if (!data?.length) {
       status.innerHTML =
-        'Bạn chưa mở khóa khóa nào. <a href="../index.html#chuong-trinh">Chọn khóa học</a> → học thử → thanh toán để mở khóa.';
+        'Bạn chưa mở khóa khóa nào. <a href="../index.html#career-map">Career Map</a> → học thử → thanh toán 199.000đ.';
       box.innerHTML = "";
       return;
     }
     status.textContent = `${data.length} khóa đang học:`;
-    box.innerHTML = data
-      .map((row) => {
+    const cards = await Promise.all(
+      data.map(async (row) => {
         const c = row.course || {};
-        return `<a class="program-card" href="../${c.slug}/">
+        const prog = c.id
+          ? await courseProgress(sb, userId, c.id)
+          : { done: 0, total: 0, pct: 0 };
+        const progLabel =
+          prog.total > 0
+            ? `Tiến độ ${prog.pct}% · ${prog.done}/${prog.total} bài`
+            : "Đã mở khóa";
+        return `<a class="program-card" href="../${c.slug}/#noi-dung-khoa">
           <span class="code">${c.code || ""}</span>
           <h3>${c.title || "Khóa học"}</h3>
-          <p class="meta">Đã mở khóa · ${fmtTime(row.enrolled_at)}</p>
+          <p class="meta">${progLabel} · ${fmtTime(row.enrolled_at)}</p>
+          <div class="progress-bar" aria-hidden="true"><span style="width:${prog.pct}%"></span></div>
           <span class="go">Tiếp tục học →</span>
         </a>`;
       })
-      .join("");
+    );
+    box.innerHTML = cards.join("");
   }
 
   async function loadOrders(sb) {
@@ -129,6 +159,6 @@
     el("user-label").textContent = name;
 
     const sb = await sa247Auth.ensureClient();
-    await Promise.all([loadCourses(sb), loadOrders(sb)]);
+    await Promise.all([loadCourses(sb, session.user.id), loadOrders(sb)]);
   });
 })();

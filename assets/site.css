@@ -1630,3 +1630,98 @@
   .app-shell.is-side-open .app-side { transform: none; }
   .app-menu-btn { display: inline-flex; }
 }
+
+/* Career map · progress · quiz · legal */
+.career { padding: 4rem 0; }
+.career-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.career-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid rgba(15, 28, 23, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.career-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(24, 163, 90, 0.45);
+}
+.career-card h3 { margin: 0; font-size: 1.05rem; }
+.career-card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.career-card__go { font-weight: 700; font-size: 0.88rem; color: var(--green-deep); }
+.footer-links { font-size: 0.9rem; }
+.footer-links a { color: inherit; }
+.progress-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(15, 28, 23, 0.1);
+  overflow: hidden;
+  margin: 0.45rem 0;
+}
+.progress-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--green-deep);
+}
+.learner-root { margin-top: 2rem; }
+.learner-head { margin-bottom: 1.25rem; }
+.learner-mod { margin: 1.5rem 0; }
+.learner-mod h4 { margin: 0 0 0.75rem; }
+.learner-lesson {
+  border: 1px solid rgba(15, 28, 23, 0.1);
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+.learner-lesson.is-done { border-color: rgba(24, 163, 90, 0.35); }
+.learner-lesson header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.quiz-form, .verify-form { display: grid; gap: 1rem; max-width: 720px; }
+.quiz-name { display: grid; gap: 0.35rem; font-weight: 600; }
+.quiz-name input, .verify-form input {
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 28, 23, 0.18);
+  font: inherit;
+}
+.quiz-q {
+  border: 1px solid rgba(15, 28, 23, 0.1);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin: 0;
+}
+.quiz-choice {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  margin: 0.45rem 0;
+  font-weight: 500;
+}
+.quiz-result, .verify-card {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(24, 163, 90, 0.3);
+  background: rgba(24, 163, 90, 0.06);
+}
+.verify-page, .legal-page { padding: 5rem 0 3rem; }
+.legal-page h2 { margin-top: 1.75rem; font-size: 1.15rem; }
+@media (max-width: 900px) {
+  .career-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .career-grid { grid-template-columns: 1fr; }
+}
