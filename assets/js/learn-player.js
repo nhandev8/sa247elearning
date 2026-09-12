@@ -47,8 +47,26 @@
     (modules || []).forEach((m) => {
       const lessons = (m.lessons || [])
         .slice()
+        .filter((l) => {
+          // Ẩn draft chưa có video; giữ published / đang phát
+          const st = l.publish_status;
+          if (st && st !== "published" && st !== "updating" && !l.youtube_video_id) {
+            return false;
+          }
+          return true;
+        })
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-      lessons.forEach((l) => list.push({ ...l, moduleTitle: m.title, moduleId: m.id }));
+      lessons.forEach((l) => {
+        const isFree = l.is_free === true || l.access === "hoc_thu";
+        list.push({
+          ...l,
+          is_free: isFree,
+          title: l.title || l.display_title || l.lesson_code || "Bài học",
+          moduleTitle: m.title,
+          moduleId: m.id,
+          moduleCode: m.code || "",
+        });
+      });
     });
     return list;
   }
@@ -114,7 +132,20 @@
     (modules || []).forEach((m, mi) => {
       const lessons = (m.lessons || [])
         .slice()
+        .map((l) => ({
+          ...l,
+          is_free: l.is_free === true || l.access === "hoc_thu",
+          title: l.title || l.display_title || l.lesson_code || "Bài học",
+        }))
+        .filter((l) => {
+          const st = l.publish_status;
+          if (st && st !== "published" && st !== "updating" && !l.youtube_video_id) {
+            return false;
+          }
+          return true;
+        })
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+      if (!lessons.length) return;
       const modDone = lessons.filter((l) => progressMap[l.id]?.completed).length;
       const details = document.createElement("details");
       details.className = "classroom__mod";
@@ -239,7 +270,7 @@
     const { data: modules, error: mErr } = await sb
       .from("modules")
       .select(
-        "id,title,sort_order,lessons(id,title,youtube_video_id,is_free,sort_order,lesson_code)"
+        "id,code,title,sort_order,lessons(id,title,youtube_video_id,is_free,sort_order,lesson_code,access,publish_status)"
       )
       .eq("course_id", courseRow.id)
       .eq("is_published", true)
