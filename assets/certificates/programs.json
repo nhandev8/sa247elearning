@@ -1,0 +1,53 @@
+{
+  "verify_base_url": "https://nhandev8.github.io/sa247elearning/verify/",
+  "academy": "Safety and You 247 Academy",
+  "issuer_name": "HỒ HỮU NHÂN",
+  "issuer_title": "Đại diện Safety and You 247 Academy",
+  "programs": [
+    {
+      "code": "ATNM-01",
+      "title": "Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy",
+      "cert_title": "SỐNG SÓT 6 THÁNG ĐẦU NGHỀ ATVSLĐ NHÀ MÁY"
+    },
+    {
+      "code": "ATNM-02",
+      "title": "Quản lý ATVSLĐ nhà máy",
+      "cert_title": "QUẢN LÝ ATVSLĐ NHÀ MÁY"
+    },
+    {
+      "code": "ATXD-01",
+      "title": "Sống sót 6 tháng đầu nghề ATVSLĐ công trường xây dựng",
+      "cert_title": "SỐNG SÓT 6 THÁNG ĐẦU NGHỀ ATVSLĐ CÔNG TRƯỜNG"
+    },
+    {
+      "code": "ATXD-02",
+      "title": "Quản lý ATVSLĐ công trường xây dựng",
+      "cert_title": "QUẢN LÝ ATVSLĐ CÔNG TRƯỜNG XÂY DỰNG"
+    },
+    {
+      "code": "KTN-01",
+      "title": "Kỹ thuật an toàn thiết bị nâng",
+      "cert_title": "KỸ THUẬT AN TOÀN THIẾT BỊ NÂNG"
+    },
+    {
+      "code": "CVNH-01",
+      "title": "Kỹ thuật an toàn các công việc nguy hiểm",
+      "cert_title": "KỸ THUẬT AN TOÀN CÔNG VIỆC NGUY HIỂM"
+    },
+    {
+      "code": "AL-01",
+      "title": "Kỹ thuật an toàn thiết bị áp lực",
+      "cert_title": "KỸ THUẬT AN TOÀN THIẾT BỊ ÁP LỰC"
+    },
+    {
+      "code": "ISO45001",
+      "title": "ISO 45001 hệ thống quản lý OHS — lộ trình triển khai",
+      "cert_title": "ISO 45001 HỆ THỐNG QUẢN LÝ OHS"
+    },
+    {
+      "code": "ISO9001",
+      "title": "ISO 9001 hệ thống quản lý QMS — lộ trình triển khai",
+      "cert_title": "ISO 9001 HỆ THỐNG QUẢN LÝ QMS"
+    }
+  ]
+}

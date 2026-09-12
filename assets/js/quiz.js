@@ -109,9 +109,12 @@
       if (data?.passed) {
         result.innerHTML = `<h2>Đạt ${pct}%</h2>
           <p>Certificate ID: <strong>${data.cert_code}</strong></p>
-          <p><a class="btn btn--amber" href="../verify/?code=${encodeURIComponent(
+          <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${encodeURIComponent(
             data.cert_code
-          )}">Xác minh chứng chỉ</a>
+          )}">Xem giấy chứng nhận</a>
+          <a class="btn btn--line" href="../verify/?code=${encodeURIComponent(
+            data.cert_code
+          )}">Xác minh</a>
           <a class="btn btn--line" href="../dashboard/">Về dashboard</a></p>`;
       } else {
         result.innerHTML = `<h2>Chưa đạt (${pct}%)</h2>

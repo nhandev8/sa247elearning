@@ -1,0 +1,68 @@
+{
+  "verify_base_url": "https://nhandev8.github.io/sa247elearning/verify/",
+  "samples": [
+    {
+      "course_code": "ATNM-01",
+      "cert_code": "SA247-ATNM01-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ATNM01-MAU000",
+      "png": "gcn-atnm-01.png",
+      "qr": "qr-atnm-01.png"
+    },
+    {
+      "course_code": "ATNM-02",
+      "cert_code": "SA247-ATNM02-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ATNM02-MAU000",
+      "png": "gcn-atnm-02.png",
+      "qr": "qr-atnm-02.png"
+    },
+    {
+      "course_code": "ATXD-01",
+      "cert_code": "SA247-ATXD01-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ATXD01-MAU000",
+      "png": "gcn-atxd-01.png",
+      "qr": "qr-atxd-01.png"
+    },
+    {
+      "course_code": "ATXD-02",
+      "cert_code": "SA247-ATXD02-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ATXD02-MAU000",
+      "png": "gcn-atxd-02.png",
+      "qr": "qr-atxd-02.png"
+    },
+    {
+      "course_code": "KTN-01",
+      "cert_code": "SA247-KTN01-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-KTN01-MAU000",
+      "png": "gcn-ktn-01.png",
+      "qr": "qr-ktn-01.png"
+    },
+    {
+      "course_code": "CVNH-01",
+      "cert_code": "SA247-CVNH01-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-CVNH01-MAU000",
+      "png": "gcn-cvnh-01.png",
+      "qr": "qr-cvnh-01.png"
+    },
+    {
+      "course_code": "AL-01",
+      "cert_code": "SA247-AL01-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-AL01-MAU000",
+      "png": "gcn-al-01.png",
+      "qr": "qr-al-01.png"
+    },
+    {
+      "course_code": "ISO45001",
+      "cert_code": "SA247-ISO45001-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ISO45001-MAU000",
+      "png": "gcn-iso45001.png",
+      "qr": "qr-iso45001.png"
+    },
+    {
+      "course_code": "ISO9001",
+      "cert_code": "SA247-ISO9001-MAU000",
+      "verify_url": "https://nhandev8.github.io/sa247elearning/verify/?code=SA247-ISO9001-MAU000",
+      "png": "gcn-iso9001.png",
+      "qr": "qr-iso9001.png"
+    }
+  ]
+}

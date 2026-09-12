@@ -36,12 +36,15 @@
     }
     msg.textContent = "Hợp lệ.";
     card.hidden = false;
+    const code = encodeURIComponent(data.cert_code);
     card.innerHTML = `<p class="kicker">Đã xác minh</p>
       <h2>${data.full_name}</h2>
       <p><strong>${data.course_code}</strong> · ${data.course_title}</p>
       <p>Điểm: ${data.score_percent}% · Ngày cấp: ${fmtDate(data.issued_at)}</p>
       <p class="meta">Mã: ${data.cert_code}</p>
-      <p class="lead">Safety and You 247 Academy xác nhận chứng chỉ hoàn thành khóa học.</p>`;
+      <p class="lead">Safety and You 247 Academy xác nhận chứng chỉ hoàn thành khóa học.</p>
+      <p><a class="btn btn--amber" href="./chung-nhan.html?code=${code}">Xem giấy chứng nhận</a>
+      <a class="btn btn--line" href="./chung-nhan.html?code=${code}" target="_blank" rel="noopener">Mở tab in</a></p>`;
   }
 
   document.addEventListener("DOMContentLoaded", () => {
