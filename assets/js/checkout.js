@@ -89,29 +89,62 @@
     stopPoll();
     const email = esc(opts?.email || guestEmail || "");
     const needActivate = !!opts?.guest;
+    const code = esc(order.order_code || courseCode);
+
+    const stages = needActivate
+      ? [
+          "Đã nhận thanh toán",
+          "Đang tạo tài khoản học tập…",
+          "Đã mở khóa khóa học",
+        ]
+      : ["Đã nhận thanh toán", "Đã mở khóa khóa học"];
+
     root.innerHTML = `
-      <div class="checkout-panel checkout-panel--paid">
-        <div class="price-tag">
-          <strong>Thanh toán thành công</strong>
-          <span>${esc(courseCode)} · đơn ${esc(order.order_code || "")}</span>
-        </div>
+      <div class="checkout-panel checkout-panel--paid" data-paid-flow>
+        <p class="checkout-pay-kicker">Thanh toán chuyển khoản</p>
+        <p class="checkout-stage" data-stage role="status">${esc(stages[0])}</p>
+        <div class="checkout-paid-body" data-paid-body hidden></div>
+      </div>`;
+
+    const stageEl = root.querySelector("[data-stage]");
+    const bodyEl = root.querySelector("[data-paid-body]");
+    let i = 0;
+
+    function showFinal() {
+      if (stageEl) stageEl.textContent = stages[stages.length - 1];
+      if (!bodyEl) return;
+      bodyEl.hidden = false;
+      bodyEl.innerHTML = `
         <p class="checkout-lead">
-          Khóa học <b>${esc(courseCode)}</b> đã được mở cho tài khoản học tập SA247.
-          ${email ? `<br/>Email: <code>${email}</code>` : ""}
+          Khóa học <b>${esc(courseCode)}</b> đã được mở
+          ${email ? ` cho <code>${email}</code>` : ""}.
         </p>
         ${
           needActivate
-            ? `<p class="form-note">Chúng tôi đã gửi email thiết lập mật khẩu tới địa chỉ trên. Không có mật khẩu mặc định.</p>
+            ? `<p class="checkout-hint">Chúng tôi đã gửi email thiết lập mật khẩu tới địa chỉ trên.</p>
                <div class="contact__cta">
                  <a class="btn btn--amber" href="${esc(activateHref(root))}">Kích hoạt tài khoản &amp; bắt đầu học</a>
-                 <a class="btn btn--line" href="../dashboard/">Vào Dashboard</a>
+                 <a class="btn btn--line" href="../dashboard/">Vào khóa học của tôi</a>
                </div>`
             : `<div class="contact__cta">
                  <a class="btn btn--amber" href="../dashboard/">Bắt đầu học</a>
                  <a class="btn btn--line" href="#hoc-thu">Xem bài học</a>
                </div>`
         }
-      </div>`;
+        <p class="checkout-order-ref">Đơn <code>${code}</code></p>`;
+    }
+
+    function tick() {
+      i += 1;
+      if (i >= stages.length - 1) {
+        showFinal();
+        return;
+      }
+      if (stageEl) stageEl.textContent = stages[i];
+      setTimeout(tick, 900);
+    }
+
+    setTimeout(tick, 700);
   }
 
   async function pollGuestStatus(orderCode, email) {
@@ -135,8 +168,8 @@
         const el = statusEl();
         if (el) {
           el.innerHTML =
-            `Vẫn chờ xác nhận CK cho <code>${esc(order.order_code)}</code>. ` +
-            `Nếu đã CK, kiểm tra email kích hoạt hoặc liên hệ hỗ trợ.`;
+            `Đơn <code>${esc(order.order_code)}</code> vẫn đang chờ xác nhận. ` +
+            `Nếu bạn đã chuyển khoản, vui lòng giữ trang này hoặc liên hệ hỗ trợ.`;
         }
         return;
       }
@@ -164,7 +197,9 @@
         }
         const el = statusEl();
         if (el) {
-          el.textContent = `Đơn ${order.order_code} đang chờ thanh toán… (tự kiểm tra)`;
+          el.innerHTML =
+            `<strong>Đang chờ xác nhận thanh toán…</strong><br/>` +
+            `Đơn <code>${esc(order.order_code)}</code> · hệ thống tự kiểm tra giao dịch.`;
         }
       } catch (e) {
         console.warn("[checkout poll]", e);
@@ -179,40 +214,54 @@
     }
     const amount = order.amount;
     const code = order.order_code;
+    const guestHint =
+      mode === "guest"
+        ? "khóa học sẽ được mở tự động và hệ thống gửi email để bạn thiết lập mật khẩu."
+        : "khóa học sẽ được mở tự động cho tài khoản của bạn.";
+
     root.innerHTML = `
-      <div class="checkout-panel">
-        <div class="price-tag">
-          <strong>${fmtVnd(amount)}</strong>
-          <span>1 khóa · ${esc(courseCode)} · thanh toán 1 lần</span>
-        </div>
-        <p class="checkout-lead">Chuyển khoản đúng <b>số tiền</b> và <b>nội dung</b> bên dưới. Sau khi SePay xác nhận, hệ thống mở khóa và ${
-          mode === "guest"
-            ? "gửi email thiết lập mật khẩu (không có mật khẩu mặc định)."
-            : "cấp quyền học cho tài khoản của bạn."
-        }</p>
-        <div class="checkout-grid">
-          <div class="checkout-qr">
-            <img src="${vietQrUrl(amount, code)}" alt="VietQR ${esc(code)}" width="280" height="280" />
+      <div class="checkout-panel checkout-panel--pay">
+        <p class="checkout-pay-kicker">Thanh toán chuyển khoản</p>
+        <p class="checkout-lead">
+          Chuyển khoản <b>đúng số tiền</b> và <b>đúng nội dung</b> bên dưới.
+          Sau khi xác nhận, ${guestHint}
+        </p>
+
+        <div class="checkout-pay">
+          <div class="checkout-pay-qr">
+            <p class="checkout-scan-label">Quét mã để thanh toán</p>
+            <img src="${vietQrUrl(amount, code)}" alt="Mã QR thanh toán ${esc(code)}" width="280" height="280" />
+            <p class="checkout-pay-amount">${fmtVnd(amount)}</p>
           </div>
-          <dl class="checkout-meta">
-            <div><dt>Ngân hàng</dt><dd>${esc(BANK.name)}</dd></div>
-            <div><dt>Chủ tài khoản</dt><dd>${esc(BANK.owner)}</dd></div>
-            <div><dt>Số tài khoản</dt><dd><code>${esc(BANK.account)}</code></dd></div>
-            <div><dt>Số tiền</dt><dd><code>${fmtVnd(amount)}</code></dd></div>
-            <div><dt>Nội dung CK</dt><dd><code class="checkout-code">${esc(code)}</code>
-              <button type="button" class="btn btn--line btn--small" data-copy="${esc(code)}">Copy</button>
-            </dd></div>
-          </dl>
+
+          <div class="checkout-pay-details">
+            <p class="checkout-memo-label">Nội dung chuyển khoản</p>
+            <div class="checkout-memo">
+              <code class="checkout-code">${esc(code)}</code>
+              <button type="button" class="btn btn--line btn--small" data-copy="${esc(code)}" aria-label="Sao chép nội dung chuyển khoản">Sao chép</button>
+            </div>
+            <ul class="checkout-bank">
+              <li><span>Ngân hàng</span><strong>${esc(BANK.name)}</strong></li>
+              <li><span>Chủ tài khoản</span><strong>${esc(BANK.owner)}</strong></li>
+              <li><span>Số tài khoản</span><strong>${esc(BANK.account)}</strong></li>
+            </ul>
+          </div>
         </div>
-        <p class="form-msg" data-status role="status">Đơn <code>${esc(code)}</code> đang chờ thanh toán…</p>
+
+        <p class="checkout-wait" data-status role="status">
+          <strong>Đang chờ xác nhận thanh toán…</strong><br/>
+          Đơn <code>${esc(code)}</code> · hệ thống tự kiểm tra giao dịch.
+        </p>
       </div>`;
+
     root.querySelector("[data-copy]")?.addEventListener("click", async (e) => {
-      const v = e.currentTarget.getAttribute("data-copy");
+      const btn = e.currentTarget;
+      const v = btn.getAttribute("data-copy");
       try {
         await navigator.clipboard.writeText(v);
-        e.currentTarget.textContent = "Đã copy";
+        btn.textContent = "Đã sao chép";
       } catch {
-        e.currentTarget.textContent = "Copy thủ công";
+        btn.textContent = "Sao chép thủ công";
       }
     });
     root.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -230,8 +279,8 @@
           <div><dt>Số điện thoại</dt><dd>${esc(fields.phone)}</dd></div>
         </dl>
         <p class="form-note">
-          Email này sẽ được dùng để <b>tạo tài khoản học tập SA247</b> và nhận thông tin khóa học.
-          Không có mật khẩu mặc định — sau thanh toán bạn sẽ nhận link thiết lập mật khẩu.
+          Email này sẽ được dùng để tạo tài khoản học tập SA247 và nhận thông tin khóa học.
+          Sau thanh toán bạn sẽ nhận link để tự đặt mật khẩu.
         </p>
         <div class="contact__cta">
           <button type="button" class="btn btn--amber" data-confirm-pay>Xác nhận &amp; thanh toán</button>
@@ -286,8 +335,8 @@
           <span>1 khóa · ${esc(courseCode)} · thanh toán 1 lần</span>
         </div>
         <p class="checkout-lead">
-          Chỉ cần họ tên, email và SĐT. Hệ thống tạo tài khoản sau khi thanh toán thành công —
-          <b>không dùng mật khẩu mặc định</b>.
+          Chỉ cần họ tên, email và số điện thoại.
+          Sau khi thanh toán, bạn nhận email để thiết lập mật khẩu và vào học.
         </p>
         <form class="order-form checkout-buyer-form" data-buyer-form>
           <label>Họ và tên
