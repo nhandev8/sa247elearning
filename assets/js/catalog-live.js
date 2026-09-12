@@ -26,11 +26,14 @@
     if (!cards.length) return;
 
     const sb = await client();
-    if (!sb) {
+    if not sb) {
       cards.forEach((card) => {
         const meta = card.querySelector("[data-live-meta]");
         const price = card.querySelector("[data-live-price]");
-        if (meta && !meta.dataset.filled) meta.textContent = "Lộ trình trên hệ thống";
+        if (meta && !meta.dataset.filled) {
+          meta.textContent =
+            meta.getAttribute("data-fallback-meta") || "Lộ trình trên hệ thống";
+        }
         if (price && !price.dataset.filled) price.textContent = "69.000đ";
       });
       return;

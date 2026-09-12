@@ -1,0 +1,82 @@
+{
+  "next_courses": {
+    "ATNM-01": {
+      "code": "ATNM-02",
+      "slug": "atnm-02",
+      "why": "Nếu ATNM-01 giúp bạn hiểu công việc, ATNM-02 giúp bạn bắt đầu xây cách quản lý."
+    },
+    "ATXD-01": {
+      "code": "ATXD-02",
+      "slug": "atxd-02",
+      "why": "Sau nền tảng công trường, ATXD-02 nâng bạn lên tầng tổ chức hệ thống HSE."
+    },
+    "ATNM-02": {
+      "code": "KTN-01",
+      "slug": "ktn-01",
+      "why": "Khi đã có khung quản lý nhà máy, chuyên sâu thiết bị nâng là bước nghiệp vụ thường gặp tiếp theo."
+    },
+    "ATXD-02": {
+      "code": "CVNH-01",
+      "slug": "cvnh-01",
+      "why": "Công trường trưởng thành → kiểm soát Permit/LOTO/công việc nguy hiểm chặt hơn."
+    },
+    "KTN-01": {
+      "code": "CVNH-01",
+      "slug": "cvnh-01",
+      "why": "Thiết bị nâng thường gắn với công việc nguy hiểm — học tiếp để kiểm soát permit và cô lập."
+    },
+    "CVNH-01": {
+      "code": "AL-01",
+      "slug": "al-01",
+      "why": "Mở rộng sang thiết bị áp lực nếu công việc của bạn chạm mảng này."
+    },
+    "AL-01": {
+      "code": "ISO45001",
+      "slug": "iso45001",
+      "why": "Khi nghiệp vụ kỹ thuật đã vững, bước tiếp thường là hệ thống OHS."
+    },
+    "ISO45001": {
+      "code": "ISO9001",
+      "slug": "iso9001",
+      "why": "Cùng logic hệ thống — mở sang QMS nếu bạn phụ trách chất lượng."
+    }
+  },
+  "programs": {
+    "ATNM-01": {
+      "slug": "atnm-01",
+      "title": "Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy"
+    },
+    "ATNM-02": {
+      "slug": "atnm-02",
+      "title": "Quản lý ATVSLĐ nhà máy"
+    },
+    "ATXD-01": {
+      "slug": "atxd-01",
+      "title": "Sống sót 6 tháng đầu nghề ATVSLĐ công trường xây dựng"
+    },
+    "ATXD-02": {
+      "slug": "atxd-02",
+      "title": "Quản lý ATVSLĐ công trường xây dựng"
+    },
+    "KTN-01": {
+      "slug": "ktn-01",
+      "title": "Kỹ thuật an toàn thiết bị nâng"
+    },
+    "CVNH-01": {
+      "slug": "cvnh-01",
+      "title": "Kỹ thuật an toàn các công việc nguy hiểm"
+    },
+    "AL-01": {
+      "slug": "al-01",
+      "title": "Kỹ thuật an toàn thiết bị áp lực"
+    },
+    "ISO45001": {
+      "slug": "iso45001",
+      "title": "ISO 45001 hệ thống quản lý OHS — lộ trình triển khai"
+    },
+    "ISO9001": {
+      "slug": "iso9001",
+      "title": "ISO 9001 hệ thống quản lý QMS — lộ trình triển khai"
+    }
+  }
+}
