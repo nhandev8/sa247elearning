@@ -42,23 +42,31 @@
     );
   }
 
+  function isCanonicalLesson(l) {
+    // Progress & outline gắn lesson_code (TL09) — bỏ orphan YouTube không mã
+    if (!String(l?.lesson_code || "").trim()) return false;
+    if (l.publish_status === "replaced") return false;
+    return true;
+  }
+
+  function sanitizeModules(modules) {
+    return (modules || []).map((m) => ({
+      ...m,
+      lessons: (m.lessons || [])
+        .filter(isCanonicalLesson)
+        .slice()
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)),
+    }));
+  }
+
   function flattenLessons(modules) {
     const list = [];
-    (modules || []).forEach((m) => {
-      const lessons = (m.lessons || [])
-        .slice()
-        .map((l) => ({
-          ...l,
-          is_free: l.is_free === true || l.access === "hoc_thu",
-          title: l.title || l.display_title || l.lesson_code || "Bài học",
-        }))
-        .filter((l) => {
-          // Outline: show all except replaced; playability uses has_video / youtube_video_id
-          const st = l.publish_status;
-          if (st === "replaced") return false;
-          return true;
-        })
-        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    sanitizeModules(modules).forEach((m) => {
+      const lessons = (m.lessons || []).map((l) => ({
+        ...l,
+        is_free: l.is_free === true || l.access === "hoc_thu",
+        title: l.title || l.display_title || l.lesson_code || "Bài học",
+      }));
       lessons.forEach((l) => {
         list.push({
           ...l,
@@ -282,7 +290,7 @@
       return;
     }
 
-    const modules = outline?.modules || [];
+    const modules = sanitizeModules(outline?.modules || []);
     const enrolledRpc = !!outline?.enrolled;
     const enrolledFinal = enrolled || enrolledRpc;
 

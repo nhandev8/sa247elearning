@@ -71,11 +71,14 @@
 
     const moduleIds = Object.keys(moduleToCourse);
     if (moduleIds.length) {
+      // Chỉ đếm bài có lesson_code ổn định (bỏ orphan YouTube không mã → tránh 340 thay vì 90)
       const { data: lessons } = await sb
         .from("lessons")
-        .select("id,module_id")
-        .in("module_id", moduleIds);
+        .select("id,module_id,lesson_code")
+        .in("module_id", moduleIds)
+        .not("lesson_code", "is", null);
       (lessons || []).forEach((L) => {
+        if (!String(L.lesson_code || "").trim()) return;
         const cid = moduleToCourse[L.module_id];
         if (cid) lessonCount[cid] = (lessonCount[cid] || 0) + 1;
       });
