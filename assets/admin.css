@@ -189,8 +189,36 @@ body.adm-body {
   color: var(--adm-accent);
 }
 .adm-badge--draft { background: rgba(91,107,100,0.12); color: var(--adm-muted); }
+.adm-badge--ok { background: rgba(24, 163, 90, 0.14); color: #0f6b3c; }
 .adm-badge--warn { background: rgba(154,107,0,0.12); color: var(--adm-warn); }
 .adm-badge--danger { background: rgba(163,58,47,0.12); color: var(--adm-danger); }
+.adm-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+  align-items: center;
+}
+.adm-filters input,
+.adm-filters select {
+  font: inherit;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+  min-width: 10rem;
+}
+.adm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+.adm-btn--danger {
+  background: rgba(163, 58, 47, 0.12);
+  color: var(--adm-danger);
+  border: 1px solid rgba(163, 58, 47, 0.35);
+}
+.adm-muted { color: var(--adm-muted); font-size: 0.85rem; }
 .adm-form { display: grid; gap: 0.7rem; max-width: 520px; }
 .adm-form label { display: grid; gap: 0.3rem; font-weight: 600; font-size: 0.9rem; }
 .adm-form input, .adm-form select, .adm-form textarea {

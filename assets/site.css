@@ -2209,3 +2209,58 @@ body.course-page { padding-bottom: 4.5rem; }
   .hero__actions { flex-wrap: wrap; }
 }
 
+.quiz-course-wrap {
+  margin: 0 0 1.25rem;
+  max-width: 32rem;
+}
+.quiz-course-wrap label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+.quiz-course-wrap select {
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.cert-mine-list {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+.cert-mine-card {
+  padding: 1.25rem 1.35rem;
+  background: #fff;
+  border: 1px solid rgba(15, 28, 23, 0.12);
+}
+.cert-mine-card h2 {
+  margin: 0.25rem 0 0.85rem;
+  font-size: 1.2rem;
+}
+.cert-mine-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.65rem 1.25rem;
+  margin: 0 0 1rem;
+}
+.cert-mine-meta dt {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cert-mine-meta dd {
+  margin: 0.15rem 0 0;
+  font-weight: 650;
+}
+.cert-mine-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0;
+}
+

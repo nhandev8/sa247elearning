@@ -1,4 +1,7 @@
-/* SA247 certificate: Form mẫu (showcase) + Phôi overlay (print) */
+/* SA247 certificate view
+ * - Form mẫu (?sample=): trưng bày thiết kế — không điền dữ liệu
+ * - Phôi + overlay (?code=): chỉ khi verify_certificate hợp lệ (hệ thống đã cấp)
+ */
 (function () {
   const CERT_PROGRAMS_URL = "../assets/certificates/programs.json";
   const ASSETS = "../assets/certificates/";
@@ -47,32 +50,29 @@
     });
   }
 
-  function setPhoi(prog) {
-    const img = el("cert-phoi");
-    img.src = ASSETS + prog.phoi;
-    img.alt = `Phôi giấy chứng nhận ${prog.code}`;
+  function showFormMau(prog) {
+    el("showcase-img").src = ASSETS + prog.form_mau;
+    el("showcase-img").alt = `Form mẫu giấy chứng nhận ${prog.code}`;
+    el("toolbar-code").textContent = `Form mẫu · ${prog.code}`;
+    el("btn-verify").href = "./";
+    el("btn-print").hidden = true;
+    el("cert-stage").hidden = true;
+    el("showcase-stage").hidden = false;
   }
 
-  async function fillPhoi(data, prog) {
+  async function renderIssued(data, prog) {
     const code = data.cert_code;
-    setPhoi(prog);
+    el("cert-phoi").src = ASSETS + prog.phoi;
+    el("cert-phoi").alt = `Giấy chứng nhận ${prog.code}`;
     el("cert-name").textContent = data.full_name || "—";
     el("cert-code").textContent = code;
     el("cert-date").textContent = fmtDate(data.issued_at);
     el("toolbar-code").textContent = code;
     el("btn-verify").href = `./?code=${encodeURIComponent(code)}`;
+    el("btn-print").hidden = false;
     el("showcase-stage").hidden = true;
     el("cert-stage").hidden = false;
     await renderQr(el("cert-qr"), verifyPageUrl(code));
-  }
-
-  function showFormMau(prog) {
-    el("showcase-img").src = ASSETS + prog.form_mau;
-    el("showcase-img").alt = `Mẫu giấy chứng nhận ${prog.code}`;
-    el("toolbar-code").textContent = prog.code;
-    el("btn-verify").href = "./";
-    el("cert-stage").hidden = true;
-    el("showcase-stage").hidden = false;
   }
 
   async function loadLive(code, map) {
@@ -82,48 +82,30 @@
       p_cert_code: code,
     });
     if (error) throw new Error(error.message);
-    if (!data?.valid) throw new Error("Không tìm thấy chứng nhận hợp lệ.");
+    if (!data?.valid) {
+      throw new Error(
+        "Không tìm thấy chứng nhận hợp lệ. Giấy chỉ hiển thị sau khi hệ thống đã cấp."
+      );
+    }
     const prog = findProgram(map, data.course_code);
-    if (!prog) throw new Error(`Chưa có phôi cho khóa ${data.course_code}.`);
-    el("certificate").classList.remove("is-sample");
-    await fillPhoi(data, prog);
+    if (!prog) throw new Error(`Chưa có phôi thiết kế cho khóa ${data.course_code}.`);
+    await renderIssued(data, prog);
     el("cert-status").textContent =
-      "Hợp lệ — phôi đã điền tên, ngày cấp, mã chứng nhận và QR. In hoặc Save as PDF.";
+      "Chứng nhận đã cấp — dữ liệu từ hồ sơ học viên. Có thể in hoặc lưu PDF.";
   }
 
-  async function loadSample(courseCode, map, mode) {
+  function loadFormSample(courseCode, map) {
     const prog = findProgram(map, courseCode) || (map.programs || [])[0];
-    if (!prog) throw new Error("Không có mẫu chương trình.");
-
-    if (mode === "phoi") {
-      const sampleCode = `SA247-${prog.stub}-MAU000`;
-      el("certificate").classList.add("is-sample");
-      await fillPhoi(
-        {
-          full_name: "Nguyễn Văn A",
-          cert_code: sampleCode,
-          issued_at: "2026-09-12T00:00:00+07:00",
-          course_code: prog.code,
-        },
-        prog
-      );
-      el("cert-status").innerHTML =
-        `Phôi điền thử cho <strong>${prog.code}</strong>. ` +
-        `Xem form trưng bày: <a href="?sample=${encodeURIComponent(prog.code)}">Form mẫu</a>.`;
-      return;
-    }
-
+    if (!prog) throw new Error("Không có form mẫu chương trình.");
     showFormMau(prog);
-    el("cert-status").innerHTML =
-      `Form mẫu trưng bày cho <strong>${prog.code}</strong>. ` +
-      `Thử phôi in (chèn tên/ngày/mã/QR): <a href="?sample=${encodeURIComponent(prog.code)}&mode=phoi">Điền thử phôi</a>.`;
+    el("cert-status").textContent =
+      `Form mẫu trưng bày cho ${prog.code}. Không phải chứng nhận đã cấp — không điền tên, ngày hay mã trên phôi.`;
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(location.search);
     const code = (params.get("code") || "").trim();
     const sample = (params.get("sample") || "").trim();
-    const mode = (params.get("mode") || "").trim();
     const status = el("cert-status");
 
     el("btn-print")?.addEventListener("click", () => window.print());
@@ -131,12 +113,11 @@
     try {
       const map = await loadProgramMap();
       if (code) await loadLive(code, map);
-      else if (sample) await loadSample(sample, map, mode);
+      else if (sample) loadFormSample(sample, map);
       else {
         status.innerHTML =
-          'Thiếu mã chứng nhận. Thêm <code>?code=…</code> hoặc xem mẫu: ' +
-          '<a href="?sample=ATNM-01">Form mẫu ATNM-01</a> · ' +
-          '<a href="?sample=ATNM-01&mode=phoi">Phôi điền thử</a>.';
+          'Mở giấy đã cấp bằng <code>?code=…</code> (mã hệ thống sinh). ' +
+          'Xem form mẫu thiết kế: <a href="?sample=ATNM-01">ATNM-01</a>.';
       }
     } catch (err) {
       status.textContent = err?.message || String(err);

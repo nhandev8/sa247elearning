@@ -1,7 +1,5 @@
-/* SA247 quiz — đề từ RPC (không lộ đáp án); chấm trên server */
+/* SA247 quiz — chọn khóa đã mở khóa; chấm + cấp chứng nhận trên server */
 (function () {
-  const COURSE = "ATNM-01";
-
   function el(id) {
     return document.getElementById(id);
   }
@@ -17,54 +15,46 @@
     return answers;
   }
 
-  async function main() {
+  function courseFromQuery() {
+    return new URLSearchParams(location.search).get("course")?.trim() || "";
+  }
+
+  async function loadEnrolledCourses(sb) {
+    const { data, error } = await sb
+      .from("enrollments")
+      .select("course:courses(id,code,title,slug)")
+      .eq("status", "active");
+    if (error) throw error;
+    return (data || [])
+      .map((r) => r.course)
+      .filter(Boolean)
+      .sort((a, b) => String(a.code).localeCompare(String(b.code)));
+  }
+
+  async function runQuiz(sb, courseCode) {
     const status = el("quiz-status");
     const form = el("quiz-form");
     const box = el("quiz-questions");
     const result = el("quiz-result");
+    form.hidden = true;
+    result.hidden = true;
+    result.innerHTML = "";
+    box.innerHTML = "";
 
-    if (!window.sa247Auth?.ready) {
-      status.innerHTML = 'Thiếu cấu hình Supabase. <a href="../auth/login.html">Đăng nhập</a>';
-      return;
-    }
-
-    const session = await sa247Auth.getSession();
-    if (!session) {
-      status.innerHTML =
-        'Cần đăng nhập và đã mở khóa ATNM-01. <a href="../auth/login.html">Đăng nhập</a>';
-      return;
-    }
-    el("user-label").textContent = session.user.email || "Học viên";
-
-    const sb = await sa247Auth.ensureClient();
-    const { data: course } = await sb
-      .from("courses")
-      .select("id,code")
-      .eq("code", COURSE)
-      .maybeSingle();
-    if (!course) {
-      status.textContent = "Không tìm thấy khóa ATNM-01.";
-      return;
-    }
-    const ok = await sa247Auth.hasCourseAccess(course.id);
-    if (!ok) {
-      status.innerHTML =
-        'Bạn chưa mở khóa ATNM-01. <a href="../atnm-01/#goi-pro">Mở khóa khóa học</a>';
-      return;
-    }
-
+    status.textContent = `Đang tải đề ${courseCode}…`;
     const { data: quiz, error: qErr } = await sb.rpc("get_course_quiz", {
-      p_course_code: COURSE,
+      p_course_code: courseCode,
     });
     if (qErr || !quiz?.questions?.length) {
       status.innerHTML =
-        "Chưa cấu hình đề kiểm tra trên hệ thống. Liên hệ hỗ trợ hoặc thử lại sau." +
+        `Chưa cấu hình đề kiểm tra cho <strong>${courseCode}</strong>.` +
         (qErr ? `<br><small>${qErr.message}</small>` : "");
       return;
     }
 
     const passAt = quiz.pass_percent || 70;
-    status.textContent = `${quiz.questions.length} câu · đạt từ ${passAt}% để nhận chứng nhận.`;
+    status.textContent = `${courseCode} · ${quiz.questions.length} câu · đạt từ ${passAt}% để nhận chứng nhận.`;
+    document.querySelector(".app-top h1").textContent = `Kỳ thi · ${courseCode}`;
     box.innerHTML = quiz.questions
       .map(
         (q, idx) => `<fieldset class="quiz-q">
@@ -81,8 +71,7 @@
       )
       .join("");
     form.hidden = false;
-
-    form.addEventListener("submit", async (ev) => {
+    form.onsubmit = async (ev) => {
       ev.preventDefault();
       const fd = new FormData(form);
       const fullName = String(fd.get("full_name") || "").trim();
@@ -92,7 +81,7 @@
       btn.textContent = "Đang chấm…";
 
       const { data, error } = await sb.rpc("submit_course_quiz", {
-        p_course_code: COURSE,
+        p_course_code: courseCode,
         p_full_name: fullName,
         p_answers: answers,
       });
@@ -107,15 +96,12 @@
 
       const pct = data?.score_percent ?? 0;
       if (data?.passed) {
+        const code = encodeURIComponent(data.cert_code);
         result.innerHTML = `<h2>Đạt ${pct}%</h2>
-          <p>Certificate ID: <strong>${data.cert_code}</strong></p>
-          <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${encodeURIComponent(
-            data.cert_code
-          )}">Xem giấy chứng nhận</a>
-          <a class="btn btn--line" href="../verify/?code=${encodeURIComponent(
-            data.cert_code
-          )}">Xác minh</a>
-          <a class="btn btn--line" href="../dashboard/">Về dashboard</a></p>`;
+          <p>Hệ thống đã cấp chứng nhận. Mã: <strong>${data.cert_code}</strong></p>
+          <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+          <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
+          <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a></p>`;
       } else {
         result.innerHTML = `<h2>Chưa đạt (${pct}%)</h2>
           <p>Cần ≥ ${data?.pass_percent || passAt}%. Ôn lại bài học rồi thử lại.</p>
@@ -124,7 +110,48 @@
       }
       btn.disabled = false;
       btn.textContent = "Nộp bài";
+    };
+  }
+
+  async function main() {
+    const status = el("quiz-status");
+    if (!window.sa247Auth?.ready) {
+      status.innerHTML = 'Thiếu cấu hình Supabase. <a href="../auth/login.html">Đăng nhập</a>';
+      return;
+    }
+    const session = await sa247Auth.getSession();
+    if (!session) {
+      status.innerHTML =
+        'Cần đăng nhập và đã mở khóa khóa học. <a href="../auth/login.html">Đăng nhập</a>';
+      return;
+    }
+    el("user-label").textContent = session.user.email || "Học viên";
+    const sb = await sa247Auth.ensureClient();
+    const courses = await loadEnrolledCourses(sb);
+    if (!courses.length) {
+      status.innerHTML =
+        'Bạn chưa mở khóa khóa nào. <a href="../index.html#chuong-trinh">Xem chương trình</a>';
+      return;
+    }
+
+    const pick = el("quiz-course");
+    const preset = courseFromQuery();
+    pick.innerHTML = courses
+      .map(
+        (c) =>
+          `<option value="${c.code}" ${c.code === preset || (!preset && c.code === "ATNM-01") ? "selected" : ""}>${c.code} — ${c.title}</option>`
+      )
+      .join("");
+    el("quiz-course-wrap").hidden = false;
+
+    const start = () => runQuiz(sb, pick.value);
+    pick.addEventListener("change", () => {
+      const u = new URL(location.href);
+      u.searchParams.set("course", pick.value);
+      history.replaceState({}, "", u);
+      start();
     });
+    await start();
   }
 
   document.addEventListener("DOMContentLoaded", () => {

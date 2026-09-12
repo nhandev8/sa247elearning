@@ -173,21 +173,6 @@ html, body {
   display: block;
 }
 
-.cert-sheet.is-sample::after {
-  content: "MẪU ĐIỀN THỬ — KHÔNG PHẢI CHỨNG NHẬN THẬT";
-  position: absolute;
-  z-index: 5;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-16deg);
-  font-size: clamp(0.75rem, 1.8vw, 1.15rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: rgba(180, 40, 40, 0.2);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 @media print {
   @page { size: A4 landscape; margin: 0; }
   html, body { background: #fff; }

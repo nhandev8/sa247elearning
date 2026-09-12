@@ -31,20 +31,29 @@
       return;
     }
     if (!data?.valid) {
-      msg.textContent = "Không tìm thấy chứng chỉ hợp lệ.";
+      if (data?.reason === "revoked") {
+        msg.textContent = "Chứng nhận đã bị thu hồi — không còn hiệu lực.";
+        card.hidden = false;
+        card.innerHTML = `<p class="kicker">Đã thu hồi</p>
+          <p><strong>${data.cert_code || code}</strong></p>
+          <p>${data.course_code || ""} · ${data.course_title || ""}</p>
+          <p class="lead">Safety and You 247 Academy không xác nhận hiệu lực của mã này.</p>`;
+        return;
+      }
+      msg.textContent = "Không tìm thấy chứng nhận hợp lệ.";
       return;
     }
     msg.textContent = "Hợp lệ.";
     card.hidden = false;
-    const code = encodeURIComponent(data.cert_code);
+    const enc = encodeURIComponent(data.cert_code);
     card.innerHTML = `<p class="kicker">Đã xác minh</p>
       <h2>${data.full_name}</h2>
       <p><strong>${data.course_code}</strong> · ${data.course_title}</p>
       <p>Điểm: ${data.score_percent}% · Ngày cấp: ${fmtDate(data.issued_at)}</p>
-      <p class="meta">Mã: ${data.cert_code}</p>
-      <p class="lead">Safety and You 247 Academy xác nhận chứng chỉ hoàn thành khóa học.</p>
-      <p><a class="btn btn--amber" href="./chung-nhan.html?code=${code}">Xem giấy chứng nhận</a>
-      <a class="btn btn--line" href="./chung-nhan.html?code=${code}" target="_blank" rel="noopener">Mở tab in</a></p>`;
+      <p class="meta">Mã: ${data.cert_code} · Trạng thái: Đã cấp</p>
+      <p class="lead">Safety and You 247 Academy xác nhận chứng nhận hoàn thành khóa học.</p>
+      <p><a class="btn btn--amber" href="./chung-nhan.html?code=${enc}">Xem giấy chứng nhận</a>
+      <a class="btn btn--line" href="./chung-nhan.html?code=${enc}" target="_blank" rel="noopener">In / PDF</a></p>`;
   }
 
   document.addEventListener("DOMContentLoaded", () => {

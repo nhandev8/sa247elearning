@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Khóa học của tôi · SA247</title>
+  <title>Chứng nhận của tôi · SA247</title>
+  <meta name="description" content="Danh sách chứng nhận SA247 đã cấp cho tài khoản của bạn." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -11,7 +12,7 @@
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>
   <script src="../assets/js/app-shell.js" defer></script>
-  <script src="../assets/js/dashboard.js" defer></script>
+  <script src="../assets/js/my-certificates.js" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
@@ -19,11 +20,9 @@
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
         <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
-        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa học</a>
-        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
-        <a href="#don-hang"><span class="ico" aria-hidden="true">▤</span>Đơn thanh toán</a>
+        <a href="../dashboard/"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
         <a href="../quiz/"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
-        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
+        <a class="is-active" href="./"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
         <a href="../verify/"><span class="ico" aria-hidden="true">⌕</span>Xác minh công khai</a>
         <a href="../auth/doi-mat-khau.html"><span class="ico" aria-hidden="true">⚙</span>Đổi mật khẩu</a>
       </nav>
@@ -32,22 +31,14 @@
         <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
       </div>
     </aside>
-
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Khóa học của tôi</h1>
+        <h1>Chứng nhận của tôi</h1>
       </header>
-
       <main class="app-content">
-        <p class="lead" id="status">Đang tải…</p>
-        <div id="courses" class="program-grid program-grid--2"></div>
-
-        <section id="don-hang" class="app-section">
-          <h2>Đơn thanh toán</h2>
-          <p class="lead" id="orders-status">Đang tải đơn…</p>
-          <div id="orders" class="order-list"></div>
-        </section>
+        <p class="lead" id="cert-status">Đang tải…</p>
+        <div id="cert-list" class="cert-mine-list"></div>
       </main>
     </div>
   </div>

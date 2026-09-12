@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quiz ATNM-01 · SA247</title>
-  <meta name="description" content="Quiz hoàn thành khóa ATNM-01 Pro — đạt từ 70% để nhận Certificate ID." />
+  <title>Kỳ thi cuối khóa · SA247</title>
+  <meta name="description" content="Làm bài kiểm tra cuối khóa SA247 — đạt điều kiện để hệ thống cấp chứng nhận." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -22,7 +22,8 @@
         <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
         <a href="../dashboard/"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
         <a class="is-active" href="./"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
-        <a href="../verify/"><span class="ico" aria-hidden="true">◎</span>Xác minh chứng chỉ</a>
+        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
+        <a href="../verify/"><span class="ico" aria-hidden="true">⌕</span>Xác minh công khai</a>
       </nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
@@ -32,13 +33,19 @@
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Quiz · ATNM-01</h1>
+        <h1>Kỳ thi cuối khóa</h1>
       </header>
       <main class="app-content">
+        <div id="quiz-course-wrap" class="quiz-course-wrap" hidden>
+          <label>
+            Chọn khóa đã mở khóa
+            <select id="quiz-course"></select>
+          </label>
+        </div>
         <p class="lead" id="quiz-status">Đang tải…</p>
         <form id="quiz-form" class="quiz-form" hidden>
           <label class="quiz-name">
-            Họ tên trên chứng chỉ
+            Họ tên trên chứng nhận
             <input type="text" name="full_name" required maxlength="120" placeholder="VD: Nguyễn Văn A" />
           </label>
           <div id="quiz-questions"></div>

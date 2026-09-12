@@ -29,7 +29,20 @@
         <h1>Chứng nhận</h1>
       </header>
       <main class="adm-content">
+        <p class="adm-lead">Quản lý bản ghi chứng nhận đã cấp. Phôi chỉ là mẫu thiết kế — không nhập tên/mã trên phôi. Thu hồi ghi nhật ký; không sửa tùy tiện nội dung đã phát hành.</p>
         <p class="adm-msg" id="adm-status"></p>
+
+        <div class="adm-filters" id="cert-filters">
+          <input type="search" id="f-q" placeholder="Họ tên / mã chứng nhận / khóa…" />
+          <select id="f-course"></select>
+          <select id="f-status">
+            <option value="">Mọi trạng thái</option>
+            <option value="issued">Đã cấp</option>
+            <option value="revoked">Đã thu hồi</option>
+          </select>
+          <button type="button" class="adm-btn adm-btn--primary" id="btn-filter">Lọc</button>
+        </div>
+
         <h2>Chứng nhận đã cấp</h2>
         <div class="adm-table-wrap">
           <table class="adm-table">
@@ -40,19 +53,22 @@
                 <th>Khóa học</th>
                 <th>Điểm</th>
                 <th>Ngày cấp</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody id="cert-rows"></tbody>
           </table>
         </div>
-        <h2 style="margin-top:1.5rem">Mẫu chứng nhận theo khóa</h2>
-        <p class="adm-lead">Upsert mẫu chứng nhận — một mẫu cho mỗi khóa học.</p>
+
+        <h2 style="margin-top:1.5rem">Cấu hình theo khóa</h2>
+        <p class="adm-lead">Tiêu đề / điểm đạt (tham chiếu vận hành). Cấp chứng nhận chỉ khi học viên đạt quiz — không cấp tay từ màn này.</p>
         <div class="adm-table-wrap">
           <table class="adm-table">
             <thead>
               <tr>
                 <th>Khóa học</th>
-                <th>Tiêu đề mẫu</th>
+                <th>Tiêu đề</th>
                 <th>Tiền tố mã</th>
                 <th>Điểm đạt %</th>
                 <th>Trạng thái</th>

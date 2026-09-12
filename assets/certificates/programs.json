@@ -3,6 +3,11 @@
   "academy": "Safety and You 247 Academy",
   "issuer_name": "HỒ HỮU NHÂN",
   "issuer_title": "Đại diện Safety and You 247 Academy",
+  "policy": {
+    "form_mau": "Trưng bày thiết kế trên trang khóa — không phải giấy đã cấp.",
+    "phoi": "Mẫu thiết kế in — không có UI điền thử / chỉnh sửa tay.",
+    "issued": "Chỉ render khi verify_certificate hợp lệ; mã và QR do hệ thống sinh."
+  },
   "canvas": { "width": 1491, "height": 1055 },
   "fields": {
     "name": { "x": 484, "y": 451, "w": 514, "h": 86 },

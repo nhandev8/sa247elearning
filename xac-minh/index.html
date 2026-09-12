@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Xác minh chứng nhận · SA247</title>
+  <meta http-equiv="refresh" content="0;url=../verify/" />
+  <link rel="canonical" href="../verify/" />
+  <script>
+    (function () {
+      var q = location.search || "";
+      var code = new URLSearchParams(q).get("code") || "";
+      var path = location.pathname.replace(/\/+$/, "");
+      var parts = path.split("/");
+      var last = parts[parts.length - 1];
+      if (last && last.toLowerCase() !== "xac-minh" && !code) {
+        code = decodeURIComponent(last);
+      }
+      var target = "../verify/" + (code ? "?code=" + encodeURIComponent(code) : "");
+      location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <p>Chuyển tới trang xác minh… <a href="../verify/">verify/</a></p>
+</body>
+</html>
