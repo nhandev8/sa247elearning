@@ -1788,31 +1788,80 @@
 }
 
 /* Career map · progress · quiz · legal */
-.career { padding: 4rem 0; }
-.career-grid {
+.career {
+  padding: 4rem 0;
+  background:
+    radial-gradient(ellipse 55% 40% at 0% 0%, rgba(24, 163, 90, 0.07), transparent 55%),
+    linear-gradient(180deg, #eef3f0 0%, var(--foam) 100%);
+}
+.career .title { max-width: 16ch; }
+.career-lanes {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 1.15rem;
+  margin-top: 1.75rem;
+  align-items: start;
+}
+.career-lane__label {
+  margin: 0 0 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid rgba(14, 122, 65, 0.35);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-deep);
+}
+.career-lane__cards {
+  display: grid;
+  gap: 0.7rem;
 }
 .career-card {
   display: grid;
-  gap: 0.55rem;
-  padding: 1.15rem 1.2rem;
-  border: 1px solid rgba(15, 28, 23, 0.12);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.55);
+  gap: 0.4rem;
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid rgba(15, 28, 23, 0.1);
+  border-left: 3px solid var(--green-deep);
+  border-radius: 0 10px 10px 0;
+  background: #fff;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease);
+  box-shadow: 0 1px 0 rgba(7, 24, 32, 0.04);
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 .career-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(24, 163, 90, 0.45);
+  border-color: rgba(24, 163, 90, 0.35);
+  border-left-color: var(--green);
+  box-shadow: 0 10px 24px rgba(7, 24, 32, 0.07);
 }
-.career-card h3 { margin: 0; font-size: 1.05rem; }
-.career-card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-.career-card__go { font-weight: 700; font-size: 0.88rem; color: var(--green-deep); }
+.career-card__path {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.75;
+}
+.career-card h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.career-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.career-card__go {
+  margin-top: 0.25rem;
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--green-deep);
+}
 .footer-links { font-size: 0.9rem; }
 .footer-links a { color: inherit; }
 .progress-bar {
@@ -2036,10 +2085,10 @@ body.course-page { padding-bottom: 4.5rem; }
   .classroom { position: relative; }
   .classroom.is-side-open .classroom__side { display: block; }
   .classroom__toggle { display: inline-flex; }
-  .career-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .career-lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 560px) {
-  .career-grid { grid-template-columns: 1fr; }
+  .career-lanes { grid-template-columns: 1fr; }
   .course-sticky__inner { flex-direction: column; align-items: stretch; }
   .hero__actions { flex-wrap: wrap; }
 }
