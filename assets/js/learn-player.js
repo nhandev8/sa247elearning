@@ -116,7 +116,7 @@
                 ? `<button type="button" class="btn btn--amber btn--small" data-resume>Tiếp tục học</button>
                    <a class="btn btn--line btn--small" href="../quiz/">Quiz · chứng chỉ</a>
                    <a class="btn btn--line btn--small" href="../verify/">Xác minh chứng chỉ</a>`
-                : `<a class="btn btn--amber btn--small" href="#goi-pro">Mở khóa khóa học</a>
+                : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa khóa học</a>
                    <a class="btn btn--line btn--small" href="${esc(loginHref)}">Đăng nhập</a>`
             }
             <button type="button" class="btn btn--line btn--small classroom__toggle" data-toggle-side>Mục lục</button>
@@ -187,7 +187,7 @@
       if (!enrolled && !lesson.is_free) {
         player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
           <p class="lead">Bài này nằm trong lộ trình khóa học — mở khóa để xem video.</p>
-          <p><a class="btn btn--amber" href="#goi-pro">Mở khóa khóa học</a>
+          <p><a class="btn btn--amber" href="#dang-ky">Mở khóa khóa học</a>
           <a class="btn btn--line" href="${esc(loginHref)}">Đăng nhập</a></p>`;
         meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
         host.querySelector(".classroom")?.classList.remove("is-side-open");
@@ -214,7 +214,7 @@
         ${
           enrolled
             ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
-            : `<a class="btn btn--amber btn--small" href="#goi-pro">Mở khóa để lưu tiến độ</a>`
+            : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
         }`;
       if (enrolled && ctx.sb) {
         touchWatch(ctx.sb, lesson.id).catch(() => {});
