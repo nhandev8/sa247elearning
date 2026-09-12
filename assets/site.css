@@ -1467,9 +1467,9 @@
   line-height: 1.7;
 }
 .catalog {
-  margin-top: 2.25rem;
+  margin-top: 1.25rem;
   display: grid;
-  gap: 2.75rem;
+  gap: 2.25rem;
 }
 .catalog-group__head {
   margin-bottom: 1rem;
