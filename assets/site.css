@@ -1152,16 +1152,39 @@
   font-size: 0.85rem;
   color: var(--muted);
 }
-.checkout-terms {
+.checkout-terms,
+.order-form label.checkout-terms {
   display: flex;
   align-items: flex-start;
-  gap: 0.55rem;
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+  padding: 0.85rem 0.95rem;
+  background: var(--foam);
+  border: 1px solid var(--line);
   font-size: 0.92rem;
-  color: var(--muted);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.45;
+  cursor: pointer;
 }
-.checkout-terms input {
-  margin-top: 0.2rem;
-  width: auto;
+.checkout-terms input[type="checkbox"],
+.order-form label.checkout-terms input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--green-deep, #128a4a);
+  cursor: pointer;
+}
+.checkout-terms span {
+  flex: 1 1 auto;
+}
+.checkout-terms a {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .checkout-confirm-title {
   margin: 0.35rem 0 1rem;

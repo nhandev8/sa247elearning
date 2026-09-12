@@ -349,8 +349,8 @@
             <input name="phone" type="tel" required minlength="8" autocomplete="tel" value="${esc(p.phone || "")}" />
           </label>
           <label class="checkout-terms">
-            <input name="terms" type="checkbox" ${p.terms ? "checked" : ""} required />
-            <span>Tôi đồng ý <a href="../privacy/" target="_blank" rel="noopener">điều khoản &amp; chính sách</a> SA247.</span>
+            <input name="terms" type="checkbox" value="1" ${p.terms === false ? "" : "checked"} />
+            <span>Tôi đồng ý <a href="../terms.html" target="_blank" rel="noopener">điều khoản</a> &amp; <a href="../privacy.html" target="_blank" rel="noopener">chính sách</a> SA247.</span>
           </label>
           <div class="contact__cta">
             <button type="submit" class="btn btn--amber">Tiếp tục thanh toán</button>
