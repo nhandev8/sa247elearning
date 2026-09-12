@@ -1798,8 +1798,9 @@
 .career-tracks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 0.9rem;
+  margin-top: 1.15rem;
+  align-items: start;
 }
 .career-track {
   display: grid;
@@ -1809,10 +1810,10 @@
   overflow: hidden;
 }
 .career-track__head {
-  padding: 1.1rem 1.2rem 1rem;
+  padding: 0.95rem 1.15rem 0.85rem;
   background:
-    linear-gradient(135deg, rgba(10, 61, 86, 0.06), transparent 55%),
-    #f7faf8;
+    linear-gradient(135deg, rgba(10, 61, 86, 0.07), transparent 60%),
+    #f3f7f5;
   border-bottom: 1px solid rgba(7, 24, 32, 0.08);
 }
 .career-track__head h3 {
