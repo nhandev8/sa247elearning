@@ -2377,7 +2377,23 @@ body.course-page { padding-bottom: 4.5rem; }
   color: #fff;
   border-radius: var(--radius);
 }
-.verify-cta-card p { color: rgba(255, 255, 255, 0.82); }
+.hub-price-sub {
+  margin: 0.35rem 0 0;
+  max-width: 36rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.hero__diff {
+  margin: 0.75rem 0 0;
+  max-width: 34rem;
+  font-weight: 600;
+  color: var(--amber);
+  font-size: 1.05rem;
+}
+.cert-soft .cert-product__price {
+  font-size: 1.15rem;
+}
 
 /* ---- Giới thiệu / Brand manifesto ---- */
 .about-teaser-cta {

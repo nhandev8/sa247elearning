@@ -236,8 +236,8 @@
     if (!items.length) {
       host.innerHTML = `<ul class="trust-list">
         <li>Đăng ký 69.000đ → học toàn bộ khóa</li>
-        <li>Thanh toán tự động qua SePay</li>
-        <li>Quiz &amp; chứng nhận (sau khi đạt)</li>
+        <li>Không khóa từng video · tiến độ trên hệ thống</li>
+        <li>Kiểm tra cuối khóa · GCN tùy chọn sau khi đạt</li>
         <li><a href="../verify/">Xác minh chứng nhận công khai</a></li>
       </ul>`;
       return;
