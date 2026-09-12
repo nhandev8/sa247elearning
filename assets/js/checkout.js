@@ -9,6 +9,7 @@
 
   let pollTimer = null;
   let guestEmail = "";
+  let guestAccountExisted = false;
 
   function vietQrUrl(amount, addInfo) {
     const base = `https://img.vietqr.io/image/${encodeURIComponent(BANK.bin)}-${encodeURIComponent(BANK.account)}-compact2.png`;
@@ -88,16 +89,17 @@
   function renderPaid(root, order, courseCode, opts) {
     stopPoll();
     const email = esc(opts?.email || guestEmail || "");
-    const needActivate = !!opts?.guest;
+    const returning = !!(opts?.returning ?? guestAccountExisted);
+    const isGuest = opts?.guest !== false && (opts?.guest || !!guestEmail);
+    const needActivate = isGuest && !returning;
+    const needLogin = isGuest && returning;
     const code = esc(order.order_code || courseCode);
 
     const stages = needActivate
-      ? [
-          "Đã nhận thanh toán",
-          "Đang tạo tài khoản học tập…",
-          "Đã mở khóa khóa học",
-        ]
-      : ["Đã nhận thanh toán", "Đã mở khóa khóa học"];
+      ? ["Đã nhận thanh toán", "Đang tạo tài khoản học tập…", "Đã mở khóa khóa học"]
+      : needLogin
+        ? ["Đã nhận thanh toán", "Đang thêm khóa vào tài khoản…", "Đã mở khóa khóa học"]
+        : ["Đã nhận thanh toán", "Đã mở khóa khóa học"];
 
     root.innerHTML = `
       <div class="checkout-panel checkout-panel--paid" data-paid-flow>
@@ -114,10 +116,17 @@
       if (stageEl) stageEl.textContent = stages[stages.length - 1];
       if (!bodyEl) return;
       bodyEl.hidden = false;
+      const login = loginHref(root);
+      const next = encodeURIComponent(
+        new URL("../dashboard/", location.href).href
+      );
       bodyEl.innerHTML = `
         <p class="checkout-lead">
-          Khóa học <b>${esc(courseCode)}</b> đã được mở
-          ${email ? ` cho <code>${email}</code>` : ""}.
+          ${
+            needLogin
+              ? `Khóa học <b>${esc(courseCode)}</b> đã được thêm vào tài khoản ${email ? `<code>${email}</code>` : "của bạn"}.`
+              : `Khóa học <b>${esc(courseCode)}</b> đã được mở${email ? ` cho <code>${email}</code>` : ""}.`
+          }
         </p>
         ${
           needActivate
@@ -126,10 +135,16 @@
                  <a class="btn btn--amber" href="${esc(activateHref(root))}">Kích hoạt tài khoản &amp; bắt đầu học</a>
                  <a class="btn btn--line" href="../dashboard/">Vào khóa học của tôi</a>
                </div>`
-            : `<div class="contact__cta">
-                 <a class="btn btn--amber" href="../dashboard/">Bắt đầu học</a>
-                 <a class="btn btn--line" href="#hoc-thu">Xem bài học</a>
-               </div>`
+            : needLogin
+              ? `<p class="checkout-hint">Để bắt đầu học, vui lòng đăng nhập tài khoản SA247.</p>
+                 <div class="contact__cta">
+                   <a class="btn btn--amber" href="${esc(login)}?next=${next}">Đăng nhập để học</a>
+                   <a class="btn btn--line" href="../dashboard/">Đã đăng nhập · Vào khóa học</a>
+                 </div>`
+              : `<div class="contact__cta">
+                   <a class="btn btn--amber" href="../dashboard/">Bắt đầu học</a>
+                   <a class="btn btn--line" href="#hoc-thu">Xem bài học</a>
+                 </div>`
         }
         <p class="checkout-order-ref">Đơn <code>${code}</code></p>`;
     }
@@ -177,8 +192,10 @@
         if (mode === "guest") {
           const st = await pollGuestStatus(order.order_code, guestEmail);
           if (st?.found && st.status === "paid") {
+            guestAccountExisted = !!st.buyer_account_existed;
             renderPaid(root, { ...order, status: "paid" }, courseCode, {
               guest: true,
+              returning: guestAccountExisted,
               email: guestEmail,
             });
             return;
@@ -214,9 +231,12 @@
     }
     const amount = order.amount;
     const code = order.order_code;
-    const guestHint =
+    const guestHint = guestAccountExisted
+      ? "khóa học sẽ được thêm vào tài khoản gắn với email này."
+      : "khóa học sẽ được mở và hệ thống gửi email để bạn thiết lập mật khẩu.";
+    const leadExtra =
       mode === "guest"
-        ? "khóa học sẽ được mở tự động và hệ thống gửi email để bạn thiết lập mật khẩu."
+        ? guestHint
         : "khóa học sẽ được mở tự động cho tài khoản của bạn.";
 
     root.innerHTML = `
@@ -224,7 +244,7 @@
         <p class="checkout-pay-kicker">Thanh toán chuyển khoản</p>
         <p class="checkout-lead">
           Chuyển khoản <b>đúng số tiền</b> và <b>đúng nội dung</b> bên dưới.
-          Sau khi xác nhận, ${guestHint}
+          Sau khi xác nhận, ${leadExtra}
         </p>
 
         <div class="checkout-pay">
@@ -268,7 +288,21 @@
     startPoll(root, order, courseCode, mode);
   }
 
-  function renderConfirm(root, courseCode, fields) {
+  async function checkBuyerEmail(email) {
+    try {
+      const sb = await sa247Auth.ensureClient();
+      const { data, error } = await sb.rpc("check_buyer_email", {
+        p_email: email,
+      });
+      if (error) return false;
+      return !!(data && data.exists);
+    } catch {
+      return false;
+    }
+  }
+
+  async function renderConfirm(root, courseCode, fields) {
+    guestAccountExisted = false;
     root.innerHTML = `
       <div class="checkout-panel">
         <p class="kicker">Vui lòng kiểm tra thông tin nhận tài khoản</p>
@@ -278,16 +312,31 @@
           <div><dt>Email</dt><dd><code>${esc(fields.email)}</code></dd></div>
           <div><dt>Số điện thoại</dt><dd>${esc(fields.phone)}</dd></div>
         </dl>
-        <p class="form-note">
+        <p class="form-note" data-confirm-note>
           Email này sẽ được dùng để tạo tài khoản học tập SA247 và nhận thông tin khóa học.
-          Sau thanh toán bạn sẽ nhận link để tự đặt mật khẩu.
         </p>
+        <div class="checkout-email-note" data-email-note hidden></div>
         <div class="contact__cta">
           <button type="button" class="btn btn--amber" data-confirm-pay>Xác nhận &amp; thanh toán</button>
           <button type="button" class="btn btn--line" data-back-form>Sửa thông tin</button>
         </div>
         <p class="form-msg" data-msg role="status"></p>
       </div>`;
+
+    const noteEl = root.querySelector("[data-email-note]");
+    const confirmNote = root.querySelector("[data-confirm-note]");
+    const existed = await checkBuyerEmail(fields.email);
+    guestAccountExisted = existed;
+    if (existed && noteEl) {
+      noteEl.hidden = false;
+      noteEl.innerHTML =
+        `<strong>Email này đã có tài khoản SA247.</strong> ` +
+        `Bạn vẫn có thể tiếp tục thanh toán. Sau khi thanh toán thành công, khóa học sẽ được thêm vào tài khoản của bạn.`;
+      if (confirmNote) {
+        confirmNote.textContent =
+          "Email này gắn với tài khoản học tập SA247 hiện có và dùng để nhận thông tin khóa học.";
+      }
+    }
 
     root.querySelector("[data-back-form]")?.addEventListener("click", () => {
       renderGuestForm(root, courseCode, fields);
@@ -299,20 +348,22 @@
       try {
         guestEmail = fields.email.trim().toLowerCase();
         const order = await createGuestOrder(courseCode, fields);
+        if (order.buyer_account_existed != null) {
+          guestAccountExisted = !!order.buyer_account_existed;
+        }
         renderCheckout(root, order, courseCode, "guest");
       } catch (err) {
         const raw = err.message || "Không tạo được đơn.";
-        if (/EMAIL_EXISTS_LOGIN/i.test(raw)) {
-          const login = loginHref(root);
-          const next = encodeURIComponent(location.href);
-          if (msg) {
+        if (msg) {
+          if (/already enrolled/i.test(raw)) {
+            const login = loginHref(root);
             msg.innerHTML =
-              `Email này đã có tài khoản. ` +
-              `<a href="${esc(login)}?next=${next}">Đăng nhập</a> rồi tạo mã thanh toán.`;
+              `Bạn đã mở khóa khóa học này rồi. ` +
+              `<a href="${esc(login)}">Đăng nhập</a> để vào học.`;
+          } else {
+            msg.textContent = friendlyError(raw);
           }
-          return;
         }
-        if (msg) msg.textContent = friendlyError(raw);
       }
     });
   }
@@ -335,8 +386,8 @@
           <span>1 khóa · ${esc(courseCode)} · thanh toán 1 lần</span>
         </div>
         <p class="checkout-lead">
-          Chỉ cần họ tên, email và số điện thoại.
-          Sau khi thanh toán, bạn nhận email để thiết lập mật khẩu và vào học.
+          Chỉ cần họ tên, email và số điện thoại — không cần đăng nhập trước.
+          Sau thanh toán, khóa học được gắn vào email bạn nhập.
         </p>
         <form class="order-form checkout-buyer-form" data-buyer-form>
           <label>Họ và tên
