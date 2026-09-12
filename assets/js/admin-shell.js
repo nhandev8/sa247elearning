@@ -39,6 +39,7 @@
         { target: "tai-khoan/", label: "Tất cả tài khoản", key: "tai-khoan" },
         { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
         { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
+        { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
         { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
       ],
     },
@@ -76,6 +77,7 @@
     if (path.includes("/tai-khoan")) return "tai-khoan";
     if (path.includes("/quyen-hoc")) return "quyen-hoc";
     if (path.includes("/don-hang")) return "don-hang";
+    if (path.includes("/gia-ship")) return "gia-ship";
     if (path.includes("/nhat-ky")) return "nhat-ky";
     if (path.includes("/thong-ke")) return "thong-ke";
     if (path.includes("/phan-quyen")) return "phan-quyen";

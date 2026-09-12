@@ -19,6 +19,26 @@
     return new URLSearchParams(location.search).get("course")?.trim() || "";
   }
 
+  function fmtVnd(n) {
+    return Number(n).toLocaleString("vi-VN") + "đ";
+  }
+
+  async function loadCertPriceLabels(sb) {
+    const fallback = { pdf: "169.000đ", hard: "199.000đ" };
+    try {
+      const { data, error } = await sb.rpc("get_product_prices");
+      if (error || !data || typeof data !== "object") return fallback;
+      const pdf = data.cert_pdf?.amount ?? data.cert_pdf;
+      const hard = data.cert_hard?.amount ?? data.cert_hard;
+      return {
+        pdf: pdf != null ? fmtVnd(pdf) : fallback.pdf,
+        hard: hard != null ? fmtVnd(hard) : fallback.hard,
+      };
+    } catch {
+      return fallback;
+    }
+  }
+
   async function loadEnrolledCourses(sb) {
     const { data, error } = await sb
       .from("enrollments")
@@ -105,13 +125,14 @@
               <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
               <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a></p>`;
           } else {
+            const prices = await loadCertPriceLabels(sb);
             result.innerHTML = `<h2>Đạt ${pct}%</h2>
               <p>Bạn đã đủ điều kiện cấp giấy chứng nhận hoàn thành khóa học.</p>
-              <p class="meta">69.000đ là phí tham gia khóa — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
+              <p class="meta">Phí khóa học là phí tham gia — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
               <p><strong>Chọn hình thức nhận:</strong></p>
               <p class="cert-buy-options">
-                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · 169.000đ</a>
-                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · 199.000đ</a>
+                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${prices.pdf}</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${prices.hard} + ship</a>
                 <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}">Xem các lựa chọn</a>
                 <a class="btn btn--line" href="../chung-nhan/">Không nhận · Về sau</a>
               </p>`;

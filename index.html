@@ -4,28 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SA247 E-Learning · Học an toàn. Làm việc chuyên nghiệp.</title>
-  <meta name="description" content="Các chương trình đào tạo ATVSLĐ, HSE và ISO được xây dựng từ thực tế công việc, giúp bạn hiểu đúng, làm đúng và áp dụng được ngay tại hiện trường." />
-  <meta name="theme-color" content="#0f1c17" />
+  <meta name="description" content="Khóa học ATVSLĐ, HSE và kỹ năng nghề được xây dựng từ thực tế công việc, giúp bạn từng bước nâng cao kiến thức và năng lực nghề nghiệp." />
+  <meta name="theme-color" content="#0B1F3A" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SA247 E-Learning · Học an toàn. Làm việc chuyên nghiệp." />
-  <meta property="og:description" content="Các chương trình đào tạo ATVSLĐ, HSE và ISO được xây dựng từ thực tế công việc, giúp bạn hiểu đúng, làm đúng và áp dụng được ngay tại hiện trường." />
+  <meta property="og:description" content="Khóa học ATVSLĐ, HSE và kỹ năng nghề được xây dựng từ thực tế công việc, giúp bạn từng bước nâng cao kiến thức và năng lực nghề nghiệp." />
   <meta property="og:image" content="assets/hero.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/site.css?v=20260913m" />
+  <link rel="stylesheet" href="assets/site.css?v=20260913p2" />
     <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/" />
 
 </head>
 <body>
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
-      <a class="nav__brand" href="#top">Safety and You <em>247</em> Academy</a>
+      <a class="nav__brand" href="#top">SA247 <em>E-LEARNING</em></a>
+      <div class="nav__menu" aria-label="Điều hướng chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="#chuong-trinh">Khóa học</a>
+        <a href="#career-map">Lộ trình nghề nghiệp</a>
+        <a href="#gioi-thieu">Về SA247</a>
+        <a href="verify/">Xác minh chứng nhận</a>
+      </div>
       <div class="nav__actions">
-        <a class="nav__link" data-nav-dashboard hidden href="dashboard/">Khóa học của tôi</a>
+        <a class="nav__link" data-nav-dashboard hidden href="dashboard/">Học tập</a>
         <a class="nav__link" data-nav-admin hidden href="admin/">Quản trị</a>
         <a class="nav__link" data-nav-login href="auth/login.html">Đăng nhập</a>
+        <a class="nav__link" data-nav-register href="auth/register.html">Đăng ký</a>
         <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="index.html" hidden>Đăng xuất</button>
         <a class="nav__cta" href="#chuong-trinh">Khám phá khóa học</a>
       </div>
@@ -42,17 +50,79 @@
         <span>Safety and You 247 Academy</span>
       </p>
       <h1>Học an toàn. Làm việc chuyên nghiệp.</h1>
-      <p class="hero__lead">Các chương trình đào tạo ATVSLĐ, HSE và ISO được xây dựng từ thực tế công việc, giúp bạn hiểu đúng, làm đúng và áp dụng được ngay tại hiện trường.</p>
+      <p class="hero__lead">Khóa học ATVSLĐ, HSE và kỹ năng nghề được xây dựng từ thực tế công việc, giúp bạn từng bước nâng cao kiến thức và năng lực nghề nghiệp.</p>
+      <p class="hub-price-banner" data-live-course-from-price>KHÓA HỌC CHÍNH THỨC TỪ 69.000đ</p>
       <div class="hero__actions">
-        <a class="btn btn--amber" href="#career-map">Khám phá khóa học</a>
-        <a class="btn btn--line" href="atnm-01/#hoc-thu">Học thử miễn phí</a>
+        <a class="btn btn--amber" href="#chuong-trinh">Khám phá khóa học</a>
+        <a class="btn btn--line" href="#career-map">Tìm lộ trình phù hợp</a>
       </div>
     </div>
   </header>
   <main>
+    <section class="about manifesto" id="gioi-thieu">
+      <div class="wrap">
+        <p class="kicker reveal">SA247 là gì?</p>
+        <h2 class="title reveal">Học để làm được việc</h2>
+        <p class="lead reveal">SA247 E-Learning tập trung vào kiến thức an toàn, HSE và kỹ năng nghề được tổ chức thành những chương trình học rõ ràng, thực tế và có hệ thống.</p>
+        <div class="values-grid">
+          <div class="value-card reveal">
+            <strong>KIẾN THỨC</strong>
+            <p>Nắm được những nội dung cần thiết cho công việc.</p>
+          </div>
+          <div class="value-card reveal">
+            <strong>KINH NGHIỆM</strong>
+            <p>Tiếp cận các tình huống và góc nhìn từ thực tế.</p>
+          </div>
+          <div class="value-card reveal">
+            <strong>KỸ NĂNG</strong>
+            <p>Biết cách vận dụng vào công việc.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="path" id="lo-trinh-hoc">
+      <div class="wrap">
+        <p class="kicker reveal">Cách SA247 hoạt động</p>
+        <h2 class="title reveal">5 bước rõ ràng</h2>
+        <p class="lead reveal">69.000đ không phải tiền để mở từng video — sau khi đăng ký bạn học toàn bộ khóa.</p>
+        <ol class="path-list path-list--flow">
+          <li class="path-step reveal">
+            <b>01</b>
+            <div><strong>Chọn khóa học</strong><span>Chọn chương trình phù hợp với công việc và mục tiêu của bạn.</span></div>
+          </li>
+          <div class="path-arrow" aria-hidden="true">↓</div>
+
+          <li class="path-step reveal">
+            <b>02</b>
+            <div><strong>Đăng ký 69K</strong><span>Thanh toán phí khóa học chính thức để nhận quyền học toàn bộ.</span></div>
+          </li>
+          <div class="path-arrow" aria-hidden="true">↓</div>
+
+          <li class="path-step reveal">
+            <b>03</b>
+            <div><strong>Học toàn bộ</strong><span>Xem mọi bài trong khóa — không khóa video theo từng bài.</span></div>
+          </li>
+          <div class="path-arrow" aria-hidden="true">↓</div>
+
+          <li class="path-step reveal">
+            <b>04</b>
+            <div><strong>Hoàn thành &amp; kiểm tra</strong><span>Theo dõi tiến độ và làm bài kiểm tra cuối khóa.</span></div>
+          </li>
+          <div class="path-arrow" aria-hidden="true">↓</div>
+
+          <li class="path-step reveal">
+            <b>05</b>
+            <div><strong>Nhận chứng nhận</strong><span>Khi đạt điều kiện, đăng ký GCN PDF hoặc bản cứng (tùy chọn).</span></div>
+          </li>
+
+        </ol>
+      </div>
+    </section>
+
     <section class="career" id="career-map">
       <div class="wrap">
-        <h2 class="title career-title">Bạn đang ở đâu trên đường nghề HSE?</h2>
+        <h2 class="title career-title">Bạn đang ở đâu trên hành trình nghề nghiệp?</h2>
         <p class="career-hook">Bạn không thiếu một khóa học. Bạn cần biết mình đang thiếu gì.</p>
         <p class="lead career-intro">Nghề HSE có rất nhiều ngã rẽ. Nhà máy, công trường, thiết bị nâng, công việc nguy hiểm, ISO…</p>
         <p class="lead career-intro">Có người mới bước vào nghề. Có người đã làm vài năm nhưng vẫn loay hoay với công việc hàng ngày. Có người đang phụ trách HSE và muốn bước lên vai trò quản lý.</p>
@@ -64,7 +134,7 @@
             <span class="career-pick__body">Bạn đã vào nhà máy nhưng còn thiếu một bức tranh tổng thể về công việc HSE.</span>
             <span class="career-pick__go">Tôi đang ở giai đoạn này →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ATNM-01 → ATNM-02</b></span>
+              <span>Khóa phù hợp: <b>ATNM-01 → ATNM-02</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -74,7 +144,7 @@
             <span class="career-pick__body">Hồ sơ, kiểm tra, đào tạo, rủi ro, sự cố… Bạn đang xử lý từng việc hay đã có một hệ thống?</span>
             <span class="career-pick__go">Tôi muốn nâng cấp năng lực →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ATNM-02</b></span>
+              <span>Khóa phù hợp: <b>ATNM-02</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -84,7 +154,7 @@
             <span class="career-pick__body">Làm HSE công trường không chỉ là đi kiểm tra và nhắc nhở — bạn cần khung kiểm soát theo giai đoạn thi công.</span>
             <span class="career-pick__go">Tôi muốn làm HSE công trường bài bản →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ATXD-01 → ATXD-02</b></span>
+              <span>Khóa phù hợp: <b>ATXD-01 → ATXD-02</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -94,7 +164,7 @@
             <span class="career-pick__body">Vấn đề có thể không nằm ở việc bạn làm chưa đủ nhiều, mà ở cách bạn tổ chức hệ thống.</span>
             <span class="career-pick__go">Tôi muốn nâng tầm quản lý →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ATXD-02</b></span>
+              <span>Khóa phù hợp: <b>ATXD-02</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -104,7 +174,7 @@
             <span class="career-pick__body">Cẩu, pa lăng, phụ kiện nâng, kiểm định, vận hành… Bạn cần một hệ thống kiến thức dùng ngay tại hiện trường.</span>
             <span class="career-pick__go">Tôi cần củng cố nghiệp vụ →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>KTN-01</b></span>
+              <span>Khóa phù hợp: <b>KTN-01</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -114,7 +184,7 @@
             <span class="career-pick__body">Sai một bước trong kiểm soát có thể biến một công việc bình thường thành sự cố nghiêm trọng.</span>
             <span class="career-pick__go">Tôi muốn kiểm soát công việc tốt hơn →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>CVNH-01</b></span>
+              <span>Khóa phù hợp: <b>CVNH-01</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -124,7 +194,7 @@
             <span class="career-pick__body">Không chỉ là kiểm định. Bạn cần hiểu cả thiết bị, nguy cơ và cách kiểm soát.</span>
             <span class="career-pick__go">Tôi muốn làm chắc phần này →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>AL-01</b></span>
+              <span>Khóa phù hợp: <b>AL-01</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -134,7 +204,7 @@
             <span class="career-pick__body">ISO 45001 là trách nhiệm của bạn — hãy bắt đầu từ cách hệ thống thực sự vận hành.</span>
             <span class="career-pick__go">Tôi muốn triển khai bài bản →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ISO45001</b></span>
+              <span>Khóa phù hợp: <b>ISO45001</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -144,7 +214,7 @@
             <span class="career-pick__body">Nếu bạn đang phụ trách triển khai hoặc duy trì QMS, hãy bắt đầu từ cách hệ thống tạo ra giá trị thật.</span>
             <span class="career-pick__go">Tôi muốn hiểu và triển khai đúng →</span>
             <span class="career-pick__path">
-              <span>Lộ trình phù hợp: <b>ISO9001</b></span>
+              <span>Khóa phù hợp: <b>ISO9001</b></span>
               <span class="career-pick__path-cta">Xem lộ trình →</span>
             </span>
           </a>
@@ -157,27 +227,11 @@
       </div>
     </section>
 
-    <section class="about manifesto" id="gioi-thieu">
-      <div class="wrap">
-        <p class="kicker reveal">Tư duy học</p>
-        <h2 class="title reveal">Học an toàn không chỉ là nhớ quy định</h2>
-        <p class="lead reveal">Một người làm an toàn cần nhiều hơn những kiến thức trên giấy.</p>
-        <p class="lead reveal">Bạn cần biết:</p>
-        <ul class="manifesto-list">
-            <li class="reveal">Mối nguy nằm ở đâu?</li>
-            <li class="reveal">Rủi ro phát sinh như thế nào?</li>
-            <li class="reveal">Biện pháp kiểm soát phải thực hiện ra sao?</li>
-            <li class="reveal">Và khi bước ra hiện trường, phải làm gì?</li>
-        </ul>
-        <p class="lead reveal">SA247 E-Learning tập trung vào những kiến thức và kỹ năng có thể đưa từ bài học đến công việc thực tế.</p>
-      </div>
-    </section>
-
     <section class="modules" id="chuong-trinh">
       <div class="wrap">
-        <p class="kicker reveal">Các chương trình đào tạo</p>
-        <h2 class="title reveal">Chọn chương trình phù hợp với công việc của bạn</h2>
-        <p class="lead reveal">Từ kiến thức nền tảng về ATVSLĐ đến các chuyên đề chuyên sâu về xây dựng, HSE và hệ thống quản lý.</p>
+        <p class="kicker reveal">Khóa học nổi bật</p>
+        <h2 class="title reveal">Các chương trình đào tạo</h2>
+        <p class="lead reveal">Số chương và số bài lấy từ hệ thống — không ghi cứng trên trang.</p>
         <div class="catalog" data-live-catalog>
           <div class="catalog-group reveal" id="nhom-atvslđ">
             <header class="catalog-group__head">
@@ -185,23 +239,27 @@
               <p>Nắm vững kiến thức nền tảng để nhận diện mối nguy, đánh giá rủi ro và kiểm soát các yếu tố nguy hiểm trong công việc.</p>
             </header>
             <div class="program-grid program-grid--2">
-            <a class="program-card reveal" href="atnm-01/">
+            <a class="program-card reveal" href="atnm-01/" data-course-code="ATNM-01">
               <span class="program-card__media">
                 <img src="assets/programs/atnm-01/card.jpg" alt="Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ATNM-01</span>
               <h3>Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy</h3>
-              <p class="meta">Bản đồ 6 tháng đầu nghề · kế hoạch 30–60–90</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
-            <a class="program-card reveal" href="atnm-02/">
+            <a class="program-card reveal" href="atnm-02/" data-course-code="ATNM-02">
               <span class="program-card__media">
                 <img src="assets/programs/atnm-02/card.jpg" alt="Quản lý ATVSLĐ nhà máy" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ATNM-02</span>
               <h3>Quản lý ATVSLĐ nhà máy</h3>
-              <p class="meta">Từ làm việc hiện trường lên vận hành hệ thống</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
             </div>
           </div>
@@ -211,23 +269,27 @@
               <p>Tập trung vào những rủi ro thường gặp trong thi công và các biện pháp kiểm soát an toàn tại công trường.</p>
             </header>
             <div class="program-grid program-grid--2">
-            <a class="program-card reveal" href="atxd-01/">
+            <a class="program-card reveal" href="atxd-01/" data-course-code="ATXD-01">
               <span class="program-card__media">
                 <img src="assets/programs/atxd-01/card.jpg" alt="Sống sót 6 tháng đầu nghề ATVSLĐ công trường xây dựng" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ATXD-01</span>
               <h3>Sống sót 6 tháng đầu nghề ATVSLĐ công trường xây dựng</h3>
-              <p class="meta">Nền tảng đầu nghề HSE trên công trường</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
-            <a class="program-card reveal" href="atxd-02/">
+            <a class="program-card reveal" href="atxd-02/" data-course-code="ATXD-02">
               <span class="program-card__media">
                 <img src="assets/programs/atxd-02/card.jpg" alt="Quản lý ATVSLĐ công trường xây dựng" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ATXD-02</span>
               <h3>Quản lý ATVSLĐ công trường xây dựng</h3>
-              <p class="meta">Vận hành hệ thống an toàn trên công trường</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
             </div>
           </div>
@@ -237,32 +299,38 @@
               <p>Các chuyên đề phục vụ trực tiếp cho công việc ATVSLĐ, HSE và quản lý hiện trường.</p>
             </header>
             <div class="program-grid program-grid--3">
-            <a class="program-card reveal" href="ktn-01/">
+            <a class="program-card reveal" href="ktn-01/" data-course-code="KTN-01">
               <span class="program-card__media">
                 <img src="assets/programs/ktn-01/card.jpg" alt="Kỹ thuật an toàn thiết bị nâng" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">KTN-01</span>
               <h3>Kỹ thuật an toàn thiết bị nâng</h3>
-              <p class="meta">An toàn cần cẩu, palang, dây &amp; phụ kiện nâng</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
-            <a class="program-card reveal" href="cvnh-01/">
+            <a class="program-card reveal" href="cvnh-01/" data-course-code="CVNH-01">
               <span class="program-card__media">
                 <img src="assets/programs/cvnh-01/card.jpg" alt="Kỹ thuật an toàn các công việc nguy hiểm" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">CVNH-01</span>
               <h3>Kỹ thuật an toàn các công việc nguy hiểm</h3>
-              <p class="meta">Permit, LOTO, không gian hạn chế &amp; lửa nóng</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
-            <a class="program-card reveal" href="al-01/">
+            <a class="program-card reveal" href="al-01/" data-course-code="AL-01">
               <span class="program-card__media">
                 <img src="assets/programs/al-01/card.jpg" alt="Kỹ thuật an toàn thiết bị áp lực" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">AL-01</span>
               <h3>Kỹ thuật an toàn thiết bị áp lực</h3>
-              <p class="meta">Nồi hơi, bình chịu áp, đường ống áp lực</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
             </div>
           </div>
@@ -272,23 +340,27 @@
               <p>Tiếp cận ISO và hệ thống quản lý theo hướng dễ hiểu, có cấu trúc và có thể áp dụng vào công việc.</p>
             </header>
             <div class="program-grid program-grid--2">
-            <a class="program-card reveal" href="iso45001/">
+            <a class="program-card reveal" href="iso45001/" data-course-code="ISO45001">
               <span class="program-card__media">
                 <img src="assets/programs/iso45001/card.jpg" alt="ISO 45001 hệ thống quản lý OHS — lộ trình triển khai" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ISO45001</span>
               <h3>ISO 45001 hệ thống quản lý OHS — lộ trình triển khai</h3>
-              <p class="meta">Triển khai hệ thống quản lý an toàn sức khỏe nghề nghiệp</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
-            <a class="program-card reveal" href="iso9001/">
+            <a class="program-card reveal" href="iso9001/" data-course-code="ISO9001">
               <span class="program-card__media">
                 <img src="assets/programs/iso9001/card.jpg" alt="ISO 9001 hệ thống quản lý QMS — lộ trình triển khai" loading="lazy" width="960" height="540" />
               </span>
+              <span class="badge badge--official">Khóa học chính thức</span>
               <span class="code">ISO9001</span>
               <h3>ISO 9001 hệ thống quản lý QMS — lộ trình triển khai</h3>
-              <p class="meta">Triển khai hệ thống quản lý chất lượng</p>
-              <span class="go">Xem chương trình →</span>
+              <p class="meta" data-live-meta>Đang tải lộ trình…</p>
+              <p class="program-card__price"><span data-live-price>…</span></p>
+              <span class="go">Xem khóa học →</span>
             </a>
             </div>
           </div>
@@ -296,94 +368,114 @@
       </div>
     </section>
 
-    <section class="why" id="vi-sao">
+    <section class="about apply" id="hoc-xong">
       <div class="wrap">
-        <p class="kicker reveal">SA247 khác gì?</p>
-        <h2 class="title reveal">SA247 khác gì?</h2>
-        <p class="lead reveal">Không học để biết. Học để làm.</p>
-        <div class="why-grid why-grid--5">
-          <div class="why-item reveal">
-            <strong>Thực tế</strong>
-            <p>Nội dung xuất phát từ những tình huống và công việc thực tế tại công trường, nhà máy và hiện trường.</p>
-          </div>
-          <div class="why-item reveal">
-            <strong>Trực quan</strong>
-            <p>Học bằng video và hình ảnh, giúp những vấn đề an toàn vốn khô khan trở nên dễ hiểu và dễ nhớ hơn.</p>
-          </div>
-          <div class="why-item reveal">
-            <strong>Chủ động</strong>
-            <p>Học bất cứ khi nào bạn có thời gian. Xem lại bài học khi cần và chủ động theo dõi tiến độ của mình.</p>
-          </div>
-          <div class="why-item reveal">
-            <strong>Đúng chuyên ngành</strong>
-            <p>Tập trung vào ATVSLĐ · HSE · An toàn xây dựng · ISO, thay vì những nội dung đào tạo chung chung.</p>
-          </div>
-          <div class="why-item reveal">
-            <strong>Có thể áp dụng</strong>
-            <p>Kiến thức được trình bày theo hướng từ nhận diện vấn đề → hiểu nguyên nhân → lựa chọn biện pháp → áp dụng vào công việc.</p>
-          </div>
+        <p class="kicker reveal">Kết quả học tập</p>
+        <h2 class="title reveal">Học xong bạn nhận được gì?</h2>
+        <p class="lead reveal">Sau khóa học, bạn có thể:</p>
+        <ul class="outcomes-list">
+          <li class="reveal">Học theo một lộ trình có cấu trúc.</li>
+          <li class="reveal">Theo dõi quá trình học.</li>
+          <li class="reveal">Ôn lại nội dung đã học.</li>
+          <li class="reveal">Tham gia bài kiểm tra cuối khóa.</li>
+          <li class="reveal">Lưu kết quả học tập.</li>
+          <li class="reveal">Đăng ký giấy chứng nhận nếu đủ điều kiện.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="why" id="chung-nhan">
+      <div class="wrap">
+        <p class="kicker reveal">Chứng nhận SA247</p>
+        <h2 class="title reveal">Hoàn thành khóa học. Lựa chọn cách nhận chứng nhận.</h2>
+        <p class="lead reveal">Chỉ đăng ký GCN sau khi đủ điều kiện (đạt kiểm tra).</p>
+        <div class="cert-products">
+          <article class="cert-product reveal">
+            <h3>Giấy chứng nhận PDF</h3>
+            <p class="cert-product__price">169.000đ</p>
+            <ul>
+              <li>Bản điện tử PDF</li>
+              <li>Mã chứng nhận riêng</li>
+              <li>QR xác minh</li>
+              <li>Tra cứu trực tuyến</li>
+              <li>Tải về tài khoản cá nhân</li>
+            </ul>
+            <a class="btn btn--line" href="chung-nhan/">Nhận GCN PDF</a>
+          </article>
+          <article class="cert-product reveal">
+            <h3>Giấy chứng nhận bản cứng</h3>
+            <p class="cert-product__price">199.000đ</p>
+            <ul>
+              <li>Bản in giấy chứng nhận</li>
+              <li>Mã chứng nhận riêng + QR</li>
+              <li>Có bản PDF điện tử</li>
+              <li>Chưa bao gồm phí vận chuyển</li>
+            </ul>
+            <a class="btn btn--line" href="chung-nhan/">Nhận GCN bản cứng</a>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="path" id="lo-trinh-hoc">
+    <section class="about" id="xac-minh">
       <div class="wrap">
-        <p class="kicker reveal">Lộ trình</p>
-        <h2 class="title reveal">Một lộ trình học đơn giản</h2>
-        <p class="lead reveal">Bắt đầu từ điều bạn cần. Học đến khi bạn làm được.</p>
-        <ol class="path-list path-list--flow">
-          <li class="path-step reveal">
-            <b>01</b>
-            <div><strong>Khám phá</strong><span>Chọn chương trình phù hợp với công việc và mục tiêu của bạn.</span></div>
-          </li>
-          <div class="path-arrow" aria-hidden="true">↓</div>
-
-          <li class="path-step reveal">
-            <b>02</b>
-            <div><strong>Học thử</strong><span>Xem những bài học được mở miễn phí.</span></div>
-          </li>
-          <div class="path-arrow" aria-hidden="true">↓</div>
-
-          <li class="path-step reveal">
-            <b>03</b>
-            <div><strong>Hiểu phương pháp</strong><span>Trải nghiệm cách SA247 trình bày kiến thức và tiếp cận vấn đề an toàn.</span></div>
-          </li>
-          <div class="path-arrow" aria-hidden="true">↓</div>
-
-          <li class="path-step reveal">
-            <b>04</b>
-            <div><strong>Tiếp tục học</strong><span>Khi thấy phù hợp, mở khóa toàn bộ chương trình.</span></div>
-          </li>
-          <div class="path-arrow" aria-hidden="true">↓</div>
-
-          <li class="path-step reveal">
-            <b>05</b>
-            <div><strong>Hoàn thành</strong><span>Học toàn bộ nội dung, thực hiện các bài kiểm tra và hoàn thành chương trình.</span></div>
-          </li>
-
-        </ol>
+        <p class="kicker reveal">Xác minh</p>
+        <h2 class="title reveal">Chứng nhận có thể được xác minh trực tuyến</h2>
+        <div class="verify-cta-card reveal">
+          <p>Mỗi giấy chứng nhận được cấp có mã riêng và QR dẫn đến trang xác minh của SA247.</p>
+          <a class="btn btn--amber" href="verify/">Xác minh chứng nhận</a>
+        </div>
       </div>
     </section>
 
-    <section class="about apply" id="ap-dung">
+    <section class="faq" id="faq">
       <div class="wrap">
-        <p class="kicker reveal">Triết lý</p>
-        <h2 class="title reveal">Kiến thức tốt hơn khi có thể áp dụng</h2>
-        <p class="lead reveal">SA247 hướng tới một điều đơn giản: sau mỗi bài học, bạn phải biết mình có thể làm gì khác đi trong công việc. Không chỉ biết một quy định. Không chỉ nhớ một khái niệm. Mà hiểu vấn đề, nhận diện được nguy cơ và biết cách hành động an toàn hơn.</p>
+        <p class="kicker reveal">FAQ</p>
+        <h2 class="title reveal">Câu hỏi thường gặp</h2>
+        <div class="faq-list">
+          <details class="faq-item reveal">
+            <summary>Khóa học giá bao nhiêu?</summary>
+            <p>Các khóa học chính thức hiện có giá từ 69.000đ/khóa.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Mua khóa học có được xem toàn bộ bài học không?</summary>
+            <p>Có. Sau khi đăng ký khóa học thành công, học viên được xem toàn bộ nội dung của khóa học.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Có bắt buộc mua giấy chứng nhận không?</summary>
+            <p>Không. Giấy chứng nhận là lựa chọn bổ sung sau khi học viên hoàn thành khóa học và đạt yêu cầu kiểm tra.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Giấy chứng nhận PDF giá bao nhiêu?</summary>
+            <p>169.000đ.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Giấy chứng nhận bản cứng giá bao nhiêu?</summary>
+            <p>199.000đ, chưa bao gồm phí vận chuyển.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Mua bản cứng có được PDF không?</summary>
+            <p>Có. Học viên nhận bản PDF điện tử của chính giấy chứng nhận đó.</p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Giấy chứng nhận có thể xác minh không?</summary>
+            <p>Có. Mỗi giấy chứng nhận có mã riêng và QR xác minh trực tuyến.</p>
+          </details>
+        </div>
       </div>
     </section>
 
     <section class="contact final-cta" id="bat-dau">
       <div class="wrap">
-        <p class="kicker reveal">Bắt đầu học hôm nay</p>
-        <h2 class="title reveal">Một bài học miễn phí có thể là điểm bắt đầu</h2>
+        <p class="kicker reveal">Bắt đầu</p>
+        <h2 class="title reveal">Bắt đầu khóa học của bạn hôm nay</h2>
         <p class="lead reveal">
-          Hãy chọn một chương trình, xem thử nội dung và tự đánh giá xem SA247 có phù hợp với bạn hay không.
+          Chọn một chương trình phù hợp với công việc và bắt đầu học.
         </p>
         <div class="contact__cta reveal">
-          <a class="btn btn--amber" href="#career-map">Tìm điểm xuất phát của bạn</a>
-          <a class="btn btn--line" href="atnm-01/#hoc-thu">Học thử miễn phí</a>
+          <a class="btn btn--amber" href="#chuong-trinh">Khám phá khóa học</a>
         </div>
+        <p class="lead reveal" style="margin-top:1rem">Khóa học chính thức từ 69.000đ</p>
       </div>
     </section>
   </main>
@@ -395,7 +487,7 @@
       <p class="footer-links">
         <a href="privacy.html">Chính sách bảo mật</a> ·
         <a href="terms.html">Điều khoản</a> ·
-        <a href="verify/">Xác minh chứng chỉ</a> ·
+        <a href="verify/">Xác minh chứng nhận</a> ·
         <a href="mailto:ysafe247@gmail.com">ysafe247@gmail.com</a> ·
         <a href="tel:+84877787988">08 77 78 79 88</a>
       </p>

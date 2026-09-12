@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Đơn hàng · SA247 Quản trị</title>
+  <title>Giá &amp; ship · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/admin.css" />
@@ -11,7 +11,7 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-don-hang.js" defer></script>
+  <script src="../../assets/js/admin-gia-ship.js" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,34 +26,27 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Đơn hàng</h1>
+        <h1>Giá &amp; phí ship</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <select id="filter">
-            <option value="all">Tất cả</option>
-            <option value="pending">Chờ thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-            <option value="cert_hard">GCN bản cứng</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
-        </div>
+        <p class="adm-msg">Nguồn: bảng <code>product_prices</code>. Đổi <code>course_default</code> có thể đồng bộ sang mọi khóa.</p>
         <p class="adm-msg" id="adm-status"></p>
         <div class="adm-table-wrap">
           <table class="adm-table">
             <thead>
               <tr>
-                <th>Mã đơn</th>
-                <th>Khóa học</th>
-                <th>Số tiền</th>
-                <th>Trạng thái</th>
-                <th>Thời gian</th>
-                <th>Thao tác</th>
+                <th>Mã</th>
+                <th>Nhãn</th>
+                <th>Số tiền (đ)</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
+        <p class="adm-toolbar">
+          <button type="button" class="adm-btn adm-btn--line" id="sync-courses">Đồng bộ giá khóa = course_default</button>
+        </p>
       </main>
     </div>
   </div>

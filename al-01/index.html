@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AL-01 - Kỹ thuật an toàn thiết bị áp lực | SA247</title>
   <meta name="description" content="AL-01 trang bị kỹ thuật an toàn thiết bị áp lực: phân loại, kiểm định, vận hành, bảo vệ và ứng xử bất thường." />
-  <meta name="theme-color" content="#0f1c17" />
+  <meta name="theme-color" content="#0B1F3A" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AL-01 - Kỹ thuật an toàn thiết bị áp lực | SA247" />
   <meta property="og:description" content="AL-01 trang bị kỹ thuật an toàn thiết bị áp lực: phân loại, kiểm định, vận hành, bảo vệ và ứng xử bất thường." />
@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260913m" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260913p2" />
     <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/al-01/" />
   <meta property="og:title" content="AL-01 - Kỹ thuật an toàn thiết bị áp lực | SA247" />
   <meta property="og:description" content="AL-01 trang bị kỹ thuật an toàn thiết bị áp lực: phân loại, kiểm định, vận hành, bảo vệ và ứng xử bất thường." />
@@ -23,13 +23,14 @@
 <body class="course-page">
   <nav class="nav" id="nav">
     <div class="wrap nav__inner">
-      <a class="nav__brand" href="../index.html">Safety and You <em>247</em> Academy</a>
+      <a class="nav__brand" href="../index.html">SA247 <em>E-LEARNING</em></a>
       <div class="nav__actions">
-        <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Khóa học của tôi</a>
+        <a class="nav__link" data-nav-dashboard hidden href="../dashboard/">Học tập</a>
         <a class="nav__link" data-nav-admin hidden href="../admin/">Quản trị</a>
         <a class="nav__link" data-nav-login href="../auth/login.html">Đăng nhập</a>
+        <a class="nav__link" data-nav-register href="../auth/register.html">Đăng ký</a>
         <button type="button" class="nav__link nav__link--btn" data-nav-logout data-home="../index.html" hidden>Đăng xuất</button>
-        <a class="nav__cta" href="#hoc-thu">Học thử</a>
+        <a class="nav__cta" href="#goi-pro">Đăng ký học · 69k</a>
       </div>
     </div>
   </nav>
@@ -40,33 +41,34 @@
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="wrap hero__content">
       <p class="hero__brand">
-        SA247 E-Learning
+        SA247 E-LEARNING
         <span>AL-01</span>
       </p>
       <div class="hero__meta" id="course-hero-meta">
-        <span>thiết bị áp lực</span>
-        <span>Học thử miễn phí</span>
+        <span data-live-meta>Đang tải lộ trình…</span>
+        <span>Khóa học chính thức</span>
       </div>
       <h1>Kỹ thuật an toàn thiết bị áp lực</h1>
       <p class="hero__lead">Thiết bị áp lực tích năng lượng. Sai một van, một mối hàn, một quy trình xả — hậu quả lan rộng. AL-01 giúp bạn kiểm soát đúng điểm.</p>
-      <div class="hero__actions">
-        <a class="btn btn--amber" href="#hoc-thu">Học thử miễn phí</a>
-        <a class="btn btn--line" href="#learner-root">Vào lớp học</a>
-        <a class="btn btn--line" href="#lo-trinh">Xem lộ trình</a>
+      <p class="hub-price-banner"><span data-live-price>69.000đ</span></p>
+      <div class="hero__actions" id="course-hero-actions">
+        <a class="btn btn--amber" data-hero-cta href="#goi-pro">Đăng ký học · 69k</a>
+        <a class="btn btn--line" href="#lo-trinh">Xem cấu trúc khóa</a>
+        <a class="btn btn--line" href="#doi-tuong">Đối tượng &amp; mục tiêu</a>
       </div>
     </div>
   </header>
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
       <span>AL-01</span>
-      <span>Học thử miễn phí</span>
-      <span>Nội dung thực tế</span>
-      <span>Mở khóa khi sẵn sàng</span>
+      <span>Khóa học chính thức</span>
+      <span>69.000đ</span>
+      <span>Học toàn bộ sau khi đăng ký</span>
       <span>SA247 E-Learning</span>
       <span>AL-01</span>
-      <span>Học thử miễn phí</span>
-      <span>Nội dung thực tế</span>
-      <span>Mở khóa khi sẵn sàng</span>
+      <span>Khóa học chính thức</span>
+      <span>69.000đ</span>
+      <span>Học toàn bộ sau khi đăng ký</span>
       <span>SA247 E-Learning</span>
     </div>
   </div>
@@ -248,8 +250,8 @@
   </main>
   <div class="course-sticky" id="course-sticky-cta" hidden>
     <div class="wrap course-sticky__inner">
-      <p data-sticky-label>Học thử miễn phí</p>
-      <a class="btn btn--amber btn--small" data-sticky-btn href="#hoc-thu">Học thử</a>
+      <p data-sticky-label>Đăng ký học chính thức</p>
+      <a class="btn btn--amber btn--small" data-sticky-btn href="#goi-pro">Đăng ký học</a>
     </div>
   </div>
   <footer>
@@ -265,7 +267,7 @@
     </div>
   </footer>
   <script type="application/json" id="sa247-course-boot">
-{"code": "AL-01", "slug": "al-01", "modules_count": 3, "lessons_count_label": "thiết bị áp lực", "free_count": 3, "duration_label": "", "status": "dang_mo", "price": "69.000đ", "deliverables": ["Hướng dẫn học Pro AL-01", "Checklist kiểm tra thường nhật thiết bị áp lực", "Bảng theo dõi van an toàn / kiểm định", "Danh mục tín hiệu bất thường cần dừng", "Kịch bản ứng xử 5 phút đầu (mẫu)", "Phiếu ghi nhận bất thường", "Quiz + chứng nhận AL-01 Pro"]}
+{"code": "AL-01", "slug": "al-01", "modules_count": 3, "lessons_count_label": "thiết bị áp lực", "free_count": 3, "duration_label": "", "status": "dang_mo", "price": "69.000đ", "price_label": "69.000đ", "deliverables": ["Hướng dẫn học Pro AL-01", "Checklist kiểm tra thường nhật thiết bị áp lực", "Bảng theo dõi van an toàn / kiểm định", "Danh mục tín hiệu bất thường cần dừng", "Kịch bản ứng xử 5 phút đầu (mẫu)", "Phiếu ghi nhận bất thường", "Quiz + chứng nhận AL-01 Pro"]}
   </script>
   <script>
     window.SA247_BANK = {

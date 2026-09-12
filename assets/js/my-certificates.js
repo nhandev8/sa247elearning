@@ -24,6 +24,26 @@
     );
   }
 
+  function fmtVnd(n) {
+    return Number(n).toLocaleString("vi-VN") + "đ";
+  }
+
+  async function loadCertPriceLabels(sb) {
+    const fallback = { pdf: "169.000đ", hard: "199.000đ" };
+    try {
+      const { data, error } = await sb.rpc("get_product_prices");
+      if (error || !data || typeof data !== "object") return fallback;
+      const pdf = data.cert_pdf?.amount ?? data.cert_pdf;
+      const hard = data.cert_hard?.amount ?? data.cert_hard;
+      return {
+        pdf: pdf != null ? fmtVnd(pdf) : fallback.pdf,
+        hard: hard != null ? fmtVnd(hard) : fallback.hard,
+      };
+    } catch {
+      return fallback;
+    }
+  }
+
   async function bindLogout() {
     const btn = el("logout");
     if (!btn) return;
@@ -36,9 +56,11 @@
     });
   }
 
-  function paint(list) {
+  function paint(list, prices) {
     const box = el("cert-list");
     const status = el("cert-status");
+    const pdfL = prices?.pdf || "169.000đ";
+    const hardL = prices?.hard || "199.000đ";
     if (!list?.length) {
       status.innerHTML =
         'Bạn chưa có chứng nhận / đủ điều kiện nào. Hoàn thành khóa → đạt kỳ thi. <a href="../quiz/">Vào kỳ thi</a>';
@@ -70,14 +92,14 @@
                   <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
                   ${
                     c.can_buy_hard
-                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký bản cứng · 199.000đ</a>`
+                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký bản cứng · ${hardL} + ship</a>`
                       : ""
                   }
                 </p>`
               : eligible
                 ? `<p class="cert-mine-actions">
-                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · 169.000đ</a>
-                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · 199.000đ</a>
+                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${pdfL}</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${hardL} + ship</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>
                   </p>`
                 : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}.</p>`
@@ -141,6 +163,7 @@
           ((c.status || "issued") === "issued" && c.delivery_type !== "hard"),
       }));
     }
-    paint(list || []);
+    const prices = await loadCertPriceLabels(sb);
+    paint(list || [], prices);
   });
 })();

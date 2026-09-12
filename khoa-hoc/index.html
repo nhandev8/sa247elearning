@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; url=../" />
+  <title>Khóa học · SA247</title>
+  <script>
+    (function () {
+      var parts = location.pathname.replace(/\/+$/, "").split("/");
+      var code = parts[parts.length - 1];
+      if (code && code !== "khoa-hoc") {
+        location.replace("../" + code.toLowerCase() + "/" + location.search + location.hash);
+      } else {
+        location.replace("../#chuong-trinh");
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p><a href="../#chuong-trinh">Xem danh sách khóa học</a></p>
+</body>
+</html>

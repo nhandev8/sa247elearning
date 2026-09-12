@@ -1,4 +1,6 @@
-/* SA247 — mua GCN PDF / bản cứng sau khi đạt (logged-in) */
+/* SA247 — mua GCN PDF / bản cứng sau khi đạt (logged-in)
+ * Giá từ get_product_prices(); hard bắt buộc địa chỉ + cộng shipping_default.
+ */
 (function () {
   const BANK = window.SA247_BANK || {
     name: "VPBank",
@@ -7,13 +9,17 @@
     bin: "VPB",
   };
 
-  const AMOUNTS = { cert_pdf: 169000, cert_hard: 199000 };
   const LABELS = {
     cert_pdf: "Giấy chứng nhận điện tử PDF",
     cert_hard: "Giấy chứng nhận bản cứng",
   };
 
   let pollTimer = null;
+  let prices = {
+    cert_pdf: 169000,
+    cert_hard: 199000,
+    shipping_default: 35000,
+  };
 
   function el(id) {
     return document.getElementById(id);
@@ -34,7 +40,7 @@
     const u = new URLSearchParams(location.search);
     return {
       course: (u.get("course") || "").trim(),
-      type: (u.get("type") || "cert_pdf").trim(),
+      type: (u.get("type") || "").trim(),
     };
   }
 
@@ -55,18 +61,42 @@
     }
   }
 
+  async function loadPrices() {
+    try {
+      const sb = await sa247Auth.ensureClient();
+      const { data, error } = await sb.rpc("get_product_prices");
+      if (error) throw error;
+      const map = {};
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        Object.keys(data).forEach((k) => {
+          const v = data[k];
+          if (v && typeof v === "object" && v.amount != null) map[k] = Number(v.amount);
+          else if (typeof v === "number") map[k] = v;
+        });
+      } else if (Array.isArray(data)) {
+        data.forEach((r) => {
+          if (r && r.code != null) map[r.code] = Number(r.amount);
+        });
+      }
+      prices = { ...prices, ...map };
+    } catch (e) {
+      console.warn("[cert-checkout] prices fallback", e);
+    }
+  }
+
   function renderChooser(root, course) {
+    const ship = prices.shipping_default || 35000;
     root.innerHTML = `
       <div class="checkout-panel">
         <p class="kicker">${esc(course)}</p>
         <h2>Bạn đã đủ điều kiện cấp giấy chứng nhận</h2>
-        <p class="checkout-lead">Chọn hình thức nhận (không bắt buộc). 69.000đ khóa học là phí tham gia — GCN là lựa chọn sau khi đạt.</p>
+        <p class="checkout-lead">Chọn hình thức nhận (không bắt buộc). Phí khóa học là phí tham gia — GCN là lựa chọn sau khi đạt.</p>
         <div class="cert-buy-options">
           <button type="button" class="btn btn--amber" data-type="cert_pdf">
-            PDF điện tử · ${fmtVnd(AMOUNTS.cert_pdf)}
+            PDF điện tử · ${fmtVnd(prices.cert_pdf)}
           </button>
           <button type="button" class="btn btn--line" data-type="cert_hard">
-            Bản cứng · ${fmtVnd(AMOUNTS.cert_hard)}
+            Bản cứng · ${fmtVnd(prices.cert_hard)} + ship ${fmtVnd(ship)}
           </button>
           <a class="btn btn--line" href="./">Không nhận · Về danh sách</a>
         </div>
@@ -78,20 +108,74 @@
         u.searchParams.set("course", course);
         u.searchParams.set("type", type);
         history.replaceState({}, "", u);
-        startBuy(course, type);
+        if (type === "cert_hard") renderHardForm(root, course);
+        else startBuy(course, type, null);
       });
+    });
+  }
+
+  function renderHardForm(root, course) {
+    const ship = prices.shipping_default || 35000;
+    const product = prices.cert_hard || 199000;
+    const total = product + ship;
+    root.innerHTML = `
+      <div class="checkout-panel">
+        <p class="kicker">${esc(course)} · Bản cứng</p>
+        <h2>Địa chỉ nhận giấy chứng nhận</h2>
+        <p class="checkout-lead">
+          Sản phẩm ${fmtVnd(product)} + vận chuyển ${fmtVnd(ship)} =
+          <strong>${fmtVnd(total)}</strong>. Có kèm bản PDF điện tử.
+        </p>
+        <form class="checkout-form" data-hard-form>
+          <label>Họ tên người nhận<input name="full_name" required autocomplete="name" /></label>
+          <label>Số điện thoại<input name="phone" required autocomplete="tel" /></label>
+          <label>Địa chỉ<input name="address" required autocomplete="street-address" /></label>
+          <label>Tỉnh / Thành phố<input name="province" required /></label>
+          <label>Ghi chú (tuỳ chọn)<input name="note" /></label>
+          <button type="submit" class="btn btn--amber">Thanh toán ${fmtVnd(total)}</button>
+          <button type="button" class="btn btn--line" data-back>Quay lại</button>
+        </form>
+        <p class="form-msg" data-form-msg role="status"></p>
+      </div>`;
+    root.querySelector("[data-back]")?.addEventListener("click", () => {
+      const u = new URL(location.href);
+      u.searchParams.delete("type");
+      history.replaceState({}, "", u);
+      renderChooser(root, course);
+    });
+    root.querySelector("[data-hard-form]")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const shipPayload = {
+        full_name: String(fd.get("full_name") || "").trim(),
+        phone: String(fd.get("phone") || "").trim(),
+        address: String(fd.get("address") || "").trim(),
+        province: String(fd.get("province") || "").trim(),
+        note: String(fd.get("note") || "").trim(),
+      };
+      const msg = root.querySelector("[data-form-msg]");
+      try {
+        await startBuy(course, "cert_hard", shipPayload);
+      } catch (err) {
+        if (msg) msg.textContent = err.message || String(err);
+      }
     });
   }
 
   function renderPay(root, order, course, type) {
     const amount = order.amount;
     const code = order.order_code;
+    const shipLine =
+      type === "cert_hard" && order.shipping_fee
+        ? `<p class="meta">Sản phẩm ${fmtVnd(order.product_amount || prices.cert_hard)} + ship ${fmtVnd(order.shipping_fee)}</p>`
+        : "";
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
           <strong>${esc(LABELS[type] || type)}</strong>
           <span>${esc(course)} · ${fmtVnd(amount)}</span>
         </div>
+        ${shipLine}
         <p class="checkout-lead">Chuyển khoản đúng số tiền và nội dung <code>${esc(code)}</code>. Hệ thống tự xác nhận qua SePay.</p>
         <figure class="qr">
           <img src="${vietQrUrl(amount, code)}" width="280" height="280" alt="VietQR thanh toán GCN" />
@@ -112,7 +196,6 @@
           .maybeSingle();
         if (data?.status === "paid") {
           stopPoll();
-          const sb = await sa247Auth.ensureClient();
           const mine = await sb.rpc("list_my_certificates");
           const hit = (mine.data || []).find(
             (c) => c.course_code === course && c.status === "issued"
@@ -137,39 +220,53 @@
     }, 4000);
   }
 
-  async function startBuy(course, type) {
+  async function startBuy(course, type, ship) {
     const root = el("cert-buy-root");
     const status = el("cert-buy-status");
-    status.textContent = "Đang tạo đơn đăng ký GCN…";
+    if (status) status.textContent = "Đang tạo đơn đăng ký GCN…";
     try {
       const sb = await sa247Auth.ensureClient();
-      const { data, error } = await sb.rpc("create_cert_order", {
+      const args = {
         p_course_code: course,
         p_product_type: type,
-      });
+      };
+      if (type === "cert_hard") {
+        if (!ship) {
+          renderHardForm(root, course);
+          return;
+        }
+        args.p_ship = ship;
+      }
+      const { data, error } = await sb.rpc("create_cert_order", args);
       if (error) throw error;
       const order = Array.isArray(data) ? data[0] : data;
-      status.textContent = LABELS[type] || "Thanh toán GCN";
+      if (status) status.textContent = LABELS[type] || "Thanh toán GCN";
       renderPay(root, order, course, type);
     } catch (e) {
       const msg = e.message || String(e);
-      if (/NOT_ELIGIBLE/i.test(msg)) {
-        status.innerHTML =
-          'Bạn chưa đạt kỳ thi cuối khóa. <a href="../quiz/?course=' +
-          encodeURIComponent(course) +
-          '">Làm kỳ thi</a>';
-      } else if (/CERT_ALREADY_ISSUED/i.test(msg)) {
-        status.innerHTML =
-          'Bạn đã có GCN PDF. <a href="./">Xem chứng nhận của tôi</a>';
-      } else if (/not_enrolled|NOT_ENROLLED/i.test(msg)) {
-        status.innerHTML =
-          'Bạn chưa đăng ký khóa học. <a href="../' +
-          encodeURIComponent(course.toLowerCase()) +
-          '/#goi-pro">Đăng ký học · 69.000đ</a>';
-      } else {
-        status.textContent = msg;
+      if (/NOT_ELIGIBLE|SHIP_ADDRESS|ship|địa chỉ/i.test(msg) && type === "cert_hard") {
+        if (status) status.textContent = msg;
+        renderHardForm(root, course);
+        return;
       }
-      root.innerHTML = "";
+      if (status) {
+        if (/NOT_ELIGIBLE/i.test(msg)) {
+          status.innerHTML =
+            'Bạn chưa đạt kỳ thi cuối khóa. <a href="../quiz/?course=' +
+            encodeURIComponent(course) +
+            '">Làm kỳ thi</a>';
+        } else if (/CERT_ALREADY_ISSUED/i.test(msg)) {
+          status.innerHTML =
+            'Bạn đã có GCN. <a href="./">Xem chứng nhận của tôi</a>';
+        } else if (/not_enrolled|NOT_ENROLLED/i.test(msg)) {
+          status.innerHTML =
+            'Bạn chưa đăng ký khóa học. <a href="../dashboard/">Vào Học tập</a>';
+        } else {
+          status.textContent = msg;
+        }
+      }
+      if (type !== "cert_hard") root.innerHTML = "";
+      throw e;
     }
   }
 
@@ -187,6 +284,7 @@
       return;
     }
     el("user-label").textContent = session.user.email || "Học viên";
+    await loadPrices();
 
     const { course, type } = params();
     if (!course) {
@@ -195,9 +293,12 @@
       return;
     }
 
-    if (type === "cert_pdf" || type === "cert_hard") {
+    if (type === "cert_hard") {
       status.textContent = course;
-      await startBuy(course, type);
+      renderHardForm(root, course);
+    } else if (type === "cert_pdf") {
+      status.textContent = course;
+      await startBuy(course, type, null);
     } else {
       status.textContent = course;
       renderChooser(root, course);

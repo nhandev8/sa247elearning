@@ -377,12 +377,13 @@
     return raw;
   }
 
-  function renderGuestForm(root, courseCode, prefills) {
+  function renderGuestForm(root, courseCode, prefills, priceLabel) {
     const p = prefills || {};
+    const price = priceLabel || "69.000đ";
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
-          <strong data-price-label>Đăng ký khóa học · 69.000đ</strong>
+          <strong data-price-label>Đăng ký khóa học · ${esc(price)}</strong>
           <span>Phí tham gia khóa · ${esc(courseCode)} · tiến độ + kiểm tra</span>
         </div>
         <p class="checkout-lead">
@@ -429,17 +430,18 @@
     });
   }
 
-  function renderAuthedStart(root, courseCode) {
+  function renderAuthedStart(root, courseCode, priceLabel) {
+    const price = priceLabel || "";
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
-          <strong>Tạo mã thanh toán</strong>
+          <strong>Tạo mã thanh toán${price ? ` · ${esc(price)}` : ""}</strong>
           <span>1 khóa · ${esc(courseCode)} · đã đăng nhập</span>
         </div>
         <p class="checkout-lead">Bạn đã đăng nhập. Tạo mã VietQR để mở khóa khóa học này.</p>
         <div class="contact__cta">
           <button type="button" class="btn btn--amber" data-create-order>Tạo mã thanh toán</button>
-          <a class="btn btn--line" href="../dashboard/">Dashboard</a>
+          <a class="btn btn--line" href="../hoc-tap/">Học tập</a>
         </div>
         <p class="form-msg" data-msg role="status"></p>
       </div>`;
@@ -455,17 +457,33 @@
     });
   }
 
+  async function loadCoursePriceLabel(sb, courseCode) {
+    try {
+      const { data } = await sb
+        .from("courses")
+        .select("price")
+        .eq("code", courseCode)
+        .maybeSingle();
+      if (data?.price != null) return fmtVnd(data.price);
+    } catch (_) {
+      /* keep fallback */
+    }
+    return "69.000đ";
+  }
+
   async function mount(selector) {
     const root = document.querySelector(selector);
     if (!root) return;
     const courseCode = root.getAttribute("data-course-code");
     if (!courseCode) return;
 
+    let priceLabel = "69.000đ";
     try {
       if (window.sa247Auth?.ready) {
+        const sb = await sa247Auth.ensureClient();
+        priceLabel = await loadCoursePriceLabel(sb, courseCode);
         const session = await sa247Auth.getSession();
         if (session) {
-          const sb = await sa247Auth.ensureClient();
           const { data: enrolled } = await sb
             .from("enrollments")
             .select("id, course:courses!inner(code)")
@@ -489,7 +507,7 @@
             renderCheckout(root, openOrders[0], courseCode, "authed");
             return;
           }
-          renderAuthedStart(root, courseCode);
+          renderAuthedStart(root, courseCode, priceLabel);
           return;
         }
       }
@@ -497,7 +515,7 @@
       console.warn("[checkout hydrate]", e);
     }
 
-    renderGuestForm(root, courseCode);
+    renderGuestForm(root, courseCode, null, priceLabel);
   }
 
   window.sa247Checkout = {

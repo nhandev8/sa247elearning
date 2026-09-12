@@ -8,11 +8,12 @@
 
   async function paint() {
     const login = document.querySelector("[data-nav-login]");
+    const register = document.querySelector("[data-nav-register]");
     const dash = document.querySelector("[data-nav-dashboard]");
     const admin = document.querySelector("[data-nav-admin]");
     const logout = document.querySelector("[data-nav-logout]");
     const cta = document.querySelector(".nav__cta");
-    if (!login && !dash && !logout && !admin) return;
+    if (!login && !dash && !logout && !admin && !register) return;
 
     let signedIn = false;
     let staff = false;
@@ -32,6 +33,7 @@
     }
 
     setHidden(login, signedIn);
+    setHidden(register, signedIn);
     setHidden(dash, !signedIn);
     setHidden(admin, !(signedIn && staff));
     setHidden(logout, !signedIn);
@@ -66,6 +68,7 @@
     setHidden(document.querySelector("[data-nav-admin]"), true);
     setHidden(document.querySelector("[data-nav-logout]"), true);
     setHidden(document.querySelector("[data-nav-login]"), false);
+    setHidden(document.querySelector("[data-nav-register]"), false);
     paint();
   });
 
