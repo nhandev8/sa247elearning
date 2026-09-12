@@ -119,30 +119,35 @@
     }
     .hero__brand {
       margin: 0 0 1.35rem;
+      max-width: 100%;
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: clamp(1.35rem, 3.2vw, 2rem);
+      font-size: clamp(1.2rem, 3.2vw, 2rem);
       letter-spacing: -0.01em;
-      line-height: 1.15;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
       opacity: 0;
       animation: rise 0.9s var(--ease) 0.1s forwards;
     }
     .hero__brand span {
       display: block;
       margin-top: 0.45rem;
-      font-size: 0.55em;
+      max-width: 100%;
+      font-size: clamp(0.72rem, 2.2vw, 0.95rem);
       font-weight: 600;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--amber);
+      overflow-wrap: anywhere;
+      line-height: 1.35;
     }
     .hero h1 {
       margin: 0 0 1.1rem;
-      max-width: min(100%, 22rem);
+      max-width: 100%;
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: clamp(2.35rem, 6.4vw, 4.6rem);
-      line-height: 1.08;
+      font-size: clamp(1.85rem, 6vw, 4.6rem);
+      line-height: 1.12;
       letter-spacing: -0.025em;
       overflow-wrap: anywhere;
       opacity: 0;
@@ -154,10 +159,11 @@
     }
     .hero__lead {
       margin: 0 0 2rem;
-      max-width: 36rem;
-      font-size: clamp(1.02rem, 1.7vw, 1.15rem);
+      max-width: min(100%, 40rem);
+      font-size: clamp(0.98rem, 1.7vw, 1.15rem);
       line-height: 1.65;
       color: rgba(255, 255, 255, 0.88);
+      overflow-wrap: anywhere;
       opacity: 0;
       animation: rise 0.95s var(--ease) 0.45s forwards;
     }
@@ -918,7 +924,13 @@
   overflow: hidden;
 }
 .hub-hero .hero__content { padding: 7.5rem 0 3rem; }
-.hub-hero h1 { max-width: min(100%, 22rem); overflow-wrap: anywhere; }
+.hub-hero h1 { max-width: 100%; overflow-wrap: anywhere; }
+.hub-hero .hero__brand,
+.hub-hero .hero__brand span,
+.hub-hero .hero__lead {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 .program-grid {
   margin-top: 2.5rem;
   display: grid;
