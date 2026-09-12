@@ -1859,7 +1859,8 @@ body.course-page { padding-bottom: 4.5rem; }
 .classroom__lesson:hover { background: rgba(24, 163, 90, 0.08); }
 .classroom__lesson.is-active { background: rgba(24, 163, 90, 0.14); }
 .classroom__lesson.is-done .classroom__lesson-title { text-decoration: line-through; opacity: 0.85; }
-.classroom__lesson.is-locked { opacity: 0.55; cursor: not-allowed; }
+.classroom__lesson.is-locked { opacity: 0.72; }
+.classroom__lesson.is-locked:hover { opacity: 0.9; }
 .classroom__lesson-title { flex: 1 1 140px; font-size: 0.88rem; }
 .classroom__main { padding: 1rem; }
 .classroom__frame { margin-bottom: 0.85rem; }

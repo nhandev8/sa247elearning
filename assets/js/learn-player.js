@@ -47,21 +47,21 @@
     (modules || []).forEach((m) => {
       const lessons = (m.lessons || [])
         .slice()
+        .map((l) => ({
+          ...l,
+          is_free: l.is_free === true || l.access === "hoc_thu",
+          title: l.title || l.display_title || l.lesson_code || "Bài học",
+        }))
         .filter((l) => {
-          // Ẩn draft chưa có video; giữ published / đang phát
+          // Outline: show all except replaced; playability uses has_video / youtube_video_id
           const st = l.publish_status;
-          if (st && st !== "published" && st !== "updating" && !l.youtube_video_id) {
-            return false;
-          }
+          if (st === "replaced") return false;
           return true;
         })
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
       lessons.forEach((l) => {
-        const isFree = l.is_free === true || l.access === "hoc_thu";
         list.push({
           ...l,
-          is_free: isFree,
-          title: l.title || l.display_title || l.lesson_code || "Bài học",
           moduleTitle: m.title,
           moduleId: m.id,
           moduleCode: m.code || "",
@@ -137,13 +137,7 @@
           is_free: l.is_free === true || l.access === "hoc_thu",
           title: l.title || l.display_title || l.lesson_code || "Bài học",
         }))
-        .filter((l) => {
-          const st = l.publish_status;
-          if (st && st !== "published" && st !== "updating" && !l.youtube_video_id) {
-            return false;
-          }
-          return true;
-        })
+        .filter((l) => l.publish_status !== "replaced")
         .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
       if (!lessons.length) return;
       const modDone = lessons.filter((l) => progressMap[l.id]?.completed).length;
@@ -156,11 +150,13 @@
         const li = document.createElement("li");
         const locked = !enrolled && !l.is_free;
         const doneL = progressMap[l.id]?.completed;
-        li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}" data-lesson="${l.id}" ${locked ? "disabled" : ""}>
+        const playable = !!(l.youtube_video_id || l.has_video);
+        li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}" data-lesson="${l.id}">
           <span class="classroom__lesson-title">${esc(l.title)}</span>
-          ${l.is_free ? '<span class="badge badge--free">Free</span>' : ""}
+          ${l.is_free ? '<span class="badge badge--free">Học thử</span>' : ""}
           ${doneL ? '<span class="badge">Đã học</span>' : ""}
           ${locked ? '<span class="badge">Khóa</span>' : ""}
+          ${!locked && !playable ? '<span class="badge">Sắp có</span>' : ""}
         </button>`;
         ul.appendChild(li);
       });
@@ -174,28 +170,39 @@
 
     async function playLesson(lesson) {
       if (!lesson) return;
-      if (!enrolled && !lesson.is_free) {
-        player.innerHTML = `<p class="lead">Bài này dành cho học viên đã mở khóa. <a href="#goi-pro">Mở khóa</a></p>`;
-        return;
-      }
       activeId = lesson.id;
       host.querySelectorAll(".classroom__lesson").forEach((btn) => {
         btn.classList.toggle("is-active", btn.getAttribute("data-lesson") === lesson.id);
       });
       const title = esc(lesson.title);
-      if (lesson.youtube_video_id) {
-        player.innerHTML = `<div class="trial-video__frame classroom__frame">
+
+      if (!enrolled && !lesson.is_free) {
+        player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
+          <p class="lead">Bài này nằm trong lộ trình khóa học — mở khóa để xem video.</p>
+          <p><a class="btn btn--amber" href="#goi-pro">Mở khóa khóa học</a>
+          <a class="btn btn--line" href="${esc(loginHref)}">Đăng nhập</a></p>`;
+        meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
+        host.querySelector(".classroom")?.classList.remove("is-side-open");
+        return;
+      }
+
+      if (!lesson.youtube_video_id) {
+        player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
+          <p class="lead">Video đang được hoàn thiện / đồng bộ. Mục lục đã sẵn — quay lại sau khi xuất bản.</p>`;
+        meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
+        host.querySelector(".classroom")?.classList.remove("is-side-open");
+        return;
+      }
+
+      player.innerHTML = `<div class="trial-video__frame classroom__frame">
           <iframe src="https://www.youtube-nocookie.com/embed/${esc(lesson.youtube_video_id)}?rel=0"
             title="${title}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>`;
-      } else {
-        player.innerHTML = `<p class="meta">Chưa có video Unlisted cho bài này.</p>`;
-      }
       const doneL = progressMap[lesson.id]?.completed;
       meta.innerHTML = `
         <h4>${title}</h4>
-        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Học thử" : ""}</p>
+        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Học thử" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
         ${
           enrolled
             ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
@@ -219,7 +226,6 @@
           window.dispatchEvent(new CustomEvent("sa247:progress", { detail: { courseCode: course.code } }));
         });
       }
-      // mobile: close drawer after pick
       host.querySelector(".classroom")?.classList.remove("is-side-open");
     }
 
@@ -267,19 +273,18 @@
 
     const enrolled = session ? await sa247Auth.hasCourseAccess(courseRow.id) : false;
 
-    const { data: modules, error: mErr } = await sb
-      .from("modules")
-      .select(
-        "id,code,title,sort_order,lessons(id,title,youtube_video_id,is_free,sort_order,lesson_code,access,publish_status)"
-      )
-      .eq("course_id", courseRow.id)
-      .eq("is_published", true)
-      .order("sort_order");
-
-    if (mErr) {
-      host.innerHTML = `<p class="lead">Không tải được mục lục: ${esc(mErr.message)}</p>`;
+    const { data: outline, error: oErr } = await sb.rpc("get_course_outline", {
+      p_course_code: code,
+    });
+    if (oErr) {
+      host.innerHTML = `<p class="lead">Không tải được mục lục: ${esc(oErr.message)}</p>
+        <p class="meta">Nếu thiếu RPC: chạy migration <code>20260912040000_course_outline_rpc.sql</code>.</p>`;
       return;
     }
+
+    const modules = outline?.modules || [];
+    const enrolledRpc = !!outline?.enrolled;
+    const enrolledFinal = enrolled || enrolledRpc;
 
     const flat = flattenLessons(modules);
     if (!flat.length) {
@@ -289,7 +294,7 @@
     }
 
     let progressMap = {};
-    if (session && enrolled) {
+    if (session && enrolledFinal) {
       const ids = flat.map((l) => l.id);
       const { data: prog } = await sb
         .from("lesson_progress")
@@ -301,14 +306,13 @@
       });
     }
 
-    // Guest / unpaid: still show classroom but only free playable
     renderClassroom(host, {
       sb,
       course: courseRow,
-      modules: modules || [],
+      modules,
       flat,
       progressMap,
-      enrolled,
+      enrolled: enrolledFinal,
       loginHref,
     });
 
@@ -316,10 +320,10 @@
       new CustomEvent("sa247:classroom-ready", {
         detail: {
           courseCode: code,
-          enrolled,
+          enrolled: enrolledFinal,
           freeCount: flat.filter((l) => l.is_free).length,
           lessonCount: flat.length,
-          moduleCount: (modules || []).length,
+          moduleCount: modules.length,
           status: courseRow.status,
           duration_label: courseRow.duration_label,
         },
