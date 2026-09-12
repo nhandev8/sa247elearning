@@ -382,8 +382,8 @@
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
-          <strong data-price-label>Mở khóa khóa học</strong>
-          <span>1 khóa · ${esc(courseCode)} · thanh toán 1 lần</span>
+          <strong data-price-label>Đăng ký khóa học · 69.000đ</strong>
+          <span>Phí tham gia khóa · ${esc(courseCode)} · tiến độ + kiểm tra</span>
         </div>
         <p class="checkout-lead">
           Chỉ cần họ tên, email và số điện thoại — không cần đăng nhập trước.

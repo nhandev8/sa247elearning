@@ -13,7 +13,15 @@
   }
 
   function statusVi(s) {
-    return { issued: "Đã cấp", revoked: "Đã thu hồi" }[s] || s || "—";
+    return (
+      {
+        issued: "Đã cấp",
+        eligible: "Đủ điều kiện — chưa đăng ký nhận",
+        revoked: "Đã thu hồi",
+      }[s] ||
+      s ||
+      "—"
+    );
   }
 
   async function bindLogout() {
@@ -33,23 +41,26 @@
     const status = el("cert-status");
     if (!list?.length) {
       status.innerHTML =
-        'Bạn chưa có chứng nhận nào. Hoàn thành khóa → đạt kỳ thi cuối khóa để được hệ thống cấp. <a href="../quiz/">Vào kỳ thi</a>';
+        'Bạn chưa có chứng nhận / đủ điều kiện nào. Hoàn thành khóa → đạt kỳ thi. <a href="../quiz/">Vào kỳ thi</a>';
       box.innerHTML = "";
       return;
     }
-    status.textContent = `${list.length} chứng nhận trong hồ sơ của bạn.`;
+    status.textContent = `${list.length} bản ghi chứng nhận trong hồ sơ của bạn.`;
     box.innerHTML = list
       .map((c) => {
-        const code = encodeURIComponent(c.cert_code);
+        const code = encodeURIComponent(c.cert_code || "");
+        const courseQ = encodeURIComponent(c.course_code || "");
         const issued = c.status === "issued";
+        const eligible = c.status === "eligible";
         return `<article class="cert-mine-card">
           <p class="kicker">${c.course_code || ""}</p>
           <h2>${c.course_title || "Khóa học"}</h2>
           <dl class="cert-mine-meta">
-            <div><dt>Mã chứng nhận</dt><dd><code>${c.cert_code}</code></dd></div>
-            <div><dt>Ngày cấp</dt><dd>${fmtDate(c.issued_at)}</dd></div>
+            <div><dt>Mã chứng nhận</dt><dd><code>${c.cert_code || "—"}</code></dd></div>
+            <div><dt>Ngày</dt><dd>${fmtDate(c.issued_at)}</dd></div>
             <div><dt>Trạng thái</dt><dd>${statusVi(c.status)}</dd></div>
             ${c.score_percent != null ? `<div><dt>Điểm</dt><dd>${c.score_percent}%</dd></div>` : ""}
+            ${c.delivery_type ? `<div><dt>Hình thức</dt><dd>${c.delivery_type === "hard" ? "Bản cứng" : "PDF"}</dd></div>` : ""}
           </dl>
           ${
             issued
@@ -57,8 +68,19 @@
                   <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
                   <a class="btn btn--line" href="../verify/chung-nhan.html?code=${code}" target="_blank" rel="noopener">In / PDF</a>
                   <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
+                  ${
+                    c.can_buy_hard
+                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký bản cứng · 199.000đ</a>`
+                      : ""
+                  }
                 </p>`
-              : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}. Không còn hiệu lực xác minh công khai.</p>`
+              : eligible
+                ? `<p class="cert-mine-actions">
+                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · 169.000đ</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · 199.000đ</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>
+                  </p>`
+                : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}.</p>`
           }
         </article>`;
       })
@@ -88,7 +110,7 @@
       let res = await sb
         .from("certificates")
         .select(
-          "cert_code,full_name,score_percent,issued_at,status,revoked_at,revoke_reason,course:courses(code,title,slug)"
+          "cert_code,full_name,score_percent,issued_at,status,delivery_type,revoked_at,revoke_reason,course:courses(code,title,slug)"
         )
         .order("issued_at", { ascending: false });
       if (res.error) {
@@ -107,11 +129,16 @@
         score_percent: c.score_percent,
         issued_at: c.issued_at,
         status: c.status || "issued",
+        delivery_type: c.delivery_type,
         revoked_at: c.revoked_at,
         revoke_reason: c.revoke_reason,
         course_code: c.course?.code,
         course_title: c.course?.title,
         course_slug: c.course?.slug,
+        can_buy_pdf: (c.status || "issued") === "eligible",
+        can_buy_hard:
+          (c.status || "") === "eligible" ||
+          ((c.status || "issued") === "issued" && c.delivery_type !== "hard"),
       }));
     }
     paint(list || []);

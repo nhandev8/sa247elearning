@@ -5,7 +5,15 @@
   let certCache = [];
 
   function statusVi(s) {
-    return { issued: "Đã cấp", revoked: "Đã thu hồi" }[s] || s || "—";
+    return (
+      {
+        issued: "Đã cấp",
+        eligible: "Đủ điều kiện",
+        revoked: "Đã thu hồi",
+      }[s] ||
+      s ||
+      "—"
+    );
   }
 
   function paintCerts(list) {

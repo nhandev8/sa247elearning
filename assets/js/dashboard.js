@@ -68,7 +68,7 @@
     }
     if (!data?.length) {
       status.innerHTML =
-        'Bạn chưa mở khóa khóa nào. <a href="../index.html#career-map">Career Map</a> → học thử → thanh toán 199.000đ.';
+        'Bạn chưa đăng ký khóa nào. <a href="../index.html#career-map">Career Map</a> → học thử → đăng ký học 69.000đ.';
       box.innerHTML = "";
       return;
     }

@@ -40,6 +40,15 @@
           <p class="lead">Safety and You 247 Academy không xác nhận hiệu lực của mã này.</p>`;
         return;
       }
+      if (data?.reason === "eligible_unpaid") {
+        msg.textContent = "Đã đủ điều kiện nhưng chưa đăng ký nhận GCN (chưa thanh toán hình thức nhận).";
+        card.hidden = false;
+        card.innerHTML = `<p class="kicker">Chưa cấp công khai</p>
+          <p><strong>${data.cert_code || code}</strong></p>
+          <p>${data.course_code || ""} · ${data.course_title || ""}</p>
+          <p class="lead">Học viên cần đăng ký nhận PDF hoặc bản cứng sau khi đạt kiểm tra.</p>`;
+        return;
+      }
       msg.textContent = "Không tìm thấy chứng nhận hợp lệ.";
       return;
     }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký giấy chứng nhận · SA247</title>
+  <meta name="description" content="Đăng ký nhận giấy chứng nhận PDF hoặc bản cứng sau khi đạt kiểm tra SA247." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/cert-checkout.js" defer></script>
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="app-side" aria-label="Menu học viên">
+      <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
+      <nav class="app-side__nav">
+        <a href="../dashboard/"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
+        <a href="../quiz/"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
+        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
+        <a class="is-active" href="./mua.html"><span class="ico" aria-hidden="true">▤</span>Đăng ký GCN</a>
+      </nav>
+      <div class="app-side__foot">
+        <p class="app-side__user" id="user-label">…</p>
+      </div>
+    </aside>
+    <div class="app-main">
+      <header class="app-top">
+        <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
+        <h1>Đăng ký giấy chứng nhận</h1>
+      </header>
+      <main class="app-content">
+        <p class="lead" id="cert-buy-status">Đang tải…</p>
+        <div id="cert-buy-root"></div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

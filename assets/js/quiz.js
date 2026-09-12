@@ -95,14 +95,28 @@
       }
 
       const pct = data?.score_percent ?? 0;
-      if (data?.passed) {
-        const code = encodeURIComponent(data.cert_code);
-        result.innerHTML = `<h2>Đạt ${pct}%</h2>
-          <p>Hệ thống đã cấp chứng nhận. Mã: <strong>${data.cert_code}</strong></p>
-          <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
-          <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
-          <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a></p>`;
-      } else {
+        if (data?.passed) {
+          const status = data.cert_status || "eligible";
+          const courseQ = encodeURIComponent(courseCode);
+          if (status === "issued") {
+            const code = encodeURIComponent(data.cert_code);
+            result.innerHTML = `<h2>Đạt ${pct}%</h2>
+              <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code}</strong></p>
+              <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+              <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a></p>`;
+          } else {
+            result.innerHTML = `<h2>Đạt ${pct}%</h2>
+              <p>Bạn đã đủ điều kiện cấp giấy chứng nhận hoàn thành khóa học.</p>
+              <p class="meta">69.000đ là phí tham gia khóa — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
+              <p><strong>Chọn hình thức nhận:</strong></p>
+              <p class="cert-buy-options">
+                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · 169.000đ</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · 199.000đ</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}">Xem các lựa chọn</a>
+                <a class="btn btn--line" href="../chung-nhan/">Không nhận · Về sau</a>
+              </p>`;
+          }
+        } else {
         result.innerHTML = `<h2>Chưa đạt (${pct}%)</h2>
           <p>Cần ≥ ${data?.pass_percent || passAt}%. Ôn lại bài học rồi thử lại.</p>
           <button type="button" class="btn btn--line" id="retry">Làm lại</button>`;
