@@ -65,12 +65,15 @@
 
       const isRecovery =
         type === "recovery" ||
+        type === "invite" ||
+        type === "signup" ||
         (next && next.includes("recovery=1")) ||
+        (next && next.includes("activate=1")) ||
         (next && next.includes("doi-mat-khau"));
 
       if (!session) {
         msg.textContent =
-          "Không lấy được phiên đăng nhập. Thử đăng nhập hoặc dùng lại link quên mật khẩu.";
+          "Không lấy được phiên đăng nhập. Thử đăng nhập hoặc dùng lại link trong email.";
         setTimeout(() => {
           location.replace("login.html");
         }, 1800);
@@ -78,11 +81,19 @@
       }
 
       msg.textContent = isRecovery
-        ? "Xác nhận thành công. Chuyển tới đặt mật khẩu…"
+        ? "Xác nhận thành công. Chuyển tới thiết lập mật khẩu…"
         : "Xác nhận thành công. Đang vào tài khoản…";
 
       if (isRecovery) {
-        location.replace("doi-mat-khau.html?recovery=1");
+        const activate =
+          type === "invite" ||
+          type === "signup" ||
+          (next && next.includes("activate=1"));
+        location.replace(
+          activate
+            ? "doi-mat-khau.html?recovery=1&activate=1"
+            : "doi-mat-khau.html?recovery=1"
+        );
         return;
       }
       if (next && !/^https?:/i.test(next) && !/dashboard\/?$/i.test(next)) {

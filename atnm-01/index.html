@@ -177,31 +177,22 @@
         <p class="kicker reveal">Mở khóa khóa học</p>
         <h2 class="title reveal">Tiếp tục với 199.000đ</h2>
         <p class="lead reveal">
-          Đăng nhập → tạo mã thanh toán → chuyển khoản VietQR đúng nội dung.
-          SePay báo có tiền → hệ thống tự mở khóa (Supabase enrollment).
+          Nhập họ tên, email, SĐT → xác nhận → VietQR.
+          Sau thanh toán, SA247 tạo tài khoản và gửi email <b>thiết lập mật khẩu</b>
+          (không mật khẩu mặc định) · giá 199k.
         </p>
-        <div id="checkout-root" class="unlock-stub__panel reveal" data-course-code="ATNM-01" data-login-href="../auth/login.html">
-          <div class="price-tag">
-            <strong>199.000đ</strong>
-            <span>1 khóa · ATNM-01 · thanh toán 1 lần</span>
-          </div>
-          <ol class="unlock-steps">
-            <li>Đăng nhập / đăng ký tài khoản SA247.</li>
-            <li>Bấm tạo mã thanh toán (mỗi đơn một nội dung CK riêng).</li>
-            <li>CK đúng <b>199.000đ</b> + đúng nội dung → tự mở khóa.</li>
-          </ol>
-          <div class="contact__cta">
-            <button type="button" class="btn btn--amber" data-create-order>Tạo mã thanh toán 199k</button>
-            <a class="btn btn--line" href="../auth/login.html">Đăng nhập</a>
-          </div>
-          <p class="form-msg" data-msg role="status"></p>
-          <p class="form-note">
-            NH: VPBank ·
-            HO HUU NHAN ·
-            STK 0877787988.
-            Giá từ catalog (199k). Không hard-code quyền học bằng JavaScript.
-          </p>
+        <div id="checkout-root" class="unlock-stub__panel reveal"
+             data-course-code="ATNM-01"
+             data-login-href="../auth/login.html"
+             data-activate-href="../auth/doi-mat-khau.html">
+          <p class="lead">Đang tải biểu mẫu thanh toán…</p>
         </div>
+        <p class="form-note reveal">
+          NH: VPBank ·
+          HO HUU NHAN ·
+          STK 0877787988.
+          Giá từ catalog. Tài khoản ≠ quyền học — entitlement sau SePay.
+        </p>
       </div>
     </section>
     <section class="trust-strip" id="tin-cay">

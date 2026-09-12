@@ -34,10 +34,13 @@
     document.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(location.search);
       const recovery = params.get("recovery") === "1";
+      const activate = params.get("activate") === "1";
       const msg = document.getElementById("msg");
       const lead = document.getElementById("lead");
+      const title = document.querySelector("h1");
       const currentWrap = document.getElementById("current-wrap");
       const currentInput = document.querySelector('input[name="current"]');
+      const submitBtn = document.querySelector('#pw-form button[type="submit"]');
 
       if (!window.sa247Auth?.ready) {
         msg.textContent = "Chưa cấu hình Supabase.";
@@ -51,8 +54,14 @@
         return;
       }
 
-      if (recovery) {
-        lead.textContent = "Đặt mật khẩu mới cho tài khoản của bạn.";
+      if (recovery || activate) {
+        if (title) title.textContent = activate ? "Kích hoạt tài khoản" : "Đặt mật khẩu";
+        lead.textContent = activate
+          ? "Tạo mật khẩu cho tài khoản học tập SA247 (không có mật khẩu mặc định)."
+          : "Đặt mật khẩu mới cho tài khoản của bạn.";
+        if (submitBtn) {
+          submitBtn.textContent = activate ? "Kích hoạt tài khoản" : "Lưu mật khẩu mới";
+        }
         currentWrap.hidden = true;
         if (currentInput) currentInput.removeAttribute("required");
       } else {
@@ -74,7 +83,7 @@
         }
         msg.textContent = "Đang cập nhật…";
         let result;
-        if (recovery) {
+        if (recovery || activate) {
           result = await sa247Auth.updatePassword(next);
         } else {
           result = await sa247Auth.changePassword(String(fd.get("current") || ""), next);
@@ -83,7 +92,9 @@
           msg.textContent = result.error.message || "Không đổi được mật khẩu.";
           return;
         }
-        msg.textContent = "Đã đổi mật khẩu. Đang chuyển…";
+        msg.textContent = activate
+          ? "Tài khoản đã kích hoạt. Chào mừng bạn đến SA247…"
+          : "Đã đổi mật khẩu. Đang chuyển…";
         const { data: profile } = await (await sa247Auth.ensureClient())
           .from("profiles")
           .select("role")
