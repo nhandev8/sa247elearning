@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Giấy chứng nhận · SA247</title>
-  <meta name="description" content="Giấy chứng nhận hoàn thành khóa học Safety and You 247 Academy — in hoặc lưu PDF kèm mã QR xác minh." />
+  <meta name="description" content="Giấy chứng nhận hoàn thành khóa học Safety and You 247 Academy — phôi in kèm tên, ngày cấp, mã và QR xác minh." />
   <meta name="robots" content="noindex" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,69 +30,22 @@
 
   <p class="cert-status" id="cert-status" role="status">Đang tải giấy chứng nhận…</p>
 
+  <!-- Form mẫu trưng bày (khi ?sample=) -->
+  <div class="cert-stage" id="showcase-stage" hidden>
+    <figure class="cert-showcase">
+      <img id="showcase-img" src="" alt="Mẫu giấy chứng nhận SA247" />
+    </figure>
+  </div>
+
+  <!-- Phôi in + trường động -->
   <div class="cert-stage" id="cert-stage" hidden>
-    <article class="certificate" id="certificate" aria-label="Giấy chứng nhận hoàn thành khóa học">
-      <div class="certificate__bg" aria-hidden="true"></div>
-      <div class="certificate__frame" aria-hidden="true">
-        <div class="certificate__corner certificate__corner--tl"></div>
-        <div class="certificate__corner certificate__corner--br"></div>
-      </div>
-      <p class="certificate__vtext certificate__vtext--left">An toàn hôm nay · Vững bước ngày mai</p>
-      <p class="certificate__vtext certificate__vtext--right">Học đúng · Làm đúng · An toàn bền vững</p>
-      <div class="certificate__seal" aria-hidden="true"><span>★</span>SAFETY AND YOU<br />247 ACADEMY</div>
-
-      <div class="certificate__body">
-        <div class="certificate__top">
-          <div class="certificate__brand">
-            <img src="../assets/certificates/logo-sa247.png" alt="" width="64" height="64" />
-            <div>
-              <strong>Safety and You 247 Academy</strong>
-              <span>Học đúng — Làm đúng — An toàn bền vững</span>
-            </div>
-          </div>
-          <p class="certificate__top-right">Kiến thức thực tiễn · An toàn tương lai</p>
-        </div>
-
-        <header class="certificate__headline">
-          <h1>Giấy chứng nhận</h1>
-          <p>Chứng nhận hoàn thành khóa học</p>
-          <p class="academy">Safety and You 247 Academy</p>
-          <div class="certificate__rule" aria-hidden="true"></div>
-        </header>
-
-        <div class="certificate__main">
-          <p class="certificate__label">Chứng nhận</p>
-          <h2 class="certificate__name" id="cert-name">—</h2>
-          <p class="certificate__course-label">Đã hoàn thành khóa học</p>
-          <p class="certificate__course" id="cert-course">—</p>
-          <p class="certificate__course-code">Mã khóa học: <span id="cert-course-code">—</span></p>
-          <p class="certificate__statement">
-            Học viên đã hoàn thành đầy đủ nội dung đào tạo và đạt yêu cầu bài kiểm tra cuối khóa
-            theo tiêu chuẩn của Safety and You 247 Academy.
-          </p>
-        </div>
-
-        <footer class="certificate__footer">
-          <div class="certificate__verify">
-            <div class="certificate__qr" id="cert-qr" aria-label="Mã QR xác minh chứng nhận"></div>
-            <div class="certificate__meta">
-              <p>Mã chứng nhận</p>
-              <p><strong id="cert-code">—</strong></p>
-              <p id="cert-verify-url">Quét QR để xác minh chứng nhận</p>
-            </div>
-          </div>
-          <div class="certificate__date">
-            Ngày cấp
-            <strong id="cert-date">—</strong>
-          </div>
-          <div class="certificate__sign">
-            <div class="certificate__sign-mark">Hồ Hữu Nhân</div>
-            <strong>HỒ HỮU NHÂN</strong>
-            <span>Đại diện Safety and You 247 Academy</span>
-          </div>
-        </footer>
-      </div>
-      <p class="certificate__legal">SA247 · Kiến thức · Kinh nghiệm · Kỹ năng · Tài liệu</p>
+    <article class="cert-sheet" id="certificate" aria-label="Giấy chứng nhận hoàn thành khóa học">
+      <img class="cert-sheet__phoi" id="cert-phoi" alt="" />
+      <div class="cert-field cert-field--name" id="cert-name">—</div>
+      <div class="cert-field cert-field--code-cover" aria-hidden="true"></div>
+      <div class="cert-field cert-field--code" id="cert-code">—</div>
+      <div class="cert-field cert-field--date" id="cert-date">—</div>
+      <div class="cert-field cert-field--qr" id="cert-qr" aria-label="Mã QR xác minh chứng nhận"></div>
     </article>
   </div>
 </body>
