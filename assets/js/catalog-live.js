@@ -26,7 +26,7 @@
     if (!cards.length) return;
 
     const sb = await client();
-    if not sb) {
+    if (!sb) {
       cards.forEach((card) => {
         const meta = card.querySelector("[data-live-meta]");
         const price = card.querySelector("[data-live-price]");
@@ -34,7 +34,7 @@
           meta.textContent =
             meta.getAttribute("data-fallback-meta") || "Lộ trình trên hệ thống";
         }
-        if (price && !price.dataset.filled) price.textContent = "69.000đ";
+        if (price && !price.dataset.filled) price.textContent = "99.000đ";
       });
       return;
     }
@@ -106,7 +106,7 @@
         meta.dataset.filled = "1";
       }
       if (priceEl) {
-        priceEl.textContent = money(row.price) || "69.000đ";
+        priceEl.textContent = money(row.price) || "99.000đ";
         priceEl.dataset.filled = "1";
       }
     });
@@ -114,7 +114,7 @@
     // Hero / CTA price banner if present
     const banner = document.querySelector("[data-live-course-from-price]");
     if (banner && courses.length) {
-      const min = Math.min(...courses.map((c) => Number(c.price) || 69000));
+      const min = Math.min(...courses.map((c) => Number(c.price) || 99000));
       banner.textContent = "KHÓA HỌC CHÍNH THỨC TỪ " + money(min);
     }
   }

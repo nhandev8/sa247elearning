@@ -945,70 +945,96 @@
 .program-card {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0 0 1.2rem;
+  gap: 0.4rem;
+  padding: 0;
   background: #fff;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(11, 31, 58, 0.08);
+  border-radius: 16px;
   text-decoration: none;
   color: inherit;
   min-height: 11rem;
   overflow: hidden;
-  transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  box-shadow: 0 8px 24px rgba(6, 20, 40, 0.05);
+  transition: border-color 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
 }
 .program-card:hover {
-  border-color: var(--navy);
-  transform: translateY(-3px);
-  background: #fbfffc;
+  border-color: rgba(11, 31, 58, 0.2);
+  transform: translateY(-5px);
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(6, 20, 40, 0.12);
 }
 .program-card__media {
   display: block;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: var(--mist);
+  background: linear-gradient(145deg, #0b1f3a 0%, #163a5c 100%);
+  position: relative;
+}
+.program-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 48%, rgba(3, 21, 31, 0.45) 100%);
+  pointer-events: none;
 }
 .program-card__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.45s var(--ease);
+  transition: transform 0.55s var(--ease);
 }
 .program-card:hover .program-card__media img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 .program-card .code {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  color: var(--navy);
-  padding: 0.85rem 1.2rem 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--amber-hot);
+  padding: 0 1.2rem;
+  margin-top: 0.05rem;
 }
 .program-card h3 {
   margin: 0;
   font-size: 1.08rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
+  letter-spacing: -0.025em;
+  line-height: 1.32;
   flex: 1;
   padding: 0 1.2rem;
+  color: var(--navy);
 }
 .program-card .meta {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   color: var(--muted);
   padding: 0 1.2rem;
 }
 .program-card .go {
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.65rem 1.2rem 1.2rem;
+  padding: 0.58rem 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--green-deep);
-  padding: 0 1.2rem;
+  color: var(--deep);
+  background: var(--amber);
+  border-radius: 999px;
+  width: fit-content;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.program-card:hover .go {
+  background: var(--amber-hot);
+  transform: translateX(2px);
 }
 .program-card .badge {
-  margin: 0.85rem 1.2rem 0;
+  margin: 0.95rem 1.2rem 0;
   align-self: flex-start;
+  border-radius: 6px;
 }
 .badge {
   display: inline-flex;
@@ -1508,7 +1534,7 @@
 .program-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
+  gap: 1.15rem;
 }
 .program-grid--2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2354,13 +2380,19 @@ body.course-page { padding-bottom: 4.5rem; }
 .value-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .program-card__price {
   margin: 0.35rem 0 0;
+  padding: 0 1.2rem;
+  font-family: var(--font-display);
   font-weight: 800;
   color: var(--navy);
-  font-size: 1.05rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 .program-card .badge--official {
-  background: rgba(11, 31, 58, 0.08);
+  background: rgba(11, 31, 58, 0.07);
   color: var(--navy);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
 }
 .outcomes-list {
   margin: 1.5rem 0 0;
