@@ -55,7 +55,7 @@
   }
 
   function applyCta(state, priceLabel) {
-    const price = priceLabel || "69.000đ";
+    const price = priceLabel || "99.000đ";
     const bar = document.getElementById("course-sticky-cta");
     const label = bar?.querySelector("[data-sticky-label]");
     const btn = bar?.querySelector("[data-sticky-btn]");
@@ -121,7 +121,7 @@
   }
 
   async function resolveState(boot) {
-    let priceLabel = money(boot.price) || boot.price_label || "69.000đ";
+    let priceLabel = money(boot.price) || boot.price_label || "99.000đ";
 
     if (window.sa247Auth?.ready) {
       try {
@@ -235,7 +235,7 @@
     const items = boot.deliverables || [];
     if (!items.length) {
       host.innerHTML = `<ul class="trust-list">
-        <li>Đăng ký 69.000đ → học toàn bộ khóa</li>
+        <li>Đăng ký 99.000đ → học toàn bộ khóa học</li>
         <li>Không khóa từng video · tiến độ trên hệ thống</li>
         <li>Kiểm tra cuối khóa · GCN tùy chọn sau khi đạt</li>
         <li><a href="../verify/">Xác minh chứng nhận công khai</a></li>
@@ -253,7 +253,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const boot = bootJson();
-    paintHeroMeta(null, boot, boot.price_label || "69.000đ");
+    paintHeroMeta(null, boot, boot.price_label || "99.000đ");
     paintTrust(boot);
     enhanceCurriculumAccordion();
     resolveState(boot).then((r) => {
@@ -263,7 +263,7 @@
 
   window.addEventListener("sa247:classroom-ready", (ev) => {
     const boot = bootJson();
-    const price = window.__sa247CoursePrice || boot.price_label || "69.000đ";
+    const price = window.__sa247CoursePrice || boot.price_label || "99.000đ";
     paintHeroMeta(ev.detail, boot, price);
     paintLiveCurriculum(ev.detail);
     resolveState(boot);

@@ -379,7 +379,7 @@
 
   function renderGuestForm(root, courseCode, prefills, priceLabel) {
     const p = prefills || {};
-    const price = priceLabel || "69.000đ";
+    const price = priceLabel || "99.000đ";
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
@@ -468,7 +468,7 @@
     } catch (_) {
       /* keep fallback */
     }
-    return "69.000đ";
+    return "99.000đ";
   }
 
   async function mount(selector) {
@@ -477,7 +477,7 @@
     const courseCode = root.getAttribute("data-course-code");
     if (!courseCode) return;
 
-    let priceLabel = "69.000đ";
+    let priceLabel = "99.000đ";
     try {
       if (window.sa247Auth?.ready) {
         const sb = await sa247Auth.ensureClient();

@@ -144,7 +144,7 @@
       <p class="kicker">Bước tiếp theo</p>
       <h4>${esc(tip.code)} · ${esc(title)}</h4>
       <p>${esc(tip.why || "")}</p>
-      <a class="btn btn--amber btn--small" href="../${esc(slug)}/#dang-ky">Học tiếp · 69.000đ</a>
+      <a class="btn btn--amber btn--small" href="../${esc(slug)}/#dang-ky">Học tiếp · 99.000đ</a>
     </aside>`;
   }
 
@@ -164,7 +164,7 @@
     }
     if (!data?.length) {
       status.innerHTML =
-        'Bạn chưa đăng ký khóa nào. <a href="../index.html#career-map">Tìm khóa phù hợp</a> → học thử → đăng ký 69.000đ.';
+        'Bạn chưa đăng ký khóa nào. <a href="../index.html#career-map">Tìm khóa phù hợp</a> → học thử → đăng ký 99.000đ.';
       box.innerHTML = "";
       if (nextHost) nextHost.innerHTML = "";
       return;
