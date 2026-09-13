@@ -15,9 +15,11 @@
   function statusVi(s) {
     return (
       {
-        issued: "Đã cấp",
+        valid: "Hợp lệ — đã cấp",
+        issued: "Hợp lệ — đã cấp",
         eligible: "Đủ điều kiện — chưa đăng ký nhận",
         revoked: "Đã thu hồi",
+        replaced: "Đã thay thế (xem mã mới)",
       }[s] ||
       s ||
       "—"
@@ -72,8 +74,9 @@
       .map((c) => {
         const code = encodeURIComponent(c.cert_code || "");
         const courseQ = encodeURIComponent(c.course_code || "");
-        const issued = c.status === "issued";
+        const issued = c.status === "valid" || c.status === "issued";
         const eligible = c.status === "eligible";
+        const replaced = c.status === "replaced";
         return `<article class="cert-mine-card">
           <p class="kicker">${c.course_code || ""}</p>
           <h2>${c.course_title || "Khóa học"}</h2>
@@ -102,7 +105,9 @@
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${hardL} + ship</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>
                   </p>`
-                : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}.</p>`
+                : replaced
+                  ? `<p class="meta">Mã này đã được thay thế — dùng mã chứng nhận mới trong danh sách.</p>`
+                  : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}.</p>`
           }
         </article>`;
       })
@@ -160,7 +165,8 @@
         can_buy_pdf: (c.status || "issued") === "eligible",
         can_buy_hard:
           (c.status || "") === "eligible" ||
-          ((c.status || "issued") === "issued" && c.delivery_type !== "hard"),
+          (((c.status || "") === "valid" || (c.status || "") === "issued") &&
+            c.delivery_type !== "hard"),
       }));
     }
     const prices = await loadCertPriceLabels(sb);

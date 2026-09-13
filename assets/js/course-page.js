@@ -159,7 +159,7 @@
           } catch {
             /* ignore */
           }
-          if (certStatus === "issued") {
+          if (certStatus === "issued" || certStatus === "valid") {
             applyCta("issued", priceLabel);
             return { state: "issued", priceLabel, course };
           }

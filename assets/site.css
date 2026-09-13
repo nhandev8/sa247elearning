@@ -2004,6 +2004,15 @@
   border: 1px solid rgba(24, 163, 90, 0.3);
   background: rgba(24, 163, 90, 0.06);
 }
+.verify-disclaimer {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  opacity: 0.85;
+  margin: 0.75rem 0;
+  max-width: 42rem;
+}
+.verify-disclaimer--page { margin: 0.5rem 0 1rem; }
+.verify-kind { font-weight: 600; margin: 0.5rem 0 0.25rem; }
 .verify-page, .legal-page { padding: 5rem 0 3rem; }
 .legal-page h2 { margin-top: 1.75rem; font-size: 1.15rem; }
 

@@ -63,7 +63,7 @@
   async function renderIssued(data, prog) {
     const code = data.cert_code;
     el("cert-phoi").src = ASSETS + prog.phoi;
-    el("cert-phoi").alt = `Giấy chứng nhận ${prog.code}`;
+    el("cert-phoi").alt = `Giấy chứng nhận hoàn thành khóa học ${prog.code}`;
     el("cert-name").textContent = data.full_name || "—";
     el("cert-code").textContent = code;
     el("cert-date").textContent = fmtDate(data.issued_at);
@@ -72,6 +72,13 @@
     el("btn-print").hidden = false;
     el("showcase-stage").hidden = true;
     el("cert-stage").hidden = false;
+    const disc = el("cert-disclaimer");
+    if (disc) {
+      disc.hidden = false;
+      disc.textContent =
+        data.legal_disclaimer ||
+        "Giấy chứng nhận này không thay thế văn bằng, chứng chỉ, giấy phép hoặc giấy chứng nhận bắt buộc theo quy định pháp luật, nếu có.";
+    }
     await renderQr(el("cert-qr"), verifyPageUrl(code));
   }
 
@@ -83,6 +90,13 @@
     });
     if (error) throw new Error(error.message);
     if (!data?.valid) {
+      const reason = data?.reason;
+      if (reason === "revoked") {
+        throw new Error("Chứng nhận đã thu hồi — không hiển thị phôi.");
+      }
+      if (reason === "replaced") {
+        throw new Error("Mã đã được thay thế — dùng mã chứng nhận mới.");
+      }
       throw new Error(
         "Không tìm thấy chứng nhận hợp lệ. Giấy chỉ hiển thị sau khi hệ thống đã cấp."
       );
@@ -91,7 +105,7 @@
     if (!prog) throw new Error(`Chưa có phôi thiết kế cho khóa ${data.course_code}.`);
     await renderIssued(data, prog);
     el("cert-status").textContent =
-      "Chứng nhận đã cấp — dữ liệu từ hồ sơ học viên. Có thể in hoặc lưu PDF.";
+      "Giấy chứng nhận hoàn thành khóa học · Safety and You 247 Academy — dữ liệu từ hồ sơ. Có thể in hoặc lưu PDF.";
   }
 
   function loadFormSample(courseCode, map) {

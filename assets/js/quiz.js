@@ -118,7 +118,7 @@
         if (data?.passed) {
           const status = data.cert_status || "eligible";
           const courseQ = encodeURIComponent(courseCode);
-          if (status === "issued") {
+          if (status === "issued" || status === "valid") {
             const code = encodeURIComponent(data.cert_code);
             result.innerHTML = `<h2>Đạt ${pct}%</h2>
               <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code}</strong></p>

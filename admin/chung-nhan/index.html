@@ -29,16 +29,17 @@
         <h1>Chứng nhận</h1>
       </header>
       <main class="adm-content">
-        <p class="adm-lead">Quản lý bản ghi chứng nhận đã cấp. Phôi chỉ là mẫu thiết kế — không nhập tên/mã trên phôi. Thu hồi ghi nhật ký; không sửa tùy tiện nội dung đã phát hành.</p>
+        <p class="adm-lead">Quản lý chứng nhận hoàn thành khóa học Academy. Thu hồi / cấp lại ghi sổ sự kiện; Quyết định PDF tự động khi cấp. Không sửa tùy tiện nội dung đã phát hành.</p>
         <p class="adm-msg" id="adm-status"></p>
 
         <div class="adm-filters" id="cert-filters">
-          <input type="search" id="f-q" placeholder="Họ tên / mã chứng nhận / khóa…" />
+          <input type="search" id="f-q" placeholder="Họ tên / mã chứng nhận / số QĐ / khóa…" />
           <select id="f-course"></select>
           <select id="f-status">
             <option value="">Mọi trạng thái</option>
-            <option value="issued">Đã cấp</option>
+            <option value="valid">Hợp lệ</option>
             <option value="eligible">Đủ điều kiện</option>
+            <option value="replaced">Đã thay thế</option>
             <option value="revoked">Đã thu hồi</option>
           </select>
           <button type="button" class="adm-btn adm-btn--primary" id="btn-filter">Lọc</button>
@@ -54,7 +55,7 @@
                 <th>Khóa học</th>
                 <th>Điểm</th>
                 <th>Ngày cấp</th>
-                <th>Trạng thái</th>
+                <th>Trạng thái / QĐ</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
