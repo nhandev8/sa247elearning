@@ -74,7 +74,7 @@
 
     const moduleIds = Object.keys(moduleToCourse);
     if (moduleIds.length) {
-      // Chỉ đếm bài có lesson_code ổn định (bỏ orphan YouTube không mã → tránh 340 thay vì 90)
+      // Chỉ đếm bài có lesson_code ổn định (bỏ orphan YouTube không mã)
       const { data: lessons } = await sb
         .from("lessons")
         .select("id,module_id,lesson_code")
@@ -99,10 +99,17 @@
       const mc = modCount[row.id] || 0;
       const lc = lessonCount[row.id] || 0;
       if (meta) {
-        meta.textContent =
-          mc || lc
-            ? `${mc} chương · ${lc} bài học`
-            : "Lộ trình trên hệ thống";
+        // Prefer static Bxx marketing label until Supabase curriculum is migrated to Bxx.
+        const fallback =
+          meta.getAttribute("data-fallback-meta") || "Lộ trình trên hệ thống";
+        if (/video/i.test(fallback)) {
+          meta.textContent = fallback;
+        } else {
+          meta.textContent =
+            mc || lc
+              ? `${mc} mô-đun · ${lc} video`
+              : fallback;
+        }
         meta.dataset.filled = "1";
       }
       if (priceEl) {

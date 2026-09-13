@@ -33,10 +33,10 @@
     const meta = document.getElementById("course-hero-meta");
     if (!meta) return;
     const bits = [];
-    if (mods != null && mods !== "") bits.push(`${mods} chương`);
-    if (typeof lessons === "number") bits.push(`${lessons} bài học`);
+    if (mods != null && mods !== "") bits.push(`${mods} mô-đun`);
+    if (typeof lessons === "number") bits.push(`${lessons} video`);
     else if (lessons) bits.push(String(lessons));
-    if (free) bits.push(`${free} bài học thử`);
+    if (free) bits.push(`${free} video mở sẵn`);
     bits.push("Khóa học chính thức");
     if (priceLabel) bits.push(priceLabel);
     bits.push(statusVi);
@@ -49,7 +49,7 @@
     if (liveMeta && (mods != null || lessons != null)) {
       liveMeta.textContent =
         mods != null || typeof lessons === "number"
-          ? `${mods || 0} chương · ${typeof lessons === "number" ? lessons : "…"} bài học`
+          ? `${mods || 0} mô-đun · ${typeof lessons === "number" ? lessons : "…"} video`
           : liveMeta.textContent;
     }
   }
@@ -201,6 +201,8 @@
   }
 
   function enhanceCurriculumAccordion() {
+    // Static Bxx accordion is already rendered by build_landings when curriculum JSON exists.
+    if (document.querySelector("#lo-trinh .curriculum-acc")) return;
     const board = document.querySelector("#lo-trinh .module-board");
     if (!board || board.dataset.accordion === "1") return;
     board.dataset.accordion = "1";
@@ -215,7 +217,7 @@
       d.className = "curriculum-acc__item reveal";
       if (i === 0) d.open = true;
       d.innerHTML = `<summary><b>${id}</b> <span>${name}</span></summary>
-        <div class="curriculum-acc__body"><p>Chương ${id}: ${name}. Xem chi tiết bài trong <a href="#learner-root">Lớp học</a>.</p></div>`;
+        <div class="curriculum-acc__body"><p>Mô-đun ${id}: ${name}. Xem chi tiết video Bxx trong <a href="#learner-root">Lớp học</a>.</p></div>`;
       wrap.appendChild(d);
     });
     board.replaceWith(wrap);
@@ -225,8 +227,8 @@
     const host = document.getElementById("live-curriculum");
     if (!host || !detail) return;
     host.hidden = false;
-    host.innerHTML = `<p class="lead">Mục lục từ hệ thống: <strong>${detail.moduleCount || 0}</strong> chương · <strong>${detail.lessonCount || 0}</strong> bài · <strong>${detail.freeCount || 0}</strong> học thử.</p>
-      <p class="meta">Sau khi đăng ký khóa học bạn xem được toàn bộ bài — không khóa từng video.</p>`;
+    host.innerHTML = `<p class="lead">Mục lục từ hệ thống: <strong>${detail.moduleCount || 0}</strong> mô-đun · <strong>${detail.lessonCount || 0}</strong> video · <strong>${detail.freeCount || 0}</strong> mở sẵn (≈ 1/5, tối đa 5).</p>
+      <p class="meta">Phần còn lại mở sau khi đăng ký khóa học.</p>`;
   }
 
   function paintTrust(boot, priceLabel) {
