@@ -128,19 +128,28 @@ html, body {
 }
 
 .cert-field--name {
-  left: calc(100% * 484 / 1491);
-  top: calc(100% * 448 / 1055);
-  width: calc(100% * 520 / 1491);
-  height: calc(100% * 90 / 1055);
-  font-family: "Great Vibes", "Segoe Script", cursive;
-  font-size: clamp(1.6rem, 4.2vw, 3.1rem);
-  font-weight: 400;
+  left: calc(100% * 430 / 1491);
+  top: calc(100% * 438 / 1055);
+  width: calc(100% * 630 / 1491);
+  height: calc(100% * 110 / 1055);
+  /* Great Vibes thiếu glyph tiếng Việt → chữ chồng. Dùng Be Vietnam Pro (có dấu). */
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  font-size: clamp(1.15rem, 2.8vw, 2.15rem);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  white-space: normal;
+  overflow: hidden;
+  word-break: keep-all;
+  hyphens: none;
+  color: #0a2744;
 }
 
 .cert-field--code-cover {
   left: calc(100% * 248 / 1491);
   top: calc(100% * 848 / 1055);
-  width: calc(100% * 290 / 1491);
+  width: calc(100% * 340 / 1491);
   height: calc(100% * 34 / 1055);
   background: #f7f8f9;
 }
@@ -148,14 +157,15 @@ html, body {
 .cert-field--code {
   left: calc(100% * 248 / 1491);
   top: calc(100% * 848 / 1055);
-  width: calc(100% * 290 / 1491);
+  width: calc(100% * 340 / 1491);
   height: calc(100% * 34 / 1055);
   justify-content: flex-start;
   padding-left: 0.15em;
-  font-size: clamp(0.55rem, 1.05vw, 0.82rem);
+  font-size: clamp(0.5rem, 0.95vw, 0.78rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .cert-field--date {
@@ -174,13 +184,23 @@ html, body {
   height: calc(100% * 118 / 1055);
   background: #fff;
   padding: 2px;
+  overflow: hidden;
 }
 
 .cert-field--qr canvas,
 .cert-field--qr img {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
+  object-fit: contain;
+}
+
+.cert-field--qr table {
+  width: 100% !important;
+  height: 100% !important;
+  border-collapse: collapse;
 }
 
 @media print {

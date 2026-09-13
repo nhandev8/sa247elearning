@@ -19,7 +19,8 @@
   }
 
   function verifyPageUrl(code) {
-    const u = new URL("./", location.href);
+    // URL tuyệt đối để QR mở đúng trang xác minh (không phụ thuộc path tương đối)
+    const u = new URL("../verify/", location.href);
     u.searchParams.set("code", code);
     return u.href;
   }
@@ -34,20 +35,58 @@
     return res.json();
   }
 
+  function qrImageFallback(container, text) {
+    const img = document.createElement("img");
+    img.alt = "Mã QR xác minh chứng nhận";
+    img.width = 200;
+    img.height = 200;
+    img.decoding = "async";
+    img.src =
+      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&ecc=M&data=" +
+      encodeURIComponent(text);
+    container.appendChild(img);
+  }
+
   async function renderQr(container, text) {
     container.innerHTML = "";
-    if (typeof QRCode === "undefined") {
-      container.textContent = "QR";
-      return;
+    const size = 200;
+
+    // node-qrcode (toCanvas) — nếu có
+    if (typeof QRCode !== "undefined" && typeof QRCode.toCanvas === "function") {
+      try {
+        const canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+        await QRCode.toCanvas(canvas, text, {
+          width: size,
+          margin: 1,
+          errorCorrectionLevel: "M",
+          color: { dark: "#0b1f3a", light: "#ffffff" },
+        });
+        return;
+      } catch (_) {
+        container.innerHTML = "";
+      }
     }
-    const canvas = document.createElement("canvas");
-    container.appendChild(canvas);
-    await QRCode.toCanvas(canvas, text, {
-      width: 200,
-      margin: 1,
-      errorCorrectionLevel: "M",
-      color: { dark: "#0b1f3a", light: "#ffffff" },
-    });
+
+    // qrcodejs (davidshimjs) — CDN hiện dùng
+    if (typeof QRCode === "function" || (typeof QRCode !== "undefined" && QRCode.CorrectLevel)) {
+      try {
+        // eslint-disable-next-line no-new
+        new QRCode(container, {
+          text,
+          width: size,
+          height: size,
+          colorDark: "#0b1f3a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 1,
+        });
+        if (container.querySelector("canvas, img")) return;
+      } catch (_) {
+        container.innerHTML = "";
+      }
+    }
+
+    qrImageFallback(container, text);
   }
 
   function showFormMau(prog) {
