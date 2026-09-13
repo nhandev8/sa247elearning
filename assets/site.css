@@ -2092,6 +2092,25 @@
 }
 .curriculum-acc__item summary::-webkit-details-marker { display: none; }
 .curriculum-acc__item summary b { color: var(--green-deep); min-width: 2.5rem; }
+.curriculum-acc__count {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.curriculum-acc__lessons {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.curriculum-acc__lessons li { line-height: 1.45; }
+.curriculum-acc__lessons code {
+  font-size: 0.8em;
+  color: var(--green-deep);
+  margin-right: 0.35rem;
+}
 .curriculum-acc__body { padding: 0 0 0.75rem; color: var(--muted); font-size: 0.95rem; }
 .live-curriculum { margin: 0 0 1.25rem; }
 .trust-strip { padding: 3.5rem 0; background: rgba(15, 28, 23, 0.03); }
