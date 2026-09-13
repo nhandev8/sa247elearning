@@ -178,29 +178,45 @@ html, body {
 }
 
 .cert-field--qr {
-  left: calc(100% * 112 / 1491);
-  top: calc(100% * 818 / 1055);
-  width: calc(100% * 118 / 1491);
-  height: calc(100% * 118 / 1055);
-  background: #fff;
-  padding: 2px;
+  /* Căn giữa khung QR trên phôi 1491×1055 (vùng trong viền navy ≈ 106,812,123×128) */
+  left: calc(100% * 114 / 1491);
+  top: calc(100% * 822 / 1055);
+  width: calc(100% * 108 / 1491);
+  height: calc(100% * 108 / 1055);
+  background: transparent;
+  padding: 0;
+  margin: 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.cert-field--qr canvas,
-.cert-field--qr img {
+.cert-field--qr > canvas,
+.cert-field--qr > img {
   width: 100% !important;
   height: 100% !important;
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display: block !important;
+  margin: 0 auto !important;
   object-fit: contain;
+  object-position: center;
+  border: 0;
+  padding: 0;
+}
+
+/* qrcodejs đôi khi chèn canvas ẩn + table — ẩn hết phần thừa */
+.cert-field--qr canvas[style*="display: none"],
+.cert-field--qr canvas[style*="display:none"] {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
 }
 
 .cert-field--qr table {
-  width: 100% !important;
-  height: 100% !important;
-  border-collapse: collapse;
+  display: none !important;
 }
 
 @media print {

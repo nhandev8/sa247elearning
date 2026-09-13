@@ -38,49 +38,95 @@
   function qrImageFallback(container, text) {
     const img = document.createElement("img");
     img.alt = "Mã QR xác minh chứng nhận";
-    img.width = 200;
-    img.height = 200;
     img.decoding = "async";
     img.src =
-      "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&ecc=M&data=" +
+      "https://api.qrserver.com/v1/create-qr-code/?size=256x256&margin=0&ecc=M&data=" +
       encodeURIComponent(text);
     container.appendChild(img);
   }
 
+  /** Chỉ giữ một ảnh QR căn giữa khung — bỏ canvas/table thừa của thư viện. */
+  function finalizeQrDom(container) {
+    const img = container.querySelector("img");
+    const canvas = container.querySelector("canvas");
+    let src = "";
+    if (img && img.src) src = img.src;
+    else if (canvas) {
+      try {
+        src = canvas.toDataURL("image/png");
+      } catch (_) {
+        /* ignore */
+      }
+    }
+    container.innerHTML = "";
+    if (!src) return false;
+    const out = document.createElement("img");
+    out.alt = "Mã QR xác minh chứng nhận";
+    out.src = src;
+    out.decoding = "async";
+    container.appendChild(out);
+    return true;
+  }
+
   async function renderQr(container, text) {
     container.innerHTML = "";
-    const size = 200;
+    const size = 256;
 
-    // node-qrcode (toCanvas) — nếu có
+    // node-qrcode (toCanvas)
     if (typeof QRCode !== "undefined" && typeof QRCode.toCanvas === "function") {
       try {
         const canvas = document.createElement("canvas");
         container.appendChild(canvas);
         await QRCode.toCanvas(canvas, text, {
           width: size,
-          margin: 1,
+          margin: 0,
           errorCorrectionLevel: "M",
           color: { dark: "#0b1f3a", light: "#ffffff" },
         });
-        return;
+        if (finalizeQrDom(container)) return;
       } catch (_) {
         container.innerHTML = "";
       }
     }
 
-    // qrcodejs (davidshimjs) — CDN hiện dùng
+    // qrcodejs (davidshimjs)
     if (typeof QRCode === "function" || (typeof QRCode !== "undefined" && QRCode.CorrectLevel)) {
       try {
+        const holder = document.createElement("div");
+        holder.style.position = "absolute";
+        holder.style.left = "-9999px";
+        holder.style.width = size + "px";
+        holder.style.height = size + "px";
+        document.body.appendChild(holder);
         // eslint-disable-next-line no-new
-        new QRCode(container, {
+        new QRCode(holder, {
           text,
           width: size,
           height: size,
           colorDark: "#0b1f3a",
           colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.M : 1,
+          correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.H : 2,
         });
-        if (container.querySelector("canvas, img")) return;
+        // đợi img data URL (qrcodejs vẽ async nhẹ)
+        await new Promise((r) => setTimeout(r, 30));
+        const okImg = holder.querySelector("img");
+        const okCanvas = holder.querySelector("canvas");
+        let src = okImg?.src || "";
+        if (!src && okCanvas) {
+          try {
+            src = okCanvas.toDataURL("image/png");
+          } catch (_) {
+            /* ignore */
+          }
+        }
+        holder.remove();
+        if (src) {
+          const out = document.createElement("img");
+          out.alt = "Mã QR xác minh chứng nhận";
+          out.src = src;
+          container.appendChild(out);
+          return;
+        }
       } catch (_) {
         container.innerHTML = "";
       }
