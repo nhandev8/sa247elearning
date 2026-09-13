@@ -229,15 +229,16 @@
       <p class="meta">Sau khi đăng ký khóa học bạn xem được toàn bộ bài — không khóa từng video.</p>`;
   }
 
-  function paintTrust(boot) {
+  function paintTrust(boot, priceLabel) {
     const host = document.getElementById("course-trust");
     if (!host) return;
+    const price = priceLabel || boot.price_label || "99.000đ";
     const items = boot.deliverables || [];
     if (!items.length) {
       host.innerHTML = `<ul class="trust-list">
-        <li>Đăng ký 99.000đ → học toàn bộ khóa học</li>
+        <li>Đăng ký ${price} → học toàn bộ khóa học</li>
         <li>Không khóa từng video · tiến độ trên hệ thống</li>
-        <li>Kiểm tra cuối khóa · GCN tùy chọn sau khi đạt</li>
+        <li>Kiểm tra cuối khóa học · GCN tùy chọn sau khi đạt</li>
         <li><a href="../verify/">Xác minh chứng nhận công khai</a></li>
       </ul>`;
       return;
@@ -253,11 +254,13 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const boot = bootJson();
-    paintHeroMeta(null, boot, boot.price_label || "99.000đ");
-    paintTrust(boot);
+    const fallback = boot.price_label || "99.000đ";
+    paintHeroMeta(null, boot, fallback);
+    paintTrust(boot, fallback);
     enhanceCurriculumAccordion();
     resolveState(boot).then((r) => {
       paintHeroMeta(null, boot, r.priceLabel);
+      paintTrust(boot, r.priceLabel);
     });
   });
 
