@@ -484,12 +484,9 @@
         priceLabel = await loadCoursePriceLabel(sb, courseCode);
         const session = await sa247Auth.getSession();
         if (session) {
-          const { data: enrolled } = await sb
-            .from("enrollments")
-            .select("id, course:courses!inner(code)")
-            .eq("status", "active")
-            .eq("courses.code", courseCode)
-            .maybeSingle();
+          const enrolled = await sa247Auth.hasCourseAccess(null, {
+            courseCode,
+          });
           if (enrolled) {
             renderPaid(root, { order_code: courseCode, status: "paid" }, courseCode, {
               guest: false,

@@ -582,7 +582,17 @@
           .maybeSingle();
         if (data) {
           courseRow = data;
-          enrolled = session ? await sa247Auth.hasCourseAccess(data.id) : false;
+          enrolled = session
+            ? await sa247Auth.hasCourseAccess(data.id, { courseCode: code })
+            : false;
+        } else if (session) {
+          // Course row không đọc được nhưng vẫn có thể đã enrolled theo mã
+          enrolled = await sa247Auth.hasCourseAccess(null, { courseCode: code });
+        }
+        if (enrolled) {
+          document.getElementById("dang-ky")?.setAttribute("hidden", "");
+          document.getElementById("goi-pro")?.setAttribute("hidden", "");
+          document.documentElement.classList.add("sa247-enrolled");
         }
       } catch (e) {
         console.warn("[learn-player] supabase", e);
