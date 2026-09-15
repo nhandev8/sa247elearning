@@ -107,6 +107,7 @@
         sort_order: l.sort_order || 0,
         publish_status: l.publish_status || "draft",
         has_video: !!(l.youtube_video_id || l.local_mp4),
+        description: l.description || l.youtube_description || "",
       })),
     }));
   }
@@ -273,9 +274,14 @@
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>`;
       const doneL = progressMap[lesson.id]?.completed;
+      const desc = (lesson.description || "").trim();
+      const descHtml = desc
+        ? `<div class="classroom__desc">${esc(desc)}</div>`
+        : "";
       meta.innerHTML = `
         <h4>${title}</h4>
         <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Mở sẵn" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
+        ${descHtml}
         ${
           enrolled
             ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
