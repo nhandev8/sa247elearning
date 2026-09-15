@@ -10,8 +10,8 @@
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
-  <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-quyen-hoc.js" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260915ia" defer></script>
+  <script src="../../assets/js/admin-quyen-hoc.js?v=20260916grant" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -33,8 +33,8 @@
         <section class="adm-card" style="margin-bottom:1rem">
           <h2>Cấp quyền học thủ công</h2>
           <form class="adm-form" id="grant-form">
-            <label>Mã hồ sơ học viên (UUID)
-              <input name="user_id" required placeholder="dán id từ mục Tài khoản" />
+            <label>Email học viên
+              <input name="user_email" type="email" required placeholder="hocvien@email.com" autocomplete="off" />
             </label>
             <label>Khóa học
               <select name="course_code" id="course-select" required></select>
