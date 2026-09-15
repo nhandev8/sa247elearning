@@ -38,7 +38,10 @@
         const p = profiles[r.user_id] || {};
         const c = r.course || {};
         return `<tr>
-          <td><strong>${p.full_name || "(không tên)"}</strong><div class="adm-msg">${r.user_id}</div></td>
+          <td><strong>${p.full_name || "(không tên)"}</strong>
+            <div class="adm-msg">${r.user_id}</div>
+            <a class="adm-btn adm-btn--line adm-btn--small" href="../tai-khoan/ho-so.html?id=${encodeURIComponent(r.user_id)}">Hồ sơ</a>
+          </td>
           <td>${c.code || ""} · ${c.title || ""}</td>
           <td>${sa247Admin.statusEnrollVi(r.status)}</td>
           <td>${sa247Admin.fmtTime(r.enrolled_at)}</td>

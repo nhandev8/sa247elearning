@@ -18,6 +18,7 @@
     return prefix + target;
   }
 
+  // Người dùng = hub thao tác theo tài khoản (hồ sơ sâu). Quyền học / tiến độ gộp vào đây.
   const MENU = [
     {
       group: "Tổng quan",
@@ -30,17 +31,12 @@
       ],
     },
     {
-      group: "Người học",
+      group: "Người dùng",
       items: [
         { target: "tai-khoan/", label: "Tất cả người dùng", key: "tai-khoan" },
-        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen" },
-      ],
-    },
-    {
-      group: "Đào tạo",
-      items: [
         { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
         { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do" },
+        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen" },
       ],
     },
     {

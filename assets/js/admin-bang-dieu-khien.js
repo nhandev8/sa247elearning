@@ -113,7 +113,7 @@
         { t: "Giao dịch / đơn chờ thanh toán", n: pendingOrders.length, href: "./don-hang/" },
         { t: "Chứng nhận đủ điều kiện chưa cấp hình thức", n: eligible.length, href: "./chung-nhan/" },
         { t: "Khóa chưa xuất bản", n: draftCourses.length, href: "./khoa-hoc/" },
-        { t: "Quyền học đang hoạt động", n: activeEnroll.length, href: "./quyen-hoc/" },
+        { t: "Người dùng đang có quyền học active", n: activeEnroll.length, href: "./tai-khoan/" },
       ];
       document.getElementById("adm-todo").innerHTML = todos
         .map(
