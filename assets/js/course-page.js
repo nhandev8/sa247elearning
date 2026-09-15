@@ -1,4 +1,4 @@
-/* SA247 course page UX — hero meta, sticky CTA theo trạng thái entitlement (TL10) */
+/* SA247 course page UX — CTA theo entitlement + trạng thái học (Tiếp tục học P0) */
 (function () {
   function bootJson() {
     const el = document.getElementById("sa247-course-boot");
@@ -45,83 +45,34 @@
     document.querySelectorAll("[data-live-price]").forEach((el) => {
       if (priceLabel) el.textContent = priceLabel;
     });
-    const liveMeta = document.querySelector("#course-hero-meta [data-live-meta]");
-    if (liveMeta && (mods != null || lessons != null)) {
-      liveMeta.textContent =
-        mods != null || typeof lessons === "number"
-          ? `${mods || 0} mô-đun · ${typeof lessons === "number" ? lessons : "…"} video`
-          : liveMeta.textContent;
-    }
   }
 
-  function applyCta(state, priceLabel) {
-    const price = priceLabel || "99.000đ";
+  function applyCta(cfg) {
     const bar = document.getElementById("course-sticky-cta");
     const label = bar?.querySelector("[data-sticky-label]");
     const btn = bar?.querySelector("[data-sticky-btn]");
     const heroCta = document.querySelector("[data-hero-cta]");
     const navCta = document.querySelector(".nav__cta");
 
-    const map = {
-      "signed-out": {
-        label: `Khóa học chính thức · ${price}`,
-        text: `Đăng ký học – ${price}`,
-        href: "#goi-pro",
-      },
-      "signed-in-locked": {
-        label: `Đã đăng nhập · đăng ký để học toàn bộ`,
-        text: `Đăng ký học – ${price}`,
-        href: "#goi-pro",
-      },
-      enrolled: {
-        label: "Bạn đã có quyền học — tiếp tục học",
-        text: "Tiếp tục học",
-        href: "#learner-root",
-      },
-      completed: {
-        label: "Đã hoàn thành khóa — xem kết quả",
-        text: "Xem kết quả",
-        href: "../dashboard/",
-      },
-      eligible: {
-        label: "Đủ điều kiện cấp GCN",
-        text: "Nhận chứng nhận",
-        href: null,
-      },
-      issued: {
-        label: "Bạn đã có giấy chứng nhận",
-        text: "Xem chứng nhận",
-        href: "../chung-nhan/",
-      },
-    };
-
-    const cfg = map[state] || map["signed-out"];
-    let href = cfg.href;
-    if (state === "eligible") {
-      const boot = bootJson();
-      href =
-        "../chung-nhan/mua.html?course=" +
-        encodeURIComponent(boot.code || "");
-    }
-
     if (bar) bar.hidden = false;
     if (label) label.textContent = cfg.label;
     if (btn) {
       btn.textContent = cfg.text;
-      btn.setAttribute("href", href);
+      btn.setAttribute("href", cfg.href);
     }
     if (heroCta) {
       heroCta.textContent = cfg.text;
-      heroCta.setAttribute("href", href);
+      heroCta.setAttribute("href", cfg.href);
     }
     if (navCta && !document.documentElement.classList.contains("sa247-staff")) {
       navCta.textContent = cfg.text;
-      navCta.setAttribute("href", href);
+      navCta.setAttribute("href", cfg.href);
     }
   }
 
   async function resolveState(boot) {
     let priceLabel = money(boot.price) || boot.price_label || "99.000đ";
+    const slug = boot.slug || "";
 
     if (window.sa247Auth?.ready) {
       try {
@@ -129,24 +80,37 @@
         if (boot.code) {
           const { data: course } = await sb
             .from("courses")
-            .select("id,price")
+            .select("id,price,slug,code,title")
             .eq("code", boot.code)
             .maybeSingle();
           if (course?.price != null) priceLabel = money(course.price);
           window.__sa247CoursePrice = priceLabel;
+          const courseSlug = course?.slug || slug;
 
           const session = await sa247Auth.getSession();
           if (!session) {
-            applyCta("signed-out", priceLabel);
+            applyCta({
+              label: `Khóa học chính thức · ${priceLabel}`,
+              text: `Đăng ký học – ${priceLabel}`,
+              href: "#goi-pro",
+            });
             return { state: "signed-out", priceLabel, course };
           }
           if (!course) {
-            applyCta("signed-in-locked", priceLabel);
+            applyCta({
+              label: "Đã đăng nhập · đăng ký để học toàn bộ",
+              text: `Đăng ký học – ${priceLabel}`,
+              href: "#goi-pro",
+            });
             return { state: "signed-in-locked", priceLabel };
           }
           const ok = await sa247Auth.hasCourseAccess(course.id);
           if (!ok) {
-            applyCta("signed-in-locked", priceLabel);
+            applyCta({
+              label: "Đã đăng nhập · đăng ký để học toàn bộ",
+              text: `Đăng ký học – ${priceLabel}`,
+              href: "#goi-pro",
+            });
             return { state: "signed-in-locked", priceLabel, course };
           }
 
@@ -160,35 +124,67 @@
             /* ignore */
           }
           if (certStatus === "issued" || certStatus === "valid") {
-            applyCta("issued", priceLabel);
+            applyCta({
+              label: "Bạn đã có giấy chứng nhận",
+              text: "Xem chứng nhận",
+              href: "../chung-nhan/",
+            });
             return { state: "issued", priceLabel, course };
           }
           if (certStatus === "eligible") {
-            applyCta("eligible", priceLabel);
+            applyCta({
+              label: "Đủ điều kiện cấp GCN",
+              text: "Nhận chứng nhận",
+              href:
+                "../chung-nhan/mua.html?course=" +
+                encodeURIComponent(boot.code || ""),
+            });
             return { state: "eligible", priceLabel, course };
           }
 
-          // Completed curriculum?
-          let completed = false;
-          try {
-            const { data: outline } = await sb.rpc("get_course_outline", {
-              p_course_code: boot.code,
-            });
-            const lessons = outline?.lessons || outline?.modules || [];
-            // outline shape varies — if progress says 100%
-            const prog = window.__sa247Progress;
-            if (prog?.percent >= 100) completed = true;
-            if (outline?.completed === true) completed = true;
-            void lessons;
-          } catch {
-            /* ignore */
+          // Learning progress → Bắt đầu / Tiếp tục / Xem lại
+          for (let i = 0; i < 40 && !window.sa247Continue; i++) {
+            await new Promise((r) => setTimeout(r, 40));
           }
-          if (completed) {
-            applyCta("completed", priceLabel);
-            return { state: "completed", priceLabel, course };
+          if (window.sa247Continue) {
+            const snap = await sa247Continue.loadCourseSnapshot(
+              sb,
+              session.user.id,
+              { code: course.code, slug: courseSlug, title: course.title }
+            );
+            window.__sa247Progress = { percent: snap.pct, snapshot: snap };
+            if (snap.state === "completed") {
+              applyCta({
+                label: "Đã hoàn thành khóa — xem lại hoặc làm kiểm tra",
+                text: "Xem lại khóa học",
+                href: `../${courseSlug}/#learner-root`,
+              });
+              return { state: "completed", priceLabel, course, snap };
+            }
+            if (snap.state === "in_progress" && snap.lesson) {
+              const code = snap.lesson.lesson_code || "";
+              applyCta({
+                label: code
+                  ? `Tiếp tục học → ${code}`
+                  : "Bạn đang học — tiếp tục",
+                text: "Tiếp tục học",
+                href: sa247Continue.learnHref(courseSlug, snap.lesson),
+              });
+              return { state: "in_progress", priceLabel, course, snap };
+            }
+            applyCta({
+              label: "Bạn đã có quyền học — bắt đầu bài đầu tiên",
+              text: "Bắt đầu học",
+              href: sa247Continue.learnHref(courseSlug, snap.lesson),
+            });
+            return { state: "not_started", priceLabel, course, snap };
           }
 
-          applyCta("enrolled", priceLabel);
+          applyCta({
+            label: "Bạn đã có quyền học — tiếp tục học",
+            text: "Tiếp tục học",
+            href: "#learner-root",
+          });
           return { state: "enrolled", priceLabel, course };
         }
       } catch (e) {
@@ -196,12 +192,15 @@
       }
     }
 
-    applyCta("signed-out", priceLabel);
+    applyCta({
+      label: `Khóa học chính thức · ${priceLabel}`,
+      text: `Đăng ký học – ${priceLabel}`,
+      href: "#goi-pro",
+    });
     return { state: "signed-out", priceLabel };
   }
 
   function enhanceCurriculumAccordion() {
-    // Static Bxx accordion is already rendered by build_landings when curriculum JSON exists.
     if (document.querySelector("#lo-trinh .curriculum-acc")) return;
     const board = document.querySelector("#lo-trinh .module-board");
     if (!board || board.dataset.accordion === "1") return;
@@ -261,21 +260,16 @@
     paintTrust(boot, fallback);
     enhanceCurriculumAccordion();
     resolveState(boot).then((r) => {
-      paintHeroMeta(null, boot, r.priceLabel);
       paintTrust(boot, r.priceLabel);
+      if (window.__sa247CourseDetail) {
+        paintHeroMeta(window.__sa247CourseDetail, boot, r.priceLabel);
+        paintLiveCurriculum(window.__sa247CourseDetail);
+      }
     });
-  });
-
-  window.addEventListener("sa247:classroom-ready", (ev) => {
-    const boot = bootJson();
-    const price = window.__sa247CoursePrice || boot.price_label || "99.000đ";
-    paintHeroMeta(ev.detail, boot, price);
-    paintLiveCurriculum(ev.detail);
-    resolveState(boot);
-  });
-
-  window.addEventListener("sa247:progress", (ev) => {
-    if (ev.detail) window.__sa247Progress = ev.detail;
-    resolveState(bootJson());
+    window.addEventListener("sa247:course-detail", (ev) => {
+      window.__sa247CourseDetail = ev.detail;
+      paintHeroMeta(ev.detail, boot, window.__sa247CoursePrice || fallback);
+      paintLiveCurriculum(ev.detail);
+    });
   });
 })();

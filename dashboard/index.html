@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Khóa học của tôi · SA247</title>
+  <title>Học tập · SA247</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260915continue" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js" defer></script>
   <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/continue-learning.js" defer></script>
   <script src="../assets/js/dashboard.js" defer></script>
 </head>
 <body class="app-body">
@@ -18,13 +19,13 @@
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
-        <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
-        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa học</a>
-        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
+        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▶</span>Học tập</a>
+        <a href="#khoa-cua-toi"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
+        <a href="#viec-tiep-theo"><span class="ico" aria-hidden="true">✓</span>Việc tiếp theo</a>
+        <a href="../quiz/"><span class="ico" aria-hidden="true">✎</span>Kỳ thi</a>
+        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận</a>
+        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa</a>
         <a href="#don-hang"><span class="ico" aria-hidden="true">▤</span>Đơn thanh toán</a>
-        <a href="../quiz/"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
-        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
-        <a href="../verify/"><span class="ico" aria-hidden="true">⌕</span>Xác minh công khai</a>
         <a href="../auth/doi-mat-khau.html"><span class="ico" aria-hidden="true">⚙</span>Đổi mật khẩu</a>
       </nav>
       <div class="app-side__foot">
@@ -36,12 +37,24 @@
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Khóa học của tôi</h1>
+        <h1>Học tập</h1>
       </header>
 
       <main class="app-content">
-        <p class="lead" id="status">Đang tải…</p>
-        <div id="courses" class="program-grid program-grid--2"></div>
+        <p class="lead learn-welcome" id="welcome">Đang tải…</p>
+
+        <section id="continue-hero" class="continue-hero" aria-live="polite" hidden></section>
+
+        <section id="khoa-cua-toi" class="app-section">
+          <h2>Khóa học của tôi</h2>
+          <p class="lead" id="status"></p>
+          <div id="courses" class="program-grid program-grid--2"></div>
+        </section>
+
+        <section id="viec-tiep-theo" class="app-section">
+          <h2>Việc tiếp theo</h2>
+          <ul class="todo-learn" id="todo-list"></ul>
+        </section>
 
         <section id="next-best" class="app-section next-best" aria-live="polite"></section>
 
