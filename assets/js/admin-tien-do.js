@@ -58,7 +58,7 @@
             else learning += 1;
             const name = e.profile?.full_name || e.user_id;
             return `<tr>
-              <td>${name}</td>
+              <td><a href="../tai-khoan/ho-so.html?id=${encodeURIComponent(e.user_id)}">${name}</a></td>
               <td>${done}</td>
               <td>${total}</td>
               <td>${pct}%</td>
