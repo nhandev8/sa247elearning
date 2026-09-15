@@ -70,7 +70,8 @@
     return { data, error };
   }
 
-  const PROFILE_CACHE_KEY = "sa247_profile_v1";
+  const PROFILE_CACHE_KEY = "sa247_profile_v2";
+  const PROFILE_SELECT = "id,full_name,role,phone,avatar_url,cert_display_name";
   let profileMem = null;
 
   function readProfileCache() {
@@ -93,6 +94,10 @@
     } catch {
       /* ignore */
     }
+  }
+
+  function clearProfileCache() {
+    writeProfileCache(null);
   }
 
   function withTimeout(promise, ms, fallback) {
@@ -137,7 +142,7 @@
           .then((sb) =>
             sb
               .from("profiles")
-              .select("id,full_name,role,phone")
+              .select(PROFILE_SELECT)
               .eq("id", session.user.id)
               .maybeSingle()
           )
@@ -153,7 +158,7 @@
       const result = await withTimeout(
         sb
           .from("profiles")
-          .select("id,full_name,role,phone")
+          .select(PROFILE_SELECT)
           .eq("id", session.user.id)
           .maybeSingle()
           .then(({ data, error }) => {
@@ -169,6 +174,42 @@
       if (result) writeProfileCache(result);
       return result;
     },
+    /** Cập nhật hồ sơ học viên (full_name, phone, avatar_url, cert_display_name). */
+    async updateProfile(patch) {
+      const sb = await ensureClient();
+      const session = await getSession();
+      if (!session?.user?.id) {
+        return { data: null, error: { message: "Bạn chưa đăng nhập." } };
+      }
+      const allowed = {};
+      for (const key of ["full_name", "phone", "avatar_url", "cert_display_name"]) {
+        if (Object.prototype.hasOwnProperty.call(patch || {}, key)) {
+          allowed[key] = patch[key];
+        }
+      }
+      if (!Object.keys(allowed).length) {
+        return { data: null, error: { message: "Không có trường hợp lệ để cập nhật." } };
+      }
+      const { data, error } = await sb
+        .from("profiles")
+        .update(allowed)
+        .eq("id", session.user.id)
+        .select(PROFILE_SELECT)
+        .maybeSingle();
+      if (!error && data) writeProfileCache(data);
+      else if (!error) clearProfileCache();
+      return { data, error };
+    },
+    async resendEmailVerification(email) {
+      const sb = await ensureClient();
+      const redirect = new URL("../auth/callback.html", location.href).href;
+      return sb.auth.resend({
+        type: "signup",
+        email: String(email || "").trim(),
+        options: { emailRedirectTo: redirect },
+      });
+    },
+    clearProfileCache,
     /** Sau đăng nhập: staff → admin; học viên → dashboard (trừ khi next chỉ định trang khác). */
     async homeAfterLogin(explicitNext, session) {
       const next = (explicitNext || "").trim();

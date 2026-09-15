@@ -401,6 +401,44 @@
     }
   }
 
+  /** Soft nudge: không chặn mua khóa — chỉ gợi ý bổ sung SĐT / ảnh. */
+  function paintProfileNudge(profile) {
+    const host = el("profile-nudge");
+    if (!host) return;
+    const hasName = Boolean(String(profile?.full_name || "").trim());
+    const hasPhone = Boolean(String(profile?.phone || "").trim());
+    const hasAvatar = Boolean(String(profile?.avatar_url || "").trim());
+    let score = 0;
+    if (hasName) score += 40;
+    if (hasPhone) score += 30;
+    if (hasAvatar) score += 30;
+    if (score >= 100) {
+      host.hidden = true;
+      host.innerHTML = "";
+      return;
+    }
+    const missing = [];
+    if (!hasName) missing.push("họ và tên");
+    if (!hasPhone) missing.push("số điện thoại");
+    if (!hasAvatar) missing.push("ảnh đại diện");
+    const hint =
+      missing.length === 1
+        ? `Bổ sung ${missing[0]}`
+        : `Bổ sung ${missing.slice(0, -1).join(", ")} và ${missing[missing.length - 1]}`;
+    host.hidden = false;
+    host.innerHTML = `
+      <div class="profile-nudge__card">
+        <p class="kicker">Hoàn thiện hồ sơ học viên</p>
+        <div class="progress-bar profile-nudge__bar" aria-label="Độ đầy đủ hồ sơ ${score}%">
+          <span style="width:${score}%"></span>
+        </div>
+        <p class="profile-nudge__pct">${score}%</p>
+        <p class="profile-nudge__hint">${hint}</p>
+        <p class="meta">Không bắt buộc để mua khóa — hữu ích khi liên hệ và cấp chứng nhận.</p>
+        <p><a class="btn btn--amber btn--small" href="../ho-so/">Hoàn thiện hồ sơ</a></p>
+      </div>`;
+  }
+
   document.addEventListener("DOMContentLoaded", async () => {
     el("menu-toggle")?.addEventListener("click", () => {
       document.querySelector(".app-shell")?.classList.toggle("is-side-open");
@@ -427,15 +465,16 @@
       return;
     }
 
+    const sb = await sa247Auth.ensureClient();
+    const profile = await sa247Auth.getProfile({ session, timeoutMs: 4000 });
     const name =
+      (profile?.full_name && String(profile.full_name).trim()) ||
       session.user.user_metadata?.full_name ||
       session.user.email?.split("@")[0] ||
       "bạn";
     el("user-label").textContent = session.user.email || name;
-    el("welcome").textContent = `Chào mừng bạn trở lại, ${name}`;
+    el("welcome").textContent = `Xin chào, ${name}`;
 
-    const sb = await sa247Auth.ensureClient();
-    const profile = await sa247Auth.getProfile();
     if (sa247Auth.isStaffRole(profile?.role)) {
       const nav = document.querySelector(".app-side__nav");
       if (nav && !nav.querySelector("[data-admin-link]")) {
@@ -445,6 +484,8 @@
         );
       }
     }
+
+    paintProfileNudge(profile);
 
     try {
       const { primary, snapshots } = await C().loadPrimaryContinue(sb, session.user.id);

@@ -20,6 +20,7 @@
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
         <a href="../dashboard/"><span class="ico" aria-hidden="true">▶</span>Học tập</a>
+        <a href="../ho-so/"><span class="ico" aria-hidden="true">☺</span>Hồ sơ của tôi</a>
         <a class="is-active" href="./"><span class="ico" aria-hidden="true">✓</span>Kỳ thi</a>
         <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận của tôi</a>
         <a href="../verify/"><span class="ico" aria-hidden="true">⌕</span>Xác minh công khai</a>
@@ -44,10 +45,18 @@
         </div>
         <p class="lead" id="quiz-status">Đang tải…</p>
         <form id="quiz-form" class="quiz-form" hidden>
-          <label class="quiz-name">
-            Họ tên trên chứng nhận
-            <input type="text" name="full_name" required maxlength="120" placeholder="VD: Nguyễn Văn A" />
-          </label>
+          <fieldset class="quiz-cert-name">
+            <legend>Kiểm tra thông tin trên chứng nhận</legend>
+            <label class="quiz-name">
+              Họ và tên
+              <input type="text" name="full_name" id="quiz-full-name" required maxlength="120" placeholder="VD: Nguyễn Văn A" />
+            </label>
+            <label class="quiz-confirm checkout-terms">
+              <input type="checkbox" name="confirm_cert_name" id="confirm-cert-name" required />
+              <span>Tôi xác nhận thông tin trên là chính xác để in trên giấy chứng nhận.</span>
+            </label>
+            <p class="meta" id="quiz-cert-lock-note" hidden>Bạn đã có GCN phát hành — tên trên chứng nhận đã khóa theo hồ sơ.</p>
+          </fieldset>
           <div id="quiz-questions"></div>
           <button type="submit" class="btn btn--amber">Nộp bài</button>
         </form>
