@@ -122,23 +122,30 @@
       resendBtn.hidden = false;
     }
 
-    let certLocked = false;
+    const isStaff = sa247Auth.isStaffRole(profile?.role);
+    let hasIssued = false;
     try {
       const { data: locked } = await sb.rpc("learner_has_issued_certificate", {
         p_uid: user.id,
       });
-      certLocked = Boolean(locked);
+      hasIssued = Boolean(locked);
     } catch (_) {
       try {
         const { data: mine } = await sb.rpc("list_my_certificates");
-        certLocked = (mine || []).some(
+        hasIssued = (mine || []).some(
           (c) => c.status === "issued" || c.status === "valid"
         );
       } catch (__) {}
     }
+    // Học viên: khóa sau khi GCN phát hành. Staff vẫn sửa được (có nhật ký khi sửa bản GCN đã cấp ở Quản trị).
+    const certLocked = hasIssued && !isStaff;
     if (certLocked) {
       certInput.readOnly = true;
       el("cert-lock-note").hidden = false;
+    } else if (hasIssued && isStaff) {
+      el("cert-lock-note").hidden = false;
+      el("cert-lock-note").textContent =
+        "Bạn là quản trị: có thể sửa tên mặc định trên hồ sơ. Tên đã in trên GCN đã phát hành cần sửa ở Quản trị → Chứng nhận (có nhật ký).";
     }
 
     await loadStats(sb, user.id);
