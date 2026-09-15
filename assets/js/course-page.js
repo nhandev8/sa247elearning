@@ -96,15 +96,9 @@
             });
             return { state: "signed-out", priceLabel, course };
           }
-          if (!course) {
-            applyCta({
-              label: "Đã đăng nhập · đăng ký để học toàn bộ",
-              text: `Đăng ký học – ${priceLabel}`,
-              href: "#goi-pro",
-            });
-            return { state: "signed-in-locked", priceLabel };
-          }
-          const ok = await sa247Auth.hasCourseAccess(course.id);
+          const ok = await sa247Auth.hasCourseAccess(course?.id || null, {
+            courseCode: boot.code || course?.code || "",
+          });
           if (!ok) {
             applyCta({
               label: "Đã đăng nhập · đăng ký để học toàn bộ",
@@ -113,6 +107,11 @@
             });
             return { state: "signed-in-locked", priceLabel, course };
           }
+
+          // Đã có quyền học → ẩn khối thanh toán / mở khóa
+          document.getElementById("dang-ky")?.setAttribute("hidden", "");
+          document.getElementById("goi-pro")?.setAttribute("hidden", "");
+          document.documentElement.classList.add("sa247-enrolled");
 
           // Cert lifecycle
           let certStatus = null;
@@ -150,7 +149,11 @@
             const snap = await sa247Continue.loadCourseSnapshot(
               sb,
               session.user.id,
-              { code: course.code, slug: courseSlug, title: course.title }
+              {
+                code: course?.code || boot.code,
+                slug: courseSlug,
+                title: course?.title || boot.title || boot.code,
+              }
             );
             window.__sa247Progress = { percent: snap.pct, snapshot: snap };
             if (snap.state === "completed") {

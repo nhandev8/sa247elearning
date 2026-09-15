@@ -42,21 +42,51 @@
     return data.session || null;
   }
 
-  async function hasCourseAccess(courseId) {
+  async function hasCourseAccess(courseId, opts) {
     const sb = await ensureClient();
     const session = await getSession();
-    if (!session) return false;
+    if (!session?.user?.id) return false;
+    const uid = session.user.id;
+    const code = (opts?.courseCode || "").trim();
+    const now = Date.now();
+
+    function rowActive(rows) {
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      if (!row) return false;
+      if (row.status && row.status !== "active") return false;
+      if (row.expires_at) {
+        const t = Date.parse(row.expires_at);
+        if (Number.isFinite(t) && t < now) return false;
+      }
+      return true;
+    }
+
+    let cid = courseId || null;
+    if (!cid && code) {
+      const { data: course, error: cErr } = await sb
+        .from("courses")
+        .select("id")
+        .eq("code", code)
+        .maybeSingle();
+      if (cErr) console.warn("[SA247] course resolve", cErr.message);
+      cid = course?.id || null;
+    }
+
+    if (!cid) return false;
+
+    // Luôn lọc user_id: staff RLS thấy nhiều enrollment → maybeSingle cũ bị lỗi → false
     const { data, error } = await sb
       .from("enrollments")
-      .select("id,status")
-      .eq("course_id", courseId)
+      .select("id,status,expires_at")
+      .eq("user_id", uid)
+      .eq("course_id", cid)
       .eq("status", "active")
-      .maybeSingle();
+      .limit(1);
     if (error) {
       console.warn("[SA247] enrollment check", error.message);
       return false;
     }
-    return Boolean(data);
+    return rowActive(data);
   }
 
   /** Premium lesson rows only return if RLS allows (enrolled). */
