@@ -45,7 +45,7 @@
           <td>
             ${
               r.status === "active"
-                ? `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${r.user_id}" data-code="${c.code}">Thu hồi</button>`
+                ? `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${r.id}">Thu hồi</button>`
                 : "—"
             }
           </td>
@@ -68,7 +68,7 @@
         const msg = document.getElementById("grant-msg");
         msg.textContent = "Đang cấp quyền…";
         const { data, error } = await sb.rpc("admin_grant_enrollment", {
-          p_user_id: String(fd.get("user_id")).trim(),
+          p_user_email: String(fd.get("user_email") || "").trim(),
           p_course_code: String(fd.get("course_code")),
           p_note: String(fd.get("note") || ""),
         });
@@ -77,6 +77,7 @@
           return;
         }
         msg.innerHTML = `<span class="adm-msg--ok">Đã cấp quyền học thành công.</span>`;
+        ev.target.reset();
         await load(sb);
       });
 
@@ -85,8 +86,7 @@
         if (!btn) return;
         if (!confirm("Thu hồi quyền học này?")) return;
         const { error } = await sb.rpc("admin_revoke_enrollment", {
-          p_user_id: btn.getAttribute("data-revoke"),
-          p_course_code: btn.getAttribute("data-code"),
+          p_enrollment_id: btn.getAttribute("data-revoke"),
         });
         if (error) {
           alert(error.message);
