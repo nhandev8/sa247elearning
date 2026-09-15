@@ -2938,4 +2938,142 @@ body.course-page { padding-bottom: 4.5rem; }
   color: rgba(255, 255, 255, 0.82);
 }
 
+/* --- Tiếp tục học P0 --- */
+.learn-welcome {
+  margin: 0 0 1.25rem;
+  font-size: 1.15rem;
+  color: var(--navy);
+  font-weight: 600;
+}
+.continue-hero {
+  margin: 0 0 2rem;
+}
+.continue-hero .kicker {
+  margin: 0 0 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.continue-hero__card {
+  padding: 1.35rem 1.4rem 1.5rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.continue-hero__code {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--green-deep);
+  margin-bottom: 0.35rem;
+}
+.continue-hero__card h2 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  line-height: 1.25;
+}
+.continue-hero__pct {
+  margin: 0 0 0.65rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.continue-hero__lesson {
+  margin: 0.85rem 0 0.35rem;
+  line-height: 1.45;
+}
+.continue-hero__pos {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--green-deep);
+  font-weight: 600;
+}
+.continue-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+.continue-hero__empty {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: rgba(11, 31, 58, 0.04);
+  border: 1px dashed var(--line);
+}
+.continue-hero__empty h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+.todo-learn {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+.todo-learn li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.todo-learn__empty {
+  color: var(--muted);
+}
+.classroom__resume {
+  color: var(--green-deep) !important;
+  font-weight: 600;
+}
+.lesson-done {
+  text-align: center;
+  padding: 1.75rem 1rem;
+}
+.lesson-done__check {
+  margin: 0;
+  font-size: 2.5rem;
+  color: var(--green-deep);
+  line-height: 1;
+}
+.lesson-done h3 {
+  margin: 0.5rem 0 0.75rem;
+}
+.lesson-next {
+  margin-top: 0.5rem;
+  padding: 1rem 1.1rem;
+  background: rgba(11, 31, 58, 0.04);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--amber, #e8a317);
+}
+.lesson-next .kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.lesson-next h4 {
+  margin: 0 0 0.35rem;
+}
+.lesson-next__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+}
+#sa247-yt-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+
 
