@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kiểm tra &amp; kết quả · SA247</title>
+  <title>Cài đặt · SA247</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -12,13 +12,13 @@
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
   <script src="../assets/js/learner-nav.js?v=20260915ia" defer></script>
   <script src="../assets/js/learner-boot.js?v=20260915ia" defer></script>
-  <script src="../assets/js/my-assessments.js?v=20260915ia" defer></script>
+  <script src="../assets/js/settings.js?v=20260915ia" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
-      <nav class="app-side__nav" data-learner-nav data-active="kiem-tra"></nav>
+      <nav class="app-side__nav" data-learner-nav data-active="cai-dat"></nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
         <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
@@ -27,18 +27,22 @@
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Kiểm tra &amp; kết quả</h1>
+        <h1>Cài đặt</h1>
       </header>
-      <main class="app-content learn-page">
-        <section class="learn-section">
-          <div class="learn-section__head"><h2>Bài kiểm tra</h2></div>
-          <p class="lead" id="quiz-status">Đang tải…</p>
-          <div id="quiz-list" class="todo-learn"></div>
+      <main class="app-content profile-page">
+        <section class="profile-panel">
+          <h2>Bảo mật</h2>
+          <p class="profile-panel__lead">Đổi mật khẩu, quên mật khẩu, xác minh email.</p>
+          <p class="profile-sec-actions">
+            <a class="btn btn--amber" href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
+            <a class="btn btn--line" href="../auth/quen-mat-khau.html">Quên mật khẩu</a>
+            <a class="btn btn--line" href="../ho-so/">Hồ sơ &amp; xác minh email</a>
+          </p>
         </section>
-        <section class="learn-section">
-          <div class="learn-section__head"><h2>Lịch sử làm bài</h2></div>
-          <p class="meta">Không được sửa lịch sử — đây là learning record.</p>
-          <div id="attempt-list"></div>
+        <section class="profile-panel">
+          <h2>Tài khoản</h2>
+          <p class="meta" id="settings-email">…</p>
+          <p class="meta">Mã tài khoản hệ thống và lịch sử thanh toán / kết quả kiểm tra không chỉnh sửa tại đây.</p>
         </section>
       </main>
     </div>

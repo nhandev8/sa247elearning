@@ -8,25 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915ui2" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260915ia" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
-  <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/learner-nav.js?v=20260915ia" defer></script>
+  <script src="../assets/js/learner-boot.js?v=20260915ia" defer></script>
   <script src="../assets/js/my-certificates.js" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
-      <nav class="app-side__nav">
-        <a href="../dashboard/">Học tập</a>
-        <a href="../ho-so/">Hồ sơ</a>
-        <a href="../quiz/">Kỳ thi</a>
-        <a class="is-active" href="./">Chứng nhận</a>
-        <a href="../verify/">Xác minh</a>
-        <a href="../index.html">Trang chủ</a>
-        <a href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
-      </nav>
+      <nav class="app-side__nav" data-learner-nav data-active="chung-nhan"></nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
         <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>

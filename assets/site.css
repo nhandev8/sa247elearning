@@ -3528,7 +3528,36 @@ body.course-page { padding-bottom: 4.5rem; }
   font-weight: 700;
   padding: 0 0.35rem;
 }
-.quiz-confirm {
-  margin-top: 0.65rem;
+.learn-more-links {
+  margin: 2rem 0 0;
+}
+.learn-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.learn-table th,
+.learn-table td {
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.learn-table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: rgba(11, 31, 58, 0.04);
+}
+.learn-table tr:last-child td {
+  border-bottom: 0;
+}
+.learn-table .progress-bar {
+  margin-top: 0.35rem;
+  max-width: 10rem;
 }
 

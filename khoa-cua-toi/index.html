@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Học tập · SA247</title>
+  <title>Khóa học của tôi · SA247</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,13 +13,14 @@
   <script src="../assets/js/learner-nav.js?v=20260915ia" defer></script>
   <script src="../assets/js/learner-boot.js?v=20260915ia" defer></script>
   <script src="../assets/js/continue-learning.js?v=20260915p0" defer></script>
-  <script src="../assets/js/dashboard.js?v=20260915ia" defer></script>
+  <script src="../assets/js/learner-panels.js?v=20260915ia" defer></script>
+  <script src="../assets/js/my-courses.js?v=20260915ia" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
-      <nav class="app-side__nav" data-learner-nav data-active="hoc-tap"></nav>
+      <nav class="app-side__nav" data-learner-nav data-active="khoa-cua-toi"></nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
         <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
@@ -28,29 +29,12 @@
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Học tập</h1>
+        <h1>Khóa học của tôi</h1>
       </header>
       <main class="app-content learn-page">
-        <header class="learn-head">
-          <p class="learn-welcome" id="welcome">Đang tải…</p>
-          <p class="learn-head__sub">Tiếp tục đúng chỗ bạn dừng — tiến độ lưu trên tài khoản.</p>
-        </header>
-        <section id="profile-nudge" class="profile-nudge" aria-live="polite" hidden></section>
-        <section id="continue-hero" class="continue-hero" aria-live="polite" hidden></section>
-        <section id="thanh-tich" class="app-section learn-section">
-          <div class="learn-section__head"><h2>Thành tích</h2></div>
-          <div class="learn-stats" id="learn-stats"></div>
-        </section>
-        <section id="viec-tiep-theo" class="app-section learn-section">
-          <div class="learn-section__head"><h2>Việc cần làm</h2></div>
-          <ul class="todo-learn" id="todo-list"></ul>
-        </section>
-        <p class="learn-more-links meta">
-          <a href="../khoa-cua-toi/">Khóa học của tôi</a> ·
-          <a href="../lo-trinh/">Lộ trình</a> ·
-          <a href="../tien-do/">Tiến độ chi tiết</a> ·
-          <a href="../kiem-tra/">Kiểm tra &amp; kết quả</a>
-        </p>
+        <p class="lead" id="status">Đang tải…</p>
+        <p class="meta">Danh sách enrollment / quyền học — khác catalog trên trang chủ.</p>
+        <div id="courses" class="program-grid program-grid--2"></div>
       </main>
     </div>
   </div>

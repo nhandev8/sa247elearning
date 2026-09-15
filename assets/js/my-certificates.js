@@ -115,7 +115,14 @@
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    await bindLogout();
+    if (window.sa247LearnerBoot) {
+      await sa247LearnerBoot.bindChrome();
+    } else {
+      await bindLogout();
+      el("menu-toggle")?.addEventListener("click", () => {
+        document.querySelector(".app-shell")?.classList.toggle("is-side-open");
+      });
+    }
     if (!window.sa247Auth?.ready) {
       el("cert-status").innerHTML =
         'Thiếu cấu hình. <a href="../auth/login.html">Đăng nhập</a>';
@@ -127,7 +134,8 @@
         'Cần đăng nhập. <a href="../auth/login.html">Đăng nhập</a>';
       return;
     }
-    el("user-label").textContent = session.user.email || "Học viên";
+    if (window.sa247LearnerBoot) await sa247LearnerBoot.paintUser(session);
+    else el("user-label").textContent = session.user.email || "Học viên";
     const sb = await sa247Auth.ensureClient();
     let list = null;
     const rpc = await sb.rpc("list_my_certificates");

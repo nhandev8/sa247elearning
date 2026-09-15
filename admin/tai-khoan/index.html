@@ -10,8 +10,8 @@
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
-  <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-tai-khoan.js" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260915ia" defer></script>
+  <script src="../../assets/js/admin-tai-khoan.js?v=20260915ia" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,15 +26,17 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tất cả tài khoản</h1>
+        <h1>Tất cả người dùng</h1>
       </header>
       <main class="adm-content">
         <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm họ tên…" />
+          <input type="search" id="q" placeholder="Tìm họ tên / SĐT…" />
           <select id="filter">
             <option value="all">Tất cả</option>
-            <option value="student">Học viên</option>
-            <option value="admin">Quản trị viên</option>
+            <option value="learner">Học viên</option>
+            <option value="staff">Staff</option>
+            <option value="quan_tri_cao_nhat">QT cao nhất</option>
+            <option value="hoc_vien">hoc_vien</option>
           </select>
         </div>
         <p class="adm-msg" id="adm-status"></p>
