@@ -253,6 +253,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    if (window.sa247LearnerBoot) {
+      sa247LearnerBoot.bindChrome().catch(() => {});
+    } else {
+      el("menu-toggle")?.addEventListener("click", () => {
+        document.querySelector(".app-shell")?.classList.toggle("is-side-open");
+      });
+    }
     main().catch((e) => {
       console.error(e);
       el("quiz-status").textContent = e.message || String(e);

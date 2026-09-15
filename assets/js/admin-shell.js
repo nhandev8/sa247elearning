@@ -20,48 +20,62 @@
 
   const MENU = [
     {
-      group: "Bảng điều khiển",
-      items: [{ target: "", label: "Tổng quan", key: "home" }],
+      group: "Tổng quan",
+      items: [{ target: "", label: "Trung tâm điều hành", key: "home" }],
     },
     {
-      group: "Quản lý khóa học",
+      group: "Học viện",
       items: [
-        { target: "khoa-hoc/", label: "Tất cả khóa học", key: "khoa-hoc" },
+        { target: "khoa-hoc/", label: "Khóa học", key: "khoa-hoc" },
+      ],
+    },
+    {
+      group: "Người học",
+      items: [
+        { target: "tai-khoan/", label: "Tất cả người dùng", key: "tai-khoan" },
+        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen" },
+      ],
+    },
+    {
+      group: "Đào tạo",
+      items: [
+        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
         { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do" },
+      ],
+    },
+    {
+      group: "Đánh giá",
+      items: [
         { target: "cau-hoi/", label: "Ngân hàng câu hỏi", key: "cau-hoi" },
         { target: "bai-kiem-tra/", label: "Bài kiểm tra", key: "bai-kiem-tra" },
-        { target: "chung-nhan/", label: "Chứng nhận", key: "chung-nhan" },
       ],
     },
     {
-      group: "Quản lý tài khoản",
+      group: "Chứng nhận",
+      items: [{ target: "chung-nhan/", label: "Tất cả chứng nhận", key: "chung-nhan" }],
+    },
+    {
+      group: "Kinh doanh",
       items: [
-        { target: "tai-khoan/", label: "Tất cả tài khoản", key: "tai-khoan" },
-        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
         { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
         { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
+      ],
+    },
+    {
+      group: "Phân tích",
+      items: [{ target: "thong-ke/", label: "Thống kê nền tảng", key: "thong-ke" }],
+    },
+    {
+      group: "Hệ thống",
+      items: [
         { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
-      ],
-    },
-    {
-      group: "Thư viện & công cụ",
-      items: [
-        { label: "Thư viện HSE", soon: true },
-        { label: "Công cụ HSE", soon: true },
-        { target: "thong-ke/", label: "Thống kê", key: "thong-ke" },
-      ],
-    },
-    {
-      group: "Cài đặt",
-      items: [
         {
           target: "auth/doi-mat-khau.html",
           label: "Đổi mật khẩu",
           key: "doi-mat-khau",
           site: true,
         },
-        { label: "Thông tin hệ thống", soon: true },
-        { target: "phan-quyen/", label: "Phân quyền", key: "phan-quyen" },
+        { label: "Tích hợp (SePay / YouTube)", soon: true },
       ],
     },
   ];
