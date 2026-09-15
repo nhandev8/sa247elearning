@@ -122,8 +122,11 @@
             const code = encodeURIComponent(data.cert_code);
             result.innerHTML = `<h2>Đạt ${pct}%</h2>
               <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code}</strong></p>
-              <p><a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
-              <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a></p>`;
+              <p class="cert-buy-options">
+                <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+                <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
+                <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
+              </p>`;
           } else {
             const prices = await loadCertPriceLabels(sb);
             result.innerHTML = `<h2>Đạt ${pct}%</h2>
@@ -134,13 +137,16 @@
                 <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${prices.pdf}</a>
                 <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${prices.hard} + ship</a>
                 <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}">Xem các lựa chọn</a>
-                <a class="btn btn--line" href="../chung-nhan/">Không nhận · Về sau</a>
+                <a class="btn btn--line" href="../dashboard/">Về Học tập · nhận sau</a>
               </p>`;
           }
         } else {
         result.innerHTML = `<h2>Chưa đạt (${pct}%)</h2>
           <p>Cần ≥ ${data?.pass_percent || passAt}%. Ôn lại bài học rồi thử lại.</p>
-          <button type="button" class="btn btn--line" id="retry">Làm lại</button>`;
+          <p class="cert-buy-options">
+            <button type="button" class="btn btn--amber" id="retry">Làm lại</button>
+            <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
+          </p>`;
         el("retry")?.addEventListener("click", () => location.reload());
       }
       btn.disabled = false;

@@ -3075,5 +3075,132 @@ body.course-page { padding-bottom: 4.5rem; }
   background: #000;
 }
 
+/* Hub continue bar + journey + knowledge stats */
+.hub-continue {
+  background: #0b1f3a;
+  color: #fff;
+  padding: 1rem 0;
+  border-bottom: 3px solid var(--amber, #e8a317);
+}
+.hub-continue__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.hub-continue__inner--empty {
+  color: rgba(255, 255, 255, 0.9);
+}
+.hub-continue__inner--empty a { color: var(--amber, #e8a317); }
+.hub-continue__kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber, #e8a317);
+  font-weight: 700;
+}
+.hub-continue__title {
+  margin: 0.2rem 0 0.35rem;
+  font-size: 1.05rem;
+}
+.hub-continue__meta {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.4;
+}
+.hub-continue .progress-bar {
+  max-width: 18rem;
+  background: rgba(255, 255, 255, 0.15);
+}
+.hub-continue .progress-bar > span {
+  background: var(--amber, #e8a317);
+}
+.hub-continue__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.learn-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+.learn-stat {
+  padding: 0.9rem 0.85rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.learn-stat strong {
+  display: block;
+  font-size: 1.45rem;
+  color: var(--navy);
+}
+.learn-stat span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.journey-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.journey-item {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  border-left: 4px solid rgba(11, 31, 58, 0.2);
+}
+.journey-item.is-here {
+  border-left-color: var(--amber, #e8a317);
+  background: rgba(232, 163, 23, 0.06);
+}
+.journey-item.is-done {
+  border-left-color: var(--green-deep, #1a7a4c);
+}
+.journey-item__badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.journey-item.is-here .journey-item__badge { color: #9a6b00; }
+.journey-item.is-done .journey-item__badge { color: var(--green-deep); }
+.learn-history {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+.learn-history li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.cert-buy-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 
 
