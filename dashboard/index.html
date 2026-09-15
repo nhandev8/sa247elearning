@@ -7,30 +7,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915hs" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260915ui2" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
   <script src="../assets/js/app-shell.js" defer></script>
   <script src="../assets/js/continue-learning.js?v=20260915p0" defer></script>
-  <script src="../assets/js/dashboard.js?v=20260915hs" defer></script>
+  <script src="../assets/js/dashboard.js?v=20260915ui2" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
-        <a class="is-active" href="./"><span class="ico" aria-hidden="true">▶</span>Học tập</a>
-        <a href="#khoa-cua-toi"><span class="ico" aria-hidden="true">▣</span>Khóa học của tôi</a>
-        <a href="#lo-trinh"><span class="ico" aria-hidden="true">↗</span>Lộ trình của tôi</a>
-        <a href="#viec-tiep-theo"><span class="ico" aria-hidden="true">✓</span>Việc tiếp theo</a>
-        <a href="#thanh-tich"><span class="ico" aria-hidden="true">★</span>Thành tích</a>
-        <a href="../quiz/"><span class="ico" aria-hidden="true">✎</span>Kỳ thi</a>
-        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận</a>
-        <a href="../kien-thuc/"><span class="ico" aria-hidden="true">◇</span>Kiến thức</a>
-        <a href="../index.html#chuong-trinh"><span class="ico" aria-hidden="true">⌕</span>Danh mục khóa</a>
-        <a href="#don-hang"><span class="ico" aria-hidden="true">▤</span>Đơn thanh toán</a>
-        <a href="../ho-so/"><span class="ico" aria-hidden="true">☺</span>Hồ sơ của tôi</a>
-        <a href="../auth/doi-mat-khau.html"><span class="ico" aria-hidden="true">⚙</span>Đổi mật khẩu</a>
+        <a class="is-active" href="./">Học tập</a>
+        <a href="#khoa-cua-toi">Khóa của tôi</a>
+        <a href="../ho-so/">Hồ sơ</a>
+        <a href="../quiz/">Kỳ thi</a>
+        <a href="../chung-nhan/">Chứng nhận</a>
+        <a href="#don-hang">Đơn hàng</a>
+        <a href="../kien-thuc/">Kiến thức</a>
+        <a href="../index.html#chuong-trinh">Danh mục khóa</a>
       </nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
@@ -44,44 +40,61 @@
         <h1>Học tập</h1>
       </header>
 
-      <main class="app-content">
-        <p class="lead learn-welcome" id="welcome">Đang tải…</p>
+      <main class="app-content learn-page">
+        <header class="learn-head">
+          <p class="learn-welcome" id="welcome">Đang tải…</p>
+          <p class="learn-head__sub">Tiếp tục đúng chỗ bạn dừng — tiến độ lưu trên tài khoản.</p>
+        </header>
 
         <section id="profile-nudge" class="profile-nudge" aria-live="polite" hidden></section>
 
         <section id="continue-hero" class="continue-hero" aria-live="polite" hidden></section>
 
-        <section id="thanh-tich" class="app-section">
-          <h2>Thành tích</h2>
+        <section id="thanh-tich" class="app-section learn-section">
+          <div class="learn-section__head">
+            <h2>Thành tích</h2>
+          </div>
           <div class="learn-stats" id="learn-stats"></div>
         </section>
 
-        <section id="khoa-cua-toi" class="app-section">
-          <h2>Khóa học của tôi</h2>
+        <section id="khoa-cua-toi" class="app-section learn-section">
+          <div class="learn-section__head">
+            <h2>Khóa học của tôi</h2>
+          </div>
           <p class="lead" id="status"></p>
           <div id="courses" class="program-grid program-grid--2"></div>
         </section>
 
-        <section id="lo-trinh" class="app-section">
-          <h2>Lộ trình nghề nghiệp của bạn</h2>
-          <p class="lead">Các bước đề xuất sau khóa bạn đang học — không bắt buộc mua ngay.</p>
+        <section id="lo-trinh" class="app-section learn-section">
+          <div class="learn-section__head">
+            <h2>Lộ trình nghề nghiệp</h2>
+            <p class="lead">Đề xuất sau khóa bạn đang học — không bắt buộc mua ngay.</p>
+          </div>
           <ol class="journey-list" id="journey-list"></ol>
         </section>
 
-        <section id="viec-tiep-theo" class="app-section">
-          <h2>Việc tiếp theo</h2>
-          <ul class="todo-learn" id="todo-list"></ul>
-        </section>
+        <div class="learn-split">
+          <section id="viec-tiep-theo" class="app-section learn-section">
+            <div class="learn-section__head">
+              <h2>Việc tiếp theo</h2>
+            </div>
+            <ul class="todo-learn" id="todo-list"></ul>
+          </section>
 
-        <section id="lich-su" class="app-section">
-          <h2>Lịch sử học gần đây</h2>
-          <ul class="learn-history" id="learn-history"></ul>
-        </section>
+          <section id="lich-su" class="app-section learn-section">
+            <div class="learn-section__head">
+              <h2>Lịch sử gần đây</h2>
+            </div>
+            <ul class="learn-history" id="learn-history"></ul>
+          </section>
+        </div>
 
         <section id="next-best" class="app-section next-best" aria-live="polite"></section>
 
-        <section id="don-hang" class="app-section">
-          <h2>Đơn thanh toán</h2>
+        <section id="don-hang" class="app-section learn-section">
+          <div class="learn-section__head">
+            <h2>Đơn thanh toán</h2>
+          </div>
           <p class="lead" id="orders-status">Đang tải đơn…</p>
           <div id="orders" class="order-list"></div>
         </section>
