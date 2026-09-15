@@ -8,23 +8,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915hs" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260915ui2" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
   <script src="../assets/js/app-shell.js" defer></script>
-  <script src="../assets/js/profile.js?v=20260915hs" defer></script>
+  <script src="../assets/js/profile.js?v=20260915ui2" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
     <aside class="app-side" aria-label="Menu học viên">
       <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
       <nav class="app-side__nav">
-        <a href="../dashboard/"><span class="ico" aria-hidden="true">▶</span>Học tập</a>
-        <a class="is-active" href="./"><span class="ico" aria-hidden="true">☺</span>Hồ sơ của tôi</a>
-        <a href="../quiz/"><span class="ico" aria-hidden="true">✎</span>Kỳ thi</a>
-        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận</a>
-        <a href="../auth/doi-mat-khau.html"><span class="ico" aria-hidden="true">⚙</span>Đổi mật khẩu</a>
-        <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
+        <a href="../dashboard/">Học tập</a>
+        <a class="is-active" href="./">Hồ sơ</a>
+        <a href="../quiz/">Kỳ thi</a>
+        <a href="../chung-nhan/">Chứng nhận</a>
+        <a href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
+        <a href="../index.html">Trang chủ</a>
       </nav>
       <div class="app-side__foot">
         <p class="app-side__user" id="user-label">…</p>
@@ -39,69 +39,77 @@
       </header>
 
       <main class="app-content profile-page">
-        <p class="lead" id="profile-status">Đang tải…</p>
+        <header class="profile-head">
+          <p class="lead" id="profile-status">Đang tải…</p>
+        </header>
 
-        <section class="profile-block" aria-labelledby="hs-account">
-          <h2 id="hs-account">Thông tin tài khoản</h2>
-          <form id="profile-form" class="order-form profile-form" hidden>
-            <div class="profile-avatar-row">
-              <div class="profile-avatar" id="avatar-preview" aria-hidden="true"></div>
-              <div class="profile-avatar-actions">
-                <label class="btn btn--line btn--small profile-file-btn">
-                  Thay đổi ảnh
-                  <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
-                </label>
-                <p class="meta">JPG/PNG/WebP · tối đa 2&nbsp;MB. Không bắt buộc để mua khóa.</p>
+        <div class="profile-layout">
+          <section class="profile-panel" aria-labelledby="hs-account">
+            <h2 id="hs-account">Thông tin tài khoản</h2>
+            <form id="profile-form" class="profile-form" hidden>
+              <div class="profile-avatar-row">
+                <div class="profile-avatar" id="avatar-preview" aria-hidden="true"></div>
+                <div class="profile-avatar-actions">
+                  <label class="btn btn--line btn--small profile-file-btn">
+                    Thay đổi ảnh
+                    <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+                  </label>
+                  <p class="meta">JPG / PNG / WebP · tối đa 2&nbsp;MB</p>
+                </div>
               </div>
+
+              <div class="profile-fields">
+                <label>
+                  Họ và tên
+                  <input name="full_name" type="text" required maxlength="120" autocomplete="name" />
+                </label>
+
+                <div class="profile-email-field">
+                  <label>
+                    Email
+                    <input name="email" type="email" readonly />
+                  </label>
+                  <p class="profile-email-status" id="email-status"></p>
+                </div>
+
+                <label>
+                  Số điện thoại
+                  <input name="phone" type="tel" maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx" />
+                </label>
+              </div>
+            </form>
+          </section>
+
+          <section class="profile-panel" aria-labelledby="hs-cert">
+            <h2 id="hs-cert">Thông tin cấp chứng nhận</h2>
+            <p class="profile-panel__lead">Họ tên in trên GCN có thể khác tên tài khoản. Sau khi chứng nhận đã phát hành, tên này bị khóa.</p>
+            <div id="cert-name-wrap" class="profile-fields" hidden>
+              <label>
+                Họ và tên trên chứng nhận
+                <input name="cert_display_name" id="cert_display_name" type="text" maxlength="120" form="profile-form" />
+              </label>
+              <p class="meta profile-lock" id="cert-lock-note" hidden>Tên trên chứng nhận đã khóa vì bạn đã có GCN phát hành. Liên hệ quản trị nếu cần đổi.</p>
             </div>
+          </section>
 
-            <label>
-              Họ và tên
-              <input name="full_name" type="text" required maxlength="120" autocomplete="name" />
-            </label>
+          <section class="profile-panel" aria-labelledby="hs-learn">
+            <h2 id="hs-learn">Thông tin học tập</h2>
+            <div class="learn-stats" id="profile-stats"></div>
+          </section>
 
-            <label>
-              Email
-              <input name="email" type="email" readonly />
-            </label>
-            <p class="profile-email-status" id="email-status"></p>
+          <section class="profile-panel" aria-labelledby="hs-sec">
+            <h2 id="hs-sec">Bảo mật</h2>
+            <p class="profile-sec-actions">
+              <a class="btn btn--line" href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
+              <button type="button" class="btn btn--line" id="resend-verify" hidden>Gửi lại email xác minh</button>
+            </p>
+          </section>
+        </div>
 
-            <label>
-              Số điện thoại
-              <input name="phone" type="tel" maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx" />
-            </label>
-          </form>
-        </section>
-
-        <section class="profile-block" aria-labelledby="hs-cert">
-          <h2 id="hs-cert">Thông tin cấp chứng nhận</h2>
-          <p class="lead">Họ tên in trên GCN có thể khác tên tài khoản. Sau khi chứng nhận đã phát hành, tên này bị khóa.</p>
-          <div id="cert-name-wrap" class="order-form" hidden>
-            <label>
-              Họ và tên trên chứng nhận
-              <input name="cert_display_name" id="cert_display_name" type="text" maxlength="120" form="profile-form" />
-            </label>
-            <p class="meta" id="cert-lock-note" hidden>Tên trên chứng nhận đã khóa vì bạn đã có GCN phát hành. Liên hệ quản trị nếu cần đổi.</p>
-          </div>
-        </section>
-
-        <section class="profile-block" aria-labelledby="hs-learn">
-          <h2 id="hs-learn">Thông tin học tập</h2>
-          <div class="learn-stats" id="profile-stats"></div>
-        </section>
-
-        <section class="profile-block" aria-labelledby="hs-sec">
-          <h2 id="hs-sec">Bảo mật</h2>
-          <p class="profile-sec-actions">
-            <a class="btn btn--line" href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
-            <button type="button" class="btn btn--line" id="resend-verify" hidden>Gửi lại email xác minh</button>
-          </p>
-        </section>
-
-        <p class="profile-save-row">
+        <div class="profile-save-bar">
+          <p class="form-msg" id="form-msg" role="status"></p>
           <button type="submit" form="profile-form" class="btn btn--amber" id="save-btn" hidden>Lưu thay đổi</button>
-        </p>
-        <p class="form-msg" id="form-msg" role="status"></p>
+        </div>
       </main>
     </div>
   </div>

@@ -68,10 +68,13 @@
     if (!primary || !primary.course?.code) {
       host.hidden = false;
       host.innerHTML = `<div class="continue-hero__empty">
-        <h2>Chào mừng bạn đến Học tập</h2>
-        <p>Bạn chưa có khóa nào. Chọn lộ trình phù hợp, học thử, rồi đăng ký để lưu tiến độ.</p>
-        <a class="btn btn--amber" href="../index.html#career-map">Tìm khóa phù hợp</a>
-        <a class="btn btn--line" href="../kien-thuc/">Đọc kiến thức miễn phí</a>
+        <p class="kicker">Bắt đầu</p>
+        <h2>Chưa có khóa nào đang học</h2>
+        <p>Chọn lộ trình phù hợp, học thử vài bài mở sẵn, rồi đăng ký để lưu tiến độ trên tài khoản.</p>
+        <div class="continue-hero__actions">
+          <a class="btn btn--amber" href="../index.html#career-map">Tìm khóa phù hợp</a>
+          <a class="btn btn--line" href="../kien-thuc/">Kiến thức miễn phí</a>
+        </div>
       </div>`;
       return;
     }
@@ -105,20 +108,22 @@
 
     host.hidden = false;
     host.innerHTML = `
-      <p class="kicker">Tiếp tục học</p>
-      <div class="continue-hero__card">
-        <span class="continue-hero__code">${esc(c.code)}</span>
-        <h2>${esc(c.title || c.code)}</h2>
-        <p class="continue-hero__pct">Đã hoàn thành <strong>${primary.pct}%</strong>
-          · ${primary.done}/${primary.total} bài${when ? " · Học lần cuối: " + esc(when) : ""}</p>
-        ${C().progressBarHtml(primary.pct)}
-        ${lessonLine}
-        ${pos}
+      <article class="continue-hero__card">
+        <div class="continue-hero__copy">
+          <p class="kicker">Tiếp tục học</p>
+          <span class="continue-hero__code">${esc(c.code)}</span>
+          <h2>${esc(c.title || c.code)}</h2>
+          <p class="continue-hero__pct">Đã hoàn thành <strong>${primary.pct}%</strong>
+            · ${primary.done}/${primary.total} bài${when ? " · Học lần cuối: " + esc(when) : ""}</p>
+          ${C().progressBarHtml(primary.pct)}
+          ${lessonLine}
+          ${pos}
+        </div>
         <div class="continue-hero__actions">
           <a class="btn btn--amber" href="${href}">${esc(labels.text)} →</a>
           ${secondary}
         </div>
-      </div>`;
+      </article>`;
   }
 
   function paintStats(snapshots, certCount) {
@@ -428,14 +433,18 @@
     host.hidden = false;
     host.innerHTML = `
       <div class="profile-nudge__card">
-        <p class="kicker">Hoàn thiện hồ sơ học viên</p>
-        <div class="progress-bar profile-nudge__bar" aria-label="Độ đầy đủ hồ sơ ${score}%">
-          <span style="width:${score}%"></span>
+        <div class="profile-nudge__copy">
+          <p class="kicker">Hoàn thiện hồ sơ</p>
+          <p class="profile-nudge__hint">${hint}</p>
+          <p class="meta">Không bắt buộc để mua khóa — hữu ích khi liên hệ và cấp chứng nhận.</p>
         </div>
-        <p class="profile-nudge__pct">${score}%</p>
-        <p class="profile-nudge__hint">${hint}</p>
-        <p class="meta">Không bắt buộc để mua khóa — hữu ích khi liên hệ và cấp chứng nhận.</p>
-        <p><a class="btn btn--amber btn--small" href="../ho-so/">Hoàn thiện hồ sơ</a></p>
+        <div class="profile-nudge__meter">
+          <div class="progress-bar profile-nudge__bar" aria-label="Độ đầy đủ hồ sơ ${score}%">
+            <span style="width:${score}%"></span>
+          </div>
+          <p class="profile-nudge__pct">${score}%</p>
+          <a class="btn btn--amber btn--small" href="../ho-so/">Hoàn thiện hồ sơ</a>
+        </div>
       </div>`;
   }
 
