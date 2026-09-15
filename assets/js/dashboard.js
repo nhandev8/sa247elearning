@@ -1,4 +1,4 @@
-/* SA247 learner dashboard — Học tập · Tiếp tục học (P0) */
+/* SA247 learner dashboard — P0 Học tập + P1 lộ trình / thành tích / lịch sử */
 (function () {
   function el(id) {
     return document.getElementById(id);
@@ -54,10 +54,10 @@
     if (!slug) return "";
     const esc = C().esc;
     return `<aside class="next-course">
-      <p class="kicker">Khóa học đề xuất</p>
+      <p class="kicker">Bước tiếp theo được đề xuất</p>
       <h4>${esc(tip.code)} · ${esc(title)}</h4>
       <p>${esc(tip.why || "")}</p>
-      <a class="btn btn--amber btn--small" href="../${esc(slug)}/#dang-ky">Xem khóa · đăng ký</a>
+      <a class="btn btn--amber btn--small" href="../${esc(slug)}/#dang-ky">Học tiếp · xem khóa</a>
     </aside>`;
   }
 
@@ -71,6 +71,7 @@
         <h2>Chào mừng bạn đến Học tập</h2>
         <p>Bạn chưa có khóa nào. Chọn lộ trình phù hợp, học thử, rồi đăng ký để lưu tiến độ.</p>
         <a class="btn btn--amber" href="../index.html#career-map">Tìm khóa phù hợp</a>
+        <a class="btn btn--line" href="../kien-thuc/">Đọc kiến thức miễn phí</a>
       </div>`;
       return;
     }
@@ -120,6 +121,79 @@
       </div>`;
   }
 
+  function paintStats(snapshots, certCount) {
+    const host = el("learn-stats");
+    if (!host) return;
+    const esc = C().esc;
+    const n = snapshots?.length || 0;
+    const doneCourses = (snapshots || []).filter((s) => s.pct >= 100).length;
+    const inProg = (snapshots || []).filter(
+      (s) => s.state === "in_progress" || (s.pct > 0 && s.pct < 100)
+    ).length;
+    const lessonsDone = (snapshots || []).reduce((a, s) => a + (s.done || 0), 0);
+    host.innerHTML = `
+      <div class="learn-stat"><strong>${esc(String(n))}</strong><span>Khóa đang có</span></div>
+      <div class="learn-stat"><strong>${esc(String(inProg))}</strong><span>Đang học</span></div>
+      <div class="learn-stat"><strong>${esc(String(doneCourses))}</strong><span>Khóa hoàn thành</span></div>
+      <div class="learn-stat"><strong>${esc(String(lessonsDone))}</strong><span>Bài đã xong</span></div>
+      <div class="learn-stat"><strong>${esc(String(certCount || 0))}</strong><span>Chứng nhận</span></div>`;
+  }
+
+  function paintJourney(snapshots) {
+    const ol = el("journey-list");
+    if (!ol) return;
+    const esc = C().esc;
+    const owned = new Set((snapshots || []).map((s) => s.course?.code).filter(Boolean));
+    const start =
+      (snapshots || []).find((s) => s.state === "in_progress")?.course?.code ||
+      (snapshots || []).find((s) => s.pct >= 100)?.course?.code ||
+      (snapshots || [])[0]?.course?.code ||
+      "ATNM-01";
+
+    const chain = [start];
+    let cur = start;
+    for (let i = 0; i < 4; i++) {
+      const tip = (nextMap.next_courses || {})[cur];
+      if (!tip?.code || chain.includes(tip.code)) break;
+      chain.push(tip.code);
+      cur = tip.code;
+    }
+
+    ol.innerHTML = chain
+      .map((code, idx) => {
+        const snap = (snapshots || []).find((s) => s.course?.code === code);
+        const meta = (nextMap.programs || {})[code] || {};
+        const title = snap?.course?.title || meta.title || code;
+        const slug = snap?.course?.slug || meta.slug || code.toLowerCase();
+        const ownedHere = owned.has(code);
+        const here =
+          snap && (snap.state === "in_progress" || (snap.pct > 0 && snap.pct < 100));
+        const done = snap && snap.pct >= 100;
+        const cls = done ? "is-done" : here ? "is-here" : ownedHere ? "is-owned" : "";
+        const badge = done
+          ? "Hoàn thành"
+          : here
+            ? "Bạn đang ở đây"
+            : ownedHere
+              ? "Đã mở khóa"
+              : "Đề xuất";
+        const tipWhy =
+          idx > 0
+            ? (nextMap.next_courses || {})[chain[idx - 1]]?.why || ""
+            : "";
+        return `<li class="journey-item ${cls}">
+          <span class="journey-item__badge">${esc(badge)}</span>
+          <strong>${esc(code)}</strong>
+          <span>${esc(title)}</span>
+          ${tipWhy ? `<p class="meta">${esc(tipWhy)}</p>` : ""}
+          <a class="btn btn--line btn--small" href="../${esc(slug)}/">${
+            ownedHere ? (done ? "Xem lại" : "Tiếp tục") : "Xem khóa"
+          }</a>
+        </li>`;
+      })
+      .join("");
+  }
+
   function paintTodos(snapshots) {
     const ul = el("todo-list");
     if (!ul) return;
@@ -130,7 +204,7 @@
       if (!c.code) return;
       if (s.state === "completed") {
         items.push({
-          html: `<strong>${esc(c.code)}</strong> — Làm bài kiểm tra cuối khóa hoặc xem lại bài học.`,
+          html: `<strong>${esc(c.code)}</strong> — Làm bài kiểm tra cuối khóa hoặc đăng ký chứng nhận.`,
           href: `../quiz/?course=${encodeURIComponent(c.code)}`,
           cta: "Kỳ thi",
         });
@@ -154,6 +228,42 @@
         (it) =>
           `<li><div>${it.html}</div><a class="btn btn--line btn--small" href="${it.href}">${esc(it.cta)}</a></li>`
       )
+      .join("");
+  }
+
+  function paintHistory(snapshots) {
+    const ul = el("learn-history");
+    if (!ul) return;
+    const esc = C().esc;
+    const rows = [];
+    (snapshots || []).forEach((s) => {
+      if (!s.lastAt || !s.lesson) return;
+      rows.push({
+        at: s.lastAt,
+        code: s.course?.code || "",
+        slug: s.course?.slug || "",
+        title: s.lesson.title,
+        lesson: s.lesson,
+        watched: s.watchedSeconds || 0,
+      });
+    });
+    rows.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+    if (!rows.length) {
+      ul.innerHTML = '<li class="meta">Chưa có phiên học gần đây.</li>';
+      return;
+    }
+    ul.innerHTML = rows
+      .slice(0, 8)
+      .map((r) => {
+        const href = C().learnHref(r.slug, r.lesson);
+        const pos =
+          r.watched > 15 ? ` · dừng ở ${C().fmtClock(r.watched)}` : "";
+        return `<li>
+          <div><strong>${esc(r.code)}</strong> — ${esc(r.title)}
+            <span class="meta">${esc(C().fmtRelative(r.at))}${pos}</span></div>
+          <a class="btn btn--line btn--small" href="${href}">Mở bài</a>
+        </li>`;
+      })
       .join("");
   }
 
@@ -187,13 +297,20 @@
           : s.state === "completed"
             ? `<p class="continue-next is-done"><strong>Đã hoàn thành khóa này.</strong></p>`
             : "";
+        const quizBtn =
+          s.pct >= 80
+            ? `<a class="btn btn--line btn--small" href="../quiz/?course=${encodeURIComponent(c.code)}">Kỳ thi</a>`
+            : "";
         return `<article class="program-card program-card--progress">
           <span class="code">${esc(c.code || "")}</span>
           <h3>${esc(c.title || "Khóa học")}</h3>
           <p class="meta progress-meta">${st} · <strong>${s.pct}%</strong> · ${s.done}/${s.total} bài</p>
           ${C().progressBarHtml(s.pct)}
           ${nextLine}
-          <a class="btn btn--amber btn--small" href="${href}">${esc(labels.text)}</a>
+          <div class="continue-hero__actions">
+            <a class="btn btn--amber btn--small" href="${href}">${esc(labels.text)}</a>
+            ${quizBtn}
+          </div>
         </article>`;
       })
       .join("");
@@ -207,12 +324,24 @@
     if (focus?.course?.code) {
       const card = nextCourseCard(focus.course.code);
       nextHost.innerHTML = card
-        ? `<h2>Bạn nên học gì tiếp theo?</h2>${card}`
+        ? `<h2>Khóa học đề xuất tiếp theo</h2>${card}`
         : `<h2>Lộ trình nghề nghiệp</h2>
-           <p class="lead"><a href="../index.html#career-map">Career Map</a> giúp bạn chọn bước tiếp theo theo công việc.</p>`;
+           <p class="lead"><a href="../index.html#career-map">Career Map</a> giúp bạn chọn bước tiếp theo.</p>`;
     } else {
       nextHost.innerHTML = "";
     }
+  }
+
+  function orderStatusVi(status) {
+    return (
+      {
+        pending: "Chờ thanh toán",
+        paid: "Đã thanh toán · đã cấp quyền",
+        cancelled: "Đã hủy",
+        expired: "Hết hạn",
+        failed: "Thất bại",
+      }[status] || status || "—"
+    );
   }
 
   async function loadOrders(sb) {
@@ -244,18 +373,32 @@
             <strong>${esc(c.code || "")} · ${esc(o.order_code)}</strong>
             <p>${esc(c.title || "")}</p>
             <p class="meta">${fmtVnd(o.amount)} · ${fmtTime(o.created_at)}</p>
+            <p class="meta"><strong>${esc(orderStatusVi(o.status))}</strong>${
+              o.paid_at ? " · " + fmtTime(o.paid_at) : ""
+            }</p>
           </div>
           <div class="order-card__right">
             <span class="order-badge">${paid ? "Đã thanh toán" : "Chờ CK"}</span>
             ${
               paid
-                ? `<a class="btn btn--line btn--small" href="../${esc(c.slug)}/">Vào học</a>`
-                : `<a class="btn btn--amber btn--small" href="../${esc(c.slug)}/#dang-ky">Xem QR</a>`
+                ? `<a class="btn btn--line btn--small" href="../${esc(c.slug)}/#learner-root">Vào học</a>`
+                : `<a class="btn btn--amber btn--small" href="../${esc(c.slug)}/#dang-ky">Thanh toán / QR</a>`
             }
           </div>
         </article>`;
       })
       .join("");
+  }
+
+  async function countCerts(sb) {
+    try {
+      const { data } = await sb.rpc("list_my_certificates");
+      return (data || []).filter(
+        (c) => c.status === "issued" || c.status === "valid" || c.status === "eligible"
+      ).length;
+    } catch {
+      return 0;
+    }
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
@@ -270,7 +413,6 @@
       return;
     }
 
-    // wait continue-learning.js
     for (let i = 0; i < 40 && !window.sa247Continue; i++) {
       await new Promise((r) => setTimeout(r, 50));
     }
@@ -306,9 +448,13 @@
 
     try {
       const { primary, snapshots } = await C().loadPrimaryContinue(sb, session.user.id);
+      const certN = await countCerts(sb);
       paintContinueHero(primary);
+      paintStats(snapshots, certN);
       paintCourses(snapshots);
+      paintJourney(snapshots);
       paintTodos(snapshots);
+      paintHistory(snapshots);
       paintNextBest(snapshots);
     } catch (e) {
       console.warn(e);
