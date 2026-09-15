@@ -205,17 +205,18 @@
     const sb = await sa247Auth.ensureClient();
     const profile = await sa247Auth.getProfile({ session, timeoutMs: 4000 });
     let certLocked = false;
+    const isStaff = sa247Auth.isStaffRole(profile?.role);
     try {
       const { data: locked } = await sb.rpc("learner_has_issued_certificate", {
         p_uid: session.user.id,
       });
-      certLocked = Boolean(locked);
+      certLocked = Boolean(locked) && !isStaff;
     } catch (_) {
       try {
         const { data: mine } = await sb.rpc("list_my_certificates");
-        certLocked = (mine || []).some(
-          (c) => c.status === "issued" || c.status === "valid"
-        );
+        certLocked =
+          (mine || []).some((c) => c.status === "issued" || c.status === "valid") &&
+          !isStaff;
       } catch (__) {}
     }
     const certOpts = {

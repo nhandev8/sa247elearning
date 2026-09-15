@@ -82,6 +82,11 @@
                 : ""
             }
             ${
+              canRevoke || st === "eligible"
+                ? `<button type="button" class="adm-btn adm-btn--line adm-btn--small" data-rename="${c.cert_code}" data-fullname="${(c.full_name || "").replace(/"/g, "&quot;")}">Sửa tên</button>`
+                : ""
+            }
+            ${
               canReissue
                 ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--small" data-reissue="${c.cert_code}">Cấp lại</button>`
                 : ""
@@ -218,6 +223,46 @@
           } finally {
             decisionBtn.disabled = false;
           }
+          return;
+        }
+
+        const renameBtn = ev.target.closest("[data-rename]");
+        if (renameBtn) {
+          const code = renameBtn.getAttribute("data-rename");
+          const current = renameBtn.getAttribute("data-fullname") || "";
+          const next = window.prompt(
+            `Sửa họ tên trên chứng nhận ${code}\nTên hiện tại: ${current}`,
+            current
+          );
+          if (next == null) return;
+          const name = String(next).trim();
+          if (!name) {
+            alert("Họ tên không được trống.");
+            return;
+          }
+          const reason = window.prompt(
+            "Nhập lý do sửa tên (bắt buộc — ghi nhật ký):",
+            "Chỉnh chính tả / yêu cầu học viên"
+          );
+          if (reason == null) return;
+          if (!String(reason).trim()) {
+            alert("Cần lý do sửa tên.");
+            return;
+          }
+          renameBtn.disabled = true;
+          const { data, error } = await sb.rpc("admin_update_certificate_full_name", {
+            p_cert_code: code,
+            p_full_name: name,
+            p_reason: String(reason).trim(),
+          });
+          renameBtn.disabled = false;
+          if (error) {
+            alert(error.message);
+            return;
+          }
+          document.getElementById("adm-status").textContent =
+            `Đã sửa tên: ${data?.old_full_name || current} → ${data?.new_full_name || name}`;
+          await loadCerts(sb);
           return;
         }
 
