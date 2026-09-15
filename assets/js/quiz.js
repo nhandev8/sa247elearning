@@ -51,15 +51,33 @@
       .sort((a, b) => String(a.code).localeCompare(String(b.code)));
   }
 
-  async function runQuiz(sb, courseCode) {
+  async function runQuiz(sb, courseCode, certOpts) {
     const status = el("quiz-status");
     const form = el("quiz-form");
     const box = el("quiz-questions");
     const result = el("quiz-result");
+    const nameInput = el("quiz-full-name");
+    const lockNote = el("quiz-cert-lock-note");
     form.hidden = true;
     result.hidden = true;
     result.innerHTML = "";
     box.innerHTML = "";
+
+    const pref =
+      (certOpts?.certName && String(certOpts.certName).trim()) ||
+      (certOpts?.accountName && String(certOpts.accountName).trim()) ||
+      "";
+    if (nameInput && !nameInput.value) nameInput.value = pref;
+    if (certOpts?.locked) {
+      if (nameInput) {
+        nameInput.readOnly = true;
+        if (pref) nameInput.value = pref;
+      }
+      if (lockNote) lockNote.hidden = false;
+    } else if (lockNote) {
+      lockNote.hidden = true;
+      if (nameInput) nameInput.readOnly = false;
+    }
 
     status.textContent = `Đang tải đề ${courseCode}…`;
     const { data: quiz, error: qErr } = await sb.rpc("get_course_quiz", {
@@ -95,10 +113,27 @@
       ev.preventDefault();
       const fd = new FormData(form);
       const fullName = String(fd.get("full_name") || "").trim();
+      if (!fd.get("confirm_cert_name")) {
+        result.hidden = false;
+        result.innerHTML =
+          '<p class="form-msg is-err">Hãy xác nhận họ tên trên chứng nhận trước khi nộp bài.</p>';
+        return;
+      }
+      if (!fullName) {
+        result.hidden = false;
+        result.innerHTML = '<p class="form-msg is-err">Nhập họ tên sẽ in trên chứng nhận.</p>';
+        return;
+      }
       const answers = collectAnswers(quiz.questions, fd);
       const btn = form.querySelector('[type="submit"]');
       btn.disabled = true;
       btn.textContent = "Đang chấm…";
+
+      if (!certOpts?.locked) {
+        try {
+          await sa247Auth.updateProfile({ cert_display_name: fullName });
+        } catch (_) {}
+      }
 
       const { data, error } = await sb.rpc("submit_course_quiz", {
         p_course_code: courseCode,
@@ -168,6 +203,27 @@
     }
     el("user-label").textContent = session.user.email || "Học viên";
     const sb = await sa247Auth.ensureClient();
+    const profile = await sa247Auth.getProfile({ session, timeoutMs: 4000 });
+    let certLocked = false;
+    try {
+      const { data: locked } = await sb.rpc("learner_has_issued_certificate", {
+        p_uid: session.user.id,
+      });
+      certLocked = Boolean(locked);
+    } catch (_) {
+      try {
+        const { data: mine } = await sb.rpc("list_my_certificates");
+        certLocked = (mine || []).some(
+          (c) => c.status === "issued" || c.status === "valid"
+        );
+      } catch (__) {}
+    }
+    const certOpts = {
+      accountName: profile?.full_name || "",
+      certName: profile?.cert_display_name || profile?.full_name || "",
+      locked: certLocked,
+    };
+
     const courses = await loadEnrolledCourses(sb);
     if (!courses.length) {
       status.innerHTML =
@@ -185,7 +241,7 @@
       .join("");
     el("quiz-course-wrap").hidden = false;
 
-    const start = () => runQuiz(sb, pick.value);
+    const start = () => runQuiz(sb, pick.value, certOpts);
     pick.addEventListener("change", () => {
       const u = new URL(location.href);
       u.searchParams.set("course", pick.value);

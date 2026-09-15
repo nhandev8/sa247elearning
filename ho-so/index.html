@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hồ sơ của tôi · SA247</title>
+  <meta name="description" content="Quản lý hồ sơ tài khoản học viên SA247: họ tên, điện thoại, ảnh đại diện, tên trên chứng nhận." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260915hs" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
+  <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/profile.js?v=20260915hs" defer></script>
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="app-side" aria-label="Menu học viên">
+      <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
+      <nav class="app-side__nav">
+        <a href="../dashboard/"><span class="ico" aria-hidden="true">▶</span>Học tập</a>
+        <a class="is-active" href="./"><span class="ico" aria-hidden="true">☺</span>Hồ sơ của tôi</a>
+        <a href="../quiz/"><span class="ico" aria-hidden="true">✎</span>Kỳ thi</a>
+        <a href="../chung-nhan/"><span class="ico" aria-hidden="true">◎</span>Chứng nhận</a>
+        <a href="../auth/doi-mat-khau.html"><span class="ico" aria-hidden="true">⚙</span>Đổi mật khẩu</a>
+        <a href="../index.html"><span class="ico" aria-hidden="true">⌂</span>Trang chủ</a>
+      </nav>
+      <div class="app-side__foot">
+        <p class="app-side__user" id="user-label">…</p>
+        <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-top">
+        <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
+        <h1>Hồ sơ của tôi</h1>
+      </header>
+
+      <main class="app-content profile-page">
+        <p class="lead" id="profile-status">Đang tải…</p>
+
+        <section class="profile-block" aria-labelledby="hs-account">
+          <h2 id="hs-account">Thông tin tài khoản</h2>
+          <form id="profile-form" class="order-form profile-form" hidden>
+            <div class="profile-avatar-row">
+              <div class="profile-avatar" id="avatar-preview" aria-hidden="true"></div>
+              <div class="profile-avatar-actions">
+                <label class="btn btn--line btn--small profile-file-btn">
+                  Thay đổi ảnh
+                  <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+                </label>
+                <p class="meta">JPG/PNG/WebP · tối đa 2&nbsp;MB. Không bắt buộc để mua khóa.</p>
+              </div>
+            </div>
+
+            <label>
+              Họ và tên
+              <input name="full_name" type="text" required maxlength="120" autocomplete="name" />
+            </label>
+
+            <label>
+              Email
+              <input name="email" type="email" readonly />
+            </label>
+            <p class="profile-email-status" id="email-status"></p>
+
+            <label>
+              Số điện thoại
+              <input name="phone" type="tel" maxlength="20" autocomplete="tel" placeholder="09xxxxxxxx" />
+            </label>
+          </form>
+        </section>
+
+        <section class="profile-block" aria-labelledby="hs-cert">
+          <h2 id="hs-cert">Thông tin cấp chứng nhận</h2>
+          <p class="lead">Họ tên in trên GCN có thể khác tên tài khoản. Sau khi chứng nhận đã phát hành, tên này bị khóa.</p>
+          <div id="cert-name-wrap" class="order-form" hidden>
+            <label>
+              Họ và tên trên chứng nhận
+              <input name="cert_display_name" id="cert_display_name" type="text" maxlength="120" form="profile-form" />
+            </label>
+            <p class="meta" id="cert-lock-note" hidden>Tên trên chứng nhận đã khóa vì bạn đã có GCN phát hành. Liên hệ quản trị nếu cần đổi.</p>
+          </div>
+        </section>
+
+        <section class="profile-block" aria-labelledby="hs-learn">
+          <h2 id="hs-learn">Thông tin học tập</h2>
+          <div class="learn-stats" id="profile-stats"></div>
+        </section>
+
+        <section class="profile-block" aria-labelledby="hs-sec">
+          <h2 id="hs-sec">Bảo mật</h2>
+          <p class="profile-sec-actions">
+            <a class="btn btn--line" href="../auth/doi-mat-khau.html">Đổi mật khẩu</a>
+            <button type="button" class="btn btn--line" id="resend-verify" hidden>Gửi lại email xác minh</button>
+          </p>
+        </section>
+
+        <p class="profile-save-row">
+          <button type="submit" form="profile-form" class="btn btn--amber" id="save-btn" hidden>Lưu thay đổi</button>
+        </p>
+        <p class="form-msg" id="form-msg" role="status"></p>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
