@@ -40,6 +40,7 @@
           <td><strong>${p.full_name || "(chưa đặt tên)"}</strong>
             <div class="adm-msg">${p.id}</div>
             <a class="adm-btn adm-btn--line adm-btn--small" href="./ho-so.html?id=${encodeURIComponent(p.id)}">Mở hồ sơ</a>
+            <a class="adm-btn adm-btn--line adm-btn--small" href="../tien-do/?id=${encodeURIComponent(p.id)}">Tiến độ</a>
           </td>
           <td>${roleVi(p.role)}</td>
           <td>${p.phone || "—"}</td>
