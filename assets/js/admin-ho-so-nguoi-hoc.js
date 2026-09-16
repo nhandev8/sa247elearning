@@ -182,7 +182,7 @@
                 .join("")}</ul>`
             : '<p class="adm-muted">Chưa có lesson_progress.</p>'
         }
-        <p class="adm-msg"><a href="../tien-do/">Xem tiến độ theo khóa (toàn hệ thống)</a></p>
+        <p class="adm-msg"><a href="../tien-do/?id=${encodeURIComponent(uid)}">Xem trang tiến độ đầy đủ của người này</a></p>
       </section>
 
       <section class="adm-card" id="sec-quiz">

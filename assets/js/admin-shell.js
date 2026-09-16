@@ -15,7 +15,18 @@
     if (opts?.site) return upFromAdmin + target;
     const prefix = d === 0 ? "./" : "../".repeat(d);
     if (!target) return prefix;
-    return prefix + target;
+    let href = prefix + target;
+    const uid = opts?.userId;
+    if (uid && opts?.keepUser) {
+      const join = href.includes("?") ? "&" : "?";
+      href += `${join}id=${encodeURIComponent(uid)}`;
+    }
+    return href;
+  }
+
+  function contextUserId() {
+    const q = new URLSearchParams(location.search);
+    return (q.get("id") || q.get("user") || "").trim();
   }
 
   // Người dùng = hub thao tác theo tài khoản (hồ sơ sâu). Quyền học / tiến độ gộp vào đây.
@@ -34,8 +45,15 @@
       group: "Người dùng",
       items: [
         { target: "tai-khoan/", label: "Tất cả người dùng", key: "tai-khoan" },
-        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc" },
-        { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do" },
+        {
+          target: "tai-khoan/ho-so.html",
+          label: "Hồ sơ đang xem",
+          key: "ho-so",
+          keepUser: true,
+          needsUser: true,
+        },
+        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc", keepUser: true },
+        { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do", keepUser: true },
         { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen" },
       ],
     },
@@ -84,6 +102,7 @@
     if (path.includes("/cau-hoi")) return "cau-hoi";
     if (path.includes("/bai-kiem-tra")) return "bai-kiem-tra";
     if (path.includes("/chung-nhan")) return "chung-nhan";
+    if (path.includes("/tai-khoan/ho-so")) return "ho-so";
     if (path.includes("/tai-khoan")) return "tai-khoan";
     if (path.includes("/quyen-hoc")) return "quyen-hoc";
     if (path.includes("/don-hang")) return "don-hang";
@@ -96,14 +115,21 @@
 
   function renderNav() {
     const key = activeKey();
+    const uid = contextUserId();
     return MENU.map((g) => {
       const links = g.items
         .map((it) => {
           if (it.soon) {
             return `<a class="is-soon" href="#">${it.label} <small>(sắp có)</small></a>`;
           }
+          if (it.needsUser && !uid) return "";
           const active = it.key === key ? "is-active" : "";
-          return `<a class="${active}" href="${hrefFor(it.target, { site: it.site })}">${it.label}</a>`;
+          const href = hrefFor(it.target, {
+            site: it.site,
+            keepUser: it.keepUser,
+            userId: uid,
+          });
+          return `<a class="${active}" href="${href}">${it.label}</a>`;
         })
         .join("");
       return `<div class="adm-nav__group">${g.group}</div>${links}`;
