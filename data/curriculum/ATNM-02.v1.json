@@ -15,10 +15,11 @@
   "stats": {
     "modules": 12,
     "lessons": 60,
-    "hoc_thu": 5,
+    "hoc_thu": 0,
     "mo_khoa": 55,
     "published": 0,
-    "draft": 60
+    "draft": 60,
+    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
   },
   "modules": [
     {
@@ -34,7 +35,7 @@
           "video_id": "B00",
           "sort_order": 1,
           "content_kind": "intro",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Giới thiệu mô-đun",
           "youtube_title": "Giới thiệu mô-đun | ATNM-02 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -53,7 +54,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Bối cảnh tổ chức, phạm vi và trách nhiệm lãnh đạo theo điều",
           "youtube_title": "Bối cảnh tổ chức, phạm vi và trách nhiệm lãnh đạo theo điều | ATNM-02 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -72,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Hoạch định rủi ro, cơ hội và mục tiêu theo điều 6",
           "youtube_title": "Hoạch định rủi ro, cơ hội và mục tiêu theo điều 6 | ATNM-02 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -91,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Hỗ trợ và vận hành: điều 7–8 và thông tin dạng văn bản bắt b",
           "youtube_title": "Hỗ trợ và vận hành: điều 7–8 và thông tin dạng văn bản bắt b | ATNM-02 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -110,7 +111,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Đánh giá hiệu lực, cải tiến và lộ trình chứng nhận điều 9–10",
           "youtube_title": "Đánh giá hiệu lực, cải tiến và lộ trình chứng nhận điều 9–10 | ATNM-02 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",

@@ -15,10 +15,11 @@
   "stats": {
     "modules": 6,
     "lessons": 30,
-    "hoc_thu": 5,
+    "hoc_thu": 0,
     "mo_khoa": 25,
     "published": 0,
-    "draft": 30
+    "draft": 30,
+    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
   },
   "modules": [
     {
@@ -34,7 +35,7 @@
           "video_id": "B00",
           "sort_order": 1,
           "content_kind": "intro",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Giới thiệu mô-đun",
           "youtube_title": "Giới thiệu mô-đun | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -53,7 +54,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Phân loại cầu trục, cổng trục và cấu tạo các cơ cấu chính",
           "youtube_title": "Phân loại cầu trục, cổng trục và cấu tạo các cơ cấu chính | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -72,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Thiết bị an toàn bắt buộc trên cầu trục và cách kiểm tra hoạ",
           "youtube_title": "Thiết bị an toàn bắt buộc trên cầu trục và cách kiểm tra hoạ | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -91,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Cáp thép, móc cẩu và tiêu chí loại bỏ định lượng",
           "youtube_title": "Cáp thép, móc cẩu và tiêu chí loại bỏ định lượng | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -110,7 +111,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Kiểm tra trước ca, vận hành an toàn, kiểm định và xử lý sự c",
           "youtube_title": "Kiểm tra trước ca, vận hành an toàn, kiểm định và xử lý sự c | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",

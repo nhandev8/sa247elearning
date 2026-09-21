@@ -18,7 +18,8 @@
     "hoc_thu": 5,
     "mo_khoa": 20,
     "published": 0,
-    "draft": 25
+    "draft": 25,
+    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
   },
   "modules": [
     {
@@ -34,7 +35,7 @@
           "video_id": "B00",
           "sort_order": 1,
           "content_kind": "intro",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Giới thiệu mô-đun",
           "youtube_title": "Giới thiệu mô-đun | ATXD-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "0uG66oTqWIc",
@@ -91,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Khung pháp luật xây dựng và kế hoạch tổng hợp về an toàn lao",
           "youtube_title": "Khung pháp luật xây dựng và kế hoạch tổng hợp về an toàn lao | ATXD-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "AipvUVjkI1w",
@@ -213,7 +214,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Trách nhiệm liên đới, tiếp đoàn thanh tra và quản lý rủi ro",
           "youtube_title": "Trách nhiệm liên đới, tiếp đoàn thanh tra và quản lý rủi ro | ATXD-01 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "foPN56bSubo",
@@ -381,7 +382,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Kiểm soát bụi: cắt thép, khoan, phun vữa và hàng rào chống b",
           "youtube_title": "Kiểm soát bụi: cắt thép, khoan, phun vữa và hàng rào chống b | ATXD-01 · M07 | Safety and You 247 Academy",
           "youtube_video_id": "wjcxXb_Nzic",

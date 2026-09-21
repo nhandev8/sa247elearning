@@ -15,10 +15,11 @@
   "stats": {
     "modules": 6,
     "lessons": 30,
-    "hoc_thu": 5,
+    "hoc_thu": 0,
     "mo_khoa": 25,
     "published": 0,
-    "draft": 30
+    "draft": 30,
+    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
   },
   "modules": [
     {
@@ -34,7 +35,7 @@
           "video_id": "B00",
           "sort_order": 1,
           "content_kind": "intro",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Giới thiệu mô-đun",
           "youtube_title": "Giới thiệu mô-đun | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -53,7 +54,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Ngưỡng làm việc trên cao, cơ chế chấn thương do rơi ngã và t",
           "youtube_title": "Ngưỡng làm việc trên cao, cơ chế chấn thương do rơi ngã và t | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "yBjUMWW7GEs",
@@ -72,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Hệ thống chống rơi ngã cá nhân: điểm neo, hệ số rơi và bài t",
           "youtube_title": "Hệ thống chống rơi ngã cá nhân: điểm neo, hệ số rơi và bài t | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -91,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Lan can, sàn công tác, lỗ mở sàn, thang di động và kiểm soát",
           "youtube_title": "Lan can, sàn công tác, lỗ mở sàn, thang di động và kiểm soát | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",
@@ -110,7 +111,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Kiểm tra thiết bị, hội chứng treo lơ lửng, cứu hộ trên cao v",
           "youtube_title": "Kiểm tra thiết bị, hội chứng treo lơ lửng, cứu hộ trên cao v | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "",

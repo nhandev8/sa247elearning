@@ -15,10 +15,11 @@
   "stats": {
     "modules": 3,
     "lessons": 15,
-    "hoc_thu": 3,
+    "hoc_thu": 0,
     "mo_khoa": 12,
     "published": 0,
-    "draft": 15
+    "draft": 15,
+    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
   },
   "modules": [
     {
@@ -34,7 +35,7 @@
           "video_id": "B00",
           "sort_order": 1,
           "content_kind": "intro",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Giới thiệu mô-đun",
           "youtube_title": "Giới thiệu mô-đun | AL-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "SBf3X_gaJ30",
@@ -53,7 +54,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Phân loại lò hơi, thông số áp suất - nhiệt độ và cấu tạo các",
           "youtube_title": "Phân loại lò hơi, thông số áp suất - nhiệt độ và cấu tạo các | AL-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "XqRjxu-VuEI",
@@ -72,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "hoc_thu",
+          "access": "mo_khoa",
           "display_title": "Hệ thống thiết bị an toàn của lò hơi: van an toàn, áp kế, ốn",
           "youtube_title": "Hệ thống thiết bị an toàn của lò hơi: van an toàn, áp kế, ốn | AL-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "kEF0xLJcy_E",
