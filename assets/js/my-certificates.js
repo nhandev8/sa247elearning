@@ -58,7 +58,14 @@
     });
   }
 
-  function paint(list, prices) {
+  function esc(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function paint(list, prices, ships) {
     const box = el("cert-list");
     const status = el("cert-status");
     const pdfL = prices?.pdf || "169.000đ";
@@ -78,20 +85,20 @@
         const eligible = c.status === "eligible";
         const replaced = c.status === "replaced";
         return `<article class="cert-mine-card">
-          <p class="kicker">${c.course_code || ""}</p>
-          <h2>${c.course_title || "Khóa học"}</h2>
+          <p class="kicker">${esc(c.course_code)}</p>
+          <h2>${esc(c.course_title || "Khóa học")}</h2>
           <dl class="cert-mine-meta">
-            <div><dt>Mã chứng nhận</dt><dd><code>${c.cert_code || "—"}</code></dd></div>
-            <div><dt>Ngày</dt><dd>${fmtDate(c.issued_at)}</dd></div>
-            <div><dt>Trạng thái</dt><dd>${statusVi(c.status)}</dd></div>
-            ${c.score_percent != null ? `<div><dt>Điểm</dt><dd>${c.score_percent}%</dd></div>` : ""}
+            <div><dt>Mã chứng nhận</dt><dd><code>${esc(c.cert_code || "—")}</code></dd></div>
+            <div><dt>Ngày</dt><dd>${esc(fmtDate(c.issued_at))}</dd></div>
+            <div><dt>Trạng thái</dt><dd>${esc(statusVi(c.status))}</dd></div>
+            ${c.score_percent != null ? `<div><dt>Điểm</dt><dd>${esc(c.score_percent)}%</dd></div>` : ""}
             ${c.delivery_type ? `<div><dt>Hình thức</dt><dd>${c.delivery_type === "hard" ? "Bản cứng" : "PDF"}</dd></div>` : ""}
           </dl>
           ${
             issued
               ? `<p class="cert-mine-actions">
                   <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
-                  <a class="btn btn--line" href="../verify/chung-nhan.html?code=${code}" target="_blank" rel="noopener">In / PDF</a>
+                  <button type="button" class="btn btn--line" data-pdf="${esc(c.cert_code)}">Tải PDF (15 phút)</button>
                   <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
                   ${
                     c.can_buy_hard
@@ -107,8 +114,17 @@
                   </p>`
                 : replaced
                   ? `<p class="meta">Mã này đã được thay thế — dùng mã chứng nhận mới trong danh sách.</p>`
-                  : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + c.revoke_reason : ""}.</p>`
+                  : `<p class="meta">Đã thu hồi${c.revoke_reason ? ": " + esc(c.revoke_reason) : ""}.</p>`
           }
+          ${(ships || [])
+            .filter((s) => s.course_code === c.course_code)
+            .map(
+              (s) =>
+                `<p class="meta">Bản cứng · ${esc(s.hard_fulfillment_status || s.status || "đang xử lý")}${
+                  s.tracking_code ? " · vận đơn " + esc(s.tracking_code) : ""
+                }${s.carrier_name ? " · " + esc(s.carrier_name) : ""}</p>`
+            )
+            .join("")}
         </article>`;
       })
       .join("");
@@ -178,6 +194,33 @@
       }));
     }
     const prices = await loadCertPriceLabels(sb);
-    paint(list || [], prices);
+    let ships = [];
+    try {
+      const shipRpc = await sb.rpc("my_hard_shipments");
+      if (!shipRpc.error && Array.isArray(shipRpc.data)) ships = shipRpc.data;
+    } catch (_) {}
+    paint(list || [], prices, ships);
+    el("cert-list")?.addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("[data-pdf]");
+      if (!btn) return;
+      btn.disabled = true;
+      const prev = btn.textContent;
+      btn.textContent = "Đang tạo link…";
+      try {
+        const { data, error } = await sb.functions.invoke("certificate-download", {
+          body: { cert_code: btn.getAttribute("data-pdf") },
+        });
+        if (error || !data?.url) {
+          btn.textContent = "PDF chưa sẵn sàng";
+          btn.disabled = false;
+          return;
+        }
+        window.open(data.url, "_blank", "noopener");
+        btn.textContent = "Đã mở link 15 phút";
+      } catch (_) {
+        btn.textContent = prev;
+        btn.disabled = false;
+      }
+    });
   });
 })();

@@ -12,6 +12,7 @@
         quan_tri: "Quản trị",
         quan_ly_noi_dung: "QL nội dung",
         giang_vien: "Giảng viên",
+        kinh_doanh: "Kinh doanh",
         admin: "Admin (legacy)",
       }[r] ||
       r ||

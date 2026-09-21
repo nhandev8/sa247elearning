@@ -28,6 +28,7 @@
     const list = cache.filter((o) => {
       if (f === "all") return true;
       if (f === "cert_hard") return o.product_type === "cert_hard";
+      if (f === "amount_mismatch") return o.payment_flag === "amount_mismatch";
       return o.status === f;
     });
     document.getElementById("rows").innerHTML = list
@@ -40,6 +41,9 @@
         if (o.ship_province) shipBits.push(o.ship_province);
         const shipLine = shipBits.length
           ? `<div class="adm-msg">${shipBits.join(" · ")}</div>`
+          : "";
+        const flag = o.payment_flag
+          ? `<div class="adm-msg adm-msg--err">${sa247Admin.paymentFlagVi(o.payment_flag)}</div>`
           : "";
         const hardCtrl =
           o.product_type === "cert_hard" && o.status === "paid"
@@ -78,12 +82,13 @@
               ? `<div class="adm-msg">ship ${sa247Admin.fmtVnd(o.shipping_fee)}</div>`
               : ""
           }</td>
-          <td>${sa247Admin.statusOrderVi(o.status)}</td>
+          <td>${sa247Admin.statusOrderVi(o.status)}${flag}</td>
           <td>${sa247Admin.fmtTime(o.created_at)}</td>
           <td>
             ${
               o.status === "pending"
-                ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--small" data-confirm="${o.order_code}">Xác nhận thanh toán</button>`
+                ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--small" data-confirm="${o.order_code}">Xác nhận thanh toán</button>
+                   <button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-fail="${o.order_code}">Đánh dấu thất bại</button>`
                 : "—"
             }
             ${hardCtrl}
@@ -96,7 +101,7 @@
 
   document.addEventListener("DOMContentLoaded", async () => {
     try {
-      const ctx = await sa247AdminShell.boot("Đơn hàng");
+      const ctx = await sa247AdminShell.boot("Đơn hàng", { requireCommerce: true });
       if (!ctx) return;
       const { sb } = ctx;
 
@@ -104,10 +109,10 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,order_code,status,amount,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,created_at,user_id,course:courses(code,title)"
+            "id,order_code,status,amount,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,course:courses(code,title)"
           )
           .order("created_at", { ascending: false })
-          .limit(150);
+          .limit(200);
         if (error) throw error;
         cache = data || [];
         paint();
@@ -121,6 +126,17 @@
           if (!confirm("Xác nhận thanh toán và cấp quyền / GCN?")) return;
           const { error } = await sb.rpc("admin_confirm_order", {
             p_order_code: btn.getAttribute("data-confirm"),
+          });
+          if (error) return alert(error.message);
+          await reload();
+          return;
+        }
+        const failBtn = ev.target.closest("[data-fail]");
+        if (failBtn) {
+          if (!confirm("Đánh dấu đơn thất bại? Khóa học sẽ không được mở.")) return;
+          const { error } = await sb.rpc("admin_mark_order_failed", {
+            p_order_code: failBtn.getAttribute("data-fail"),
+            p_reason: "provider_rejected",
           });
           if (error) return alert(error.message);
           await reload();

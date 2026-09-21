@@ -47,6 +47,64 @@
     }
   }
 
+  function orderStoreKey(courseCode) {
+    return "sa247-open-order:" + String(courseCode || "");
+  }
+
+  function rememberOrder(courseCode, order, mode) {
+    try {
+      sessionStorage.setItem(
+        orderStoreKey(courseCode),
+        JSON.stringify({
+          order_code: order.order_code,
+          amount: order.amount,
+          status: order.status || "pending",
+          mode: mode || "guest",
+          email: guestEmail || "",
+        })
+      );
+    } catch (_) {}
+  }
+
+  function recallOrder(courseCode) {
+    try {
+      const raw = sessionStorage.getItem(orderStoreKey(courseCode));
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function forgetOrder(courseCode) {
+    try {
+      sessionStorage.removeItem(orderStoreKey(courseCode));
+    } catch (_) {}
+  }
+
+  function renderPaymentHold(root, order, courseCode, kind) {
+    stopPoll();
+    const code = esc(order.order_code || "");
+    const texts = {
+      expired:
+        "Đơn đã hết hạn chờ (quá 48 giờ chưa có giao dịch đúng). Chưa mở khóa. Tạo đơn mới nếu bạn vẫn muốn học.",
+      failed:
+        "Thanh toán không thành công. Khóa học chưa được mở. Bạn có thể tạo đơn mới.",
+      amount_mismatch:
+        "Hệ thống thấy chuyển khoản không đúng số tiền. Khóa học chưa được mở. Hãy chuyển đúng số tiền trên đơn, hoặc liên hệ hỗ trợ kèm mã đơn.",
+    };
+    root.innerHTML = `
+      <div class="checkout-panel">
+        <p class="checkout-pay-kicker">Thanh toán</p>
+        <p class="form-msg" role="status">${texts[kind] || texts.failed}</p>
+        <p class="checkout-order-ref">Đơn <code>${code}</code> · ${esc(courseCode)}</p>
+        <p><button type="button" class="btn btn--amber" data-new-order>Tạo đơn mới</button></p>
+      </div>`;
+    root.querySelector("[data-new-order]")?.addEventListener("click", () => {
+      forgetOrder(courseCode);
+      location.reload();
+    });
+  }
+
   function loginHref(root) {
     return root.getAttribute("data-login-href") || "../auth/login.html";
   }
@@ -192,6 +250,7 @@
         if (mode === "guest") {
           const st = await pollGuestStatus(order.order_code, guestEmail);
           if (st?.found && st.status === "paid") {
+            forgetOrder(courseCode);
             guestAccountExisted = !!st.buyer_account_existed;
             renderPaid(root, { ...order, status: "paid" }, courseCode, {
               guest: true,
@@ -200,15 +259,41 @@
             });
             return;
           }
+          if (st?.found && (st.status === "expired" || st.status === "failed" || st.status === "cancelled")) {
+            forgetOrder(courseCode);
+            renderPaymentHold(root, order, courseCode, st.status === "expired" ? "expired" : "failed");
+            return;
+          }
+          if (st?.found && st.payment_flag === "amount_mismatch") {
+            renderPaymentHold(root, order, courseCode, "amount_mismatch");
+            return;
+          }
         } else {
           const sb = await sa247Auth.ensureClient();
-          const { data } = await sb
-            .from("orders")
-            .select("order_code,status,amount,paid_at")
-            .eq("order_code", order.order_code)
-            .maybeSingle();
+          const { data: refreshed, error: refreshErr } = await sb.rpc("refresh_my_order_status", {
+            p_order_code: order.order_code,
+          });
+          const data = !refreshErr && refreshed?.found
+            ? refreshed
+            : (
+                await sb
+                  .from("orders")
+                  .select("order_code,status,amount,paid_at,payment_flag")
+                  .eq("order_code", order.order_code)
+                  .maybeSingle()
+              ).data;
           if (data?.status === "paid") {
+            forgetOrder(courseCode);
             renderPaid(root, data, courseCode, { guest: false });
+            return;
+          }
+          if (data?.status === "expired" || data?.status === "failed" || data?.status === "cancelled") {
+            forgetOrder(courseCode);
+            renderPaymentHold(root, order, courseCode, data.status === "expired" ? "expired" : "failed");
+            return;
+          }
+          if (data?.payment_flag === "amount_mismatch") {
+            renderPaymentHold(root, order, courseCode, "amount_mismatch");
             return;
           }
         }
@@ -216,10 +301,17 @@
         if (el) {
           el.innerHTML =
             `<strong>Đang chờ xác nhận thanh toán…</strong><br/>` +
-            `Đơn <code>${esc(order.order_code)}</code> · hệ thống tự kiểm tra giao dịch.`;
+            `Đơn <code>${esc(order.order_code)}</code> · hệ thống tự kiểm tra giao dịch. ` +
+            `Mất mạng không làm mở khóa — trang sẽ thử lại.`;
         }
       } catch (e) {
         console.warn("[checkout poll]", e);
+        const el = statusEl();
+        if (el) {
+          el.innerHTML =
+            `Mất kết nối tạm thời. Đơn <code>${esc(order.order_code)}</code> vẫn chờ trên máy chủ. ` +
+            `Chưa mở khóa cho đến khi thanh toán được xác nhận.`;
+        }
       }
     }, 5000);
   }
@@ -229,8 +321,17 @@
       renderPaid(root, order, courseCode, { guest: mode === "guest", email: guestEmail });
       return;
     }
+    if (order.status === "expired" || order.status === "failed" || order.status === "cancelled") {
+      renderPaymentHold(root, order, courseCode, order.status === "expired" ? "expired" : "failed");
+      return;
+    }
+    if (order.payment_flag === "amount_mismatch") {
+      renderPaymentHold(root, order, courseCode, "amount_mismatch");
+      return;
+    }
     const amount = order.amount;
     const code = order.order_code;
+    rememberOrder(courseCode, order, mode);
     const guestHint = guestAccountExisted
       ? "khóa học sẽ được thêm vào tài khoản gắn với email này."
       : "khóa học sẽ được mở và hệ thống gửi email để bạn thiết lập mật khẩu.";
@@ -505,6 +606,17 @@
             return;
           }
           renderAuthedStart(root, courseCode, priceLabel);
+          return;
+        }
+        const saved = recallOrder(courseCode);
+        if (saved?.order_code && saved.mode !== "authed") {
+          guestEmail = saved.email || "";
+          renderCheckout(
+            root,
+            { order_code: saved.order_code, amount: saved.amount, status: "pending" },
+            courseCode,
+            "guest"
+          );
           return;
         }
       }

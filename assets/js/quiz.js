@@ -1,26 +1,72 @@
-/* SA247 quiz — chọn khóa đã mở khóa; chấm + cấp chứng nhận trên server */
+/* SA247 quiz v2 — cuối chương / cuối khóa; chấm theo choice_key session */
 (function () {
   function el(id) {
     return document.getElementById(id);
-  }
-
-  function collectAnswers(questions, formData) {
-    const answers = {};
-    questions.forEach((q) => {
-      const raw = formData.get(q.id);
-      const chosen = raw == null || raw === "" ? -1 : Number(raw);
-      answers[q.id] = chosen;
-      if (q.code && q.code !== q.id) answers[q.code] = chosen;
-    });
-    return answers;
   }
 
   function courseFromQuery() {
     return new URLSearchParams(location.search).get("course")?.trim() || "";
   }
 
+  function moduleFromQuery() {
+    const m = new URLSearchParams(location.search).get("module")?.trim() || "";
+    return m ? m.toUpperCase() : "";
+  }
+
   function fmtVnd(n) {
     return Number(n).toLocaleString("vi-VN") + "đ";
+  }
+
+  function attemptsPhrase(used, left, max) {
+    const m = max != null ? Number(max) : 3;
+    const u = used != null ? Number(used) : null;
+    const l = left != null ? Number(left) : null;
+    if (l != null && l <= 0) {
+      return u != null
+        ? `Bạn đã dùng hết ${u}/${m} lần làm bài.`
+        : `Bạn đã hết ${m} lần làm bài cho đề này.`;
+    }
+    if (l != null && u != null) return `Còn ${l}/${m} lần (đã dùng ${u}).`;
+    if (l != null) return `Còn ${l}/${m} lần làm bài.`;
+    return `Tối đa ${m} lần làm bài.`;
+  }
+
+  function friendlyError(msg) {
+    const raw = String(msg || "");
+    if (raw.includes("module_quizzes_required")) {
+      return "Bạn cần đạt tất cả bài kiểm tra cuối chương trước khi thi cuối khóa.";
+    }
+    if (raw.includes("progress_required")) {
+      const n = raw.split(":").pop();
+      return `Cần hoàn thành ít nhất ${n}% nội dung trước khi làm bài.`;
+    }
+    if (raw.includes("attempts_exhausted")) {
+      const parts = raw.split(":");
+      // attempts_exhausted | attempts_exhausted:used:max
+      if (parts.length >= 3) {
+        const used = parts[parts.length - 2];
+        const max = parts[parts.length - 1];
+        return attemptsPhrase(used, 0, max);
+      }
+      return attemptsPhrase(null, 0, 3);
+    }
+    if (raw.includes("cooldown_active")) {
+      const n = raw.split(":").pop();
+      return `Chờ thêm khoảng ${n} phút trước khi làm lại.`;
+    }
+    if (raw.includes("quiz_not_configured")) {
+      return "Chưa cấu hình đề kiểm tra cho phạm vi này.";
+    }
+    if (raw.includes("not_enrolled")) {
+      return "Bạn chưa mở khóa khóa học này.";
+    }
+    if (raw.includes("duplicate_submit")) {
+      return "Bài vừa được nộp. Không tạo thêm lần làm.";
+    }
+    if (raw.includes("quiz_empty")) {
+      return "Đề kiểm tra chưa có câu hỏi.";
+    }
+    return raw;
   }
 
   async function loadCertPriceLabels(sb) {
@@ -51,117 +97,194 @@
       .sort((a, b) => String(a.code).localeCompare(String(b.code)));
   }
 
-  async function runQuiz(sb, courseCode, certOpts) {
+  function collectKeyedAnswers(questions, formData) {
+    const answers = {};
+    questions.forEach((q) => {
+      const key = formData.get(q.id);
+      if (key != null && key !== "") {
+        answers[q.id] = String(key);
+        if (q.code && q.code !== q.id) answers[q.code] = String(key);
+      }
+    });
+    return answers;
+  }
+
+  function setCertBlockVisible(visible, certOpts) {
+    const block = el("quiz-cert-block");
+    const nameInput = el("quiz-full-name");
+    const confirm = el("confirm-cert-name");
+    const lockNote = el("quiz-cert-lock-note");
+    if (block) block.hidden = !visible;
+    if (nameInput) {
+      nameInput.required = visible;
+      if (!visible) nameInput.value = nameInput.value; // keep
+      if (visible && certOpts?.locked) {
+        nameInput.readOnly = true;
+        const pref =
+          (certOpts.certName && String(certOpts.certName).trim()) ||
+          (certOpts.accountName && String(certOpts.accountName).trim()) ||
+          "";
+        if (pref) nameInput.value = pref;
+      } else if (nameInput) {
+        nameInput.readOnly = false;
+      }
+    }
+    if (confirm) confirm.required = visible;
+    if (lockNote) lockNote.hidden = !(visible && certOpts?.locked);
+  }
+
+  function renderPassedFinal(data, courseCode, pct) {
+    const status = data.cert_status || "eligible";
+    const courseQ = encodeURIComponent(courseCode);
+    if (status === "issued" || status === "valid") {
+      const code = encodeURIComponent(data.cert_code || "");
+      return `<h2>Đạt ${pct}%</h2>
+        <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code || "—"}</strong></p>
+        <p class="cert-buy-options">
+          <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+          <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
+          <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
+        </p>`;
+    }
+    return null;
+  }
+
+  async function runQuiz(sb, courseCode, moduleCode, certOpts) {
     const status = el("quiz-status");
     const form = el("quiz-form");
     const box = el("quiz-questions");
     const result = el("quiz-result");
-    const nameInput = el("quiz-full-name");
-    const lockNote = el("quiz-cert-lock-note");
+    const isFinal = !moduleCode;
+
     form.hidden = true;
     result.hidden = true;
     result.innerHTML = "";
     box.innerHTML = "";
+    setCertBlockVisible(isFinal, certOpts);
 
     const pref =
       (certOpts?.certName && String(certOpts.certName).trim()) ||
       (certOpts?.accountName && String(certOpts.accountName).trim()) ||
       "";
-    if (nameInput && !nameInput.value) nameInput.value = pref;
-    if (certOpts?.locked) {
-      if (nameInput) {
-        nameInput.readOnly = true;
-        if (pref) nameInput.value = pref;
-      }
-      if (lockNote) lockNote.hidden = false;
-    } else if (lockNote) {
-      lockNote.hidden = true;
-      if (nameInput) nameInput.readOnly = false;
-    }
+    const nameInput = el("quiz-full-name");
+    if (nameInput && isFinal && !nameInput.value && pref) nameInput.value = pref;
 
-    status.textContent = `Đang tải đề ${courseCode}…`;
-    const { data: quiz, error: qErr } = await sb.rpc("get_course_quiz", {
+    status.textContent = moduleCode
+      ? `Đang tải đề ${courseCode} · chương ${moduleCode}…`
+      : `Đang tải đề cuối khóa ${courseCode}…`;
+
+    const { data: quiz, error: qErr } = await sb.rpc("start_quiz_attempt", {
       p_course_code: courseCode,
+      p_module_code: moduleCode || null,
     });
     if (qErr || !quiz?.questions?.length) {
       status.innerHTML =
-        `Chưa cấu hình đề kiểm tra cho <strong>${courseCode}</strong>.` +
-        (qErr ? `<br><small>${qErr.message}</small>` : "");
+        friendlyError(qErr?.message) ||
+        `Chưa cấu hình đề kiểm tra cho <strong>${courseCode}</strong>${
+          moduleCode ? ` · ${moduleCode}` : ""
+        }.`;
       return;
     }
 
     const passAt = quiz.pass_percent || 70;
-    status.textContent = `${courseCode} · ${quiz.questions.length} câu · đạt từ ${passAt}% để nhận chứng nhận.`;
-    document.querySelector(".app-top h1").textContent = `Kỳ thi · ${courseCode}`;
+    const scopeLabel =
+      quiz.scope === "chuong"
+        ? `Cuối chương ${quiz.module_code || moduleCode}`
+        : "Cuối khóa";
+    const attemptInfo = attemptsPhrase(
+      quiz.attempts_used,
+      quiz.attempts_left,
+      quiz.attempts_max ?? 3
+    );
+    status.textContent = `${courseCode} · ${scopeLabel} · ${quiz.questions.length} câu · đạt từ ${passAt}% · ${attemptInfo}`;
+    document.querySelector(".app-top h1").textContent = quiz.title
+      ? quiz.title
+      : moduleCode
+        ? `Kiểm tra chương ${moduleCode}`
+        : `Kỳ thi cuối khóa · ${courseCode}`;
+
     box.innerHTML = quiz.questions
-      .map(
-        (q, idx) => `<fieldset class="quiz-q">
+      .map((q, idx) => {
+        const choices = (q.choices || [])
+          .map((c) => {
+            const key = typeof c === "object" ? c.key : String(c);
+            const text = typeof c === "object" ? c.text : c;
+            return `<label class="quiz-choice">
+            <input type="radio" name="${q.id}" value="${key}" required />
+            <span>${text}</span>
+          </label>`;
+          })
+          .join("");
+        return `<fieldset class="quiz-q">
         <legend>${idx + 1}. ${q.q}</legend>
-        ${(q.choices || [])
-          .map(
-            (c, ci) => `<label class="quiz-choice">
-            <input type="radio" name="${q.id}" value="${ci}" required />
-            <span>${c}</span>
-          </label>`
-          )
-          .join("")}
-      </fieldset>`
-      )
+        ${choices}
+      </fieldset>`;
+      })
       .join("");
+
     form.hidden = false;
     form.onsubmit = async (ev) => {
       ev.preventDefault();
       const fd = new FormData(form);
-      const fullName = String(fd.get("full_name") || "").trim();
-      if (!fd.get("confirm_cert_name")) {
+      let fullName = null;
+
+      if (isFinal) {
+        fullName = String(fd.get("full_name") || "").trim();
+        if (!fd.get("confirm_cert_name")) {
+          result.hidden = false;
+          result.innerHTML =
+            '<p class="form-msg is-err">Hãy xác nhận họ tên trên chứng nhận trước khi nộp bài.</p>';
+          return;
+        }
+        if (!fullName) {
+          result.hidden = false;
+          result.innerHTML = '<p class="form-msg is-err">Nhập họ tên sẽ in trên chứng nhận.</p>';
+          return;
+        }
+        if (!certOpts?.locked) {
+          try {
+            await sa247Auth.updateProfile({ cert_display_name: fullName });
+          } catch (_) {}
+        }
+      }
+
+      const answers = collectKeyedAnswers(quiz.questions, fd);
+      const missing = (quiz.questions || []).filter((q) => answers[q.id] == null || answers[q.id] === "");
+      if (missing.length) {
         result.hidden = false;
         result.innerHTML =
-          '<p class="form-msg is-err">Hãy xác nhận họ tên trên chứng nhận trước khi nộp bài.</p>';
+          `<p class="form-msg is-err">Còn ${missing.length} câu chưa chọn đáp án.</p>`;
         return;
       }
-      if (!fullName) {
-        result.hidden = false;
-        result.innerHTML = '<p class="form-msg is-err">Nhập họ tên sẽ in trên chứng nhận.</p>';
-        return;
-      }
-      const answers = collectAnswers(quiz.questions, fd);
+      if (form.dataset.submitting === "1") return;
+      form.dataset.submitting = "1";
       const btn = form.querySelector('[type="submit"]');
       btn.disabled = true;
       btn.textContent = "Đang chấm…";
 
-      if (!certOpts?.locked) {
-        try {
-          await sa247Auth.updateProfile({ cert_display_name: fullName });
-        } catch (_) {}
-      }
-
-      const { data, error } = await sb.rpc("submit_course_quiz", {
-        p_course_code: courseCode,
-        p_full_name: fullName,
+      const { data, error } = await sb.rpc("submit_quiz_attempt", {
+        p_session_id: quiz.session_id,
         p_answers: answers,
+        p_full_name: fullName,
       });
 
       result.hidden = false;
       if (error) {
-        result.innerHTML = `<p class="form-msg">${error.message}</p>`;
+        result.innerHTML = `<p class="form-msg">${friendlyError(error.message)}</p>`;
+        form.dataset.submitting = "";
         btn.disabled = false;
         btn.textContent = "Nộp bài";
         return;
       }
 
       const pct = data?.score_percent ?? 0;
-        if (data?.passed) {
-          const status = data.cert_status || "eligible";
-          const courseQ = encodeURIComponent(courseCode);
-          if (status === "issued" || status === "valid") {
-            const code = encodeURIComponent(data.cert_code);
-            result.innerHTML = `<h2>Đạt ${pct}%</h2>
-              <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code}</strong></p>
-              <p class="cert-buy-options">
-                <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
-                <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
-                <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
-              </p>`;
+      const backAssess = `../kiem-tra/?course=${encodeURIComponent(courseCode)}`;
+
+      if (data?.passed) {
+        if (data.scope === "khoa") {
+          const issuedHtml = renderPassedFinal(data, courseCode, pct);
+          if (issuedHtml) {
+            result.innerHTML = issuedHtml;
           } else {
             const prices = await loadCertPriceLabels(sb);
             result.innerHTML = `<h2>Đạt ${pct}%</h2>
@@ -169,23 +292,47 @@
               <p class="meta">Phí khóa học là phí tham gia — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
               <p><strong>Chọn hình thức nhận:</strong></p>
               <p class="cert-buy-options">
-                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${prices.pdf}</a>
-                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${prices.hard} + ship</a>
-                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${courseQ}">Xem các lựa chọn</a>
+                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_pdf">PDF điện tử · ${prices.pdf}</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_hard">Bản cứng · ${prices.hard} + ship</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}">Xem các lựa chọn</a>
                 <a class="btn btn--line" href="../dashboard/">Về Học tập · nhận sau</a>
               </p>`;
           }
         } else {
-        result.innerHTML = `<h2>Chưa đạt (${pct}%)</h2>
-          <p>Cần ≥ ${data?.pass_percent || passAt}%. Ôn lại bài học rồi thử lại.</p>
+          result.innerHTML = `<h2>Đạt ${pct}%</h2>
+            <p>Bạn đã hoàn thành kiểm tra chương <strong>${data.module_code || moduleCode}</strong>.</p>
+            <p class="meta">Đạt hết quiz chương mới được thi cuối khóa.</p>
+            <p class="cert-buy-options">
+              <a class="btn btn--amber" href="${backAssess}">Xem tiến độ kiểm tra</a>
+              <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
+            </p>`;
+        }
+      } else {
+        const expiredNote = data?.expired
+          ? " (hết thời gian làm bài — lần này không tính đạt)"
+          : "";
+        const left = data?.attempts_left;
+        const used = data?.attempts_used;
+        const maxA = data?.attempts_max ?? 3;
+        const attemptNote = attemptsPhrase(used, left, maxA);
+        const canRetry = left == null || Number(left) > 0;
+        const retryBtn = canRetry
+          ? `<button type="button" class="btn btn--amber" id="retry">Làm lại · còn ${left ?? "?"} lần</button>`
+          : "";
+        result.innerHTML = `<h2>Chưa đạt (${pct}%)${expiredNote}</h2>
+          <p>Cần ≥ ${data?.pass_percent || passAt}%. ${
+            canRetry ? "Ôn lại bài học rồi thử lại." : "Bạn không còn lượt làm cho đề này."
+          }</p>
+          <p class="meta">${attemptNote}</p>
           <p class="cert-buy-options">
-            <button type="button" class="btn btn--amber" id="retry">Làm lại</button>
+            ${retryBtn}
+            <a class="btn btn--line" href="${backAssess}">Kiểm tra &amp; kết quả</a>
             <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
           </p>`;
         el("retry")?.addEventListener("click", () => location.reload());
       }
-      btn.disabled = false;
-      btn.textContent = "Nộp bài";
+      btn.disabled = true;
+      btn.textContent = "Đã nộp";
     };
   }
 
@@ -233,22 +380,67 @@
     }
 
     const pick = el("quiz-course");
+    const pickMod = el("quiz-module");
     const preset = courseFromQuery();
+    const presetMod = moduleFromQuery();
     pick.innerHTML = courses
       .map(
         (c) =>
-          `<option value="${c.code}" ${c.code === preset || (!preset && c.code === "ATNM-01") ? "selected" : ""}>${c.code} — ${c.title}</option>`
+          `<option value="${c.code}" ${
+            c.code === preset || (!preset && c.code === "AL-01") ? "selected" : ""
+          }>${c.code} — ${c.title}</option>`
       )
       .join("");
     el("quiz-course-wrap").hidden = false;
 
-    const start = () => runQuiz(sb, pick.value, certOpts);
-    pick.addEventListener("change", () => {
+    async function fillModules(courseCode) {
+      if (!pickMod) return;
+      pickMod.innerHTML = `<option value="">Cuối khóa (chứng nhận)</option>`;
+      try {
+        const { data, error } = await sb.rpc("get_assessment_overview", {
+          p_course_code: courseCode,
+        });
+        if (error) throw error;
+        const mods = data?.modules || [];
+        mods.forEach((m) => {
+          if (!m.quiz_configured) return;
+          const mark = m.passed ? " · đã đạt" : m.unlocked ? "" : " · chưa mở";
+          const opt = document.createElement("option");
+          opt.value = m.module_code;
+          opt.textContent = `${m.module_code} — ${m.title || "Chương"}${mark}`;
+          if (m.module_code === presetMod) opt.selected = true;
+          pickMod.appendChild(opt);
+        });
+        if (presetMod && ![...pickMod.options].some((o) => o.value === presetMod)) {
+          const opt = document.createElement("option");
+          opt.value = presetMod;
+          opt.textContent = `${presetMod} (đề)`;
+          opt.selected = true;
+          pickMod.appendChild(opt);
+        }
+      } catch (_) {
+        /* overview optional for picker */
+      }
+      el("quiz-module-wrap").hidden = false;
+    }
+
+    const start = async () => {
+      const course = pick.value;
+      const mod = (pickMod?.value || "").trim().toUpperCase();
       const u = new URL(location.href);
-      u.searchParams.set("course", pick.value);
+      u.searchParams.set("course", course);
+      if (mod) u.searchParams.set("module", mod);
+      else u.searchParams.delete("module");
       history.replaceState({}, "", u);
-      start();
+      await runQuiz(sb, course, mod, certOpts);
+    };
+
+    await fillModules(pick.value);
+    pick.addEventListener("change", async () => {
+      await fillModules(pick.value);
+      await start();
     });
+    pickMod?.addEventListener("change", () => start());
     await start();
   }
 
@@ -262,7 +454,7 @@
     }
     main().catch((e) => {
       console.error(e);
-      el("quiz-status").textContent = e.message || String(e);
+      el("quiz-status").textContent = friendlyError(e.message) || String(e);
     });
   });
 })();

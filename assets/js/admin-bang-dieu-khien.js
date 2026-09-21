@@ -6,6 +6,7 @@
     "quan_tri",
     "quan_ly_noi_dung",
     "giang_vien",
+    "kinh_doanh",
   ]);
 
   document.addEventListener("DOMContentLoaded", async () => {
@@ -67,7 +68,13 @@
       const eligible = certs.filter((c) => c.status === "eligible");
       const pendingOrders = (orders.data || []).filter((o) => o.status === "pending");
       const paidOrders = (orders.data || []).filter((o) => o.status === "paid");
-      const revenue = paidOrders.reduce((a, o) => a + (Number(o.amount) || 0), 0);
+      let revenue = paidOrders.reduce((a, o) => a + (Number(o.amount) || 0), 0);
+      let revenueLabel = "Doanh thu (mẫu paid)";
+      const { data: commerce, error: commerceErr } = await sb.rpc("admin_commerce_summary");
+      if (!commerceErr && commerce && commerce.paid_revenue != null) {
+        revenue = Number(commerce.paid_revenue) || 0;
+        revenueLabel = "Doanh thu đơn đã thanh toán";
+      }
 
       const prog = progress.data || [];
       const completedLessons = prog.filter((p) => p.completed).length;
@@ -98,7 +105,7 @@
         ["Quiz trong 24h", quizzesToday],
         ["GCN đủ ĐK / đã cấp", `${eligible.length} / ${issued.length}`],
         ["Đơn chờ CK", pendingOrders.length],
-        ["Doanh thu (mẫu paid)", revenue.toLocaleString("vi-VN") + "đ"],
+        [revenueLabel, revenue.toLocaleString("vi-VN") + "đ"],
         ["Staff", staffN],
         ["HV mới 7 ngày", newLearners],
       ]

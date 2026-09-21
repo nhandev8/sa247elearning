@@ -1910,6 +1910,12 @@
   margin-top: 1rem;
   color: var(--ink);
 }
+.career-question {
+  margin: 0.75rem 0 1.25rem;
+  max-width: min(100%, 44rem);
+  font-weight: 600;
+  color: var(--ink);
+}
 .career-picks {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2162,7 +2168,39 @@
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.55;
-  max-height: 14rem;
+}
+.desc-fold__short { margin: 0; }
+.desc-fold__more {
+  margin: 0.45rem 0 0;
+}
+.desc-fold__more > summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--green-deep, #0b3d2e);
+  font-weight: 600;
+  font-size: 0.9em;
+  user-select: none;
+}
+.desc-fold__more > summary::-webkit-details-marker { display: none; }
+.desc-fold__more > summary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.desc-fold__more[open] > summary::before {
+  transform: rotate(90deg);
+}
+.desc-fold__more[open] > summary {
+  margin-bottom: 0.4rem;
+}
+.desc-fold__full {
+  margin: 0;
+  padding-top: 0.15rem;
+  border-top: 1px solid rgba(11, 31, 58, 0.1);
+}
+.classroom__desc.desc-fold .desc-fold__full {
+  white-space: pre-wrap;
+  max-height: 18rem;
   overflow: auto;
 }
 .live-curriculum { margin: 0 0 1.25rem; }
@@ -3115,6 +3153,12 @@ body.course-page { padding-bottom: 4.5rem; }
 .continue-hero__empty p {
   margin: 0 0 1rem;
   color: var(--muted);
+}
+.todo-learn__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
 }
 .todo-learn {
   list-style: none;

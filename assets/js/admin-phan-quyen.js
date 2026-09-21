@@ -5,6 +5,7 @@
   const ROLES = [
     "hoc_vien",
     "giang_vien",
+    "kinh_doanh",
     "quan_ly_noi_dung",
     "quan_tri",
     "quan_tri_cao_nhat",

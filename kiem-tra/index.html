@@ -7,12 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915ia" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260920quiz" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
   <script src="../assets/js/learner-nav.js?v=20260915ia" defer></script>
   <script src="../assets/js/learner-boot.js?v=20260915ia" defer></script>
-  <script src="../assets/js/my-assessments.js?v=20260915ia" defer></script>
+  <script src="../assets/js/my-assessments.js?v=20260920v2" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
@@ -32,8 +32,15 @@
       <main class="app-content learn-page">
         <section class="learn-section">
           <div class="learn-section__head"><h2>Bài kiểm tra</h2></div>
+          <div id="assess-course-wrap" class="quiz-course-wrap" hidden>
+            <label>
+              Khóa học
+              <select id="assess-course"></select>
+            </label>
+          </div>
           <p class="lead" id="quiz-status">Đang tải…</p>
-          <div id="quiz-list" class="todo-learn"></div>
+          <p class="meta">Làm lần lượt các đề cuối chương; đạt hết rồi mới mở đề cuối khóa (cấp chứng nhận).</p>
+          <ul id="quiz-list" class="todo-learn"></ul>
         </section>
         <section class="learn-section">
           <div class="learn-section__head"><h2>Lịch sử làm bài</h2></div>

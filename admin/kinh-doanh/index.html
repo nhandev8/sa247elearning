@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Phân quyền · SA247 Quản trị</title>
+  <title>Kinh doanh · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/admin.css" />
@@ -11,7 +11,7 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-phan-quyen.js" defer></script>
+  <script src="../../assets/js/admin-kinh-doanh.js" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,28 +26,12 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Phân quyền</h1>
+        <h1>Kinh doanh</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm họ tên hoặc ID…" />
-        </div>
-        <p class="adm-lead">Chỉ quản trị cao nhất (<code>quan_tri_cao_nhat</code>) mới đổi được vai trò. Role <code>kinh_doanh</code> = vận hành đơn hàng / thanh toán (không CMS).</p>
-        <p class="adm-msg" id="adm-status"></p>
-        <p class="adm-msg" id="save-msg"></p>
-        <div class="adm-table-wrap">
-          <table class="adm-table">
-            <thead>
-              <tr>
-                <th>Tài khoản</th>
-                <th>Vai trò</th>
-                <th>Ngày tạo</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
+        <p class="adm-lead" id="adm-status">Đang tải…</p>
+        <div class="adm-stats" id="adm-stats"></div>
+        <div class="adm-grid-2" id="adm-links" style="margin-top:1.25rem"></div>
       </main>
     </div>
   </div>

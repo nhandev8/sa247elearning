@@ -11,7 +11,7 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-cau-hoi.js" defer></script>
+  <script src="../../assets/js/admin-cau-hoi.js?v=20260920v2" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -31,20 +31,57 @@
       <main class="adm-content">
         <div class="adm-toolbar">
           <select id="filter-course"><option value="">Tất cả khóa</option></select>
+          <select id="filter-scope">
+            <option value="">Mọi scope</option>
+            <option value="chuong">Chương</option>
+            <option value="khoa">Khóa</option>
+          </select>
+          <select id="filter-module"><option value="">Tất cả chương</option></select>
         </div>
         <p class="adm-msg" id="adm-status"></p>
+
+        <section class="adm-card" style="margin-bottom:1rem">
+          <h2>Import JSON theo lô</h2>
+          <p class="meta">Dán đúng định dạng <code>content/quiz/&lt;COURSE&gt;/*.json</code> (có <code>questions[]</code> + <code>answer</code>). Ưu tiên seed bằng <code>scripts/seed_quiz_bank.py</code> khi có file nguồn.</p>
+          <form class="adm-form" id="import-form">
+            <label>Khóa (tuỳ chọn nếu JSON có course_code)
+              <select id="import-course"></select>
+            </label>
+            <label>Scope mặc định
+              <select id="import-scope">
+                <option value="chuong">chuong</option>
+                <option value="khoa">khoa</option>
+              </select>
+            </label>
+            <label>Chương mặc định <select id="import-module"></select></label>
+            <label>JSON<textarea id="import-json" rows="8" placeholder='{ "course_code":"AL-01", "scope":"chuong", "module_code":"M01", "questions":[…] }'></textarea></label>
+            <label><input type="checkbox" id="import-dry" /> Dry-run (không ghi DB)</label>
+            <button type="submit" class="adm-btn adm-btn--primary">Import</button>
+          </form>
+          <p class="adm-msg" id="import-msg"></p>
+        </section>
+
         <section class="adm-card" style="margin-bottom:1rem">
           <h2>Thêm câu hỏi</h2>
           <form class="adm-form" id="add-form">
             <label>Khóa học <select name="course_id" id="form-course" required></select></label>
-            <label>Chủ đề <input name="topic" placeholder="An toàn điện" /></label>
-            <label>Độ khó
-              <select name="difficulty">
-                <option value="co_ban">Cơ bản</option>
-                <option value="trung_binh">Trung bình</option>
-                <option value="nang_cao">Nâng cao</option>
+            <label>Scope
+              <select name="scope" id="form-scope">
+                <option value="chuong" selected>Cuối chương</option>
+                <option value="khoa">Cuối khóa</option>
               </select>
             </label>
+            <label id="form-module-wrap">Chương <select name="module_code" id="form-module"></select></label>
+            <label>Mã câu (external_code) <input name="external_code" placeholder="AL01-M01-Q01" /></label>
+            <label>source_ref <input name="source_ref" placeholder="AL-01-M01-B01/V01-S02" /></label>
+            <label>Mức
+              <select name="level">
+                <option value="nho_hieu">Nhớ–hiểu</option>
+                <option value="ap_dung">Áp dụng</option>
+                <option value="phan_tich">Phân tích</option>
+              </select>
+            </label>
+            <label>Chủ đề <input name="topic" placeholder="An toàn điện" /></label>
             <label>Câu hỏi <textarea name="stem" rows="3" required></textarea></label>
             <label>Lựa chọn A <input name="choice_0" required /></label>
             <label>Lựa chọn B <input name="choice_1" required /></label>
@@ -68,8 +105,8 @@
             <thead>
               <tr>
                 <th>Khóa</th>
-                <th>Chủ đề</th>
-                <th>Độ khó</th>
+                <th>Scope</th>
+                <th>Mức</th>
                 <th>Câu hỏi</th>
                 <th>Đáp án</th>
                 <th></th>

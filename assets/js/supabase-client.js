@@ -152,6 +152,7 @@
       "quan_tri",
       "quan_ly_noi_dung",
       "giang_vien",
+      "kinh_doanh",
     ],
     isStaffRole(role) {
       return window.sa247Auth.STAFF_ROLES.includes(role);
