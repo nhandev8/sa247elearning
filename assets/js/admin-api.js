@@ -6,7 +6,41 @@
     "quan_tri",
     "quan_ly_noi_dung",
     "giang_vien",
+    "kinh_doanh",
   ];
+
+  const COMMERCE_ROLES = [
+    "admin",
+    "quan_tri_cao_nhat",
+    "quan_tri",
+    "kinh_doanh",
+  ];
+
+  const CONTENT_ROLES = [
+    "admin",
+    "quan_tri_cao_nhat",
+    "quan_tri",
+    "quan_ly_noi_dung",
+  ];
+
+  const FULL_ADMIN_ROLES = ["admin", "quan_tri_cao_nhat", "quan_tri"];
+
+  function canManageCommerce(role) {
+    return COMMERCE_ROLES.includes(role);
+  }
+
+  function canManageContent(role) {
+    return CONTENT_ROLES.includes(role);
+  }
+
+  function isFullAdmin(role) {
+    return FULL_ADMIN_ROLES.includes(role);
+  }
+
+  /** Role chỉ Kinh doanh — không CMS / hệ thống */
+  function isCommerceOnly(role) {
+    return role === "kinh_doanh";
+  }
 
   function fmtVnd(n) {
     return Number(n || 0).toLocaleString("vi-VN") + "đ";
@@ -28,7 +62,18 @@
         paid: "Đã thanh toán",
         expired: "Hết hạn",
         cancelled: "Đã hủy",
+        failed: "Thất bại",
       }[s] || s || "—"
+    );
+  }
+
+  function paymentFlagVi(f) {
+    return (
+      {
+        amount_mismatch: "Sai số tiền",
+        timeout: "Hết hạn CK",
+        provider_rejected: "Nhà cung cấp từ chối",
+      }[f] || f || ""
     );
   }
 
@@ -50,6 +95,7 @@
         quan_tri: "Quản trị",
         quan_ly_noi_dung: "Quản lý nội dung",
         giang_vien: "Giảng viên",
+        kinh_doanh: "Kinh doanh",
         hoc_vien: "Học viên",
         student: "Học viên",
       }[r] || r || "—"
@@ -104,9 +150,17 @@
 
   window.sa247Admin = {
     STAFF_ROLES,
+    COMMERCE_ROLES,
+    CONTENT_ROLES,
+    FULL_ADMIN_ROLES,
+    canManageCommerce,
+    canManageContent,
+    isFullAdmin,
+    isCommerceOnly,
     fmtVnd,
     fmtTime,
     statusOrderVi,
+    paymentFlagVi,
     statusEnrollVi,
     roleLabelVi,
     courseStatusVi,

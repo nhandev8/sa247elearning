@@ -191,14 +191,14 @@
         const sb = await sa247Auth.ensureClient();
         const { data } = await sb
           .from("orders")
-          .select("order_code,status,amount,paid_at,product_type")
+          .select("order_code,status,amount,paid_at,product_type,payment_flag")
           .eq("order_code", code)
           .maybeSingle();
         if (data?.status === "paid") {
           stopPoll();
           const mine = await sb.rpc("list_my_certificates");
           const hit = (mine.data || []).find(
-            (c) => c.course_code === course && c.status === "issued"
+            (c) => c.course_code === course && (c.status === "issued" || c.status === "valid")
           );
           const viewHref = hit?.cert_code
             ? `../verify/chung-nhan.html?code=${encodeURIComponent(hit.cert_code)}`
@@ -212,10 +212,22 @@
                 <a class="btn btn--line" href="./">Chứng nhận của tôi</a>
               </div>
             </div>`;
+          return;
+        }
+        if (data?.status === "expired" || data?.status === "failed" || data?.status === "cancelled") {
+          stopPoll();
+          const st = root.querySelector("[data-status]");
+          if (st) st.textContent = "Đơn không còn hiệu lực. Chưa cấp chứng nhận. Hãy tạo đơn mới.";
+          return;
+        }
+        if (data?.payment_flag === "amount_mismatch") {
+          const st = root.querySelector("[data-status]");
+          if (st) st.textContent = "Sai số tiền — chưa cấp chứng nhận. Chuyển đúng số trên đơn hoặc liên hệ hỗ trợ.";
         }
       } catch (e) {
         const st = root.querySelector("[data-status]");
-        if (st) st.textContent = e.message || String(e);
+        if (st) st.textContent = "Mất kết nối tạm thời. Đơn vẫn chờ trên máy chủ, chưa cấp chứng nhận.";
+        console.warn("[cert checkout]", e);
       }
     }, 4000);
   }

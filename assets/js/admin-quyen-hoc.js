@@ -3,18 +3,44 @@
   let rows = [];
   let profiles = {};
 
-  async function load(sb) {
-    const [{ data: enrolls, error }, { data: courses }, { data: profs }] =
-      await Promise.all([
-        sb
-          .from("enrollments")
-          .select("id,user_id,status,enrolled_at,course:courses(code,title)")
-          .order("enrolled_at", { ascending: false }),
-        sb.from("courses").select("code,title").order("code"),
-        sb.from("profiles").select("id,full_name,role"),
+  async function load(sb, role) {
+    const commerceOnly = window.sa247Admin?.isCommerceOnly?.(role) === true;
+
+    const enrollP = sb
+      .from("enrollments")
+      .select("id,user_id,status,enrolled_at,course:courses(code,title)")
+      .order("enrolled_at", { ascending: false });
+    const courseP = sb.from("courses").select("code,title").order("code");
+
+    let profs = [];
+    let courses = [];
+    if (commerceOnly) {
+      const [{ data: enrolls, error }, courseRes, learners] = await Promise.all([
+        enrollP,
+        courseP,
+        sb.rpc("commerce_list_learners"),
       ]);
-    if (error) throw error;
-    rows = enrolls || [];
+      if (error) throw error;
+      if (courseRes.error) throw courseRes.error;
+      if (learners.error) throw learners.error;
+      rows = enrolls || [];
+      courses = courseRes.data || [];
+      profs = Array.isArray(learners.data) ? learners.data : [];
+    } else {
+      const [{ data: enrolls, error }, courseRes, { data: profRows, error: pErr }] =
+        await Promise.all([
+          enrollP,
+          courseP,
+          sb.from("profiles").select("id,full_name,role"),
+        ]);
+      if (error) throw error;
+      if (courseRes.error) throw courseRes.error;
+      if (pErr) throw pErr;
+      rows = enrolls || [];
+      courses = courseRes.data || [];
+      profs = profRows || [];
+    }
+
     profiles = {};
     (profs || []).forEach((p) => {
       profiles[p.id] = p;
@@ -62,7 +88,7 @@
       const ctx = await sa247AdminShell.boot("Quyền học");
       if (!ctx) return;
       const { sb } = ctx;
-      await load(sb);
+      await load(sb, ctx.profile?.role);
       document.getElementById("q").addEventListener("input", paint);
 
       document.getElementById("grant-form").addEventListener("submit", async (ev) => {
@@ -81,7 +107,7 @@
         }
         msg.innerHTML = `<span class="adm-msg--ok">Đã cấp quyền học thành công.</span>`;
         ev.target.reset();
-        await load(sb);
+        await load(sb, ctx.profile?.role);
       });
 
       document.getElementById("rows").addEventListener("click", async (ev) => {
@@ -95,7 +121,7 @@
           alert(error.message);
           return;
         }
-        await load(sb);
+        await load(sb, ctx.profile?.role);
       });
     } catch (e) {
       alert(e.message || e);

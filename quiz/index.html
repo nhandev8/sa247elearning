@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kỳ thi cuối khóa · SA247</title>
-  <meta name="description" content="Làm bài kiểm tra cuối khóa SA247 — đạt điều kiện để hệ thống cấp chứng nhận." />
+  <title>Bài kiểm tra · SA247</title>
+  <meta name="description" content="Làm bài kiểm tra cuối chương hoặc cuối khóa SA247 — chấm trên máy chủ." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915ia" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260920quiz" />
   <script src="../assets/supabase-config.js"></script>
   <script src="../assets/js/supabase-client.js?v=20260915hs" defer></script>
   <script src="../assets/js/learner-nav.js?v=20260915ia" defer></script>
   <script src="../assets/js/learner-boot.js?v=20260915ia" defer></script>
-  <script src="../assets/js/quiz.js?v=20260915rename" defer></script>
+  <script src="../assets/js/quiz.js?v=20260920v2" defer></script>
 </head>
 <body class="app-body">
   <div class="app-shell">
@@ -28,7 +28,7 @@
     <div class="app-main">
       <header class="app-top">
         <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Kỳ thi cuối khóa</h1>
+        <h1>Bài kiểm tra</h1>
       </header>
       <main class="app-content">
         <div id="quiz-course-wrap" class="quiz-course-wrap" hidden>
@@ -36,17 +36,21 @@
             Chọn khóa đã mở khóa
             <select id="quiz-course"></select>
           </label>
+          <label id="quiz-module-wrap" hidden>
+            Phạm vi kiểm tra
+            <select id="quiz-module"></select>
+          </label>
         </div>
         <p class="lead" id="quiz-status">Đang tải…</p>
         <form id="quiz-form" class="quiz-form" hidden>
-          <fieldset class="quiz-cert-name">
+          <fieldset class="quiz-cert-name" id="quiz-cert-block" hidden>
             <legend>Kiểm tra thông tin trên chứng nhận</legend>
             <label class="quiz-name">
               Họ và tên
-              <input type="text" name="full_name" id="quiz-full-name" required maxlength="120" placeholder="VD: Nguyễn Văn A" />
+              <input type="text" name="full_name" id="quiz-full-name" maxlength="120" placeholder="VD: Nguyễn Văn A" />
             </label>
             <label class="quiz-confirm checkout-terms">
-              <input type="checkbox" name="confirm_cert_name" id="confirm-cert-name" required />
+              <input type="checkbox" name="confirm_cert_name" id="confirm-cert-name" />
               <span>Tôi xác nhận thông tin trên là chính xác để in trên giấy chứng nhận.</span>
             </label>
             <p class="meta" id="quiz-cert-lock-note" hidden>Bạn đã có GCN phát hành — tên trên chứng nhận đã khóa theo hồ sơ.</p>

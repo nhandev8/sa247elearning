@@ -79,15 +79,28 @@
       // Failsafe: luôn chuyển trang trong ≤1.2s dù profile treo
       const hardTimer = setTimeout(() => go(fallback), 1200);
 
+      const email = String(fd.get("email") || "").trim();
       try {
-        await sa247Auth.ensureClient();
-        const { data, error } = await sa247Auth.signIn(fd.get("email"), fd.get("password"));
+        const sb = await sa247Auth.ensureClient();
+        try {
+          const gate = await sb.rpc("login_gate", { p_email: email });
+          if (!gate.error && gate.data && gate.data.allowed === false) {
+            clearTimeout(hardTimer);
+            const sec = Number(gate.data.retry_after_sec) || 60;
+            msg.textContent = "Đăng nhập sai quá nhiều lần. Thử lại sau khoảng " + Math.ceil(sec / 60) + " phút.";
+            btn.disabled = false;
+            return;
+          }
+        } catch (_) {}
+        const { data, error } = await sa247Auth.signIn(email, fd.get("password"));
         if (error) {
           clearTimeout(hardTimer);
-          msg.textContent = error.message;
+          try { await sb.rpc("login_record", { p_email: email, p_ok: false }); } catch (_) {}
+          msg.textContent = "Email hoặc mật khẩu không đúng.";
           btn.disabled = false;
           return;
         }
+        try { await sb.rpc("login_record", { p_email: email, p_ok: true }); } catch (_) {}
         msg.textContent = "Đang chuyển…";
         const dest = await Promise.race([
           sa247Auth.homeAfterLogin(next, data?.session),

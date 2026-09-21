@@ -100,7 +100,7 @@
           .select("role")
           .eq("id", session.user.id)
           .maybeSingle();
-        const staff = ["admin", "quan_tri_cao_nhat", "quan_tri", "quan_ly_noi_dung", "giang_vien"];
+        const staff = ["admin", "quan_tri_cao_nhat", "quan_tri", "quan_ly_noi_dung", "giang_vien", "kinh_doanh"];
         const go = staff.includes(profile?.role) ? "../admin/" : "../dashboard/";
         setTimeout(() => { location.href = go; }, 800);
       });

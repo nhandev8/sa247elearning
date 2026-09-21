@@ -72,7 +72,7 @@
     return ytApiReady;
   }
 
-  async function markComplete(sb, lessonId, watchedSeconds) {
+  async function markComplete(sb, lessonId, watchedSeconds, playedSeconds) {
     const session = await sa247Auth.getSession();
     if (!session) return { error: { message: "Chưa đăng nhập" } };
     if (String(lessonId).startsWith("static:")) {
@@ -90,7 +90,14 @@
     if (watchedSeconds != null && watchedSeconds >= 0) {
       row.watched_seconds = Math.floor(watchedSeconds);
     }
-    return sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
+    const played = Math.floor(Number(playedSeconds) || 0);
+    if (played > 0) row.played_seconds = played;
+    let res = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
+    if (res.error && /played_seconds/i.test(res.error.message || "")) {
+      delete row.played_seconds;
+      res = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
+    }
+    return res;
   }
 
   async function saveWatch(sb, lessonId, opts) {
@@ -108,11 +115,17 @@
     if (opts?.progressPercent != null) {
       row.progress_percent = Math.min(99, Math.max(0, Math.floor(opts.progressPercent)));
     }
-    const { error } = await sb
+    if (opts?.playedSeconds != null && opts.playedSeconds >= 0) {
+      row.played_seconds = Math.floor(opts.playedSeconds);
+    }
+    let { error } = await sb
       .from("lesson_progress")
       .upsert(row, { onConflict: "user_id,lesson_id" });
+    if (error && /played_seconds/i.test(error.message || "")) {
+      delete row.played_seconds;
+      ({ error } = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" }));
+    }
     if (error && /watched_seconds/i.test(error.message || "")) {
-      // Migration chưa apply — fallback không ghi giây
       delete row.watched_seconds;
       await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
     }
@@ -139,14 +152,27 @@
     (modules || []).forEach((m) => {
       (m.lessons || []).forEach((l) => flat.push(l));
     });
-    const nFree = freePreviewCount(flat.length);
+    const quota = freePreviewCount(flat.length);
+    // Nếu curriculum đã chỉ định tập học thử (đúng trong quota) thì tôn trọng lựa chọn đó
+    // — không ép về N bài đầu. Chỉ fallback vị trí khi chưa có chỉ định hợp lệ.
+    const marked = flat.filter((l) => l.access === "hoc_thu" || l.is_free === true);
+    const useExplicit = marked.length > 0 && marked.length <= Math.max(quota, marked.length);
+    if (useExplicit) {
+      const openSet = new Set(marked);
+      flat.forEach((l) => {
+        const open = openSet.has(l);
+        l.is_free = open;
+        l.access = open ? "hoc_thu" : l.access === "hoc_thu" ? "mo_khoa" : l.access || "mo_khoa";
+      });
+      return marked.length;
+    }
     flat.forEach((l, i) => {
-      const open = i < nFree;
+      const open = i < quota;
       l.is_free = open;
       if (open) l.access = "hoc_thu";
       else if (l.access === "hoc_thu") l.access = "mo_khoa";
     });
-    return nFree;
+    return quota;
   }
 
   function curriculumToModules(cur) {
@@ -166,6 +192,7 @@
         publish_status: l.publish_status || "draft",
         has_video: !!(l.youtube_video_id || l.local_mp4),
         description: l.description || l.youtube_description || "",
+        description_short: l.description_short || "",
       })),
     }));
   }
@@ -272,7 +299,16 @@
         <p class="meta">Tiến độ khóa: <strong>${pctN}%</strong> · ${doneN}/${flat.length} bài</p>
         ${sa247Continue ? sa247Continue.progressBarHtml(pctN) : ""}
       </div>`;
-      if (next) {
+      const modCode = (lesson.moduleCode || "").toString().toUpperCase();
+      const nextSameMod =
+        next &&
+        String(next.moduleCode || "").toUpperCase() === modCode;
+      const chapterQuizHref = modCode
+        ? `../quiz/?course=${encodeURIComponent(course.code)}&module=${encodeURIComponent(modCode)}`
+        : `../kiem-tra/?course=${encodeURIComponent(course.code)}`;
+      const assessHref = `../kiem-tra/?course=${encodeURIComponent(course.code)}`;
+
+      if (next && nextSameMod) {
         meta.innerHTML = `<div class="lesson-next">
           <p class="kicker">Bài tiếp theo</p>
           <h4>${esc(next.moduleCode || next.moduleTitle || "")}${next.lesson_code ? " · " + esc(next.lesson_code) : ""}</h4>
@@ -282,11 +318,23 @@
             <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
           </div>
         </div>`;
+      } else if (next && !nextSameMod) {
+        meta.innerHTML = `<div class="lesson-next">
+          <p class="lead"><strong>Bạn đã học xong chương ${esc(modCode || "")}.</strong></p>
+          <p class="meta">Nên làm bài kiểm tra cuối chương trước khi sang chương tiếp theo.</p>
+          <div class="lesson-next__actions">
+            <a class="btn btn--amber" href="${chapterQuizHref}">Kiểm tra cuối chương ${esc(modCode)}</a>
+            <button type="button" class="btn btn--line" data-next-lesson="${esc(next.id)}">Sang chương tiếp →</button>
+            <a class="btn btn--line" href="${assessHref}">Kiểm tra &amp; kết quả</a>
+          </div>
+        </div>`;
       } else {
         meta.innerHTML = `<div class="lesson-next">
           <p class="lead"><strong>Bạn đã hoàn thành toàn bộ video khóa học.</strong></p>
+          <p class="meta">Đạt hết quiz chương rồi làm đề cuối khóa để đủ điều kiện chứng nhận.</p>
           <div class="lesson-next__actions">
-            <a class="btn btn--amber" href="../quiz/?course=${encodeURIComponent(course.code)}">Làm bài kiểm tra</a>
+            <a class="btn btn--amber" href="${assessHref}">Xem kiểm tra chương &amp; cuối khóa</a>
+            <a class="btn btn--line" href="../quiz/?course=${encodeURIComponent(course.code)}">Thi cuối khóa</a>
             <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
           </div>
         </div>`;
@@ -314,7 +362,7 @@
               enrolled
                 ? `<button type="button" class="btn btn--amber btn--small" data-resume>Tiếp tục học</button>
                    <a class="btn btn--line btn--small" href="../dashboard/">Học tập</a>
-                   <a class="btn btn--line btn--small" href="../quiz/">Quiz · chứng chỉ</a>`
+                   <a class="btn btn--line btn--small" href="../kiem-tra/?course=${encodeURIComponent(course.code)}">Kiểm tra</a>`
                 : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa khóa học</a>
                    <a class="btn btn--line btn--small" href="${esc(loginHref)}">Đăng nhập</a>`
             }
@@ -407,14 +455,31 @@
       // Chỉ seek nếu đã xem > 15s và chưa hoàn thành
       const seek =
         !progressMap[lesson.id]?.completed && startAt > 15 ? startAt : 0;
+      let playedAcc = Math.max(0, Number(progressMap[lesson.id]?.played_seconds) || 0);
+      let playTick = 0;
 
       player.innerHTML = `<div class="trial-video__frame classroom__frame">
           <div id="sa247-yt-player"></div>
         </div>`;
 
       const doneL = progressMap[lesson.id]?.completed;
-      const desc = (lesson.description || "").trim();
-      const descHtml = desc ? `<div class="classroom__desc">${esc(desc)}</div>` : "";
+      const full = (lesson.description || "").trim();
+      const short = (lesson.description_short || "").trim() || full;
+      let descHtml = "";
+      if (short) {
+        const needFold = full && full !== short && full.length > short.length + 40;
+        if (needFold) {
+          descHtml = `<div class="classroom__desc desc-fold">
+            <div class="desc-fold__short">${esc(short)}</div>
+            <details class="desc-fold__more">
+              <summary>Xem đầy đủ</summary>
+              <div class="desc-fold__full">${esc(full)}</div>
+            </details>
+          </div>`;
+        } else {
+          descHtml = `<div class="classroom__desc">${esc(short)}</div>`;
+        }
+      }
       const resumeHint =
         seek > 0
           ? `<p class="meta classroom__resume">Tiếp tục từ ${
@@ -432,6 +497,16 @@
             ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
             : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
         }`;
+
+      window.dispatchEvent(
+        new CustomEvent("sa247:progress", {
+          detail: {
+            courseCode: course.code,
+            lessonCode: lesson.lesson_code || "",
+            started: true,
+          },
+        })
+      );
 
       await loadYtApi();
       if (window.YT && window.YT.Player) {
@@ -451,6 +526,17 @@
                   try {
                     const t = ytPlayer?.getCurrentTime?.();
                     const d = ytPlayer?.getDuration?.();
+                    const state = ytPlayer?.getPlayerState?.();
+                    if (state === YT.PlayerState.PLAYING) {
+                      const now = Date.now();
+                      if (playTick) {
+                        const delta = Math.min(12, Math.max(0, (now - playTick) / 1000));
+                        playedAcc += delta;
+                      }
+                      playTick = now;
+                    } else {
+                      playTick = 0;
+                    }
                     if (typeof t === "number" && t > 0) {
                       const pp =
                         typeof d === "number" && d > 0
@@ -459,6 +545,7 @@
                       saveWatch(sb, lesson.id, {
                         watchedSeconds: t,
                         progressPercent: pp,
+                        playedSeconds: playedAcc,
                       }).catch(() => {});
                     }
                   } catch {
@@ -468,6 +555,11 @@
               }
             },
             onStateChange: (ev) => {
+              if (ev.data === YT.PlayerState.PLAYING) {
+                playTick = Date.now();
+              } else if (ev.data !== YT.PlayerState.BUFFERING) {
+                playTick = 0;
+              }
               if (ev.data === YT.PlayerState.ENDED && enrolled && sb) {
                 // Gợi ý hoàn thành — không auto sang bài
                 const btn = $("[data-complete]", meta);
@@ -500,10 +592,18 @@
           } catch {
             t = 0;
           }
-          const { error } = await markComplete(sb, lesson.id, t);
+          if (playedAcc < 45) {
+            btn.disabled = false;
+            btn.textContent = "Xem thêm một lúc rồi đánh dấu hoàn thành";
+            return;
+          }
+          const { error } = await markComplete(sb, lesson.id, t, playedAcc);
           if (error) {
             btn.disabled = false;
-            btn.textContent = error.message || "Lỗi lưu";
+            const msg = String(error.message || "");
+            btn.textContent = /CHUA_DU_THOI_GIAN_XEM/i.test(msg)
+              ? "Xem thêm một lúc rồi đánh dấu hoàn thành"
+              : msg || "Lỗi lưu";
             return;
           }
           progressMap[lesson.id] = {
@@ -515,7 +615,13 @@
           const b = host.querySelector(`[data-lesson="${CSS.escape(lesson.id)}"]`);
           b?.classList.add("is-done");
           window.dispatchEvent(
-            new CustomEvent("sa247:progress", { detail: { courseCode: course.code } })
+            new CustomEvent("sa247:progress", {
+              detail: {
+                courseCode: course.code,
+                lessonCode: lesson.lesson_code || "",
+                completed: true,
+              },
+            })
           );
           showCompleteScreen(lesson);
         });
@@ -618,14 +724,20 @@
           (cur.modules || []).forEach((m) => {
             (m.lessons || []).forEach((l) => {
               if (l.lesson_code) {
-                byCode[l.lesson_code] = l.description || l.youtube_description || "";
+                byCode[l.lesson_code] = {
+                  description: l.description || l.youtube_description || "",
+                  description_short: l.description_short || "",
+                };
               }
             });
           });
           modules.forEach((m) => {
             (m.lessons || []).forEach((l) => {
-              if (!l.description && byCode[l.lesson_code]) {
-                l.description = byCode[l.lesson_code];
+              const hit = byCode[l.lesson_code];
+              if (!hit) return;
+              if (!l.description && hit.description) l.description = hit.description;
+              if (!l.description_short && hit.description_short) {
+                l.description_short = hit.description_short;
               }
             });
           });
@@ -667,13 +779,13 @@
       const ids = flat.map((l) => l.id).filter((id) => !String(id).startsWith("static:"));
       if (ids.length) {
         let sel =
-          "lesson_id,completed,progress_percent,last_watched_at,watched_seconds";
+          "lesson_id,completed,progress_percent,last_watched_at,watched_seconds,played_seconds";
         let { data: prog, error } = await sb
           .from("lesson_progress")
           .select(sel)
           .eq("user_id", session.user.id)
           .in("lesson_id", ids);
-        if (error && /watched_seconds/i.test(error.message || "")) {
+        if (error && /played_seconds|watched_seconds/i.test(error.message || "")) {
           ({ data: prog } = await sb
             .from("lesson_progress")
             .select("lesson_id,completed,progress_percent,last_watched_at")
