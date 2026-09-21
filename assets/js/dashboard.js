@@ -172,7 +172,7 @@
           </div>
           <p class="profile-nudge__pct">${score}%</p>
           <a class="btn btn--amber btn--small" href="../ho-so/">Hoàn thiện hồ sơ</a>
-        </div>
+          </div>
       </div>`;
   }
 
