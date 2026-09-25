@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NHOI-01 — An toàn nồi hơi và thiết bị áp lực (sắp mở) · SA247</title>
+  <link rel="stylesheet" href="../assets/site.css?v=20260925q2" />
+  <style>
+.waitlist{margin:2rem 0;padding:1.25rem 1.35rem;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12)}
+.waitlist label{display:block;font-size:.9rem;margin:.75rem 0 .35rem;color:#c8c4bc}
+.waitlist input,.waitlist select,.waitlist textarea{
+  width:100%;max-width:100%;box-sizing:border-box;padding:.65rem .75rem;border-radius:8px;
+  border:1px solid rgba(255,255,255,.16);background:#121820;color:#f2eee6;font:inherit
+}
+.waitlist .hint{font-size:.85rem;color:#8a93a3;margin-top:.75rem}
+</style>
+</head>
+<body>
+  <nav class="nav"><div class="wrap nav__inner">
+    <a class="nav__brand" href="../index.html">SA247</a>
+    <a class="nav__link" href="../kien-thuc/">← Kiến thức</a>
+  </div></nav>
+  <main class="app-content" style="max-width:42rem;margin:2rem auto;padding:0 1.25rem 3rem">
+    <p class="kicker">Khóa mới · Đợt 2 · Sắp mở</p>
+    <h1>NHOI-01 — An toàn nồi hơi và thiết bị áp lực</h1>
+    <p class="lead">Chương trình đang được biên soạn từ kho tri thức HSE và sách HSE Digital Transformation. Hiện đã có 3 bài kiến thức miễn phí để bạn đọc trước.</p>
+    <figure style="margin:1.25rem 0;border-radius:12px;overflow:hidden">
+      <img src="../assets/articles/illust-tb-nhoi-01.jpg" alt="An toàn nồi hơi và thiết bị áp lực" style="width:100%;display:block" />
+    </figure>
+    <h2>3 bài kiến thức đi kèm</h2>
+    <ol><li><a href="../kien-thuc/nhoi-01-bai-1.html">Thông số vận hành nồi hơi không được bỏ qua</a></li><li><a href="../kien-thuc/nhoi-01-bai-2.html">Van an toàn: kiểm tra gì, tuyệt đối không làm gì</a></li><li><a href="../kien-thuc/nhoi-01-bai-3.html">Rò hơi và tín hiệu dừng khẩn</a></li></ol>
+    <p><strong>Khi khóa mở:</strong> học trọn khóa dự kiến 99.000đ — video theo mô-đun, kiểm tra, chứng nhận tùy chọn.</p>
+    <p><strong>Trong lúc chờ:</strong> học khóa liên quan đang mở — <em>AL-01</em> Thiết bị áp lực — đang mở.</p>
+    <p>
+      <a class="btn btn--amber" href="../al-01/">AL-01 — học ngay (đang mở)</a>
+      <a class="btn btn--line" href="../kien-thuc/#track-b">Xem tất cả bài Track B</a>
+    </p>
+    
+    <div class="waitlist" id="cho-mo-khoa">
+      <h2>Đăng ký chờ mở khóa</h2>
+      <p>Khóa chưa mở bán. Để lại email — SA247 sẽ báo khi có lịch / ưu đãi sớm (không spam).</p>
+      <form id="waitlist-form" action="#" method="get">
+        <input type="hidden" name="ma" value="NHOI-01" />
+        <label for="wl-email">Email</label>
+        <input id="wl-email" name="email" type="email" required placeholder="ban@congty.com" autocomplete="email" />
+        <label for="wl-role">Bạn đang làm</label>
+        <select id="wl-role" name="role">
+          <option value="hse">Nhân viên / chuyên viên HSE</option>
+          <option value="gs">Giám sát / tổ trưởng</option>
+          <option value="ql">Quản lý</option>
+          <option value="khac">Khác</option>
+        </select>
+        <label for="wl-note">Ghi chú ngắn (tuỳ chọn)</label>
+        <textarea id="wl-note" name="note" rows="2" placeholder="Muốn học phần nào trước?"></textarea>
+        <p style="margin-top:1rem">
+          <button type="submit" class="btn btn--amber">Gửi đăng ký chờ mở</button>
+        </p>
+        <p class="hint">Form mở email tới ysafe247@gmail.com — chưa có máy chủ thu form. Dữ liệu cũng lưu tạm trên trình duyệt của bạn.</p>
+      </form>
+    </div>
+    <script>
+    (function(){
+      var f=document.getElementById('waitlist-form');
+      if(!f) return;
+      f.addEventListener('submit', function(e){
+        e.preventDefault();
+        var email=document.getElementById('wl-email').value.trim();
+        var role=document.getElementById('wl-role').value;
+        var note=document.getElementById('wl-note').value.trim();
+        var ma='NHOI-01';
+        var ten="An toàn nồi hơi và thiết bị áp lực";
+        var payload={ma:ma,ten:ten,email:email,role:role,note:note,ts:new Date().toISOString()};
+        try {
+          var key='sa247_waitlist';
+          var arr=JSON.parse(localStorage.getItem(key)||'[]');
+          arr.push(payload);
+          localStorage.setItem(key, JSON.stringify(arr));
+        } catch (err) {}
+        var sub='SA247 chờ mở khóa '+ma;
+        var body='Mã khóa: '+ma+'\nTên: '+ten+'\nEmail: '+email+'\nVai trò: '+role+'\nGhi chú: '+note;
+        window.location.href='mailto:ysafe247@gmail.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);
+      });
+    })();
+    </script>
+
+    <p>Liên hệ tư vấn: <a href="mailto:ysafe247@gmail.com">ysafe247@gmail.com</a> · 08 77 78 79 88</p>
+  </main>
+</body>
+</html>

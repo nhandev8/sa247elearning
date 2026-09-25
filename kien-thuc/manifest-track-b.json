@@ -1,0 +1,365 @@
+{
+  "language": "vi",
+  "track": "B",
+  "course_count": 17,
+  "article_count": 51,
+  "articles": [
+    {
+      "slug": "wah-01-bai-1.html",
+      "title": "5 nguyên nhân rơi ngã thường gặp trên công trường",
+      "course": "WAH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "wah-01-bai-2.html",
+      "title": "Checklist dây an toàn và điểm neo trước ca",
+      "course": "WAH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "wah-01-bai-3.html",
+      "title": "Giàn giáo đạt và không đạt — điểm giám sát phải nhìn",
+      "course": "WAH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "xnh-01-bai-1.html",
+      "title": "7 điểm kiểm tra xe nâng trước ca",
+      "course": "XNH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "xnh-01-bai-2.html",
+      "title": "Giao cắt người–xe nâng: vì sao hay xảy ra",
+      "course": "XNH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "xnh-01-bai-3.html",
+      "title": "Chất tải / tầm nhìn / tốc độ trong nhà kho",
+      "course": "XNH-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "lto-01-bai-1.html",
+      "title": "LOTO là gì và vì sao “cắt điện” chưa đủ",
+      "course": "LTO-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "lto-01-bai-2.html",
+      "title": "Quy trình cô lập năng lượng 6 bước",
+      "course": "LTO-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "lto-01-bai-3.html",
+      "title": "Sai lầm LOTO khi làm việc nhóm",
+      "course": "LTO-01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "ktn-n01-bai-1.html",
+      "title": "Phân loại thiết bị nâng và phụ kiện — bản đồ nhanh",
+      "course": "KTN-N01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "ktn-n01-bai-2.html",
+      "title": "Sling và shackle: 8 lỗi treo tải",
+      "course": "KTN-N01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "ktn-n01-bai-3.html",
+      "title": "Near-miss nâng tải: chuỗi sai lệch nhỏ",
+      "course": "KTN-N01",
+      "dot": 1,
+      "status": "ready"
+    },
+    {
+      "slug": "xnn-01-bai-1.html",
+      "title": "MEWP khác xe nâng hàng chỗ nào về rủi ro",
+      "course": "XNN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "xnn-01-bai-2.html",
+      "title": "Checklist trước khi nâng người",
+      "course": "XNN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "xnn-01-bai-3.html",
+      "title": "Cứu nạn trên cao khi MEWP sự cố",
+      "course": "XNN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ctr-01-bai-1.html",
+      "title": "Kiểm tra hàng ngày cầu trục / palăng",
+      "course": "CTR-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ctr-01-bai-2.html",
+      "title": "Tín hiệu và vùng nguy hiểm dưới cầu trục",
+      "course": "CTR-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ctr-01-bai-3.html",
+      "title": "Lỗi bảo trì khiến cầu trục mất kiểm soát",
+      "course": "CTR-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "cse-01-bai-1.html",
+      "title": "Nhận diện không gian hạn chế — đừng gọi nhầm",
+      "course": "CSE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "cse-01-bai-2.html",
+      "title": "Kiểm tra khí và giám sát người vào",
+      "course": "CSE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "cse-01-bai-3.html",
+      "title": "Cứu nạn CSE: chuẩn bị trước khi vào",
+      "course": "CSE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ele-01-bai-1.html",
+      "title": "5 nguy cơ điện hay gặp trong nhà máy",
+      "course": "ELE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ele-01-bai-2.html",
+      "title": "Checklist tủ điện / panel trước khi mở",
+      "course": "ELE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ele-01-bai-3.html",
+      "title": "Sơ cứu điện giật và cách không thành nạn nhân thứ hai",
+      "course": "ELE-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "nhoi-01-bai-1.html",
+      "title": "Thông số vận hành nồi hơi không được bỏ qua",
+      "course": "NHOI-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "nhoi-01-bai-2.html",
+      "title": "Van an toàn: kiểm tra gì, tuyệt đối không làm gì",
+      "course": "NHOI-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "nhoi-01-bai-3.html",
+      "title": "Rò hơi và tín hiệu dừng khẩn",
+      "course": "NHOI-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "han-01-bai-1.html",
+      "title": "Công việc nóng: 6 điều kiện trước khi mồi lửa",
+      "course": "HAN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "han-01-bai-2.html",
+      "title": "Cháy lan sau hàn — vì sao xảy ra sau giờ",
+      "course": "HAN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "han-01-bai-3.html",
+      "title": "Khí hàn / chai khí cạnh khu vực nóng",
+      "course": "HAN-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "chm-01-bai-1.html",
+      "title": "Đọc nhãn GHS / phiếu an toàn trong 5 phút",
+      "course": "CHM-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "chm-01-bai-2.html",
+      "title": "Lưu trữ hóa chất tương thích",
+      "course": "CHM-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "chm-01-bai-3.html",
+      "title": "Ứng phó tràn đổ quy mô nhỏ",
+      "course": "CHM-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ggt-01-bai-1.html",
+      "title": "Tag giàn giáo: xanh / đỏ nghĩa là gì trên thực địa",
+      "course": "GGT-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ggt-01-bai-2.html",
+      "title": "Checklist lắp / tháo giàn giáo",
+      "course": "GGT-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ggt-01-bai-3.html",
+      "title": "Sau mưa bão kiểm tra lại những gì",
+      "course": "GGT-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ptw-01-bai-1.html",
+      "title": "Các loại giấy phép và khi nào bắt buộc",
+      "course": "PTW-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ptw-01-bai-2.html",
+      "title": "Quy trình cấp – mở – đóng giấy phép",
+      "course": "PTW-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "ptw-01-bai-3.html",
+      "title": "Giấy phép chồng chéo giữa hai tổ",
+      "course": "PTW-01",
+      "dot": 2,
+      "status": "ready"
+    },
+    {
+      "slug": "cok-01-bai-1.html",
+      "title": "Che chắn máy (machine guarding): lỗ hổng hay gặp",
+      "course": "COK-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "cok-01-bai-2.html",
+      "title": "Checklist trước khi vận hành máy",
+      "course": "COK-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "cok-01-bai-3.html",
+      "title": "Giao cắt người–máy trên dây chuyền",
+      "course": "COK-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "vsci-01-bai-1.html",
+      "title": "Vệ sinh lao động không chỉ là đo tiếng ồn định kỳ",
+      "course": "VSCI-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "vsci-01-bai-2.html",
+      "title": "Checklist quan trắc và kiểm soát phơi nhiễm",
+      "course": "VSCI-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "vsci-01-bai-3.html",
+      "title": "Bụi / ồn / nhiệt — ưu tiên kiểm soát thế nào",
+      "course": "VSCI-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "snu-01-bai-1.html",
+      "title": "PPE nổi và quy tắc làm việc gần nước",
+      "course": "SNU-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "snu-01-bai-2.html",
+      "title": "Ngã xuống nước: chuỗi cứu nạn tối thiểu",
+      "course": "SNU-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "snu-01-bai-3.html",
+      "title": "Làm việc trên sà lan / cầu tạm",
+      "course": "SNU-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "pcc-01-bai-1.html",
+      "title": "Phân loại đám cháy và chọn bình chữa cháy đúng",
+      "course": "PCC-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "pcc-01-bai-2.html",
+      "title": "Lối thoát nạn bị chặn — lỗi quản lý không phải lỗi may",
+      "course": "PCC-01",
+      "dot": 3,
+      "status": "ready"
+    },
+    {
+      "slug": "pcc-01-bai-3.html",
+      "title": "Diễn tập PCCC có hiệu lực khác diễn tập cho có",
+      "course": "PCC-01",
+      "dot": 3,
+      "status": "ready"
+    }
+  ]
+}

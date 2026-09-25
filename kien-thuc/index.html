@@ -4,12 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kiến thức HSE miễn phí · SA247</title>
-  <meta name="description" content="27 bài kiến thức chất lượng — 3 bài cho mỗi khóa SA247 Academy. Đọc miễn phí, cuối bài vào khóa 99K." />
+  <meta name="description" content="78 bài kiến thức HSE tiếng Việt — Track A (9 khóa đang mở) + Track B (17 khóa sắp mở). Lọc theo đợt, nhà máy, công trường." />
   <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/kien-thuc/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=20260925q1" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260925q2" />
+  <style>
+.kt-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.25rem 0 1.75rem;align-items:center}
+.kt-filters .lab{font-size:.85rem;color:#8a93a3;margin-right:.35rem}
+.kt-filters button{
+  font:inherit;font-size:.88rem;padding:.4rem .85rem;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8e4dc
+}
+.kt-filters button.is-on{background:rgba(196,92,38,.28);border-color:rgba(196,92,38,.65);color:#fff}
+.kt-filters button:focus-visible{outline:2px solid #c45c26;outline-offset:2px}
+.program-card.is-hidden,.course-block.is-hidden{display:none!important}
+.kt-count{font-size:.9rem;color:#8a93a3;margin:.5rem 0 0}
+</style>
 </head>
 <body>
   <nav class="nav" id="nav">
@@ -29,636 +41,622 @@
     <div class="wrap hero__content">
       <p class="hero__brand">SA247 · KIẾN THỨC MIỄN PHÍ</p>
       <h1>Đọc trước. Học bài bản sau.</h1>
-      <p class="hero__lead">Mỗi khóa có 3 bài viết kiến thức đầy đủ — tình huống, checklist, sai lầm thường gặp. Cuối mỗi bài dẫn thẳng vào khóa học 99.000đ.</p>
+      <p class="hero__lead">27 bài Track A (khóa đang mở) + 51 bài Track B (khóa sắp mở). Lọc theo chương trình, đợt hoặc ngữ cảnh nhà máy / công trường.</p>
     </div>
   </header>
   <main>
     <section class="modules" id="bai-viet">
       <div class="wrap">
-        <p class="kicker">9 khóa đang mở · 27 bài</p>
+        <p class="kicker">78 bài · tiếng Việt · Free</p>
         <h2 class="title">Chọn bài theo đúng công việc bạn đang làm</h2>
-        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ATNM-01 · Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy</h3>
+
+        <div class="kt-filters" id="kt-filters" role="toolbar" aria-label="Lọc bài kiến thức">
+          <span class="lab">Lọc:</span>
+          <button type="button" data-filter="track" data-value="all" class="is-on">Tất cả</button>
+          <button type="button" data-filter="track" data-value="a">Track A · đang mở</button>
+          <button type="button" data-filter="track" data-value="b">Track B · sắp mở</button>
+          <button type="button" data-filter="dot" data-value="1">Đợt 1</button>
+          <button type="button" data-filter="dot" data-value="2">Đợt 2</button>
+          <button type="button" data-filter="dot" data-value="3">Đợt 3</button>
+          <button type="button" data-filter="context" data-value="nha-may">Nhà máy</button>
+          <button type="button" data-filter="context" data-value="cong-truong">Công trường</button>
+          <button type="button" data-filter="context" data-value="he-thong">Hệ thống</button>
+          <button type="button" data-filter="context" data-value="hon-hop">Hỗn hợp</button>
+        </div>
+        <p class="kt-count" id="kt-count"></p>
+
+        <section id="track-a">
+          <p class="kicker">Track A · 9 khóa đang mở</p>
+        <div class="course-block" data-track="a" data-ma="ATNM-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ATNM-01 · Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-01" data-status="draft">
             <span class="code">ATNM-01</span>
             <h3>5 lỗi phổ biến của nhân viên ATVSLĐ mới vào nhà máy</h3>
-            <p class="meta">Người mới · Nhà máy</p>
-            <p>Muốn sửa hết tháng đầu, đi hiện trường không checklist, báo cáo thiếu bằng chứng — năm lỗi hay gặp.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="5-loi-moi-vao-nghe.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-01" data-status="draft">
             <span class="code">ATNM-01</span>
             <h3>Checklist đầu ca nhà máy: 12 mục HSE nên nhìn trước khi dây chuyền chạy</h3>
-            <p class="meta">Checklist · Nhà máy</p>
-            <p>Không cần dài — cần đúng điểm dừng việc nếu chưa đạt.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atnm01-checklist-dau-ca.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-01" data-status="draft">
             <span class="code">ATNM-01</span>
             <h3>Kế hoạch 30–60–90 ngày cho HSE mới vào nhà máy</h3>
-            <p class="meta">Lộ trình · Người mới</p>
-            <p>Biết tuần này làm gì — không học lan man.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atnm01-30-60-90.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ATNM-02 · Quản lý ATVSLĐ nhà máy</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="ATNM-02" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ATNM-02 · Quản lý ATVSLĐ nhà máy</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-02" data-status="draft">
             <span class="code">ATNM-02</span>
             <h3>Bạn đang quản lý hệ thống HSE hay chỉ đang “cháy việc” mỗi ngày?</h3>
-            <p class="meta">Quản lý · Nhà máy</p>
-            <p>Nếu mọi việc vẫn dồn vào bạn — vấn đề có thể nằm ở cách tổ chức.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atnm02-he-thong-hay-chay-viec.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-02" data-status="draft">
             <span class="code">ATNM-02</span>
             <h3>KPI HSE nhà máy: đừng chỉ đếm ngày không tai nạn</h3>
-            <p class="meta">KPI · Chỉ số dẫn dắt</p>
-            <p>Số “không tai nạn” dễ đẹp — nhưng thường đến muộn.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atnm02-kpi-dan-dat.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="ATNM-02" data-status="draft">
             <span class="code">ATNM-02</span>
             <h3>Họp HSE 30 phút ra quyết định — không chỉ đọc biên bản</h3>
-            <p class="meta">Điều hành · Nhà máy</p>
-            <p>Agenda ngắn: rủi ro – hành động – quyết định.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atnm02-hop-hse-ra-quyet-dinh.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ATXD-01 · Sống sót 6 tháng đầu nghề ATVSLĐ công trường</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="ATXD-01" data-context="cong-truong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ATXD-01 · Sống sót 6 tháng đầu nghề ATVSLĐ công trường</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-01" data-status="draft">
             <span class="code">ATXD-01</span>
             <h3>5 điểm kiểm tra giàn giáo trước khi cho người lên</h3>
-            <p class="meta">Công trường · Checklist</p>
-            <p>Không phải “nhìn qua là được” — năm điểm dừng việc nếu không đạt.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="checklist-gian-giao.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-01" data-status="draft">
             <span class="code">ATXD-01</span>
             <h3>Ngày đầu trên công trường: 8 việc HSE mới nên làm trước khi “đi tuần”</h3>
-            <p class="meta">Người mới · Công trường</p>
-            <p>Hiểu mặt bằng và lệnh dừng việc trước khi đi nhắc nhở.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atxd01-ngay-dau-cong-truong.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-01" data-status="draft">
             <span class="code">ATXD-01</span>
             <h3>Brief nhà thầu 10 phút trước khi vào công trường</h3>
-            <p class="meta">Nhà thầu · Công trường</p>
-            <p>Không brief = chấp nhận rủi ro người lạ trên mặt bằng của bạn.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atxd01-nha-thau-brief.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ATXD-02 · Quản lý ATVSLĐ công trường xây dựng</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="ATXD-02" data-context="cong-truong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ATXD-02 · Quản lý ATVSLĐ công trường</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-02" data-status="draft">
             <span class="code">ATXD-02</span>
             <h3>Kiểm soát HSE theo giai đoạn thi công — vì sao một checklist không đủ cho cả dự án</h3>
-            <p class="meta">ATXD-02 · Kiểm soát theo giai đoạn thi công</p>
-            <p>Một biểu mẫu duyệt lúc khởi công không thể theo kịp một công trường đổi mặt mỗi tuần.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atxd02-kiem-soat-theo-giai-doan.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-02" data-status="draft">
             <span class="code">ATXD-02</span>
             <h3>Biện pháp thi công (BPTC) và HSE — lồng an toàn vào bản vẽ, không viết hồ sơ riêng</h3>
-            <p class="meta">ATXD-02 · BPTC và HSE</p>
-            <p>Một BPTC không có phần an toàn ở từng bước không phải là bản vẽ đủ, mà là bản vẽ thiếu.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atxd02-bptc-va-hse.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="cong-truong" data-ma="ATXD-02" data-status="draft">
             <span class="code">ATXD-02</span>
             <h3>Quản lý ATVSLĐ khi công trường có nhiều tầng nhà thầu phụ</h3>
-            <p class="meta">ATXD-02 · Nhiều tầng nhà thầu phụ</p>
-            <p>Người làm việc rủi ro nhất trên công trường thường ở tầng thầu phụ xa nhất khỏi bàn ký hợp đồng.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="atxd02-nha-thau-nhieu-tang.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">KTN-01 · Kỹ thuật an toàn thiết bị nâng</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="KTN-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">KTN-01 · An toàn thiết bị nâng</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="KTN-01" data-status="draft">
             <span class="code">KTN-01</span>
             <h3>10 lỗi kiểm tra thiết bị nâng trước khi vận hành — vì sao chúng lặp lại mãi</h3>
-            <p class="meta">KTN-01 · 10 lỗi kiểm tra trước vận hành</p>
-            <p>Một tờ kiểm tra đã ký đầy đủ không có nghĩa là thiết bị đã thực sự được kiểm tra.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="ktn01-10-loi-kiem-tra.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="KTN-01" data-status="draft">
             <span class="code">KTN-01</span>
             <h3>7 điểm phải kiểm tra trước khi nâng hàng — bỏ một điểm là đủ để xảy ra sự cố</h3>
-            <p class="meta">KTN-01 · 7 điểm trước khi nâng</p>
-            <p>Thiết bị tốt và người vận hành giỏi vẫn không đủ nếu bỏ qua một trong bảy điểm này trước khi nâng.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="ktn01-7-diem-truoc-nang.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="KTN-01" data-status="draft">
             <span class="code">KTN-01</span>
             <h3>Không đứng dưới tải — nguyên tắc cơ bản nhất, cũng là nguyên tắc bị vi phạm nhiều nhất</h3>
-            <p class="meta">KTN-01 · Không đứng dưới tải</p>
-            <p>Quy tắc mọi người đều biết vẫn là quy tắc bị phá thường xuyên nhất — vì lý do không nằm ở nhận thức.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="ktn01-khong-dung-duoi-tai.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">CVNH-01 · Kỹ thuật an toàn các công việc nguy hiểm</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="CVNH-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CVNH-01 · Công việc nguy hiểm</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="CVNH-01" data-status="draft">
             <span class="code">CVNH-01</span>
             <h3>Tình huống permit to work: khi giấy phép làm việc an toàn chỉ là thủ tục ký cho xong</h3>
-            <p class="meta">CVNH-01 · Tình huống permit to work</p>
-            <p>Permit được ký đúng quy trình không có nghĩa là điều kiện làm việc lúc ký vẫn còn đúng lúc thực hiện.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="tinh-huong-permit.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="CVNH-01" data-status="draft">
             <span class="code">CVNH-01</span>
             <h3>LOTO chưa đủ — vì sao khóa và treo thẻ cách ly nguồn năng lượng vẫn để lọt sự cố</h3>
-            <p class="meta">CVNH-01 · LOTO chưa đủ</p>
-            <p>Khóa đã treo trên bảng điện không có nghĩa là mọi nguồn năng lượng nguy hiểm đã được cách ly.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="cvnh01-loto-chua-du.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="hon-hop" data-ma="CVNH-01" data-status="draft">
             <span class="code">CVNH-01</span>
             <h3>Không gian hạn chế (CSE) và đo khí — vì sao một lần đo đầu ca không đủ</h3>
-            <p class="meta">CVNH-01 · CSE và đo khí</p>
-            <p>Một lần đo khí đạt yêu cầu đầu ca không đảm bảo không khí bên trong vẫn an toàn hai giờ sau đó.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="cvnh01-cse-gas-test.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">AL-01 · Kỹ thuật an toàn thiết bị áp lực</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="AL-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">AL-01 · An toàn thiết bị áp lực</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="AL-01" data-status="draft">
             <span class="code">AL-01</span>
             <h3>5 dấu hiệu thiết bị áp lực / nồi hơi cần dừng và báo cáo ngay</h3>
-            <p class="meta">6 phút đọc · AL-01</p>
-            <p>Thiết bị áp lực hiếm khi báo trước bằng tiếng ồn. Nhận đúng 5 dấu hiệu sớm để dừng và báo cáo trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="al01-noi-hoi-dau-hieu.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="AL-01" data-status="draft">
             <span class="code">AL-01</span>
             <h3>Có tem kiểm định rồi — vẫn phải vận hành đúng cách</h3>
-            <p class="meta">7 phút đọc · AL-01</p>
-            <p>Tem kiểm định không phải giấy miễn trừ. Ba lớp kiểm soát pháp lý, vận hành, bảo trì phải cùng chạy để thiết bị áp lực an toàn mỗi ngày.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="al01-kiem-dinh-va-van-hanh.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="nha-may" data-ma="AL-01" data-status="draft">
             <span class="code">AL-01</span>
             <h3>Chai chứa khí: 7 quy tắc lưu trữ và di chuyển hay bị bỏ qua</h3>
-            <p class="meta">6 phút đọc · AL-01</p>
-            <p>Chai khí là bình áp lực di động. Bảy quy tắc lưu trữ và di chuyển giúp bạn tránh biến một vật dụng quen thuộc thành nguồn nguy hiểm.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="al01-chai-khi-van-chuyen.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ISO45001 · ISO 45001 hệ thống quản lý OHS</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="ISO45001" data-context="he-thong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ISO45001 · ISO 45001 OHS</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO45001" data-status="draft">
             <span class="code">ISO45001</span>
             <h3>ISO 45001: bạn đang xây hệ thống hay chỉ đang hoàn thành hồ sơ?</h3>
-            <p class="meta">7 phút đọc · ISO45001</p>
-            <p>Nhiều tổ chức có sổ tay dày nhưng hiện trường vẫn thiếu kiểm soát. ISO 45001 chỉ có giá trị khi PDCA đi vào vận hành, không chỉ nằm trên giấy.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso45001-ho-so-hay-he-thong.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO45001" data-status="draft">
             <span class="code">ISO45001</span>
             <h3>Điều khoản rủi ro & cơ hội: làm sao để không biến thành bảng Excel chết</h3>
-            <p class="meta">7 phút đọc · ISO45001</p>
-            <p>Sổ đăng ký rủi ro chỉ hữu ích khi mỗi dòng có chủ sở hữu, kiểm soát rõ và ngày xem xét lại — không phải một bảng Excel nằm im giữa hai kỳ audit.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso45001-rui-ro-va-co-hoi.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO45001" data-status="draft">
             <span class="code">ISO45001</span>
             <h3>Sự tham gia của người lao động trong ISO 45001 — làm thật chứ không lấy chữ ký</h3>
-            <p class="meta">6 phút đọc · ISO45001</p>
-            <p>An toàn tâm lý và kênh báo cáo dễ dùng quyết định hệ thống có nhìn thấy rủi ro sớm hay không — sự tham gia không nằm ở chữ ký trong biên bản.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso45001-tham-gia-nld.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.2rem;margin-top:2.25rem">ISO9001 · ISO 9001 hệ thống quản lý QMS</h3>
+        </div></div>        <div class="course-block" data-track="a" data-ma="ISO9001" data-context="he-thong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ISO9001 · ISO 9001 QMS</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO9001" data-status="draft">
             <span class="code">ISO9001</span>
             <h3>ISO 9001 tạo giá trị thật ở đâu — không chỉ “đủ hồ sơ giao hàng”</h3>
-            <p class="meta">7 phút đọc · ISO9001</p>
-            <p>Nếu QMS chỉ để audit, tổ chức đang trả chi phí giấy tờ. Nếu QMS gắn với quy trình tạo sản phẩm và dịch vụ, nó thực sự tiết kiệm tiền.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso9001-qms-tao-gia-tri.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO9001" data-status="draft">
             <span class="code">ISO9001</span>
             <h3>Xử lý không phù hợp: từ “ghi nhận” đến hết tái diễn</h3>
-            <p class="meta">7 phút đọc · ISO9001</p>
-            <p>Không phù hợp là cơ hội học. Nếu chỉ sửa triệu chứng, cùng một NC sẽ quay lại trước kỳ audit sau — vòng đời xử lý đúng giúp chặn tái diễn.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso9001-khong-phu-hop.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="a" data-dot="" data-context="he-thong" data-ma="ISO9001" data-status="draft">
             <span class="code">ISO9001</span>
             <h3>Tư duy dựa trên rủi ro trong ISO 9001: áp dụng vào họp giao ban thế nào?</h3>
-            <p class="meta">6 phút đọc · ISO9001</p>
-            <p>Mỗi thay đổi — nhà cung cấp, ca làm, thiết bị, tiến độ — là lúc nên hỏi: rủi ro chất lượng nào đang tăng? Ba câu hỏi đưa risk-based thinking vào giao ban.</p>
+            <p class="meta">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+            <p>Bài kiến thức miễn phí — cuối bài vào khóa đang mở.</p>
             <a class="go" href="iso9001-rui-ro-theo-tu-duy.html">Đọc bài →</a>
           </article>
-        </div>
-      </div>
-    </section>
-    
-    <section class="modules" id="track-b">
-      <div class="wrap">
-        <p class="kicker">Chương trình B · 17 khóa mới</p>
-        <h2 class="title">51 bài kiến thức cho khóa sắp mở</h2>
-        <p class="lead">Toàn bộ tiếng Việt. Mỗi khóa 3 bài Free — cuối bài dẫn tới trang khóa sắp mở và khóa liên quan đang bán.</p>
+        </div></div>
+        </section>
+        <section class="modules" id="track-b">
       <p class="kicker" style="margin-top:2.5rem">Track B · Đợt 1 · Khóa mới từ kho HSE</p>
+        <div class="course-block" data-track="b" data-dot="1" data-ma="WAH-01" data-context="cong-truong">
         <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">WAH-01 · An toàn làm việc trên cao</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="1" data-context="cong-truong" data-ma="WAH-01" data-status="draft">
             <span class="code">WAH-01</span>
             <h3>5 nguyên nhân rơi ngã thường gặp trên công trường</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="wah-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="cong-truong" data-ma="WAH-01" data-status="draft">
             <span class="code">WAH-01</span>
             <h3>Checklist dây an toàn và điểm neo trước ca</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="wah-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="cong-truong" data-ma="WAH-01" data-status="draft">
             <span class="code">WAH-01</span>
             <h3>Giàn giáo đạt và không đạt — điểm giám sát phải nhìn</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="wah-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">XNH-01 · An toàn xe nâng hàng (forklift)</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="1" data-ma="XNH-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">XNH-01 · An toàn xe nâng hàng (forklift)</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="1" data-context="nha-may" data-ma="XNH-01" data-status="draft">
             <span class="code">XNH-01</span>
             <h3>7 điểm kiểm tra xe nâng trước ca</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnh-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="nha-may" data-ma="XNH-01" data-status="draft">
             <span class="code">XNH-01</span>
             <h3>Giao cắt người–xe nâng: vì sao hay xảy ra</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnh-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="nha-may" data-ma="XNH-01" data-status="draft">
             <span class="code">XNH-01</span>
             <h3>Chất tải / tầm nhìn / tốc độ trong nhà kho</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnh-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">LTO-01 · LOTO / cô lập năng lượng</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="1" data-ma="LTO-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">LTO-01 · LOTO / cô lập năng lượng</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="LTO-01" data-status="draft">
             <span class="code">LTO-01</span>
             <h3>LOTO là gì và vì sao “cắt điện” chưa đủ</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="lto-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="LTO-01" data-status="draft">
             <span class="code">LTO-01</span>
             <h3>Quy trình cô lập năng lượng 6 bước</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="lto-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="LTO-01" data-status="draft">
             <span class="code">LTO-01</span>
             <h3>Sai lầm LOTO khi làm việc nhóm</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="lto-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">KTN-N01 · An toàn thiết bị nâng — mở rộng từ kho HSE</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="1" data-ma="KTN-N01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">KTN-N01 · An toàn thiết bị nâng — mở rộng từ kho HSE</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="KTN-N01" data-status="draft">
             <span class="code">KTN-N01</span>
             <h3>Phân loại thiết bị nâng và phụ kiện — bản đồ nhanh</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ktn-n01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="KTN-N01" data-status="draft">
             <span class="code">KTN-N01</span>
             <h3>Sling và shackle: 8 lỗi treo tải</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ktn-n01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="1" data-context="hon-hop" data-ma="KTN-N01" data-status="draft">
             <span class="code">KTN-N01</span>
             <h3>Near-miss nâng tải: chuỗi sai lệch nhỏ</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ktn-n01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>      <p class="kicker" style="margin-top:2.5rem">Track B · Đợt 2 · Khóa mới từ kho HSE</p>
+        </div></div>      <p class="kicker" style="margin-top:2.5rem">Track B · Đợt 2 · Khóa mới từ kho HSE</p>
+        <div class="course-block" data-track="b" data-dot="2" data-ma="XNN-01" data-context="cong-truong">
         <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">XNN-01 · An toàn xe nâng người (MEWP)</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="XNN-01" data-status="draft">
             <span class="code">XNN-01</span>
             <h3>MEWP khác xe nâng hàng chỗ nào về rủi ro</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnn-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="XNN-01" data-status="draft">
             <span class="code">XNN-01</span>
             <h3>Checklist trước khi nâng người</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnn-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="XNN-01" data-status="draft">
             <span class="code">XNN-01</span>
             <h3>Cứu nạn trên cao khi MEWP sự cố</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="xnn-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CTR-01 · An toàn palăng, cầu trục</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="CTR-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CTR-01 · An toàn palăng, cầu trục</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CTR-01" data-status="draft">
             <span class="code">CTR-01</span>
             <h3>Kiểm tra hàng ngày cầu trục / palăng</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ctr-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CTR-01" data-status="draft">
             <span class="code">CTR-01</span>
             <h3>Tín hiệu và vùng nguy hiểm dưới cầu trục</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ctr-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CTR-01" data-status="draft">
             <span class="code">CTR-01</span>
             <h3>Lỗi bảo trì khiến cầu trục mất kiểm soát</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ctr-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CSE-01 · An toàn không gian hạn chế</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="CSE-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CSE-01 · An toàn không gian hạn chế</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="CSE-01" data-status="draft">
             <span class="code">CSE-01</span>
             <h3>Nhận diện không gian hạn chế — đừng gọi nhầm</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cse-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="CSE-01" data-status="draft">
             <span class="code">CSE-01</span>
             <h3>Kiểm tra khí và giám sát người vào</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cse-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="CSE-01" data-status="draft">
             <span class="code">CSE-01</span>
             <h3>Cứu nạn CSE: chuẩn bị trước khi vào</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cse-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ELE-01 · An toàn điện</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="ELE-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">ELE-01 · An toàn điện</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="ELE-01" data-status="draft">
             <span class="code">ELE-01</span>
             <h3>5 nguy cơ điện hay gặp trong nhà máy</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ele-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="ELE-01" data-status="draft">
             <span class="code">ELE-01</span>
             <h3>Checklist tủ điện / panel trước khi mở</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ele-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="ELE-01" data-status="draft">
             <span class="code">ELE-01</span>
             <h3>Sơ cứu điện giật và cách không thành nạn nhân thứ hai</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ele-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">NHOI-01 · An toàn nồi hơi và thiết bị áp lực</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="NHOI-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">NHOI-01 · An toàn nồi hơi và thiết bị áp lực</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="NHOI-01" data-status="draft">
             <span class="code">NHOI-01</span>
             <h3>Thông số vận hành nồi hơi không được bỏ qua</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="nhoi-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="NHOI-01" data-status="draft">
             <span class="code">NHOI-01</span>
             <h3>Van an toàn: kiểm tra gì, tuyệt đối không làm gì</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="nhoi-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="NHOI-01" data-status="draft">
             <span class="code">NHOI-01</span>
             <h3>Rò hơi và tín hiệu dừng khẩn</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="nhoi-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">HAN-01 · An toàn hàn cắt</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="HAN-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">HAN-01 · An toàn hàn cắt</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="HAN-01" data-status="draft">
             <span class="code">HAN-01</span>
             <h3>Công việc nóng: 6 điều kiện trước khi mồi lửa</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="han-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="HAN-01" data-status="draft">
             <span class="code">HAN-01</span>
             <h3>Cháy lan sau hàn — vì sao xảy ra sau giờ</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="han-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="HAN-01" data-status="draft">
             <span class="code">HAN-01</span>
             <h3>Khí hàn / chai khí cạnh khu vực nóng</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="han-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CHM-01 · An toàn hóa chất</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="CHM-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">CHM-01 · An toàn hóa chất</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CHM-01" data-status="draft">
             <span class="code">CHM-01</span>
             <h3>Đọc nhãn GHS / phiếu an toàn trong 5 phút</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="chm-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CHM-01" data-status="draft">
             <span class="code">CHM-01</span>
             <h3>Lưu trữ hóa chất tương thích</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="chm-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="nha-may" data-ma="CHM-01" data-status="draft">
             <span class="code">CHM-01</span>
             <h3>Ứng phó tràn đổ quy mô nhỏ</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="chm-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">GGT-01 · An toàn giàn giáo (chuyên sâu)</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="GGT-01" data-context="cong-truong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">GGT-01 · An toàn giàn giáo (chuyên sâu)</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="GGT-01" data-status="draft">
             <span class="code">GGT-01</span>
             <h3>Tag giàn giáo: xanh / đỏ nghĩa là gì trên thực địa</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ggt-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="GGT-01" data-status="draft">
             <span class="code">GGT-01</span>
             <h3>Checklist lắp / tháo giàn giáo</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ggt-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="cong-truong" data-ma="GGT-01" data-status="draft">
             <span class="code">GGT-01</span>
             <h3>Sau mưa bão kiểm tra lại những gì</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ggt-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">PTW-01 · Giấy phép công việc (Permit to Work)</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="2" data-ma="PTW-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">PTW-01 · Giấy phép công việc (Permit to Work)</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="PTW-01" data-status="draft">
             <span class="code">PTW-01</span>
             <h3>Các loại giấy phép và khi nào bắt buộc</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ptw-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="PTW-01" data-status="draft">
             <span class="code">PTW-01</span>
             <h3>Quy trình cấp – mở – đóng giấy phép</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ptw-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="2" data-context="hon-hop" data-ma="PTW-01" data-status="draft">
             <span class="code">PTW-01</span>
             <h3>Giấy phép chồng chéo giữa hai tổ</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="ptw-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>      <p class="kicker" style="margin-top:2.5rem">Track B · Đợt 3 · Khóa mới từ kho HSE</p>
+        </div></div>      <p class="kicker" style="margin-top:2.5rem">Track B · Đợt 3 · Khóa mới từ kho HSE</p>
+        <div class="course-block" data-track="b" data-dot="3" data-ma="COK-01" data-context="nha-may">
         <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">COK-01 · An toàn cơ khí</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="COK-01" data-status="draft">
             <span class="code">COK-01</span>
             <h3>Che chắn máy (machine guarding): lỗ hổng hay gặp</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cok-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="COK-01" data-status="draft">
             <span class="code">COK-01</span>
             <h3>Checklist trước khi vận hành máy</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cok-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="COK-01" data-status="draft">
             <span class="code">COK-01</span>
             <h3>Giao cắt người–máy trên dây chuyền</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="cok-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">VSCI-01 · An toàn vệ sinh công nghiệp</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="3" data-ma="VSCI-01" data-context="nha-may">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">VSCI-01 · An toàn vệ sinh công nghiệp</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="VSCI-01" data-status="draft">
             <span class="code">VSCI-01</span>
             <h3>Vệ sinh lao động không chỉ là đo tiếng ồn định kỳ</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="vsci-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="VSCI-01" data-status="draft">
             <span class="code">VSCI-01</span>
             <h3>Checklist quan trắc và kiểm soát phơi nhiễm</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="vsci-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="nha-may" data-ma="VSCI-01" data-status="draft">
             <span class="code">VSCI-01</span>
             <h3>Bụi / ồn / nhiệt — ưu tiên kiểm soát thế nào</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="vsci-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">SNU-01 · An toàn sông nước / mặt nước</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="3" data-ma="SNU-01" data-context="cong-truong">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">SNU-01 · An toàn sông nước / mặt nước</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="3" data-context="cong-truong" data-ma="SNU-01" data-status="draft">
             <span class="code">SNU-01</span>
             <h3>PPE nổi và quy tắc làm việc gần nước</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="snu-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="cong-truong" data-ma="SNU-01" data-status="draft">
             <span class="code">SNU-01</span>
             <h3>Ngã xuống nước: chuỗi cứu nạn tối thiểu</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="snu-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="cong-truong" data-ma="SNU-01" data-status="draft">
             <span class="code">SNU-01</span>
             <h3>Làm việc trên sà lan / cầu tạm</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="snu-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">PCC-01 · PCCC tại nơi làm việc</h3>
+        </div></div>        <div class="course-block" data-track="b" data-dot="3" data-ma="PCC-01" data-context="hon-hop">
+        <h3 class="title" style="font-size:1.15rem;margin-top:1.75rem">PCC-01 · PCCC tại nơi làm việc</h3>
         <div class="program-grid program-grid--3">
-          <article class="program-card">
+          <article class="program-card" data-track="b" data-dot="3" data-context="hon-hop" data-ma="PCC-01" data-status="draft">
             <span class="code">PCC-01</span>
             <h3>Phân loại đám cháy và chọn bình chữa cháy đúng</h3>
-            <p class="meta">Checklist · Thực địa</p>
-            <p>Mang ra dùng được ngay — có điểm dừng việc rõ.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="pcc-01-bai-1.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="hon-hop" data-ma="PCC-01" data-status="draft">
             <span class="code">PCC-01</span>
             <h3>Lối thoát nạn bị chặn — lỗi quản lý không phải lỗi may</h3>
-            <p class="meta">Nguy cơ · Nhận diện</p>
-            <p>Nhận diện lỗ hổng trước khi chúng thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="pcc-01-bai-2.html">Đọc bài →</a>
-          </article>
-          <article class="program-card">
+          </article>          <article class="program-card" data-track="b" data-dot="3" data-context="hon-hop" data-ma="PCC-01" data-status="draft">
             <span class="code">PCC-01</span>
             <h3>Diễn tập PCCC có hiệu lực khác diễn tập cho có</h3>
-            <p class="meta">Tình huống · Bài học</p>
-            <p>Từ chuỗi sai lệch nhỏ đến cách siết lại trước khi thành sự cố.</p>
+            <p class="meta">SA247 Knowledge · Tiếng Việt · Free · Chương trình khóa mới (Track B)</p>
+            <p>Khóa sắp mở — đọc Free, đăng ký chờ mở trên trang khóa.</p>
             <a class="go" href="pcc-01-bai-3.html">Đọc bài →</a>
           </article>
-        </div>
+        </div></div>
+        </section>
       </div>
     </section>
-
     <section class="path">
       <div class="wrap">
         <p class="kicker">Bước tiếp</p>
         <h2 class="title">Muốn học có hệ thống?</h2>
-        <p class="lead">Bài viết giúp bạn định hướng. Khóa học giúp bạn dựng năng lực theo lộ trình có tiến độ và kiểm tra.</p>
+        <p class="lead">Bài viết giúp bạn định hướng. Khóa đang mở học ngay; khóa mới đăng ký chờ mở trên trang stub.</p>
         <p>
           <a class="btn btn--amber" href="../index.html#career-map">Tìm lộ trình phù hợp</a>
-          <a class="btn btn--line" href="../index.html#chuong-trinh">Xem tất cả khóa học</a>
+          <a class="btn btn--line" href="../index.html#chuong-trinh">Xem khóa đang mở</a>
         </p>
       </div>
     </section>
@@ -669,5 +667,58 @@
       <p>Kiến thức miễn phí · Khóa học · Chứng nhận</p>
     </div>
   </footer>
+
+<script>
+(function(){
+  const bar = document.getElementById('kt-filters');
+  if(!bar) return;
+  let track='all', dot='all', context='all';
+  const cards=[...document.querySelectorAll('.program-card[data-track]')];
+  const blocks=[...document.querySelectorAll('.course-block')];
+  const countEl=document.getElementById('kt-count');
+  function apply(){
+    let n=0;
+    cards.forEach(c=>{
+      const okT = track==='all' || c.dataset.track===track;
+      const okD = dot==='all' || !c.dataset.dot || c.dataset.dot===dot || (track==='a' && dot!=='all' ? false : (c.dataset.dot===dot || track==='a' && dot==='all'));
+      // Track A has no dot — hide A when filtering by dot
+      const okDot = (dot==='all') ? true : (c.dataset.track==='b' && c.dataset.dot===dot);
+      const okC = context==='all' || c.dataset.context===context;
+      const show = okT && okDot && okC;
+      c.classList.toggle('is-hidden', !show);
+      if(show) n++;
+    });
+    blocks.forEach(b=>{
+      const visible = [...b.querySelectorAll('.program-card')].some(c=>!c.classList.contains('is-hidden'));
+      b.classList.toggle('is-hidden', !visible);
+    });
+    if(countEl) countEl.textContent = 'Đang hiện '+n+' / '+cards.length+' bài';
+  }
+  bar.addEventListener('click', e=>{
+    const btn=e.target.closest('button[data-filter]');
+    if(!btn) return;
+    const f=btn.dataset.filter, v=btn.dataset.value;
+    if(f==='track'){
+      track=v; dot='all';
+      bar.querySelectorAll('button[data-filter=track]').forEach(b=>b.classList.toggle('is-on', b===btn));
+      bar.querySelectorAll('button[data-filter=dot]').forEach(b=>b.classList.remove('is-on'));
+    } else if(f==='dot'){
+      dot = (dot===v ? 'all' : v);
+      track = (dot==='all' ? track : 'b');
+      bar.querySelectorAll('button[data-filter=dot]').forEach(b=>b.classList.toggle('is-on', b.dataset.value===dot));
+      bar.querySelectorAll('button[data-filter=track]').forEach(b=>{
+        b.classList.toggle('is-on', (dot==='all' && b.dataset.value===track) || (dot!=='all' && b.dataset.value==='b'));
+      });
+      if(dot!=='all') track='b';
+    } else if(f==='context'){
+      context = (context===v ? 'all' : v);
+      bar.querySelectorAll('button[data-filter=context]').forEach(b=>b.classList.toggle('is-on', b.dataset.value===context));
+    }
+    apply();
+  });
+  apply();
+})();
+</script>
+
 </body>
 </html>
