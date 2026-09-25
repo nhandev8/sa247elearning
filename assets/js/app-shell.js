@@ -1,4 +1,4 @@
-/* Auth-aware top nav: login XOR (my courses / admin + logout) */
+/* Auth-aware top nav for marketing header (post login: Học tập + Tài khoản). */
 (function () {
   function setHidden(el, hide) {
     if (!el) return;
@@ -9,14 +9,20 @@
   async function paint() {
     const login = document.querySelector("[data-nav-login]");
     const register = document.querySelector("[data-nav-register]");
-    const dash = document.querySelector("[data-nav-dashboard]");
+    const learnWrap = document.querySelector("[data-nav-learn-wrap]");
+    const dashBtn = document.querySelector("[data-nav-dashboard]");
+    const accountBtn = document.querySelector("[data-nav-account]");
     const admin = document.querySelector("[data-nav-admin]");
     const logout = document.querySelector("[data-nav-logout]");
     const cta = document.querySelector(".nav__cta");
-    if (!login && !dash && !logout && !admin && !register) return;
+    const loginMobile = document.querySelector("[data-nav-login-mobile]");
+    const learnMobile = document.querySelector("[data-nav-learn-mobile]");
+
+    if (!login && !dashBtn && !logout && !admin && !accountBtn) return;
 
     let signedIn = false;
     let staff = false;
+    let label = "Tài khoản";
     try {
       if (window.sa247Auth?.ready) {
         const session = await sa247Auth.getSession();
@@ -24,6 +30,8 @@
         if (signedIn) {
           const profile = await sa247Auth.getProfile({ timeoutMs: 1500 });
           staff = sa247Auth.isStaffRole(profile?.role);
+          const name = (profile?.full_name || profile?.ho_ten || session.user?.email || "").trim();
+          if (name) label = name.split(/\s+/).slice(-2).join(" ") || name;
         }
       }
     } catch (err) {
@@ -32,20 +40,28 @@
       staff = false;
     }
 
+    // Public: never show Đăng ký in header
+    setHidden(register, true);
     setHidden(login, signedIn);
-    setHidden(register, signedIn);
-    setHidden(dash, !signedIn);
+    setHidden(learnWrap, !signedIn);
+    setHidden(dashBtn, !signedIn);
+    setHidden(accountBtn, !signedIn);
     setHidden(admin, !(signedIn && staff));
     setHidden(logout, !signedIn);
+    setHidden(loginMobile, signedIn);
+    setHidden(learnMobile, !signedIn);
+
+    if (accountBtn) accountBtn.textContent = label;
 
     document.documentElement.classList.toggle("sa247-signed-in", signedIn);
     document.documentElement.classList.toggle("sa247-staff", staff);
 
-    // Staff: CTA chính = vào Quản trị (trừ khi đang ở trang khóa với CTA học thử)
-    if (cta && staff && !document.body.classList.contains("course-page")) {
-      const adminHref = admin?.getAttribute("href") || "admin/";
-      cta.setAttribute("href", adminHref);
-      cta.textContent = "Quản trị";
+    // Never hijack marketing CTA to Admin — admin only in account menu
+    if (cta && !document.body.classList.contains("course-page")) {
+      if (!cta.dataset.lockedHref) cta.dataset.lockedHref = cta.getAttribute("href") || "";
+      if (!cta.dataset.lockedText) cta.dataset.lockedText = cta.textContent || "Tìm khóa phù hợp";
+      if (cta.dataset.lockedHref) cta.setAttribute("href", cta.dataset.lockedHref);
+      cta.textContent = cta.dataset.lockedText;
     }
 
     if (logout && !logout.dataset.bound) {
@@ -64,12 +80,17 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    setHidden(document.querySelector("[data-nav-dashboard]"), true);
-    setHidden(document.querySelector("[data-nav-admin]"), true);
-    setHidden(document.querySelector("[data-nav-logout]"), true);
-    setHidden(document.querySelector("[data-nav-login]"), false);
-    setHidden(document.querySelector("[data-nav-register]"), false);
-    paint();
+    // Wait one tick so marketing-nav can mount hooks first
+    requestAnimationFrame(() => {
+      setHidden(document.querySelector("[data-nav-learn-wrap]"), true);
+      setHidden(document.querySelector("[data-nav-dashboard]"), true);
+      setHidden(document.querySelector("[data-nav-admin]"), true);
+      setHidden(document.querySelector("[data-nav-logout]"), true);
+      setHidden(document.querySelector("[data-nav-account]"), true);
+      setHidden(document.querySelector("[data-nav-register]"), true);
+      setHidden(document.querySelector("[data-nav-login]"), false);
+      paint();
+    });
   });
 
   window.sa247PaintNav = paint;
