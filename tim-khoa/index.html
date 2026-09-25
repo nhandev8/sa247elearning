@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tìm khóa phù hợp · SA247 E-Learning</title>
+  <meta name="description" content="Chọn tình huống nghề HSE của bạn — SA247 gợi ý đúng khóa học và lộ trình tiếp theo." />
+  <meta name="theme-color" content="#0B1F3A" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260925nav" />
+  <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/tim-khoa/" />
+</head>
+<body>
+  <nav class="nav" id="nav"></nav>
+  <main class="finder-page">
+    <div class="wrap">
+      <p class="kicker">Công cụ định hướng</p>
+      <h1 class="title">Tìm khóa phù hợp</h1>
+      <p class="lead">Bạn đang làm công việc gì? Chọn tình huống gần bạn nhất — SA247 gợi ý đúng khóa.</p>
+      <div class="finder-grid" id="finder-picks" role="list">
+        <button type="button" class="finder-card" data-code="ATNM-01" data-slug="atnm-01" data-title="Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy" data-why="Phù hợp khi bạn mới vào nghề HSE nhà máy và cần bức tranh tổng thể.">
+          <span class="finder-card__k">Mới vào nghề</span>
+          <span class="finder-card__t">Tôi mới vào nghề HSE</span>
+        </button>
+        <button type="button" class="finder-card" data-code="ATNM-02" data-slug="atnm-02" data-title="Quản lý ATVSLĐ nhà máy" data-why="Phù hợp khi bạn đã làm HSE nhà máy và muốn quản lý bài bản hơn.">
+          <span class="finder-card__k">HSE nhà máy</span>
+          <span class="finder-card__t">Tôi làm HSE nhà máy</span>
+        </button>
+        <button type="button" class="finder-card" data-code="ATXD-01" data-slug="atxd-01" data-title="Sống sót 6 tháng đầu nghề ATVSLĐ công trường" data-why="Phù hợp khi bạn đang làm HSE công trường và cần khung kiểm soát theo giai đoạn.">
+          <span class="finder-card__k">HSE công trường</span>
+          <span class="finder-card__t">Tôi làm HSE công trường</span>
+        </button>
+        <button type="button" class="finder-card" data-code="KTN-01" data-slug="ktn-01" data-title="Kỹ thuật an toàn thiết bị nâng" data-why="Phù hợp khi bạn phụ trách cẩu, pa lăng, phụ kiện nâng và kiểm định.">
+          <span class="finder-card__k">Thiết bị</span>
+          <span class="finder-card__t">Tôi phụ trách thiết bị</span>
+        </button>
+        <button type="button" class="finder-card" data-code="CVNH-01" data-slug="cvnh-01" data-title="Kỹ thuật an toàn các công việc nguy hiểm" data-why="Phù hợp khi bạn kiểm soát Permit, LOTO và công việc nguy hiểm.">
+          <span class="finder-card__k">Công việc nguy hiểm</span>
+          <span class="finder-card__t">Tôi phụ trách công việc nguy hiểm</span>
+        </button>
+        <button type="button" class="finder-card" data-code="ISO45001" data-slug="iso45001" data-title="ISO 45001 hệ thống quản lý OHS" data-why="Phù hợp khi bạn triển khai hoặc duy trì hệ thống ISO tại đơn vị.">
+          <span class="finder-card__k">Hệ thống ISO</span>
+          <span class="finder-card__t">Tôi làm hệ thống ISO</span>
+        </button>
+      </div>
+
+      <div class="finder-result" id="finder-result" hidden>
+        <p class="kicker" style="color:var(--amber-hot)">Khóa phù hợp với bạn</p>
+        <h3 id="fr-code">—</h3>
+        <p id="fr-title" style="margin:0;opacity:.92"></p>
+        <p id="fr-why" style="margin:.65rem 0 0;color:#cbd5e1;font-size:.95rem"></p>
+        <p class="price" id="fr-price" data-live-price>99.000đ</p>
+        <div class="actions">
+          <a class="btn btn--amber" id="fr-go" href="../atnm-01/">Xem khóa học</a>
+          <a class="btn btn--line" href="../index.html#career-map" style="border-color:rgba(255,255,255,.35);color:#fff">Xem thêm lộ trình</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="wrap footer-brand">
+      <strong>SA247 E-LEARNING</strong>
+      <p class="footer-links">
+        <a href="../privacy.html">Chính sách bảo mật</a> ·
+        <a href="../terms.html">Điều khoản</a> ·
+        <a href="../kien-thuc/">Kiến thức</a> ·
+        <a href="../chuyen-doi-so-hse/">Chuyển đổi số HSE</a> ·
+        <a href="../ve-sa247/">Về SA247</a> ·
+        <a href="../verify/">Xác minh chứng nhận</a> ·
+        <a href="mailto:ysafe247@gmail.com">ysafe247@gmail.com</a> ·
+        <a href="tel:+84877787988">08 77 78 79 88</a>
+      </p>
+    </div>
+  </footer>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/marketing-nav.js?v=20260925nav"></script>
+  <script src="../assets/js/app-shell.js" defer></script>
+  <script src="../assets/js/catalog-live.js?v=20260915p0" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script>
+    (function () {
+      const result = document.getElementById("finder-result");
+      document.querySelectorAll(".finder-card").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".finder-card").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          const code = btn.dataset.code;
+          const slug = btn.dataset.slug;
+          document.getElementById("fr-code").textContent = code;
+          document.getElementById("fr-title").textContent = btn.dataset.title;
+          document.getElementById("fr-why").textContent = btn.dataset.why;
+          document.getElementById("fr-go").href = "../" + slug + "/";
+          const price = document.getElementById("fr-price");
+          price.setAttribute("data-course-code", code);
+          result.hidden = false;
+          result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          if (window.sa247Track) {
+            try { sa247Track("finder_pick", { code: code }); } catch (_) {}
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
