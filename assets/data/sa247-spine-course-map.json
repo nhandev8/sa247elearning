@@ -1,0 +1,258 @@
+{
+  "mo_ta": "Map chương sách HSE Digital Transformation v6 ↔ khóa SA247 (Track A đang mở + Track B đề xuất). AI đề xuất; chuyên gia duyệt trước khi dùng làm outline video.",
+  "nguon_spine": "knowledge/core/hse-dt-v6-spine.json",
+  "cap_nhat": "2026-09-25",
+  "track_a": [
+    {
+      "ma": "ATNM-01",
+      "ten": "Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy",
+      "chuong_spine": [
+        1,
+        5,
+        19
+      ],
+      "context": "nha-may"
+    },
+    {
+      "ma": "ATNM-02",
+      "ten": "Quản lý ATVSLĐ nhà máy",
+      "chuong_spine": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "context": "nha-may"
+    },
+    {
+      "ma": "ATXD-01",
+      "ten": "Sống sót 6 tháng đầu nghề ATVSLĐ công trường",
+      "chuong_spine": [
+        1,
+        9,
+        19
+      ],
+      "context": "cong-truong"
+    },
+    {
+      "ma": "ATXD-02",
+      "ten": "Quản lý ATVSLĐ công trường",
+      "chuong_spine": [
+        6,
+        7,
+        9,
+        19
+      ],
+      "context": "cong-truong"
+    },
+    {
+      "ma": "KTN-01",
+      "ten": "An toàn thiết bị nâng",
+      "chuong_spine": [
+        11
+      ],
+      "context": "hon-hop"
+    },
+    {
+      "ma": "CVNH-01",
+      "ten": "Công việc nguy hiểm (PTW / LOTO / CSE)",
+      "chuong_spine": [
+        8,
+        10,
+        12
+      ],
+      "context": "hon-hop"
+    },
+    {
+      "ma": "AL-01",
+      "ten": "An toàn thiết bị áp lực",
+      "chuong_spine": [
+        8
+      ],
+      "context": "nha-may"
+    },
+    {
+      "ma": "ISO45001",
+      "ten": "ISO 45001 OHS",
+      "chuong_spine": [
+        3,
+        4,
+        5
+      ],
+      "context": "he-thong"
+    },
+    {
+      "ma": "ISO9001",
+      "ten": "ISO 9001 QMS",
+      "chuong_spine": [
+        3,
+        4
+      ],
+      "context": "he-thong"
+    }
+  ],
+  "track_b": [
+    {
+      "ma": "WAH-01",
+      "dot": 1,
+      "chuong_spine": [
+        9
+      ],
+      "context": "cong-truong",
+      "related_live": "ATXD-01"
+    },
+    {
+      "ma": "XNH-01",
+      "dot": 1,
+      "chuong_spine": [
+        11
+      ],
+      "context": "nha-may",
+      "related_live": "KTN-01"
+    },
+    {
+      "ma": "LTO-01",
+      "dot": 1,
+      "chuong_spine": [
+        8,
+        12
+      ],
+      "context": "hon-hop",
+      "related_live": "CVNH-01",
+      "uu_tien_mo": 1
+    },
+    {
+      "ma": "KTN-N01",
+      "dot": 1,
+      "chuong_spine": [
+        11
+      ],
+      "context": "hon-hop",
+      "related_live": "KTN-01"
+    },
+    {
+      "ma": "XNN-01",
+      "dot": 2,
+      "chuong_spine": [
+        9,
+        11
+      ],
+      "context": "cong-truong",
+      "related_live": "ATXD-02"
+    },
+    {
+      "ma": "CTR-01",
+      "dot": 2,
+      "chuong_spine": [
+        11
+      ],
+      "context": "nha-may",
+      "related_live": "KTN-01"
+    },
+    {
+      "ma": "CSE-01",
+      "dot": 2,
+      "chuong_spine": [
+        10
+      ],
+      "context": "hon-hop",
+      "related_live": "CVNH-01"
+    },
+    {
+      "ma": "ELE-01",
+      "dot": 2,
+      "chuong_spine": [
+        12,
+        8
+      ],
+      "context": "hon-hop",
+      "related_live": "CVNH-01"
+    },
+    {
+      "ma": "NHOI-01",
+      "dot": 2,
+      "chuong_spine": [
+        8
+      ],
+      "context": "nha-may",
+      "related_live": "AL-01"
+    },
+    {
+      "ma": "HAN-01",
+      "dot": 2,
+      "chuong_spine": [
+        7,
+        13
+      ],
+      "context": "hon-hop",
+      "related_live": "CVNH-01"
+    },
+    {
+      "ma": "CHM-01",
+      "dot": 2,
+      "chuong_spine": [
+        13
+      ],
+      "context": "nha-may",
+      "related_live": "ATNM-02"
+    },
+    {
+      "ma": "GGT-01",
+      "dot": 2,
+      "chuong_spine": [
+        9
+      ],
+      "context": "cong-truong",
+      "related_live": "ATXD-01"
+    },
+    {
+      "ma": "PTW-01",
+      "dot": 2,
+      "chuong_spine": [
+        6,
+        7,
+        10
+      ],
+      "context": "hon-hop",
+      "related_live": "CVNH-01"
+    },
+    {
+      "ma": "COK-01",
+      "dot": 3,
+      "chuong_spine": [
+        11
+      ],
+      "context": "nha-may",
+      "related_live": "KTN-01"
+    },
+    {
+      "ma": "VSCI-01",
+      "dot": 3,
+      "chuong_spine": [
+        14
+      ],
+      "context": "nha-may",
+      "related_live": "ATNM-02"
+    },
+    {
+      "ma": "SNU-01",
+      "dot": 3,
+      "chuong_spine": [
+        7,
+        9
+      ],
+      "context": "cong-truong",
+      "related_live": "ATXD-02"
+    },
+    {
+      "ma": "PCC-01",
+      "dot": 3,
+      "chuong_spine": [
+        7
+      ],
+      "context": "hon-hop",
+      "related_live": "ATNM-02"
+    }
+  ],
+  "ghi_chu": "uu_tien_mo=1 → xem docs/SA247-CHIEN-LUOC-KHOA-DAU-LTO.md"
+}
