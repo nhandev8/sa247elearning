@@ -1,4 +1,13 @@
 :root {
+      /* SA247 Visibility Standard — text contrast tokens */
+      --text-primary: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #667085;
+      --text-subtle: #7B8494;
+      --dark-primary: #FFFFFF;
+      --dark-secondary: #F2F4F7;
+      --dark-muted: #D0D5DD;
+
       /* TL11 — Navy + Gold */
       --ink: #0b1f3a;
       --navy: #0b1f3a;
@@ -3605,3 +3614,39 @@ body.course-page { padding-bottom: 4.5rem; }
   max-width: 10rem;
 }
 
+
+
+/* ---- SA247 Visibility Standard (system) ---- */
+.article-wrap .lead {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: #26364a;
+  font-weight: 500;
+}
+.article-wrap .meta-row,
+.article-fig figcaption,
+.article-hero figcaption {
+  color: var(--text-muted);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+.article-wrap .callout strong {
+  color: #9a3412;
+  font-weight: 700;
+}
+.kt-filters .lab,
+.track-label {
+  color: var(--text-muted) !important;
+}
+/* Hero/dark: keep readable light text */
+.hub-hero .hub-scale-sub {
+  color: var(--dark-muted);
+}
+.hub-hero .hub-phil p {
+  color: var(--dark-secondary);
+}
+/* Light foam sections */
+.modules .kt-count,
+.hub-footer-card p {
+  color: var(--text-muted);
+}
