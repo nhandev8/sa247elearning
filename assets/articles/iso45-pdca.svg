@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a2332"/>
+      <stop offset="100%" stop-color="#0f1620"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#g)"/>
+  <rect x="80" y="90" width="800" height="360" rx="18" fill="#243044" stroke="#C45C26" stroke-width="3"/>
+  <text x="120" y="150" fill="#f2eee6" font-family="Segoe UI, Arial" font-size="28" font-weight="700">ISO45001</text>
+  <g fill="none" stroke="#C45C26" stroke-width="4">
+    <rect x="120" y="190" width="36" height="36" rx="6"/>
+    <path d="M128 208 l8 8 16-18"/>
+    <rect x="120" y="260" width="36" height="36" rx="6"/>
+    <path d="M128 278 l8 8 16-18"/>
+    <rect x="120" y="330" width="36" height="36" rx="6"/>
+    <path d="M128 348 l8 8 16-18"/>
+  </g>
+  <text x="180" y="216" fill="#d9d3c7" font-family="Segoe UI, Arial" font-size="22">Kiểm tra trước ca</text>
+  <text x="180" y="286" fill="#d9d3c7" font-family="Segoe UI, Arial" font-size="22">Ghi nhận bằng chứng</text>
+  <text x="180" y="356" fill="#d9d3c7" font-family="Segoe UI, Arial" font-size="22">Dừng việc nếu chưa đạt</text>
+  <text x="120" y="420" fill="#8a93a3" font-family="Segoe UI, Arial" font-size="16">SA247 · Minh họa kiến thức</text>
+</svg>

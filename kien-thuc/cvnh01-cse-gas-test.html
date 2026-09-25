@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Không gian hạn chế (CSE) và đo khí — vì sao một lần đo đầu ca không đủ · SA247</title>
+  <meta name="description" content="Không gian hạn chế nguy hiểm khác hẳn không gian mở vì không khí không tự lưu thông. Cách đo khí đúng trước và trong khi làm việc, vai trò người canh gác, và vì sao kế hoạch cứu nạn phải có trước khi vào." />
+  <meta property="og:title" content="Không gian hạn chế (CSE) và đo khí — vì sao một lần đo đầu ca không đủ" />
+  <meta property="og:description" content="Không gian hạn chế nguy hiểm khác hẳn không gian mở vì không khí không tự lưu thông. Cách đo khí đúng trước và trong khi làm việc, vai trò người canh gác, và vì sao kế hoạch cứu nạn phải có trước khi vào." />
+  <meta property="og:image" content="https://nhandev8.github.io/sa247elearning/assets/programs/cvnh-01/card.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260925q2" />
+  <style>
+    .article-wrap{max-width:44rem;margin:2rem auto;padding:0 1.25rem 4rem}
+    .article-wrap h1{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.25;margin:.35rem 0 1rem}
+    .article-wrap .lead{font-size:1.08rem;line-height:1.75;color:rgba(242,238,230,.92)}
+    .article-wrap h2{margin-top:2rem;font-size:1.28rem}
+    .article-wrap h3{margin-top:1.35rem;font-size:1.08rem}
+    .article-wrap p,.article-wrap li{line-height:1.8;font-size:1.02rem}
+    .article-wrap p+p{margin-top:.95rem}
+    .article-hero,.article-fig{margin:1.4rem 0 1.6rem;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#121820}
+    .article-hero img,.article-fig img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+    .article-fig figcaption,.article-hero figcaption{padding:.65rem 1rem;color:#8a93a3;font-size:.88rem}
+    .callout{margin:1.6rem 0;padding:1.1rem 1.25rem;border-radius:12px;background:rgba(196,92,38,.12);border:1px solid rgba(196,92,38,.38)}
+    .callout strong{color:#f0b27a}
+    .takeaways{margin:2rem 0;padding:1.2rem 1.3rem;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}
+    .takeaways h2{margin-top:0}
+    .cta-box{margin:2rem 0 1rem;padding:1.25rem 1.35rem;border-radius:14px;background:linear-gradient(135deg,rgba(196,92,38,.22),rgba(20,28,40,.9));border:1px solid rgba(196,92,38,.45)}
+    .meta-row{color:#8a93a3;font-size:.92rem;margin-bottom:.75rem}
+    .article-wrap ul,.article-wrap ol{padding-left:1.25rem}
+    .article-wrap li{margin:.35rem 0}
+
+.week-action{margin:2rem 0;padding:1.2rem 1.35rem;border-radius:12px;background:rgba(56,120,90,.12);border:1px solid rgba(56,120,90,.35)}
+.week-action h2{margin-top:0;font-size:1.2rem}
+.week-action ol{padding-left:1.2rem}
+.week-action li{margin:.45rem 0;line-height:1.7}
+</style>
+</head>
+<body>
+  <nav class="nav" id="nav"><div class="wrap nav__inner">
+    <a class="nav__brand" href="../index.html">SA247 <em>Academy</em></a>
+    <div class="nav__links">
+      <a class="nav__link" href="./">← Kiến thức</a>
+      <a class="nav__cta" href="../cvnh-01/">Khóa CVNH-01</a>
+    </div>
+  </div></nav>
+
+  <main class="article-wrap">
+    <p class="kicker">Bài viết · CVNH-01 · Kỹ thuật an toàn công việc nguy hiểm</p>
+    <h1>Không gian hạn chế (CSE) và đo khí — vì sao một lần đo đầu ca không đủ</h1>
+    <p class="meta-row">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+    <p class="lead">Không gian hạn chế — thường gọi là confined space, viết tắt CSE cho việc ra vào không gian hạn chế (confined space entry) — là những khu vực không được thiết kế cho con người làm việc thường xuyên, có lối vào và ra hạn chế, và quan trọng nhất, có khả năng tích tụ khí độc, thiếu oxy, hoặc khí dễ cháy nổ do không khí không tự lưu thông như ở không gian mở. Bể chứa, hầm ga, hố kỹ thuật, khoang tàu, hoặc đường ống lớn đều là những ví dụ điển hình.</p>
+<p>Điểm khác biệt cốt lõi giữa không gian hạn chế và không gian mở không phải là kích thước, mà là việc không khí bên trong không tự trao đổi với không khí bên ngoài. Điều này có nghĩa là nồng độ khí bên trong có thể thay đổi liên tục theo thời gian — do phản ứng hóa học, do vi sinh vật phân hủy vật liệu hữu cơ, do khí thoát ra từ vật liệu ở đáy không gian — mà không có cách nào để người quan sát từ bên ngoài nhận biết chỉ bằng mắt hoặc bằng cảm giác. Bài viết này trình bày cách đo khí đúng, vai trò người canh gác, và vì sao kế hoạch cứu nạn phải có sẵn trước khi bất kỳ ai bước vào.</p>
+
+    <figure class="article-hero">
+      <img src="../assets/programs/cvnh-01/card.jpg" alt="Đo khí trước khi vào không gian hạn chế confined space tại nhà máy" width="960" height="540" />
+      <figcaption>Không khí bên trong không gian hạn chế không tự lưu thông như không gian mở — phải đo, không được ước lượng.</figcaption>
+    </figure>
+
+    
+<h2>Không gian hạn chế là gì và vì sao nó nguy hiểm khác hẳn không gian mở</h2>
+<p>Ở một không gian mở, nếu có khí độc hoặc khí dễ cháy thoát ra, luồng không khí tự nhiên thường pha loãng và phân tán khí đó theo thời gian, giảm nồng độ nguy hiểm. Ở không gian hạn chế, do lối vào và ra hạn chế và không có luồng không khí tự nhiên trao đổi, khí thoát ra sẽ tích tụ dần theo thời gian, có thể đạt đến nồng độ nguy hiểm dù ban đầu ở mức an toàn. Cùng một lượng khí thoát ra, ở không gian mở có thể không gây ảnh hưởng đáng kể, nhưng ở không gian hạn chế có thể đủ để gây ngạt hoặc nổ.</p>
+<p>Thêm vào đó, nhiều không gian hạn chế có các lớp vật liệu ở đáy — bùn, cặn hữu cơ, rỉ sét kim loại — có thể tiếp tục sinh ra hoặc tiêu thụ khí theo thời gian mà không cần có nguồn thải mới từ bên ngoài. Rỉ sét kim loại tiêu thụ oxy chậm nhưng liên tục; vật liệu hữu cơ phân hủy sinh ra khí H2S hoặc metan. Những quá trình này diễn ra âm thầm và không thể phát hiện bằng mắt, chỉ có thể phát hiện bằng thiết bị đo khí.</p>
+
+<h2>Đo khí trước khi vào — đo cái gì, đo ở đâu</h2>
+<p>Một thiết bị đo khí đa năng tiêu chuẩn cho không gian hạn chế cần đo tối thiểu bốn thông số:</p>
+<ul>
+<li><strong>Nồng độ oxy (O2)</strong> — mức bình thường khoảng 20,9%; dưới mức này là thiếu oxy, có thể gây ngạt; trên mức này là dư oxy, làm tăng nguy cơ cháy.</li>
+<li><strong>Khí cháy nổ (LEL — lower explosive limit)</strong> — đo theo phần trăm của giới hạn nổ dưới, cảnh báo khi nồng độ khí dễ cháy đang tiến gần đến mức có thể bắt cháy hoặc nổ.</li>
+<li><strong>Khí độc phổ biến</strong> — thường là carbon monoxide (CO) và hydrogen sulfide (H2S), hai loại khí độc thường gặp nhất trong không gian hạn chế công nghiệp và hệ thống xử lý nước thải.</li>
+<li><strong>Đo theo nhiều độ sâu hoặc nhiều tầng nếu không gian sâu</strong> — khí nặng hơn không khí như H2S có xu hướng tích tụ ở đáy, trong khi khí nhẹ hơn như metan tích tụ ở phần trên; đo một điểm duy nhất có thể bỏ lỡ vùng nguy hiểm ở độ sâu khác.</li>
+</ul>
+<p>Việc đo cần thực hiện trước khi mở nắp hoàn toàn nếu có thể — đưa đầu dò qua một khe nhỏ để lấy mẫu không khí bên trong trước khi con người tiếp cận trực tiếp cửa vào.</p>
+
+    <figure class="article-fig">
+      <img src="../assets/articles/illust-cse-entry.jpg" alt="Người canh gác ngoài và người vào không gian hạn chế được kết nối bằng dây và thiết bị liên lạc" width="960" height="540" loading="lazy" />
+      <figcaption>Người canh gác ngoài không gian hạn chế phải liên tục quan sát và liên lạc với người bên trong, không thực hiện việc khác cùng lúc.</figcaption>
+    </figure>
+<h2>Vì sao phải đo liên tục, không chỉ đo một lần đầu ca</h2>
+<p>Kết quả đo khí đạt yêu cầu vào lúc bắt đầu ca làm việc chỉ xác nhận điều kiện không khí tại đúng thời điểm đó. Trong quá trình làm việc, nhiều yếu tố có thể làm thay đổi nồng độ khí bên trong: công việc đang thực hiện có thể tự sinh ra khí — ví dụ hàn cắt sinh ra khí độc, hoặc khuấy động lớp cặn ở đáy giải phóng khí đã tích tụ; nhiệt độ thay đổi trong ngày có thể ảnh hưởng đến tốc độ bay hơi hoặc phân hủy của vật liệu bên trong; và các quá trình sinh học hoặc hóa học tự nhiên trong không gian đó tiếp tục diễn ra không phụ thuộc vào việc con người có đang làm việc hay không.</p>
+<p>Vì những lý do này, tiêu chuẩn thực hành tốt yêu cầu đo khí liên tục hoặc theo chu kỳ ngắn trong suốt thời gian có người ở trong không gian hạn chế, không chỉ đo một lần trước khi cho phép vào. Nhiều thiết bị đo khí hiện đại có chức năng cảnh báo tự động khi nồng độ vượt ngưỡng, cho phép giám sát liên tục mà không cần đo thủ công lặp lại.</p>
+
+<h2>Người canh gác ngoài (attendant) và quyền dừng việc</h2>
+<p>Người canh gác ngoài không gian hạn chế có nhiệm vụ duy nhất, không kiêm nhiệm việc khác cùng lúc: liên tục quan sát người bên trong, duy trì liên lạc bằng lời hoặc bằng dây tín hiệu, theo dõi thiết bị đo khí, và có quyền — cùng trách nhiệm — yêu cầu người bên trong ra ngay khi phát hiện bất kỳ dấu hiệu bất thường nào, bao gồm cảnh báo từ thiết bị đo khí, mất liên lạc, hoặc quan sát thấy hành vi bất thường của người bên trong.</p>
+<p>Một lỗi thường gặp là để người canh gác kiêm nhiệm thêm việc khác gần khu vực, như chuẩn bị vật tư hoặc trả lời điện thoại, dẫn đến việc quan sát bị gián đoạn đúng vào lúc cần thiết nhất. Vai trò canh gác cần được coi là một nhiệm vụ toàn thời gian trong suốt thời gian có người bên trong, không phải một việc phụ có thể tạm dừng.</p>
+
+<h2>Kế hoạch cứu nạn phải có trước khi vào, không phải sau khi có sự cố</h2>
+<p>Một trong những nguyên tắc quan trọng nhất của công tác không gian hạn chế là kế hoạch cứu nạn phải được chuẩn bị và có sẵn thiết bị, nhân sự trước khi bất kỳ ai bước vào, không phải được nghĩ ra sau khi sự cố đã xảy ra. Nhiều trường hợp tử vong trong không gian hạn chế xảy ra với người cứu nạn tự phát — thường là đồng nghiệp hoảng loạn chạy vào cứu người gặp nạn mà không có thiết bị bảo vệ hô hấp phù hợp, và trở thành người gặp nạn thứ hai trong cùng một không gian có khí độc.</p>
+<div class="callout"><strong>Lưu ý hiện trường:</strong> Tuyệt đối không tự ý chạy vào không gian hạn chế để cứu người gặp nạn nếu không có thiết bị bảo vệ hô hấp phù hợp và không phải là người được huấn luyện cứu nạn. Kích hoạt ngay kế hoạch cứu nạn đã chuẩn bị sẵn — gọi đội cứu nạn được huấn luyện, không tự phát hành động.</div>
+
+<h2>Tình huống thực tế thường gặp</h2><p>Trên hiện trường, áp lực tiến độ và thói quen “làm tắt” thường khiến người ta bỏ qua đúng những bước kiểm soát quan trọng nhất. Khi sự cố xảy ra, mọi người mới nhìn lại và thấy chuỗi sai lệch nhỏ đã xuất hiện từ trước: checklist hình thức, brief thiếu, permit ký nhưng không xác minh, vùng nguy hiểm không được phong tỏa.</p><p>Bài học chung: đừng đợi hậu quả lớn mới siết quy trình. Hãy biến các điểm dừng việc thành phản xạ tập thể.</p><h2>Sai lầm hay gặp khi áp dụng</h2><ul><li>Biết đúng nhưng không ghi nhận bằng chứng</li><li>Giao việc mà không giao quyền dừng việc</li><li>Đào tạo một lần rồi coi như xong năng lực</li><li>Chỉ siết trước thanh tra / đánh giá</li></ul>
+
+<div class="week-action" id="viec-tuan-nay">
+  <h2>Việc làm trong tuần này (1 hành động)</h2>
+  <p>Chỉ chọn <strong>một</strong> việc — làm xong trong 7 ngày, có bằng chứng.</p>
+  <ol>
+    <li><strong>Hành động:</strong> áp dụng một điểm kiểm soát then chốt của CVNH-01 vào checklist đang dùng</li>
+    <li><strong>Bằng chứng:</strong> Ảnh / phiếu checklist có ngày giờ + chữ ký hoặc xác nhận giám sát</li>
+    <li><strong>Người chịu trách nhiệm:</strong> Người phụ trách HSE khu vực + giám sát trực tiếp</li>
+  </ol>
+  <div class="callout"><p><strong>Ghi nhớ:</strong> Không có bằng chứng = chưa làm. Họp ngắn cuối tuần chỉ cần trả lời: đã làm / chưa / vướng gì.</p></div>
+</div>
+
+    
+
+    <div class="takeaways">
+      <h2>Tóm tắt mang ra hiện trường</h2>
+      <ul>
+        <li>Không gian hạn chế nguy hiểm hơn không gian mở vì không khí không tự trao đổi — khí có thể tích tụ đến mức nguy hiểm mà không có cách nhận biết bằng mắt.</li>
+<li>Đo khí trước khi vào cần đo tối thiểu oxy, khí cháy nổ (LEL), khí độc phổ biến (CO, H2S), và đo theo nhiều độ sâu nếu không gian sâu.</li>
+<li>Một lần đo đạt yêu cầu đầu ca không đảm bảo an toàn suốt ca — cần đo liên tục hoặc theo chu kỳ ngắn trong suốt thời gian có người bên trong.</li>
+<li>Người canh gác ngoài phải là nhiệm vụ toàn thời gian, không kiêm nhiệm việc khác, và có quyền yêu cầu người bên trong ra ngay khi phát hiện bất thường.</li>
+<li>Kế hoạch cứu nạn phải chuẩn bị sẵn trước khi có người vào; tuyệt đối không tự phát chạy vào cứu người mà không có thiết bị bảo vệ hô hấp phù hợp.</li>
+      </ul>
+    </div>
+
+    <div class="cta-box">
+      <p><strong>Muốn học có hệ thống, không chỉ đọc một bài?</strong></p>
+      <p>Khóa <strong>CVNH-01</strong> — Kỹ thuật an toàn các công việc nguy hiểm — gồm video theo mô-đun, khung áp dụng thực tế, tiến độ trên hệ thống và kiểm tra cuối khóa. Học trọn khóa 99.000đ.</p>
+      <p style="margin-top:1rem">
+        <a class="btn btn--amber" href="../cvnh-01/">Vào khóa CVNH-01</a>
+        <a class="btn btn--line" href="./">Tất cả bài kiến thức</a>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-brand">
+      <strong>SA247 E-LEARNING</strong>
+      <p>Kiến thức miễn phí · Khóa học · Chứng nhận</p>
+      <p class="footer-links">
+        <a href="../index.html">Trang chủ</a> ·
+        <a href="./">Kiến thức</a> ·
+        <a href="../index.html#chuong-trinh">Khóa học</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
