@@ -1,0 +1,385 @@
+{
+  "ma": "HSE-CORE-001",
+  "plan": "full_ui_v1",
+  "layers": {
+    "lop_1_free": "Trích chương mở, checklist thông minh, near-miss QR — bài viết / video mồi",
+    "lop_2_academy": "Curriculum 23 chương → khóa học theo chủ đề kỹ thuật (Ch.8–14) + quản trị (Ch.1–7)",
+    "lop_3_premium": "Full sách + bộ công cụ Ch.22–23 + HSE Digital Platform"
+  },
+  "chuong": [
+    {
+      "so": 1,
+      "ten": "Vai trò của chuyên gia HSE trong kỷ nguyên số",
+      "lop": null
+    },
+    {
+      "so": 2,
+      "ten": "Quản lý pháp lý, tiêu chuẩn và nghĩa vụ tuân thủ",
+      "lop": null
+    },
+    {
+      "so": 3,
+      "ten": "Hệ thống quản lý HSE theo ISO 45001 và ISO 14001",
+      "lop": null
+    },
+    {
+      "so": 4,
+      "ten": "Chỉ số dẫn dắt, chỉ số kết quả và đo hiệu lực hệ thống",
+      "lop": null
+    },
+    {
+      "so": 5,
+      "ten": "Sự tham gia của người lao động, an toàn tâm lý và văn hóa báo cáo",
+      "lop": null
+    },
+    {
+      "so": 6,
+      "ten": "HIRA, JSA, sổ đăng ký rủi ro và ngưỡng chấp nhận rủi ro",
+      "lop": null
+    },
+    {
+      "so": 7,
+      "ten": "Nguyên tắc kiểm soát rủi ro và quản lý kiểm soát trọng yếu",
+      "lop": null
+    },
+    {
+      "so": 8,
+      "ten": "An toàn thiết bị áp lực, năng lượng và cô lập",
+      "lop": null
+    },
+    {
+      "so": 9,
+      "ten": "An toàn làm việc trên cao và sẵn sàng cứu nạn",
+      "lop": null
+    },
+    {
+      "so": 10,
+      "ten": "Không gian hạn chế",
+      "lop": null
+    },
+    {
+      "so": 11,
+      "ten": "Thiết bị nâng hạ, cơ khí và giao cắt người - máy",
+      "lop": null
+    },
+    {
+      "so": 12,
+      "ten": "An toàn điện",
+      "lop": null
+    },
+    {
+      "so": 13,
+      "ten": "An toàn hóa chất và phơi nhiễm nghề nghiệp",
+      "lop": null
+    },
+    {
+      "so": 14,
+      "ten": "Vệ sinh lao động và quan trắc môi trường lao động",
+      "lop": null
+    },
+    {
+      "so": 15,
+      "ten": "Checklist thông minh trên thiết bị di động",
+      "lop": 3
+    },
+    {
+      "so": 16,
+      "ten": "Bảng điều khiển HSE, phương tiện bảo vệ cá nhân và tài sản trọng yếu",
+      "lop": 3
+    },
+    {
+      "so": 17,
+      "ten": "Quản lý sự cố và near-miss qua mã QR",
+      "lop": 3
+    },
+    {
+      "so": 18,
+      "ten": "Quản trị dữ liệu, quyền riêng tư và an ninh mạng cho HSE số",
+      "lop": 3
+    },
+    {
+      "so": 19,
+      "ten": "Đào tạo an toàn trong kỷ nguyên số",
+      "lop": null
+    },
+    {
+      "so": 20,
+      "ten": "Trợ lý HSE bằng trí tuệ nhân tạo",
+      "lop": null
+    },
+    {
+      "so": 21,
+      "ten": "Tâm lý học hành vi và quản trị thay đổi",
+      "lop": null
+    },
+    {
+      "so": 22,
+      "ten": "Lộ trình triển khai chuyển đổi số HSE",
+      "lop": 3
+    },
+    {
+      "so": 23,
+      "ten": "Bộ công cụ triển khai",
+      "lop": 3
+    }
+  ],
+  "academy_map": {
+    "mo_ta": "Map chương sách HSE Digital Transformation v6 ↔ khóa SA247 (Track A đang mở + Track B đề xuất). AI đề xuất; chuyên gia duyệt trước khi dùng làm outline video.",
+    "nguon_spine": "knowledge/core/hse-dt-v6-spine.json",
+    "cap_nhat": "2026-09-25",
+    "track_a": [
+      {
+        "ma": "ATNM-01",
+        "ten": "Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy",
+        "chuong_spine": [
+          1,
+          5,
+          19
+        ],
+        "context": "nha-may"
+      },
+      {
+        "ma": "ATNM-02",
+        "ten": "Quản lý ATVSLĐ nhà máy",
+        "chuong_spine": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "context": "nha-may"
+      },
+      {
+        "ma": "ATXD-01",
+        "ten": "Sống sót 6 tháng đầu nghề ATVSLĐ công trường",
+        "chuong_spine": [
+          1,
+          9,
+          19
+        ],
+        "context": "cong-truong"
+      },
+      {
+        "ma": "ATXD-02",
+        "ten": "Quản lý ATVSLĐ công trường",
+        "chuong_spine": [
+          6,
+          7,
+          9,
+          19
+        ],
+        "context": "cong-truong"
+      },
+      {
+        "ma": "KTN-01",
+        "ten": "An toàn thiết bị nâng",
+        "chuong_spine": [
+          11
+        ],
+        "context": "hon-hop"
+      },
+      {
+        "ma": "CVNH-01",
+        "ten": "Công việc nguy hiểm (PTW / LOTO / CSE)",
+        "chuong_spine": [
+          8,
+          10,
+          12
+        ],
+        "context": "hon-hop"
+      },
+      {
+        "ma": "AL-01",
+        "ten": "An toàn thiết bị áp lực",
+        "chuong_spine": [
+          8
+        ],
+        "context": "nha-may"
+      },
+      {
+        "ma": "ISO45001",
+        "ten": "ISO 45001 OHS",
+        "chuong_spine": [
+          3,
+          4,
+          5
+        ],
+        "context": "he-thong"
+      },
+      {
+        "ma": "ISO9001",
+        "ten": "ISO 9001 QMS",
+        "chuong_spine": [
+          3,
+          4
+        ],
+        "context": "he-thong"
+      }
+    ],
+    "track_b": [
+      {
+        "ma": "WAH-01",
+        "dot": 1,
+        "chuong_spine": [
+          9
+        ],
+        "context": "cong-truong",
+        "related_live": "ATXD-01"
+      },
+      {
+        "ma": "XNH-01",
+        "dot": 1,
+        "chuong_spine": [
+          11
+        ],
+        "context": "nha-may",
+        "related_live": "KTN-01"
+      },
+      {
+        "ma": "LTO-01",
+        "dot": 1,
+        "chuong_spine": [
+          8,
+          12
+        ],
+        "context": "hon-hop",
+        "related_live": "CVNH-01",
+        "uu_tien_mo": 1
+      },
+      {
+        "ma": "KTN-N01",
+        "dot": 1,
+        "chuong_spine": [
+          11
+        ],
+        "context": "hon-hop",
+        "related_live": "KTN-01"
+      },
+      {
+        "ma": "XNN-01",
+        "dot": 2,
+        "chuong_spine": [
+          9,
+          11
+        ],
+        "context": "cong-truong",
+        "related_live": "ATXD-02"
+      },
+      {
+        "ma": "CTR-01",
+        "dot": 2,
+        "chuong_spine": [
+          11
+        ],
+        "context": "nha-may",
+        "related_live": "KTN-01"
+      },
+      {
+        "ma": "CSE-01",
+        "dot": 2,
+        "chuong_spine": [
+          10
+        ],
+        "context": "hon-hop",
+        "related_live": "CVNH-01"
+      },
+      {
+        "ma": "ELE-01",
+        "dot": 2,
+        "chuong_spine": [
+          12,
+          8
+        ],
+        "context": "hon-hop",
+        "related_live": "CVNH-01"
+      },
+      {
+        "ma": "NHOI-01",
+        "dot": 2,
+        "chuong_spine": [
+          8
+        ],
+        "context": "nha-may",
+        "related_live": "AL-01"
+      },
+      {
+        "ma": "HAN-01",
+        "dot": 2,
+        "chuong_spine": [
+          7,
+          13
+        ],
+        "context": "hon-hop",
+        "related_live": "CVNH-01"
+      },
+      {
+        "ma": "CHM-01",
+        "dot": 2,
+        "chuong_spine": [
+          13
+        ],
+        "context": "nha-may",
+        "related_live": "ATNM-02"
+      },
+      {
+        "ma": "GGT-01",
+        "dot": 2,
+        "chuong_spine": [
+          9
+        ],
+        "context": "cong-truong",
+        "related_live": "ATXD-01"
+      },
+      {
+        "ma": "PTW-01",
+        "dot": 2,
+        "chuong_spine": [
+          6,
+          7,
+          10
+        ],
+        "context": "hon-hop",
+        "related_live": "CVNH-01"
+      },
+      {
+        "ma": "COK-01",
+        "dot": 3,
+        "chuong_spine": [
+          11
+        ],
+        "context": "nha-may",
+        "related_live": "KTN-01"
+      },
+      {
+        "ma": "VSCI-01",
+        "dot": 3,
+        "chuong_spine": [
+          14
+        ],
+        "context": "nha-may",
+        "related_live": "ATNM-02"
+      },
+      {
+        "ma": "SNU-01",
+        "dot": 3,
+        "chuong_spine": [
+          7,
+          9
+        ],
+        "context": "cong-truong",
+        "related_live": "ATXD-02"
+      },
+      {
+        "ma": "PCC-01",
+        "dot": 3,
+        "chuong_spine": [
+          7
+        ],
+        "context": "hon-hop",
+        "related_live": "ATNM-02"
+      }
+    ],
+    "ghi_chu": "uu_tien_mo=1 → xem docs/SA247-CHIEN-LUOC-KHOA-DAU-LTO.md"
+  },
+  "note": "Free góc nhìn + Academy map + Premium waitlist. No PDF."
+}
