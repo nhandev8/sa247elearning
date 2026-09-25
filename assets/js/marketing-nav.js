@@ -295,7 +295,7 @@
     const r = rootPrefix();
     nav.dataset.marketingMounted = "1";
     nav.classList.add("nav--marketing");
-    if (!document.querySelector(".hero, .hub-hero, .about-hero, .hse-dt-hero, .book-hero")) {
+    if (!document.querySelector(".hero, .hub-hero, .about-hero, .hse-dt-hero, .book-hero") && !document.body.classList.contains("book-page")) {
       nav.classList.add("is-solid");
     }
     nav.innerHTML = "";

@@ -7,7 +7,7 @@
   <meta name="description" content="HSE Digital Transformation — cuốn sách tư duy HSE trong kỷ nguyên số. 23 chương · Tiếng Việt · Đọc online miễn phí trên SA247." />
   <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/sach/hse-digital-transformation/" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/site.css?v=20260925nav3" />
+  <link rel="stylesheet" href="../../assets/site.css?v=20260925read" />
   <style>
 .book-hero{padding:5.5rem 0 3rem;background:linear-gradient(155deg,#071426 0%,#0b1f3a 45%,#0f766e 130%);color:#f2f4f7}
 .book-hero__grid{display:grid;gap:2rem;align-items:center}
@@ -55,7 +55,8 @@
           <span>Đọc online</span>
         </div>
         <div class="book-actions">
-          <a class="btn btn--amber" href="chuong-01.html">Đọc sách miễn phí</a>
+          <a class="btn btn--amber" id="book-start" href="chuong-01.html">Đọc sách miễn phí</a>
+          <a class="btn btn--line" id="book-continue" href="chuong-01.html" hidden style="border-color:rgba(255,255,255,.4);color:#fff">Đọc tiếp</a>
           <a class="btn btn--line" href="#muc-luc" style="border-color:rgba(255,255,255,.4);color:#fff">Xem mục lục</a>
         </div>
       </div>
@@ -77,7 +78,7 @@
             <p>Tư duy HSE số · dữ liệu · số hóa quy trình · dashboard &amp; KPI · hệ sinh thái công cụ · lộ trình triển khai.</p>
           </article>
         </div>
-        <p class="book-note">Đọc online từng chương trên SA247. Không tải PDF nguyên văn — giữ trải nghiệm đọc có mục lục, chương trước/sau và liên kết sang lộ trình / khóa học.</p>
+        <p class="book-note">Đọc online đầy đủ từng chương trên SA247 — có mục lục, nhớ vị trí đọc, chương trước/sau. Không tải file PDF.</p>
       </div>
     </section>
     <section class="book-section" id="muc-luc" style="background:#f8fafc">
@@ -129,8 +130,17 @@
   </footer>
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
-  <script src="../../assets/js/marketing-nav.js?v=20260925nav33"></script>
+  <script src="../../assets/js/marketing-nav.js?v=20260925read3"></script>
   <script src="../../assets/js/app-shell.js" defer></script>
   <script src="../../assets/site.js" defer></script>
+<script>
+  (function(){
+    try {
+      var last = localStorage.getItem('sa247_book_hse_dt_last');
+      var btn = document.getElementById('book-continue');
+      if (last && btn) { btn.href = last; btn.hidden = false; }
+    } catch(e) {}
+  })();
+</script>
 </body>
 </html>
