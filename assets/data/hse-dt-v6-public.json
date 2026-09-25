@@ -1,0 +1,240 @@
+{
+  "ma": "HSE-CORE-001",
+  "ten": "HSE Digital Transformation",
+  "phien_ban": "v6",
+  "tac_gia": "Hồ Hữu Nhàn (Leo Ho)",
+  "vai_tro": "meta_knowledge",
+  "mo_ta": "Sách lõi — hệ điều hành tư duy cho toàn bộ HSE Knowledge Library. Trả lời 'làm thế nào để chuyển hoạt động HSE thành dữ liệu, quy trình và hệ thống số'. Không thay thế kho tài liệu kỹ thuật; đứng trên kho đó.",
+  "luan_diem": [
+    "HSE là hệ thống quản trị, không chỉ chức năng tuân thủ",
+    "Chuyển đổi số không phải thay giấy bằng màn hình",
+    "Dữ liệu để phát hiện sớm rủi ro, đo hiệu lực, ra quyết định",
+    "Công nghệ chỉ có giá trị khi đi cùng quy trình, trách nhiệm và hành vi",
+    "AI đề xuất — chuyên gia kiểm duyệt — hệ thống xuất bản"
+  ],
+  "cau_cau_noi": {
+    "tu": "HSE Knowledge (kho tài liệu F:\\HSE)",
+    "qua": "HSE Digital Transformation (sách này)",
+    "den": "HSE Digital Platform (SA247 lớp 3)",
+    "chuoi": [
+      "Checklist kiểm tra",
+      "Digital Checklist (Ch.15)",
+      "Inspection / incident workflow (Ch.17)",
+      "Database & data governance (Ch.18)",
+      "KPI dẫn dắt / kết quả (Ch.4)",
+      "Dashboard (Ch.16)",
+      "HSE Digital Platform"
+    ]
+  },
+  "lop_san_pham": {
+    "lop_1_free": "Trích chương mở, checklist thông minh, near-miss QR — bài viết / video mồi",
+    "lop_2_academy": "Curriculum 23 chương → khóa học theo chủ đề kỹ thuật (Ch.8–14) + quản trị (Ch.1–7)",
+    "lop_3_premium": "Full sách + bộ công cụ Ch.22–23 + HSE Digital Platform"
+  },
+  "phan": [
+    {
+      "id": "P0",
+      "ten": "Mở đầu",
+      "chuong": [
+        "Mở đầu sách"
+      ]
+    },
+    {
+      "id": "P1",
+      "ten": "Nền tảng quản trị HSE hiện đại",
+      "chuong": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "id": "P2",
+      "ten": "Quản trị rủi ro và kiểm soát trọng yếu",
+      "chuong": [
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "id": "P3",
+      "ten": "Rủi ro kỹ thuật + công cụ số và dữ liệu",
+      "chuong": [
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+      ]
+    },
+    {
+      "id": "P4",
+      "ten": "Con người, đào tạo, AI và hành vi",
+      "chuong": [
+        "19",
+        "20",
+        "21"
+      ]
+    },
+    {
+      "id": "P5",
+      "ten": "Lộ trình và bộ công cụ triển khai",
+      "chuong": [
+        "22",
+        "23"
+      ]
+    }
+  ],
+  "chuong": [
+    {
+      "so": 1,
+      "ten": "Vai trò của chuyên gia HSE trong kỷ nguyên số",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 2,
+      "ten": "Quản lý pháp lý, tiêu chuẩn và nghĩa vụ tuân thủ",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 3,
+      "ten": "Hệ thống quản lý HSE theo ISO 45001 và ISO 14001",
+      "khoa": "ISO-45001",
+      "lop": null
+    },
+    {
+      "so": 4,
+      "ten": "Chỉ số dẫn dắt, chỉ số kết quả và đo hiệu lực hệ thống",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 5,
+      "ten": "Sự tham gia của người lao động, an toàn tâm lý và văn hóa báo cáo",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 6,
+      "ten": "HIRA, JSA, sổ đăng ký rủi ro và ngưỡng chấp nhận rủi ro",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 7,
+      "ten": "Nguyên tắc kiểm soát rủi ro và quản lý kiểm soát trọng yếu",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 8,
+      "ten": "An toàn thiết bị áp lực, năng lượng và cô lập",
+      "khoa": [
+        "PRV-01",
+        "LTO-01"
+      ],
+      "lop": null
+    },
+    {
+      "so": 9,
+      "ten": "An toàn làm việc trên cao và sẵn sàng cứu nạn",
+      "khoa": "WAH-01",
+      "lop": null
+    },
+    {
+      "so": 10,
+      "ten": "Không gian hạn chế",
+      "khoa": "CSE-01",
+      "lop": null
+    },
+    {
+      "so": 11,
+      "ten": "Thiết bị nâng hạ, cơ khí và giao cắt người - máy",
+      "khoa": "KTN-01",
+      "lop": null
+    },
+    {
+      "so": 12,
+      "ten": "An toàn điện",
+      "khoa": "ELE-01",
+      "lop": null
+    },
+    {
+      "so": 13,
+      "ten": "An toàn hóa chất và phơi nhiễm nghề nghiệp",
+      "khoa": "CHM-01",
+      "lop": null
+    },
+    {
+      "so": 14,
+      "ten": "Vệ sinh lao động và quan trắc môi trường lao động",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 15,
+      "ten": "Checklist thông minh trên thiết bị di động",
+      "khoa": null,
+      "lop": 3
+    },
+    {
+      "so": 16,
+      "ten": "Bảng điều khiển HSE, phương tiện bảo vệ cá nhân và tài sản trọng yếu",
+      "khoa": null,
+      "lop": 3
+    },
+    {
+      "so": 17,
+      "ten": "Quản lý sự cố và near-miss qua mã QR",
+      "khoa": null,
+      "lop": 3
+    },
+    {
+      "so": 18,
+      "ten": "Quản trị dữ liệu, quyền riêng tư và an ninh mạng cho HSE số",
+      "khoa": null,
+      "lop": 3
+    },
+    {
+      "so": 19,
+      "ten": "Đào tạo an toàn trong kỷ nguyên số",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 20,
+      "ten": "Trợ lý HSE bằng trí tuệ nhân tạo",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 21,
+      "ten": "Tâm lý học hành vi và quản trị thay đổi",
+      "khoa": null,
+      "lop": null
+    },
+    {
+      "so": 22,
+      "ten": "Lộ trình triển khai chuyển đổi số HSE",
+      "khoa": null,
+      "lop": 3
+    },
+    {
+      "so": 23,
+      "ten": "Bộ công cụ triển khai",
+      "khoa": null,
+      "lop": 3
+    }
+  ],
+  "ghi_chu_public": "Hub Free: bản đồ curriculum + cầu sang Knowledge/khóa. Full PDF thuộc lớp Premium — chưa mở tải công khai."
+}
