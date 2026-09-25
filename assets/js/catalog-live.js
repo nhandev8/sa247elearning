@@ -2,10 +2,13 @@
  * Không thay layout nhóm tĩnh từ build — chỉ cập nhật [data-live-meta] / [data-live-price].
  */
 (function () {
+  const SA247_COURSE_PRICE = 99000;
   function money(n) {
     const v = Number(n);
-    if (!Number.isFinite(v)) return "";
-    return v.toLocaleString("vi-VN") + "đ";
+    if (!Number.isFinite(v) || v <= 0) return "";
+    // Không bao giờ paint legacy 69K lên UI
+    const safe = v === 69000 ? SA247_COURSE_PRICE : v;
+    return safe.toLocaleString("vi-VN") + "đ";
   }
 
   async function client() {

@@ -3650,3 +3650,18 @@ body.course-page { padding-bottom: 4.5rem; }
 .hub-footer-card p {
   color: var(--text-muted);
 }
+
+
+/* SA247 value principle box */
+.value-principle { padding: 2.5rem 0; background: #fff; border-top: 1px solid #e5e7eb; }
+.value-checklist { list-style: none; padding: 0; margin: 1.25rem 0; display: grid; gap: .55rem; max-width: 36rem; }
+.value-checklist li { position: relative; padding-left: 1.6rem; color: var(--text-secondary, #334155); font-weight: 500; line-height: 1.45; }
+.value-checklist li::before { content: "✓"; position: absolute; left: 0; color: #0f766e; font-weight: 700; }
+.cta-box .cta-kicker { color: #9a3412 !important; }
+
+.related-articles { margin: 2.5rem 0 1rem; padding: 1.25rem 1.35rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+.related-articles h2 { margin: 0 0 .75rem; font-size: 1.15rem; color: var(--text-primary, #0f172a); }
+.related-articles ul { margin: 0 0 1rem; padding-left: 1.1rem; }
+.related-articles li { margin: .35rem 0; }
+.related-articles a { color: #0f766e; font-weight: 600; }
+.related-course { margin: 0; color: var(--text-secondary, #334155); display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }

@@ -10,10 +10,12 @@
     }
   }
 
+  const SA247_COURSE_PRICE = 99000;
   function money(n) {
     const v = Number(n);
-    if (!Number.isFinite(v)) return "";
-    return v.toLocaleString("vi-VN") + "đ";
+    if (!Number.isFinite(v) || v <= 0) return "";
+    const safe = v === 69000 ? SA247_COURSE_PRICE : v;
+    return safe.toLocaleString("vi-VN") + "đ";
   }
 
   function paintHeroMeta(detail, boot, priceLabel) {
@@ -92,7 +94,7 @@
             applyCta({
               label: `Khóa học chính thức · ${priceLabel}`,
               text: `Đăng ký học – ${priceLabel}`,
-              href: "#goi-pro",
+              href: "#dang-ky",
             });
             return { state: "signed-out", priceLabel, course };
           }
@@ -103,14 +105,14 @@
             applyCta({
               label: "Đã đăng nhập · đăng ký để học toàn bộ",
               text: `Đăng ký học – ${priceLabel}`,
-              href: "#goi-pro",
+              href: "#dang-ky",
             });
             return { state: "signed-in-locked", priceLabel, course };
           }
 
           // Đã có quyền học → ẩn khối thanh toán / mở khóa
           document.getElementById("dang-ky")?.setAttribute("hidden", "");
-          document.getElementById("goi-pro")?.setAttribute("hidden", "");
+          document.getElementById("dang-ky")?.setAttribute("hidden", "");
           document.documentElement.classList.add("sa247-enrolled");
 
           // Cert lifecycle
@@ -198,7 +200,7 @@
     applyCta({
       label: `Khóa học chính thức · ${priceLabel}`,
       text: `Đăng ký học – ${priceLabel}`,
-      href: "#goi-pro",
+      href: "#dang-ky",
     });
     return { state: "signed-out", priceLabel };
   }
