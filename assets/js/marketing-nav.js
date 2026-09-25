@@ -107,24 +107,25 @@
         h("p", { className: "mega__label", text: "HSE Digital Transformation" }),
         h("p", { className: "mega__prompt", style: "margin:0 0 .65rem", text: "Đọc miễn phí toàn bộ" }),
         h("ul", { className: "mega__list" }, [
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", html: "<strong>Tổng quan</strong>" })]),
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/#muc-luc", html: "<strong>Mục lục</strong>" })]),
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/chuong-01.html", html: "<strong>Đọc sách</strong>" })]),
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", html: "<strong>Trang sách</strong>" })]),
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/bia.html", html: "<strong>Trang bìa</strong>" })]),
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/muc-luc.html", html: "<strong>Mục lục</strong>" })]),
         ]),
       ]),
       megaCol("Đọc sách", [
-        ["sach/hse-digital-transformation/chuong-01.html", "Đọc từ đầu", null],
-        ["sach/hse-digital-transformation/#muc-luc", "Mục lục", null],
-        ["sach/hse-digital-transformation/chuong-01.html", "Đọc tiếp", null],
+        ["sach/hse-digital-transformation/loi-cam-on.html", "Lời cảm ơn", null],
+        ["sach/hse-digital-transformation/loi-noi-dau.html", "Lời nói đầu", null],
+        ["sach/hse-digital-transformation/mo-dau.html", "Mở đầu sách", null],
+        ["sach/hse-digital-transformation/chuong-01.html", "Chương 01", null],
       ], r),
       megaCol("Khám phá", [
+        ["sach/hse-digital-transformation/muc-luc.html", "Toàn bộ mục lục", null],
         ["sach/hse-digital-transformation/chuong-05.html", "Framework / dữ liệu", null],
-        ["chuyen-doi-so-hse/chuong-17.html", "Case / QR sự cố", null],
-        ["chuyen-doi-so-hse/premium.html", "Công cụ HSE", null],
+        ["tim-khoa/", "Tìm khóa phù hợp", null],
       ], r),
       h("div", { className: "mega__foot mega__foot--cta" }, [
-        h("p", { className: "mega__prompt", text: "Kiến thức nền tảng về chuyển đổi số trong HSE" }),
-        h("a", { href: r + "sach/hse-digital-transformation/", className: "btn btn--amber mega__cta-btn", text: "Đọc sách miễn phí" }),
+        h("p", { className: "mega__prompt", text: "Từ trang bìa đến 23 chương — đọc online" }),
+        h("a", { href: r + "sach/hse-digital-transformation/loi-cam-on.html", className: "btn btn--amber mega__cta-btn", text: "Bắt đầu đọc" }),
       ]),
     ]);
   }
