@@ -1,0 +1,6 @@
+Audited publish tree: D:\OneDrive - nhandev\Youtube\Safety and You 247\SA247\_publish_sa247elearning
+Critical fails: 2
+Warnings: 0
+FAIL [price_69k] assets/js/catalog-live.js:10: const safe = v === 69000 ? SA247_COURSE_PRICE : v;
+FAIL [price_69k] assets/js/course-page.js:17: const safe = v === 69000 ? SA247_COURSE_PRICE : v;
+RESULT: FAIL

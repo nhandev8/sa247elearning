@@ -697,7 +697,7 @@
         }
         if (enrolled) {
           document.getElementById("dang-ky")?.setAttribute("hidden", "");
-          document.getElementById("goi-pro")?.setAttribute("hidden", "");
+          document.getElementById("dang-ky")?.setAttribute("hidden", "");
           document.documentElement.classList.add("sa247-enrolled");
         }
       } catch (e) {
