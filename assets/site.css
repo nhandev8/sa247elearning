@@ -3665,3 +3665,8 @@ body.course-page { padding-bottom: 4.5rem; }
 .related-articles li { margin: .35rem 0; }
 .related-articles a { color: #0f766e; font-weight: 600; }
 .related-course { margin: 0; color: var(--text-secondary, #334155); display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+
+
+.course-spine-box{margin:1.5rem auto;padding:1.1rem 1.2rem;border-radius:12px;border:1px solid #99f6e4;background:#f0fdfa;max-width:72rem}
+.course-spine-box h3{margin:0 0 .5rem;color:#134e4a;font-size:1.05rem}
+.course-spine-box a{color:#0f766e;font-weight:600}
