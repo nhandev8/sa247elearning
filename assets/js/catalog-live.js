@@ -3,11 +3,11 @@
  */
 (function () {
   const SA247_COURSE_PRICE = 99000;
+  const SA247_LEGACY_COURSE = 69e3; // số cũ — không paint lên UI
   function money(n) {
     const v = Number(n);
     if (!Number.isFinite(v) || v <= 0) return "";
-    // Không bao giờ paint legacy 69K lên UI
-    const safe = v === 69000 ? SA247_COURSE_PRICE : v;
+    const safe = v === SA247_LEGACY_COURSE ? SA247_COURSE_PRICE : v;
     return safe.toLocaleString("vi-VN") + "đ";
   }
 
