@@ -68,8 +68,9 @@
         ["iso45001/", "ISO 45001", "Hệ thống quản lý OHS"],
         ["iso9001/", "ISO 9001", "Hệ thống quản lý QMS"],
       ], r),
-      h("div", { className: "mega__foot" }, [
-        h("a", { href: r + "index.html#chuong-trinh", className: "mega__all", text: "→ Xem tất cả khóa học" }),
+      h("div", { className: "mega__foot mega__foot--cta" }, [
+        h("p", { className: "mega__prompt", text: "9 khóa học · Từ 99.000đ" }),
+        h("a", { href: r + "index.html#chuong-trinh", className: "btn btn--amber mega__cta-btn", text: "Xem tất cả khóa học" }),
       ]),
     ]);
   }
@@ -80,11 +81,11 @@
         ["index.html#career-map", "Mới vào nghề HSE", null],
         ["atnm-02/", "HSE nhà máy", null],
       ], r),
-      megaCol("HSE xây dựng", [
+      megaCol("An toàn xây dựng", [
         ["atxd-01/", "HSE công trường", null],
         ["atxd-02/", "Trưởng / phụ trách HSE", null],
       ], r),
-      megaCol("Nghiệp vụ kỹ thuật", [
+      megaCol("Kỹ thuật", [
         ["ktn-01/", "Thiết bị nâng", null],
         ["al-01/", "Thiết bị áp lực", null],
         ["cvnh-01/", "Công việc nguy hiểm", null],
@@ -96,6 +97,34 @@
       h("div", { className: "mega__foot mega__foot--cta" }, [
         h("p", { className: "mega__prompt", text: "Bạn đang ở đâu trong nghề HSE?" }),
         h("a", { href: r + "tim-khoa/", className: "btn btn--amber mega__cta-btn", text: "Tìm lộ trình cho tôi" }),
+      ]),
+    ]);
+  }
+
+  function buildMegaBook(r) {
+    return h("div", { className: "mega", role: "region", "aria-label": "Sách HSE" }, [
+      h("div", { className: "mega__col mega__col--hero" }, [
+        h("p", { className: "mega__label", text: "HSE Digital Transformation" }),
+        h("p", { className: "mega__prompt", style: "margin:0 0 .65rem", text: "Đọc miễn phí toàn bộ" }),
+        h("ul", { className: "mega__list" }, [
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", html: "<strong>Tổng quan</strong>" })]),
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/#muc-luc", html: "<strong>Mục lục</strong>" })]),
+          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/chuong-01.html", html: "<strong>Đọc sách</strong>" })]),
+        ]),
+      ]),
+      megaCol("Đọc sách", [
+        ["sach/hse-digital-transformation/chuong-01.html", "Đọc từ đầu", null],
+        ["sach/hse-digital-transformation/#muc-luc", "Mục lục", null],
+        ["sach/hse-digital-transformation/chuong-01.html", "Đọc tiếp", null],
+      ], r),
+      megaCol("Khám phá", [
+        ["sach/hse-digital-transformation/chuong-05.html", "Framework / dữ liệu", null],
+        ["chuyen-doi-so-hse/chuong-17.html", "Case / QR sự cố", null],
+        ["chuyen-doi-so-hse/premium.html", "Công cụ HSE", null],
+      ], r),
+      h("div", { className: "mega__foot mega__foot--cta" }, [
+        h("p", { className: "mega__prompt", text: "Kiến thức nền tảng về chuyển đổi số trong HSE" }),
+        h("a", { href: r + "sach/hse-digital-transformation/", className: "btn btn--amber mega__cta-btn", text: "Đọc sách miễn phí" }),
       ]),
     ]);
   }
@@ -116,36 +145,12 @@
         ["kien-thuc/?q=iso", "ISO", null],
       ], r),
       megaCol("Tài nguyên", [
-        ["chuyen-doi-so-hse/", "Framework", null],
+        ["sach/hse-digital-transformation/", "Framework", null],
         ["kien-thuc/#checklist", "Biểu mẫu", null],
-        ["chuyen-doi-so-hse/", "Công cụ HSE", null],
+        ["sach/hse-digital-transformation/", "Công cụ HSE", null],
       ], r),
       h("div", { className: "mega__foot" }, [
         h("a", { href: r + "kien-thuc/", className: "mega__all", text: "→ Xem toàn bộ kiến thức" }),
-      ]),
-    ]);
-  }
-
-  function buildMegaHseDt(r) {
-    return h("div", { className: "mega", role: "region", "aria-label": "Chuyển đổi số HSE" }, [
-      megaCol("HSE Digital Transformation", [
-        ["chuyen-doi-so-hse/", "Tổng quan", null],
-        ["chuyen-doi-so-hse/#ban-do", "23 chương", null],
-        ["chuyen-doi-so-hse/chuong-1.html", "Đọc thử", null],
-      ], r),
-      megaCol("Framework", [
-        ["chuyen-doi-so-hse/chuong-5.html", "HSE Data", null],
-        ["chuyen-doi-so-hse/chuong-8.html", "Số hóa quy trình", null],
-        ["chuyen-doi-so-hse/chuong-12.html", "Dashboard & KPI", null],
-        ["chuyen-doi-so-hse/chuong-23.html", "Digital HSE Roadmap", null],
-      ], r),
-      megaCol("Ứng dụng", [
-        ["chuyen-doi-so-hse/premium.html", "Công cụ HSE", null],
-        ["chuyen-doi-so-hse/", "Checklist số", null],
-        ["chuyen-doi-so-hse/", "QR sự cố", null],
-      ], r),
-      h("div", { className: "mega__foot" }, [
-        h("a", { href: r + "chuyen-doi-so-hse/", className: "mega__all", text: "→ Khám phá HSE Digital Transformation" }),
       ]),
     ]);
   }
@@ -154,9 +159,10 @@
     return h("div", { className: "mega mega--slim", role: "region", "aria-label": "Về SA247" }, [
       h("ul", { className: "mega__list mega__list--flat" }, [
         h("li", null, [h("a", { href: r + "ve-sa247/#sa247-la-ai", text: "SA247 là gì?" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#triet-ly", text: "Tuyên ngôn" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#cam-ket", text: "Phương pháp đào tạo" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#sa247-la-ai", text: "Người sáng lập" })]),
+        h("li", null, [h("a", { href: r + "ve-sa247/#su-menh", text: "Sứ mệnh" })]),
+        h("li", null, [h("a", { href: r + "ve-sa247/#triet-ly", text: "Triết lý đào tạo" })]),
+        h("li", null, [h("a", { href: r + "ve-sa247/#cam-ket", text: "Phương pháp học" })]),
+        h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", text: "HSE Digital Transformation" })]),
         h("li", null, [h("a", { href: r + "ve-sa247/#faq", text: "Câu hỏi thường gặp" })]),
         h("li", null, [h("a", { href: r + "index.html#tu-van", text: "Liên hệ" })]),
       ]),
@@ -256,10 +262,10 @@
   function buildMobileDrawer(r) {
     const drawer = h("div", { className: "nav-drawer", id: "nav-drawer", hidden: true });
     const links = [
-      ["Khóa học", "index.html#chuong-trinh"],
       ["Lộ trình HSE", "index.html#career-map"],
+      ["Khóa học", "index.html#chuong-trinh"],
+      ["Sách HSE", "sach/hse-digital-transformation/"],
       ["Kiến thức", "kien-thuc/"],
-      ["Chuyển đổi số HSE", "chuyen-doi-so-hse/"],
       ["Về SA247", "ve-sa247/"],
     ];
     const list = h(
@@ -289,7 +295,7 @@
     const r = rootPrefix();
     nav.dataset.marketingMounted = "1";
     nav.classList.add("nav--marketing");
-    if (!document.querySelector(".hero, .hub-hero, .about-hero, .hse-dt-hero")) {
+    if (!document.querySelector(".hero, .hub-hero, .about-hero, .hse-dt-hero, .book-hero")) {
       nav.classList.add("is-solid");
     }
     nav.innerHTML = "";
@@ -312,10 +318,10 @@
     });
 
     const menu = h("div", { className: "nav__menu", "aria-label": "Điều hướng chính" }, [
-      item("Khóa học", "index.html#chuong-trinh", buildMegaCourses, r),
       item("Lộ trình HSE", "index.html#career-map", buildMegaPath, r),
+      item("Khóa học", "index.html#chuong-trinh", buildMegaCourses, r),
+      item("Sách HSE", "sach/hse-digital-transformation/", buildMegaBook, r),
       item("Kiến thức", "kien-thuc/", buildMegaKnowledge, r),
-      item("Chuyển đổi số HSE", "chuyen-doi-so-hse/", buildMegaHseDt, r),
       item("Về SA247", "ve-sa247/", buildMegaAbout, r),
     ]);
 
