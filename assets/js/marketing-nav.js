@@ -125,7 +125,7 @@
       ], r),
       h("div", { className: "mega__foot mega__foot--cta" }, [
         h("p", { className: "mega__prompt", text: "Từ trang bìa đến 23 chương — đọc online" }),
-        h("a", { href: r + "sach/hse-digital-transformation/loi-cam-on.html", className: "btn btn--amber mega__cta-btn", text: "Bắt đầu đọc" }),
+        h("a", { href: r + "sach/hse-digital-transformation/bia.html", className: "btn btn--amber mega__cta-btn", text: "Bắt đầu đọc" }),
       ]),
     ]);
   }

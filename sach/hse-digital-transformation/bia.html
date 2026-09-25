@@ -7,7 +7,7 @@
   <meta name="description" content="Trang bìa — HSE Digital Transformation. Đọc online miễn phí trên SA247." />
   <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/sach/hse-digital-transformation/bia.html" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/site.css?v=20260926book" />
+  <link rel="stylesheet" href="../../assets/site.css?v=20260926book2" />
   <style>
 .book-reader{padding:5.5rem 0 4rem;background:#f7f5f0}
 .book-reader__bar{position:sticky;top:3.4rem;z-index:20;background:rgba(247,245,240,.94);backdrop-filter:blur(8px);border-bottom:1px solid rgba(11,31,58,.08);padding:.55rem 0;margin-bottom:1.25rem}
@@ -34,31 +34,38 @@
 .book-pager a{text-decoration:none;font-weight:700;color:#0b1f3a}
 .book-pager a:hover{color:#0f766e}
 .book-cover-page{text-align:center}
-.book-cover-page img{width:min(340px,100%);height:auto;border-radius:12px;box-shadow:0 18px 40px rgba(7,20,38,.2);margin:0 auto 1.25rem}
-.book-cover-gallery{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-top:1.5rem}
-.book-cover-gallery img{width:100%;height:auto;border-radius:8px;border:1px solid #e2e8f0}
-.book-toc-full{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:.35rem}
-.book-toc-full a{display:flex;gap:.75rem;padding:.65rem .75rem;border-radius:10px;background:#fff;border:1px solid #e2e8f0;text-decoration:none;color:#0b1f3a}
-.book-toc-full a:hover{border-color:#99f6e4;background:#f0fdfa}
-.book-toc-full .n{flex:0 0 5.5rem;font-weight:800;color:#0f766e;font-size:.88rem}
-.book-toc-full .t{font-weight:600;line-height:1.4}
+.book-cover-page .book-cover-main{
+  display:block;margin:0 auto 1.25rem;width:auto;height:auto;
+  max-width:min(100%,512px);max-height:min(78vh,900px);
+  object-fit:contain;object-position:center;border-radius:0;
+  box-shadow:0 18px 40px rgba(7,20,38,.2);
+}
+.book-cover-gallery{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:1.5rem;
+}
+.book-cover-gallery img{
+  display:block;width:auto;height:auto;
+  max-width:min(100%,220px);max-height:330px;
+  object-fit:contain;border-radius:0;border:1px solid #e2e8f0;
+}
 .book-hub{padding:5.5rem 0 3.5rem;background:linear-gradient(155deg,#071426 0%,#0b1f3a 45%,#0f766e 130%);color:#f2f4f7}
-.book-hub__grid{display:grid;gap:2rem;align-items:center}
-@media(min-width:880px){.book-hub__grid{grid-template-columns:240px 1fr;gap:2.5rem}}
-.book-hub img.cover{width:100%;max-width:260px;border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.35);margin:0 auto;display:block}
+.book-hub__grid{display:grid;gap:2rem;align-items:center;justify-items:center}
+@media(min-width:880px){
+  .book-hub__grid{grid-template-columns:auto 1fr;justify-items:stretch;gap:2.5rem}
+}
+.book-hub a.cover-link{display:block;margin:0 auto;line-height:0}
+.book-hub img.cover{
+  display:block;width:auto;height:auto;
+  max-width:min(100%,280px);max-height:min(70vh,520px);
+  object-fit:contain;object-position:center;border-radius:0;
+  box-shadow:0 24px 48px rgba(0,0,0,.35);margin:0 auto;
+}
 .book-hub .kicker{color:#99f6e4;font-weight:800;letter-spacing:.05em;text-transform:uppercase;font-size:.78rem}
 .book-hub h1{color:#fff;font-size:clamp(1.75rem,3.2vw,2.6rem);margin:.4rem 0 .75rem;max-width:16ch;line-height:1.15}
 .book-hub .lead{color:#d0d5dd;max-width:40rem;font-size:1.05rem}
 .book-hub .meta{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.1rem 0 1.35rem}
 .book-hub .meta span{padding:.35rem .7rem;border-radius:999px;border:1px solid rgba(255,255,255,.28);font-size:.82rem;font-weight:600}
 .book-hub .actions{display:flex;flex-wrap:wrap;gap:.65rem}
-.book-hub-nav{padding:1.5rem 0 3rem;background:#f8fafc}
-.book-hub-nav h2{margin:0 0 1rem}
-.book-hub-cards{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.book-hub-cards a{display:block;padding:1rem 1.1rem;background:#fff;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#0b1f3a}
-.book-hub-cards a strong{display:block;margin-bottom:.25rem}
-.book-hub-cards a span{color:#64748b;font-size:.9rem}
-.book-hub-cards a:hover{border-color:#99f6e4;background:#f0fdfa}
 </style>
 </head>
 <body class="book-page">
@@ -97,27 +104,29 @@
         <p class="book-kicker">Sách HSE</p>
         <h1>Trang bìa</h1>
         
+    
     <div class="book-cover-page">
-      <img src="../../assets/books/hse-dt/cover-01.jpg" alt="Bìa HSE Digital Transformation" width="720" height="1080" />
+      <img class="book-cover-main" src="../../assets/books/hse-dt/cover-01.jpg" width="1024" height="1536" alt="Bìa HSE Digital Transformation" />
       <p><strong>HSE Digital Transformation</strong></p>
       <p>Hồ Hữu Nhàn · Safety and You 247</p>
     </div>
     <h2>Các biến thể bìa</h2>
-    <div class="book-cover-gallery"><img src="../../assets/books/hse-dt/cover-01.jpg" alt="Minh họa bìa 1" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-02.jpg" alt="Minh họa bìa 2" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-03.jpg" alt="Minh họa bìa 3" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-04.jpg" alt="Minh họa bìa 4" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-05.jpg" alt="Minh họa bìa 5" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-06.jpg" alt="Minh họa bìa 6" loading="lazy" />
-<img src="../../assets/books/hse-dt/cover-07.jpg" alt="Minh họa bìa 7" loading="lazy" /></div>
-    
-        <nav class="book-pager" aria-label="Chuyển trang"><a href="./">← Trang sách</a><a href="loi-cam-on.html">Lời cảm ơn →</a></nav>
+    <div class="book-cover-gallery">
+<img src="../../assets/books/hse-dt/cover-01.jpg" width="1024" height="1536" alt="Bìa 1" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-02.jpg" width="1024" height="1536" alt="Bìa 2" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-03.jpg" width="1024" height="1536" alt="Bìa 3" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-04.jpg" width="1024" height="1536" alt="Bìa 4" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-05.jpg" width="1024" height="1536" alt="Bìa 5" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-06.jpg" width="1024" height="1536" alt="Bìa 6" loading="lazy" />
+<img src="../../assets/books/hse-dt/cover-07.jpg" width="1024" height="1536" alt="Bìa 7" loading="lazy" />
+    </div>
+<nav class="book-pager" aria-label="Chuyển trang"><a href="./">← Trang sách</a><a href="loi-cam-on.html">Lời cảm ơn →</a></nav>
       </article>
     </div>
   </div>
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
-  <script src="../../assets/js/marketing-nav.js?v=20260926book"></script>
+  <script src="../../assets/js/marketing-nav.js?v=20260926book2"></script>
   <script src="../../assets/js/app-shell.js" defer></script>
   <script src="../../assets/site.js" defer></script>
 <script>try{localStorage.setItem('sa247_book_hse_dt_last','bia.html')}catch(e){}</script>
