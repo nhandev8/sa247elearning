@@ -163,6 +163,20 @@
     ]);
   }
 
+  function closeAllMegas(except) {
+    document.querySelectorAll(".nav-item").forEach((n) => {
+      if (except && n === except) return;
+      n.classList.remove("is-open");
+      const t = n.querySelector(".nav-item__trigger");
+      const p = n.querySelector(".mega");
+      if (t) t.setAttribute("aria-expanded", "false");
+      if (p) {
+        p.hidden = true;
+        p.setAttribute("hidden", "");
+      }
+    });
+  }
+
   function item(label, href, megaBuilder, r) {
     const wrap = h("div", { className: "nav-item" });
     const btn = h("a", {
@@ -173,31 +187,26 @@
     }, [label]);
     const panel = megaBuilder(r);
     panel.hidden = true;
+    panel.setAttribute("hidden", "");
     wrap.appendChild(btn);
     wrap.appendChild(panel);
 
     let closeTimer;
     const open = () => {
       clearTimeout(closeTimer);
-      document.querySelectorAll(".nav-item.is-open").forEach((n) => {
-        if (n !== wrap) {
-          n.classList.remove("is-open");
-          const t = n.querySelector(".nav-item__trigger");
-          const p = n.querySelector(".mega");
-          if (t) t.setAttribute("aria-expanded", "false");
-          if (p) p.hidden = true;
-        }
-      });
+      closeAllMegas(wrap);
       wrap.classList.add("is-open");
       btn.setAttribute("aria-expanded", "true");
       panel.hidden = false;
+      panel.removeAttribute("hidden");
     };
     const close = () => {
       closeTimer = setTimeout(() => {
         wrap.classList.remove("is-open");
         btn.setAttribute("aria-expanded", "false");
         panel.hidden = true;
-      }, 120);
+        panel.setAttribute("hidden", "");
+      }, 80);
     };
     wrap.addEventListener("mouseenter", open);
     wrap.addEventListener("mouseleave", close);
