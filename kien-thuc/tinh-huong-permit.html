@@ -3,31 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tình huống Permit công việc nóng · SA247</title>
-  <meta name="description" content="Permit đã ký — đã được bắt đầu công việc nóng? Phân tích tình huống và liên kết khóa CVNH-01." />
-  <link rel="stylesheet" href="../assets/site.css?v=20260915p0" />
+  <title>Tình huống permit to work: khi giấy phép làm việc an toàn chỉ là thủ tục ký cho xong · SA247</title>
+  <meta name="description" content="Một tình huống điển hình về permit to work được ký hợp lệ nhưng điều kiện hiện trường đã thay đổi, và cách xây dựng permit thành công cụ kiểm soát thật, không phải thủ tục hành chính." />
+  <meta property="og:title" content="Tình huống permit to work: khi giấy phép làm việc an toàn chỉ là thủ tục ký cho xong" />
+  <meta property="og:description" content="Một tình huống điển hình về permit to work được ký hợp lệ nhưng điều kiện hiện trường đã thay đổi, và cách xây dựng permit thành công cụ kiểm soát thật, không phải thủ tục hành chính." />
+  <meta property="og:image" content="https://nhandev8.github.io/sa247elearning/assets/programs/cvnh-01/card.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260925q2" />
+  <style>
+    .article-wrap{max-width:44rem;margin:2rem auto;padding:0 1.25rem 4rem}
+    .article-wrap h1{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.25;margin:.35rem 0 1rem}
+    .article-wrap .lead{font-size:1.08rem;line-height:1.75;color:rgba(242,238,230,.92)}
+    .article-wrap h2{margin-top:2rem;font-size:1.28rem}
+    .article-wrap h3{margin-top:1.35rem;font-size:1.08rem}
+    .article-wrap p,.article-wrap li{line-height:1.8;font-size:1.02rem}
+    .article-wrap p+p{margin-top:.95rem}
+    .article-hero,.article-fig{margin:1.4rem 0 1.6rem;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#121820}
+    .article-hero img,.article-fig img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+    .article-fig figcaption,.article-hero figcaption{padding:.65rem 1rem;color:#8a93a3;font-size:.88rem}
+    .callout{margin:1.6rem 0;padding:1.1rem 1.25rem;border-radius:12px;background:rgba(196,92,38,.12);border:1px solid rgba(196,92,38,.38)}
+    .callout strong{color:#f0b27a}
+    .takeaways{margin:2rem 0;padding:1.2rem 1.3rem;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}
+    .takeaways h2{margin-top:0}
+    .cta-box{margin:2rem 0 1rem;padding:1.25rem 1.35rem;border-radius:14px;background:linear-gradient(135deg,rgba(196,92,38,.22),rgba(20,28,40,.9));border:1px solid rgba(196,92,38,.45)}
+    .meta-row{color:#8a93a3;font-size:.92rem;margin-bottom:.75rem}
+    .article-wrap ul,.article-wrap ol{padding-left:1.25rem}
+    .article-wrap li{margin:.35rem 0}
+
+.week-action{margin:2rem 0;padding:1.2rem 1.35rem;border-radius:12px;background:rgba(56,120,90,.12);border:1px solid rgba(56,120,90,.35)}
+.week-action h2{margin-top:0;font-size:1.2rem}
+.week-action ol{padding-left:1.2rem}
+.week-action li{margin:.45rem 0;line-height:1.7}
+</style>
 </head>
 <body>
   <nav class="nav" id="nav"><div class="wrap nav__inner">
-    <a class="nav__brand" href="../index.html">SA247</a>
-    <a class="nav__link" href="./">← Kiến thức</a>
+    <a class="nav__brand" href="../index.html">SA247 <em>Academy</em></a>
+    <div class="nav__links">
+      <a class="nav__link" href="./">← Kiến thức</a>
+      <a class="nav__cta" href="../cvnh-01/">Khóa CVNH-01</a>
+    </div>
   </div></nav>
-  <main class="app-content" style="max-width:42rem;margin:2rem auto;padding:0 1.25rem 3rem">
-    <p class="kicker">Tình huống · CVNH</p>
-    <h1>Permit đã ký — đã được bắt đầu công việc nóng?</h1>
-    <p class="lead"><strong>Không tự động.</strong> Chữ ký trên giấy chỉ là một điều kiện cần, không phải điều kiện đủ.</p>
-    <p>Trước khi đốt / cắt / hàn, cần xác nhận thêm (ví dụ):</p>
-    <ul>
-      <li>Phạm vi và thời hạn permit còn hiệu lực tại đúng vị trí.</li>
-      <li>Kiểm soát cháy lan, vật liệu dễ cháy, người trực lửa.</li>
-      <li>Thiết bị / khí / cách ly (nếu có) đã đúng trạng thái.</li>
-      <li>Người thực hiện hiểu điều kiện dừng việc.</li>
-    </ul>
-    <p>CVNH-01 đi sâu Permit, LOTO và kiểm soát công việc nguy hiểm theo quy trình — không chỉ “có form”.</p>
-    <p>
-      <a class="btn btn--amber" href="../cvnh-01/">Xem khóa CVNH-01</a>
-      <a class="btn btn--line" href="./">Quay lại Kiến thức</a>
-    </p>
+
+  <main class="article-wrap">
+    <p class="kicker">Bài viết · CVNH-01 · Kỹ thuật an toàn công việc nguy hiểm</p>
+    <h1>Tình huống permit to work: khi giấy phép làm việc an toàn chỉ là thủ tục ký cho xong</h1>
+    <p class="meta-row">SA247 Knowledge · Free · CTA cuối bài dẫn vào khóa học</p>
+    <p class="lead">Permit to work — giấy phép làm việc an toàn — là văn bản xác nhận rằng một công việc có nguy cơ cao, như hàn cắt nóng, làm việc trên cao, làm việc trong không gian hạn chế, hoặc đào đất gần công trình ngầm, đã được đánh giá rủi ro, có biện pháp kiểm soát phù hợp, và được người có thẩm quyền cho phép thực hiện trong một khoảng thời gian và điều kiện cụ thể. Về nguyên tắc, đây là một trong những công cụ kiểm soát mạnh nhất trong hệ thống an toàn công nghiệp, vì nó buộc phải có sự xác nhận rõ ràng trước khi công việc nguy hiểm bắt đầu.</p>
+<p>Trong thực tế vận hành, permit to work rất dễ trượt từ một công cụ kiểm soát rủi ro thành một thủ tục hành chính cần hoàn tất trước khi bắt đầu công việc — được ký đúng quy trình, đúng người, đúng thời điểm, nhưng sau đó không còn được đối chiếu lại với điều kiện thực tế đang diễn ra. Bài viết này mô tả một tình huống điển hình cho vấn đề này, và từ đó rút ra những nguyên tắc cần áp dụng để permit thực sự làm đúng vai trò của nó.</p>
+
+    <figure class="article-hero">
+      <img src="../assets/programs/cvnh-01/card.jpg" alt="Giấy phép làm việc an toàn permit to work cho công việc hàn cắt nóng tại hiện trường" width="960" height="540" />
+      <figcaption>Permit to work chỉ có giá trị bảo vệ khi điều kiện ghi trên giấy còn đúng với điều kiện thực tế lúc công việc diễn ra.</figcaption>
+    </figure>
+
+    
+<h2>Permit to work là gì và tại sao nó tồn tại</h2>
+<p>Một permit làm việc an toàn thường bao gồm các thành phần: mô tả công việc cụ thể, vị trí thực hiện, thời gian có hiệu lực, những rủi ro đã được xác định, biện pháp kiểm soát tương ứng cho từng rủi ro, và chữ ký xác nhận của người có thẩm quyền cấp phép sau khi đã kiểm tra hiện trường đáp ứng đủ điều kiện. Lý do permit tồn tại là để tạo ra một điểm dừng bắt buộc — trước khi bắt đầu công việc nguy hiểm, phải có ai đó, ngoài chính người thực hiện, xác nhận điều kiện an toàn đã đủ.</p>
+<p>Điều quan trọng cần nhấn mạnh là permit xác nhận điều kiện <em>tại thời điểm cấp phép</em>, không phải một sự bảo đảm vĩnh viễn cho toàn bộ thời gian công việc diễn ra, đặc biệt khi công việc kéo dài nhiều giờ hoặc qua nhiều ca làm việc trong khi điều kiện hiện trường xung quanh có thể thay đổi.</p>
+
+<h2>Tình huống thường gặp: permit hợp lệ nhưng điều kiện hiện trường đã đổi</h2>
+<p>Một tình huống điển hình diễn ra như sau: vào đầu ca sáng, một permit hàn cắt nóng được cấp cho việc hàn nối đường ống tại một khu vực đã được kiểm tra không có vật liệu dễ cháy trong bán kính an toàn, có bình chữa cháy tại chỗ, và có người canh lửa được chỉ định. Permit được ký hợp lệ, công việc bắt đầu đúng quy trình.</p>
+<p>Đến giữa buổi, một đội khác di chuyển một số tấm bạt che và vật liệu cách nhiệt đến gần khu vực đó để chuẩn bị cho công việc khác, nằm ngoài phạm vi permit đang có hiệu lực. Đội hàn, vẫn đang làm việc theo permit đã ký từ buổi sáng, không có yêu cầu phải dừng lại và đánh giá lại điều kiện xung quanh, vì về mặt hình thức, permit của họ vẫn còn hiệu lực và họ không phải là người mang vật liệu đến. Nguy cơ cháy từ tia lửa hàn bắn vào vật liệu mới xuất hiện tăng lên đáng kể, nhưng không ai trong hai đội có trách nhiệm rõ ràng để nhận ra và xử lý sự thay đổi này.</p>
+<p>Trước khi bắt đầu hoặc tiếp tục bất kỳ công việc hàn cắt nóng nào, cần xác nhận lại các điều kiện sau, không chỉ dựa vào tình trạng đã ghi trên permit từ đầu ca:</p>
+<ul>
+<li>Bán kính an toàn xung quanh khu vực hàn không có vật liệu dễ cháy mới xuất hiện</li>
+<li>Bình chữa cháy tại chỗ còn trong tầm tay và còn hiệu lực sử dụng</li>
+<li>Người canh lửa vẫn có mặt tại đúng vị trí, không rời đi làm việc khác</li>
+<li>Không có công việc khác mới bắt đầu gần khu vực có thể tạo thêm rủi ro cháy hoặc va chạm</li>
+</ul>
+
+    <figure class="article-fig">
+      <img src="../assets/articles/illust-cvnh-hotwork.jpg" alt="Công việc hàn cắt nóng gần khu vực có vật liệu dễ cháy tại công trường" width="960" height="540" loading="lazy" />
+      <figcaption>Một permit hàn cắt nóng được ký hợp lệ vào buổi sáng có thể không còn phù hợp nếu điều kiện xung quanh đã thay đổi vào buổi chiều.</figcaption>
+    </figure>
+<h2>Ai có quyền ký, ai có quyền dừng — và họ có thực sự có mặt tại hiện trường không</h2>
+<p>Một nguyên tắc quan trọng thường bị bỏ qua là người ký cấp permit và người có quyền dừng công việc khi phát hiện điều kiện thay đổi không nhất thiết là cùng một người, và người có quyền dừng cần có khả năng thực sự quan sát hiện trường trong suốt thời gian permit có hiệu lực — không chỉ ký một lần vào buổi sáng rồi rời khỏi khu vực. Trong tình huống nêu trên, nếu có một người được phân công cụ thể để giám sát khu vực xuyên suốt ca làm việc, việc vật liệu mới xuất hiện gần khu vực hàn có thể được phát hiện và xử lý ngay, thay vì chỉ được nhận ra sau khi có sự cố hoặc trong lần kiểm tra định kỳ tiếp theo.</p>
+<p>Người ký cấp permit, nếu chỉ xuất hiện tại thời điểm ký rồi không quay lại kiểm tra trong suốt thời gian permit có hiệu lực, thực chất chỉ đóng vai trò xác nhận điều kiện ban đầu — một vai trò cần thiết nhưng không đủ để đảm bảo an toàn cho toàn bộ thời gian công việc diễn ra.</p>
+
+<h2>Permit không phải một lần ký cho cả ca làm việc</h2>
+<p>Với những công việc có thời gian hiệu lực dài hoặc điều kiện xung quanh dễ thay đổi — như khu vực có nhiều đội cùng hoạt động, hoặc công trường ngoài trời chịu ảnh hưởng thời tiết — cách làm phù hợp hơn là chia thời gian hiệu lực của permit thành các khoảng ngắn hơn, ví dụ theo nửa ca, kèm yêu cầu xác nhận lại điều kiện trước khi permit được gia hạn tiếp cho khoảng thời gian kế tiếp. Việc xác nhận lại này không cần phức tạp — có thể chỉ là một lượt kiểm tra nhanh khu vực và ghi nhận bằng chữ ký thời điểm gia hạn — nhưng nó tạo ra một điểm dừng bắt buộc để phát hiện những thay đổi đã xảy ra từ lúc cấp permit ban đầu.</p>
+
+<h2>Khi permit và thực tế hiện trường lệch nhau</h2>
+<p>Nguyên tắc cần được quán triệt cho mọi người liên quan, không chỉ người thực hiện công việc chính, là: khi điều kiện thực tế tại hiện trường khác với điều kiện đã ghi trên permit — bất kể sự khác biệt đó do ai gây ra — công việc đang thực hiện theo permit đó phải dừng lại để đánh giá lại, không tiếp tục chỉ vì permit về hình thức vẫn còn hiệu lực thời gian.</p>
+<div class="callout"><strong>Lưu ý hiện trường:</strong> Nếu bạn nhận thấy điều kiện xung quanh khu vực làm việc đã thay đổi so với lúc permit được ký — có vật liệu mới, có đội khác bắt đầu làm việc gần đó, hoặc thời tiết thay đổi — hãy dừng công việc và báo cáo ngay, dù permit trên giấy vẫn còn hiệu lực thời gian.</div>
+
+<h2>Tình huống thực tế thường gặp</h2><p>Trên hiện trường, áp lực tiến độ và thói quen “làm tắt” thường khiến người ta bỏ qua đúng những bước kiểm soát quan trọng nhất. Khi sự cố xảy ra, mọi người mới nhìn lại và thấy chuỗi sai lệch nhỏ đã xuất hiện từ trước: checklist hình thức, brief thiếu, permit ký nhưng không xác minh, vùng nguy hiểm không được phong tỏa.</p><p>Bài học chung: đừng đợi hậu quả lớn mới siết quy trình. Hãy biến các điểm dừng việc thành phản xạ tập thể.</p><h2>Sai lầm hay gặp khi áp dụng</h2><ul><li>Biết đúng nhưng không ghi nhận bằng chứng</li><li>Giao việc mà không giao quyền dừng việc</li><li>Đào tạo một lần rồi coi như xong năng lực</li><li>Chỉ siết trước thanh tra / đánh giá</li></ul>
+
+<div class="week-action" id="viec-tuan-nay">
+  <h2>Việc làm trong tuần này (1 hành động)</h2>
+  <p>Chỉ chọn <strong>một</strong> việc — làm xong trong 7 ngày, có bằng chứng.</p>
+  <ol>
+    <li><strong>Hành động:</strong> áp dụng một điểm kiểm soát then chốt của CVNH-01 vào checklist đang dùng</li>
+    <li><strong>Bằng chứng:</strong> Ảnh / phiếu checklist có ngày giờ + chữ ký hoặc xác nhận giám sát</li>
+    <li><strong>Người chịu trách nhiệm:</strong> Người phụ trách HSE khu vực + giám sát trực tiếp</li>
+  </ol>
+  <div class="callout"><p><strong>Ghi nhớ:</strong> Không có bằng chứng = chưa làm. Họp ngắn cuối tuần chỉ cần trả lời: đã làm / chưa / vướng gì.</p></div>
+</div>
+
+    
+
+    <div class="takeaways">
+      <h2>Tóm tắt mang ra hiện trường</h2>
+      <ul>
+        <li>Permit to work xác nhận điều kiện an toàn tại thời điểm cấp phép, không phải một bảo đảm vĩnh viễn cho toàn bộ thời gian công việc diễn ra.</li>
+<li>Cần xác nhận lại các điều kiện an toàn quan trọng trước khi tiếp tục công việc, không chỉ dựa vào tình trạng permit đã ghi từ đầu ca.</li>
+<li>Người có quyền dừng công việc cần thực sự có mặt và quan sát hiện trường xuyên suốt thời gian permit có hiệu lực, không chỉ ký một lần rồi rời đi.</li>
+<li>Với công việc kéo dài hoặc điều kiện dễ thay đổi, nên chia thời gian hiệu lực permit thành khoảng ngắn hơn kèm xác nhận lại trước khi gia hạn.</li>
+<li>Khi điều kiện thực tế khác với điều kiện ghi trên permit, công việc phải dừng để đánh giá lại — không tiếp tục chỉ vì permit vẫn còn hiệu lực thời gian.</li>
+      </ul>
+    </div>
+
+    <div class="cta-box">
+      <p><strong>Muốn học có hệ thống, không chỉ đọc một bài?</strong></p>
+      <p>Khóa <strong>CVNH-01</strong> — Kỹ thuật an toàn các công việc nguy hiểm — gồm video theo mô-đun, khung áp dụng thực tế, tiến độ trên hệ thống và kiểm tra cuối khóa. Học trọn khóa 99.000đ.</p>
+      <p style="margin-top:1rem">
+        <a class="btn btn--amber" href="../cvnh-01/">Vào khóa CVNH-01</a>
+        <a class="btn btn--line" href="./">Tất cả bài kiến thức</a>
+      </p>
+    </div>
   </main>
+
+  <footer>
+    <div class="wrap footer-brand">
+      <strong>SA247 E-LEARNING</strong>
+      <p>Kiến thức miễn phí · Khóa học · Chứng nhận</p>
+      <p class="footer-links">
+        <a href="../index.html">Trang chủ</a> ·
+        <a href="./">Kiến thức</a> ·
+        <a href="../index.html#chuong-trinh">Khóa học</a>
+      </p>
+    </div>
+  </footer>
 </body>
 </html>

@@ -1,0 +1,168 @@
+{
+  "language": "vi",
+  "article_count": 27,
+  "articles": [
+    {
+      "slug": "5-loi-moi-vao-nghe.html",
+      "title": "5 lỗi phổ biến của nhân viên ATVSLĐ mới vào nhà máy",
+      "course": "ATNM-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atnm01-checklist-dau-ca.html",
+      "title": "Checklist đầu ca nhà máy: 12 mục HSE nên nhìn trước khi dây chuyền chạy",
+      "course": "ATNM-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atnm01-30-60-90.html",
+      "title": "Kế hoạch 30–60–90 ngày cho HSE mới vào nhà máy",
+      "course": "ATNM-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atnm02-he-thong-hay-chay-viec.html",
+      "title": "Bạn đang quản lý hệ thống HSE hay chỉ đang “cháy việc” mỗi ngày?",
+      "course": "ATNM-02",
+      "status": "ready"
+    },
+    {
+      "slug": "atnm02-kpi-dan-dat.html",
+      "title": "KPI HSE nhà máy: đừng chỉ đếm ngày không tai nạn",
+      "course": "ATNM-02",
+      "status": "ready"
+    },
+    {
+      "slug": "atnm02-hop-hse-ra-quyet-dinh.html",
+      "title": "Họp HSE 30 phút ra quyết định — không chỉ đọc biên bản",
+      "course": "ATNM-02",
+      "status": "ready"
+    },
+    {
+      "slug": "checklist-gian-giao.html",
+      "title": "5 điểm kiểm tra giàn giáo trước khi cho người lên",
+      "course": "ATXD-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atxd01-ngay-dau-cong-truong.html",
+      "title": "Ngày đầu trên công trường: 8 việc HSE mới nên làm trước khi “đi tuần”",
+      "course": "ATXD-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atxd01-nha-thau-brief.html",
+      "title": "Brief nhà thầu 10 phút trước khi vào công trường",
+      "course": "ATXD-01",
+      "status": "ready"
+    },
+    {
+      "slug": "atxd02-kiem-soat-theo-giai-doan.html",
+      "title": "Kiểm soát HSE theo giai đoạn thi công — vì sao một checklist không đủ cho cả dự án",
+      "course": "ATXD-02",
+      "status": "ready"
+    },
+    {
+      "slug": "atxd02-bptc-va-hse.html",
+      "title": "Biện pháp thi công (BPTC) và HSE — lồng an toàn vào bản vẽ, không viết hồ sơ riêng",
+      "course": "ATXD-02",
+      "status": "ready"
+    },
+    {
+      "slug": "atxd02-nha-thau-nhieu-tang.html",
+      "title": "Quản lý ATVSLĐ khi công trường có nhiều tầng nhà thầu phụ",
+      "course": "ATXD-02",
+      "status": "ready"
+    },
+    {
+      "slug": "ktn01-10-loi-kiem-tra.html",
+      "title": "10 lỗi kiểm tra thiết bị nâng trước khi vận hành — vì sao chúng lặp lại mãi",
+      "course": "KTN-01",
+      "status": "ready"
+    },
+    {
+      "slug": "ktn01-7-diem-truoc-nang.html",
+      "title": "7 điểm phải kiểm tra trước khi nâng hàng — bỏ một điểm là đủ để xảy ra sự cố",
+      "course": "KTN-01",
+      "status": "ready"
+    },
+    {
+      "slug": "ktn01-khong-dung-duoi-tai.html",
+      "title": "Không đứng dưới tải — nguyên tắc cơ bản nhất, cũng là nguyên tắc bị vi phạm nhiều nhất",
+      "course": "KTN-01",
+      "status": "ready"
+    },
+    {
+      "slug": "tinh-huong-permit.html",
+      "title": "Tình huống permit to work: khi giấy phép làm việc an toàn chỉ là thủ tục ký cho xong",
+      "course": "CVNH-01",
+      "status": "ready"
+    },
+    {
+      "slug": "cvnh01-loto-chua-du.html",
+      "title": "LOTO chưa đủ — vì sao khóa và treo thẻ cách ly nguồn năng lượng vẫn để lọt sự cố",
+      "course": "CVNH-01",
+      "status": "ready"
+    },
+    {
+      "slug": "cvnh01-cse-gas-test.html",
+      "title": "Không gian hạn chế (CSE) và đo khí — vì sao một lần đo đầu ca không đủ",
+      "course": "CVNH-01",
+      "status": "ready"
+    },
+    {
+      "slug": "al01-noi-hoi-dau-hieu.html",
+      "title": "5 dấu hiệu thiết bị áp lực / nồi hơi cần dừng và báo cáo ngay",
+      "course": "AL-01",
+      "status": "ready"
+    },
+    {
+      "slug": "al01-kiem-dinh-va-van-hanh.html",
+      "title": "Có tem kiểm định rồi — vẫn phải vận hành đúng cách",
+      "course": "AL-01",
+      "status": "ready"
+    },
+    {
+      "slug": "al01-chai-khi-van-chuyen.html",
+      "title": "Chai chứa khí: 7 quy tắc lưu trữ và di chuyển hay bị bỏ qua",
+      "course": "AL-01",
+      "status": "ready"
+    },
+    {
+      "slug": "iso45001-ho-so-hay-he-thong.html",
+      "title": "ISO 45001: bạn đang xây hệ thống hay chỉ đang hoàn thành hồ sơ?",
+      "course": "ISO45001",
+      "status": "ready"
+    },
+    {
+      "slug": "iso45001-rui-ro-va-co-hoi.html",
+      "title": "Điều khoản rủi ro & cơ hội: làm sao để không biến thành bảng Excel chết",
+      "course": "ISO45001",
+      "status": "ready"
+    },
+    {
+      "slug": "iso45001-tham-gia-nld.html",
+      "title": "Sự tham gia của người lao động trong ISO 45001 — làm thật chứ không lấy chữ ký",
+      "course": "ISO45001",
+      "status": "ready"
+    },
+    {
+      "slug": "iso9001-qms-tao-gia-tri.html",
+      "title": "ISO 9001 tạo giá trị thật ở đâu — không chỉ “đủ hồ sơ giao hàng”",
+      "course": "ISO9001",
+      "status": "ready"
+    },
+    {
+      "slug": "iso9001-khong-phu-hop.html",
+      "title": "Xử lý không phù hợp: từ “ghi nhận” đến hết tái diễn",
+      "course": "ISO9001",
+      "status": "ready"
+    },
+    {
+      "slug": "iso9001-rui-ro-theo-tu-duy.html",
+      "title": "Tư duy dựa trên rủi ro trong ISO 9001: áp dụng vào họp giao ban thế nào?",
+      "course": "ISO9001",
+      "status": "ready"
+    }
+  ]
+}
