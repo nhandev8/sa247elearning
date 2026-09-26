@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Auth callback · SA247</title>
-  <link rel="stylesheet" href="../assets/site.css?v=20260926google" />
+  <title>Xác thực · SA247</title>
+  <link rel="stylesheet" href="../assets/site.css?v=20260926g2" />
   <script src="../assets/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js?v=20260926google" defer></script>
+  <script src="../assets/js/supabase-client.js?v=20260926g2" defer></script>
 </head>
 <body class="auth-page">
   <main class="wrap auth-box">
@@ -29,18 +29,72 @@
       ).trim();
     }
 
+    function pickAvatar(user) {
+      const meta = user?.user_metadata || {};
+      return (meta.avatar_url || meta.picture || "").trim();
+    }
+
+    function isSafeNext(next) {
+      if (!next || /^https?:/i.test(next)) return false;
+      if (next.includes("://")) return false;
+      return true;
+    }
+
+    function isFirstGoogleLogin(user) {
+      if (!user?.created_at) return false;
+      const created = Date.parse(user.created_at);
+      const last = Date.parse(user.last_sign_in_at || user.created_at);
+      if (!Number.isFinite(created) || !Number.isFinite(last)) return false;
+      return Math.abs(last - created) < 120000;
+    }
+
+    async function hasAnyEnrollment(session) {
+      try {
+        const sb = await sa247Auth.ensureClient();
+        const uid = session?.user?.id;
+        if (!uid) return false;
+        const { data, error } = await sb
+          .from("enrollments")
+          .select("id")
+          .eq("user_id", uid)
+          .eq("status", "active")
+          .limit(1);
+        if (error) return false;
+        return Array.isArray(data) && data.length > 0;
+      } catch (_) {
+        return false;
+      }
+    }
+
     async function syncGoogleProfile(session) {
       try {
         const user = session?.user;
         if (!user?.id) return;
         const name = pickDisplayName(user);
-        if (!name) return;
+        const avatar = pickAvatar(user);
         const profile = await sa247Auth.getProfile({ session, timeoutMs: 1200 });
-        if (profile?.full_name && String(profile.full_name).trim()) return;
-        await sa247Auth.updateProfile({ full_name: name });
+        const patch = {};
+        if (name && !(profile?.full_name && String(profile.full_name).trim())) {
+          patch.full_name = name;
+        }
+        if (avatar && !(profile?.avatar_url && String(profile.avatar_url).trim())) {
+          patch.avatar_url = avatar;
+        }
+        if (Object.keys(patch).length) await sa247Auth.updateProfile(patch);
       } catch (e) {
         console.warn("[SA247] syncGoogleProfile", e);
       }
+    }
+
+    function mapOauthError(errDesc) {
+      const raw = decodeURIComponent(String(errDesc || "").replace(/\+/g, " ")).toLowerCase();
+      if (raw.includes("access_denied") || raw.includes("cancel")) {
+        return "Bạn đã hủy đăng nhập bằng Google.";
+      }
+      if (raw.includes("banned") || raw.includes("disabled")) {
+        return "Tài khoản của bạn hiện không thể đăng nhập. Vui lòng liên hệ SA247.";
+      }
+      return "Không thể đăng nhập bằng Google. Vui lòng thử lại.";
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -58,6 +112,7 @@
         if (!next) next = sessionStorage.getItem("sa247_auth_next") || "";
         sessionStorage.removeItem("sa247_auth_next");
       } catch (_) {}
+
       const type = hash.get("type") || params.get("type");
       const code = params.get("code");
       const errDesc =
@@ -67,14 +122,11 @@
         hash.get("error");
 
       if (errDesc) {
-        msg.textContent = decodeURIComponent(errDesc.replace(/\+/g, " "));
-        setTimeout(() => {
-          location.replace("login.html");
-        }, 2500);
+        msg.textContent = mapOauthError(errDesc);
+        setTimeout(() => location.replace("login.html"), 2200);
         return;
       }
 
-      // PKCE / Google OAuth: trao đổi ?code= lấy session
       if (code) {
         try {
           const { error } = await sb.auth.exchangeCodeForSession(code);
@@ -100,21 +152,16 @@
         (next && next.includes("doi-mat-khau"));
 
       if (!session) {
-        msg.textContent =
-          "Không lấy được phiên đăng nhập. Thử đăng nhập hoặc dùng lại link trong email.";
-        setTimeout(() => {
-          location.replace("login.html");
-        }, 1800);
+        msg.textContent = "Không thể đăng nhập bằng Google. Vui lòng thử lại.";
+        setTimeout(() => location.replace("login.html"), 1800);
         return;
       }
 
+      // Đồng bộ hồ sơ — không đụng enrollments / progress / chứng nhận
       await syncGoogleProfile(session);
 
-      msg.textContent = isRecovery
-        ? "Xác nhận thành công. Chuyển tới thiết lập mật khẩu…"
-        : "Xác nhận thành công. Đang vào tài khoản…";
-
       if (isRecovery) {
+        msg.textContent = "Xác nhận thành công. Chuyển tới thiết lập mật khẩu…";
         const activate =
           type === "invite" ||
           type === "signup" ||
@@ -126,10 +173,20 @@
         );
         return;
       }
-      if (next && !/^https?:/i.test(next) && !/dashboard\/?$/i.test(next)) {
+
+      msg.textContent = "Đăng nhập thành công. Đang vào tài khoản…";
+
+      if (isSafeNext(next) && !/dashboard\/?$/i.test(next)) {
         location.replace(next);
         return;
       }
+
+      const enrolled = await hasAnyEnrollment(session);
+      if (!enrolled && isFirstGoogleLogin(session.user)) {
+        location.replace("../tim-khoa/?welcome=1");
+        return;
+      }
+
       location.replace(await sa247Auth.homeAfterLogin(next, session));
     });
   </script>

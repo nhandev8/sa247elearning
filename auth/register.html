@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Đăng ký · SA247 E-Learning</title>
-  <link rel="stylesheet" href="../assets/site.css?v=20260926google" />
+  <title>Tạo tài khoản · SA247 E-Learning</title>
+  <link rel="stylesheet" href="../assets/site.css?v=20260926g2" />
   <script src="../assets/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js?v=20260926google" defer></script>
+  <script src="../assets/js/supabase-client.js?v=20260926g2" defer></script>
   <script src="../assets/js/sa247-track.js?v=20260917" defer></script>
 </head>
 <body class="auth-page">
   <main class="wrap auth-box">
     <p class="kicker">SA247 E-Learning</p>
-    <h1>Tạo tài khoản</h1>
-    <p class="lead">Tạo tài khoản để theo dõi tiến độ và mở khóa khóa học sau thanh toán.</p>
+    <h1>Tạo tài khoản SA247</h1>
+    <p class="lead">Một tài khoản để theo dõi tiến độ và mở khóa học sau thanh toán. Google chỉ xác thực danh tính — quyền học vẫn do SA247 cấp.</p>
 
-    <button type="button" class="btn btn--google" id="btn-google" aria-label="Đăng ký / đăng nhập bằng Google">
+    <button type="button" class="btn btn--google" id="btn-google">
       <span class="btn--google__icon" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 48 48" focusable="false"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
       </span>
       Tiếp tục với Google
     </button>
-    <p class="auth-divider" role="presentation"><span>hoặc đăng ký bằng email</span></p>
+    <p class="auth-divider" role="presentation"><span>hoặc</span></p>
 
     <form id="reg-form" class="order-form" data-sa247-event="register_submit">
       <label>Họ và tên
@@ -33,13 +33,11 @@
       <label>Mật khẩu (tối thiểu 6 ký tự)
         <input name="password" type="password" required minlength="6" autocomplete="new-password" />
       </label>
-      <button class="btn btn--amber" type="submit">Đăng ký</button>
+      <button class="btn btn--amber" type="submit">Tạo tài khoản</button>
       <p class="form-msg" id="msg" role="status"></p>
     </form>
-    <p>
-      <a href="login.html">Đã có tài khoản? Đăng nhập</a>
-      ·
-      <a href="quen-mat-khau.html" id="link-forgot">Quên mật khẩu</a>
+    <p class="auth-links">
+      Đã có tài khoản? <a href="login.html">Đăng nhập</a>
     </p>
   </main>
   <script>
@@ -47,26 +45,20 @@
       const q = email ? "?email=" + encodeURIComponent(email) : "";
       return (
         "Tài khoản với email này đã được đăng ký. " +
-        '<a href="login.html' +
-        q +
-        '">Đăng nhập</a> hoặc ' +
-        '<a href="quen-mat-khau.html' +
-        q +
-        '">quên mật khẩu</a> để đặt lại.'
+        '<a href="login.html' + q + '">Đăng nhập</a> hoặc ' +
+        '<a href="quen-mat-khau.html' + q + '">quên mật khẩu</a> để đặt lại.'
       );
     }
 
-    const emailInput = document.querySelector('#reg-form input[name="email"]');
-    const forgotLink = document.getElementById("link-forgot");
-    if (emailInput && forgotLink) {
-      const syncForgot = () => {
-        const v = (emailInput.value || "").trim();
-        forgotLink.href = v
-          ? "quen-mat-khau.html?email=" + encodeURIComponent(v)
-          : "quen-mat-khau.html";
-      };
-      emailInput.addEventListener("input", syncForgot);
-      syncForgot();
+    function googleErrorMessage(err) {
+      const raw = String(err?.message || err || "").toLowerCase();
+      if (raw.includes("access_denied") || raw.includes("cancel") || raw.includes("hủy")) {
+        return "Bạn đã hủy đăng nhập bằng Google.";
+      }
+      if (raw.includes("banned") || raw.includes("disabled") || raw.includes("locked")) {
+        return "Tài khoản của bạn hiện không thể đăng nhập. Vui lòng liên hệ SA247.";
+      }
+      return "Không thể đăng nhập bằng Google. Vui lòng thử lại.";
     }
 
     document.getElementById("btn-google").addEventListener("click", async () => {
@@ -83,7 +75,7 @@
         const next = new URLSearchParams(location.search).get("next") || "";
         const { data, error } = await sa247Auth.signInWithGoogle({ next });
         if (error) {
-          msg.textContent = error.message || "Không mở được Google.";
+          msg.textContent = googleErrorMessage(error);
           btn.disabled = false;
           return;
         }
@@ -91,10 +83,10 @@
           location.href = data.url;
           return;
         }
-        msg.textContent = "Không nhận được URL Google. Kiểm tra provider Google trên Supabase.";
+        msg.textContent = "Không thể đăng nhập bằng Google. Vui lòng thử lại.";
         btn.disabled = false;
       } catch (err) {
-        msg.textContent = err?.message || "Đăng nhập Google lỗi.";
+        msg.textContent = googleErrorMessage(err);
         btn.disabled = false;
       }
     });
@@ -116,12 +108,7 @@
       );
       if (error) {
         const m = (error.message || "").toLowerCase();
-        if (
-          m.includes("already") ||
-          m.includes("registered") ||
-          m.includes("exists") ||
-          m.includes("user already")
-        ) {
+        if (m.includes("already") || m.includes("registered") || m.includes("exists") || m.includes("user already")) {
           msg.innerHTML = alreadyRegisteredHtml(email);
         } else if (m.includes("database error")) {
           msg.innerHTML =
@@ -131,7 +118,6 @@
         }
         return;
       }
-      // Supabase (confirm email bật): user đã tồn tại thường trả user giả, identities rỗng
       const identities = data?.user?.identities;
       if (data?.user && Array.isArray(identities) && identities.length === 0) {
         msg.innerHTML = alreadyRegisteredHtml(email);
@@ -140,12 +126,8 @@
       if (data?.user && !data.session) {
         msg.innerHTML =
           "Đăng ký gần xong. Nếu chưa vào được, hãy " +
-          '<a href="login.html?email=' +
-          encodeURIComponent(email) +
-          '">đăng nhập</a> hoặc ' +
-          '<a href="quen-mat-khau.html?email=' +
-          encodeURIComponent(email) +
-          '">quên mật khẩu</a>.';
+          '<a href="login.html?email=' + encodeURIComponent(email) + '">đăng nhập</a> hoặc ' +
+          '<a href="quen-mat-khau.html?email=' + encodeURIComponent(email) + '">quên mật khẩu</a>.';
         return;
       }
       const dest = await sa247Auth.homeAfterLogin("../dashboard/", data?.session);
