@@ -3990,3 +3990,22 @@ body.course-page { padding-bottom: 4.5rem; }
   html.sa247-signed-in .nav--marketing [data-nav-learn-wrap][hidden] { display: none !important; }
   html.sa247-signed-in .nav--marketing .nav__avatar[hidden] { display: none !important; }
 }
+
+/* ---- Auth Google OAuth ---- */
+.auth-page { min-height: 100vh; display: grid; align-items: center; padding: 2rem 0; background: #f6f8fa; }
+.auth-box { max-width: 26rem; margin: 0 auto; padding: 1.75rem 1.4rem; background: #fff; border: 1px solid rgba(11,31,58,.1); border-radius: 14px; box-shadow: 0 10px 28px rgba(7,20,38,.06); }
+.auth-box h1 { margin: .35rem 0 1rem; font-size: 1.55rem; }
+.auth-divider { display: flex; align-items: center; gap: .75rem; margin: 1.1rem 0; color: #64748b; font-size: .85rem; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: rgba(11,31,58,.12); }
+.auth-divider span { white-space: nowrap; }
+.btn--google {
+  display: inline-flex; align-items: center; justify-content: center; gap: .65rem;
+  width: 100%; min-height: 2.75rem; padding: .6rem 1rem;
+  background: #fff; color: #1f2937; border: 1px solid #dadce0;
+  border-radius: 10px; font-weight: 700; font-size: .95rem;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+.btn--google:hover { background: #f8fafc; box-shadow: 0 1px 2px rgba(60,64,67,.2); }
+.btn--google:disabled { opacity: .65; cursor: wait; }
+.btn--google__icon { display: inline-flex; line-height: 0; }

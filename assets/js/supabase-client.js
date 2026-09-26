@@ -265,6 +265,33 @@
       const sb = await ensureClient();
       return sb.auth.signInWithPassword({ email, password });
     },
+    /**
+     * Google OAuth (Supabase Auth → Google provider).
+     * redirectTo mặc định: /auth/callback.html (+ next nếu có).
+     */
+    async signInWithGoogle(opts) {
+      writeProfileCache(null);
+      const sb = await ensureClient();
+      const next = (opts?.next || "").trim();
+      try {
+        if (next) sessionStorage.setItem("sa247_auth_next", next);
+        else sessionStorage.removeItem("sa247_auth_next");
+      } catch (_) {}
+      const redirect = new URL("callback.html", location.href);
+      if (next && !/^https?:/i.test(next)) {
+        redirect.searchParams.set("next", next);
+      }
+      return sb.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: redirect.href,
+          queryParams: {
+            access_type: "offline",
+            prompt: "select_account",
+          },
+        },
+      });
+    },
     async signUp(email, password, fullName) {
       writeProfileCache(null);
       const sb = await ensureClient();
