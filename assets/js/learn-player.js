@@ -353,7 +353,7 @@
             <p class="meta">${
               enrolled
                 ? "Bạn đã mở khóa toàn bộ lộ trình."
-                : `Mở sẵn <strong>${openN}</strong> video · còn lại khóa đến khi đăng ký.`
+                : `Xem trước <strong>${openN}</strong> video · còn lại khóa đến khi đăng ký.`
             }</p>
             <div class="progress-bar" aria-hidden="true"><span style="width:${pct}%"></span></div>
           </div>
@@ -408,7 +408,7 @@
         const playable = !!(l.youtube_video_id || l.has_video);
         li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}" data-lesson="${esc(l.id)}">
           <span class="classroom__lesson-title">${esc(l.title)}</span>
-          ${l.is_free ? '<span class="badge badge--free">Mở sẵn</span>' : ""}
+          ${l.is_free ? '<span class="badge badge--free">Xem trước</span>' : ""}
           ${doneL ? '<span class="badge">Đã học</span>' : ""}
           ${locked ? '<span class="badge">Khóa</span>' : ""}
           ${!locked && !playable ? '<span class="badge">Sắp có</span>' : ""}
@@ -433,8 +433,8 @@
 
       if (!enrolled && !lesson.is_free) {
         player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
-          <p class="lead">Video này nằm trong phần khóa — đăng ký để xem toàn bộ lộ trình.</p>
-          <p><a class="btn btn--amber" href="#dang-ky">Mở khóa khóa học</a>
+          <p class="lead">Muốn học đầy đủ và có hệ thống? Tiếp tục với toàn bộ khóa học <strong>99.000đ</strong>.</p>
+          <p><a class="btn btn--amber" href="#dang-ky">Bắt đầu khóa học</a>
           <a class="btn btn--line" href="${esc(loginHref)}">Đăng nhập</a></p>`;
         meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
         host.querySelector(".classroom")?.classList.remove("is-side-open");
@@ -489,7 +489,7 @@
 
       meta.innerHTML = `
         <h4>${title}</h4>
-        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Mở sẵn" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
+        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Xem trước" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
         ${resumeHint}
         ${descHtml}
         ${
