@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Auth callback · SA247</title>
-  <link rel="stylesheet" href="../assets/site.css" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260926google" />
   <script src="../assets/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/supabase-client.js?v=20260926google" defer></script>
 </head>
 <body class="auth-page">
   <main class="wrap auth-box">
@@ -19,6 +19,30 @@
       return new Promise((r) => setTimeout(r, ms));
     }
 
+    function pickDisplayName(user) {
+      const meta = user?.user_metadata || {};
+      return (
+        meta.full_name ||
+        meta.name ||
+        [meta.given_name, meta.family_name].filter(Boolean).join(" ") ||
+        ""
+      ).trim();
+    }
+
+    async function syncGoogleProfile(session) {
+      try {
+        const user = session?.user;
+        if (!user?.id) return;
+        const name = pickDisplayName(user);
+        if (!name) return;
+        const profile = await sa247Auth.getProfile({ session, timeoutMs: 1200 });
+        if (profile?.full_name && String(profile.full_name).trim()) return;
+        await sa247Auth.updateProfile({ full_name: name });
+      } catch (e) {
+        console.warn("[SA247] syncGoogleProfile", e);
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
       const msg = document.getElementById("msg");
       if (!window.sa247Auth?.ready) {
@@ -29,7 +53,11 @@
       const sb = await sa247Auth.ensureClient();
       const params = new URLSearchParams(location.search);
       const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
-      const next = params.get("next") || hash.get("next");
+      let next = params.get("next") || hash.get("next");
+      try {
+        if (!next) next = sessionStorage.getItem("sa247_auth_next") || "";
+        sessionStorage.removeItem("sa247_auth_next");
+      } catch (_) {}
       const type = hash.get("type") || params.get("type");
       const code = params.get("code");
       const errDesc =
@@ -46,7 +74,7 @@
         return;
       }
 
-      // PKCE: trao đổi ?code= lấy session (confirm / recovery)
+      // PKCE / Google OAuth: trao đổi ?code= lấy session
       if (code) {
         try {
           const { error } = await sb.auth.exchangeCodeForSession(code);
@@ -57,7 +85,7 @@
       }
 
       let session = null;
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 10; i++) {
         session = await sa247Auth.getSession();
         if (session) break;
         await sleep(200);
@@ -80,6 +108,8 @@
         return;
       }
 
+      await syncGoogleProfile(session);
+
       msg.textContent = isRecovery
         ? "Xác nhận thành công. Chuyển tới thiết lập mật khẩu…"
         : "Xác nhận thành công. Đang vào tài khoản…";
@@ -100,7 +130,7 @@
         location.replace(next);
         return;
       }
-      location.replace(await sa247Auth.homeAfterLogin(next));
+      location.replace(await sa247Auth.homeAfterLogin(next, session));
     });
   </script>
 </body>
