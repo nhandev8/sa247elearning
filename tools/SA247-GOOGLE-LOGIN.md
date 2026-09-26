@@ -1,4 +1,4 @@
-# SA247 — Tiếp tục với Google (feature hoàn chỉnh)
+﻿# SA247 — Tiếp tục với Google (feature hoàn chỉnh)
 
 Google chỉ **xác thực danh tính**. Quyền học vẫn theo:
 
@@ -89,3 +89,16 @@ Authorized redirect URI (**callback của Supabase**, không tự đoán):
 - Không tự tạo mật khẩu cho user Google  
 - Không cấp quyền học chỉ vì đăng nhập Google  
 - Không đá mọi người về homepage sau login
+
+## Trạng thái cấu hình (2026-09-26)
+
+- Supabase Google provider: **Enabled**
+- Manual linking: **Enabled**
+- Redirect URLs + Site URL: đã set
+- Google Cloud OAuth **Web application** SA247 Web Auth: đã tạo
+- Callback URI: `https://quuwvsiqqqvdbenyowor.supabase.co/auth/v1/callback`
+- Migration `handle_new_user` + `avatar_url` / `auth_provider`: applied
+- Live GA-001: **PASS** (nút Tiếp tục với Google)
+
+Còn lại khi test người thật: GA-002…012; OAuth consent đang **Testing** → chỉ test users (hoặc publish app).
+
