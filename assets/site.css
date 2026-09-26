@@ -4009,3 +4009,7 @@ body.course-page { padding-bottom: 4.5rem; }
 .btn--google:hover { background: #f8fafc; box-shadow: 0 1px 2px rgba(60,64,67,.2); }
 .btn--google:disabled { opacity: .65; cursor: wait; }
 .btn--google__icon { display: inline-flex; line-height: 0; }
+
+.auth-links{margin-top:1.1rem;font-size:.92rem;line-height:1.7;color:#475569}
+.auth-links a{font-weight:600;color:#0b1f3a}
+.auth-box .lead{color:#475569;font-size:.95rem;margin:0 0 1rem}
