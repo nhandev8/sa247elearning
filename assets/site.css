@@ -3980,6 +3980,13 @@ body.course-page { padding-bottom: 4.5rem; }
     grid-template-columns: auto 1fr auto;
   }
   .nav--marketing .nav__cta { display: none; }
-  .nav--marketing .nav__actions .nav__link[data-nav-login] { display: none; }
-  .nav--marketing .nav__avatar { display: inline-flex; }
+  /* Guest: login chỉ trong drawer — không ép hiện avatar */
+  .nav--marketing .nav__actions .nav__link[data-nav-login] { display: none !important; }
+  .nav--marketing .nav__avatar { display: none !important; }
+  .nav--marketing [data-nav-learn-wrap] { display: none !important; }
+  /* Đã đăng nhập: hiện Học tập + Tài khoản trên header */
+  html.sa247-signed-in .nav--marketing .nav__avatar { display: inline-flex !important; }
+  html.sa247-signed-in .nav--marketing [data-nav-learn-wrap] { display: inline-flex !important; }
+  html.sa247-signed-in .nav--marketing [data-nav-learn-wrap][hidden] { display: none !important; }
+  html.sa247-signed-in .nav--marketing .nav__avatar[hidden] { display: none !important; }
 }

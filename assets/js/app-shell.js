@@ -6,6 +6,19 @@
     else el.removeAttribute("hidden");
   }
 
+  function paintGuest() {
+    setHidden(document.querySelector("[data-nav-register]"), true);
+    setHidden(document.querySelector("[data-nav-login]"), false);
+    setHidden(document.querySelector("[data-nav-learn-wrap]"), true);
+    setHidden(document.querySelector("[data-nav-dashboard]"), true);
+    setHidden(document.querySelector("[data-nav-admin]"), true);
+    setHidden(document.querySelector("[data-nav-logout]"), true);
+    setHidden(document.querySelector("[data-nav-account]"), true);
+    setHidden(document.querySelector("[data-nav-login-mobile]"), false);
+    setHidden(document.querySelector("[data-nav-learn-mobile]"), true);
+    document.documentElement.classList.remove("sa247-signed-in", "sa247-staff");
+  }
+
   async function paint() {
     const login = document.querySelector("[data-nav-login]");
     const register = document.querySelector("[data-nav-register]");
@@ -20,15 +33,18 @@
 
     if (!login && !dashBtn && !logout && !admin && !accountBtn) return;
 
+    // Guest-first: ẩn tài khoản trước khi xác thực xong
+    paintGuest();
+
     let signedIn = false;
     let staff = false;
     let label = "Tài khoản";
     try {
       if (window.sa247Auth?.ready) {
         const session = await sa247Auth.getSession();
-        signedIn = Boolean(session);
+        signedIn = Boolean(session?.user?.id);
         if (signedIn) {
-          const profile = await sa247Auth.getProfile({ timeoutMs: 1500 });
+          const profile = await sa247Auth.getProfile({ timeoutMs: 1500, session });
           staff = sa247Auth.isStaffRole(profile?.role);
           const name = (profile?.full_name || profile?.ho_ten || session.user?.email || "").trim();
           if (name) label = name.split(/\s+/).slice(-2).join(" ") || name;
@@ -40,7 +56,6 @@
       staff = false;
     }
 
-    // Public: never show Đăng ký in header
     setHidden(register, true);
     setHidden(login, signedIn);
     setHidden(learnWrap, !signedIn);
@@ -51,12 +66,11 @@
     setHidden(loginMobile, signedIn);
     setHidden(learnMobile, !signedIn);
 
-    if (accountBtn) accountBtn.textContent = label;
+    if (accountBtn) accountBtn.textContent = signedIn ? label : "Tài khoản";
 
     document.documentElement.classList.toggle("sa247-signed-in", signedIn);
     document.documentElement.classList.toggle("sa247-staff", staff);
 
-    // Never hijack marketing CTA to Admin — admin only in account menu
     if (cta && !document.body.classList.contains("course-page")) {
       if (!cta.dataset.lockedHref) cta.dataset.lockedHref = cta.getAttribute("href") || "";
       if (!cta.dataset.lockedText) cta.dataset.lockedText = cta.textContent || "Tìm khóa phù hợp";
@@ -74,23 +88,35 @@
         } catch (err) {
           console.warn(err);
         }
+        paintGuest();
         location.href = logout.getAttribute("data-home") || "index.html";
       });
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Wait one tick so marketing-nav can mount hooks first
     requestAnimationFrame(() => {
-      setHidden(document.querySelector("[data-nav-learn-wrap]"), true);
-      setHidden(document.querySelector("[data-nav-dashboard]"), true);
-      setHidden(document.querySelector("[data-nav-admin]"), true);
-      setHidden(document.querySelector("[data-nav-logout]"), true);
-      setHidden(document.querySelector("[data-nav-account]"), true);
-      setHidden(document.querySelector("[data-nav-register]"), true);
-      setHidden(document.querySelector("[data-nav-login]"), false);
+      paintGuest();
       paint();
     });
+  });
+
+  // Đồng bộ khi session đổi (login/logout tab khác)
+  document.addEventListener("DOMContentLoaded", () => {
+    const bind = () => {
+      if (!window.sa247Auth?.ensureClient || window.__sa247NavAuthBound) return;
+      window.__sa247NavAuthBound = true;
+      window.sa247Auth
+        .ensureClient()
+        .then((sb) => {
+          if (!sb?.auth?.onAuthStateChange) return;
+          sb.auth.onAuthStateChange(() => {
+            paint();
+          });
+        })
+        .catch(() => {});
+    };
+    setTimeout(bind, 0);
   });
 
   window.sa247PaintNav = paint;
