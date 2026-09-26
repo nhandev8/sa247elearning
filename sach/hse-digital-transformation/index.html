@@ -3,95 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HSE Digital Transformation · Đọc miễn phí | Sách HSE · SA247</title>
-  <meta name="description" content="HSE Digital Transformation — trang bìa, lời cảm ơn, lời nói đầu, mở đầu, mục lục và 23 chương. Đọc online miễn phí trên SA247." />
+  <title>HSE Digital Transformation · Từ HSE truyền thống đến HSE dựa trên dữ liệu | SA247</title>
+  <meta name="description" content="HSE Digital Transformation — từ HSE truyền thống đến HSE dựa trên dữ liệu. Không chỉ số hóa HSE. Mà chuyển đổi cách chúng ta làm HSE." />
   <link rel="canonical" href="https://nhandev8.github.io/sa247elearning/sach/hse-digital-transformation/" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/site.css?v=20260926book2" />
+  <link rel="stylesheet" href="../../assets/site.css?v=20260926open" />
   <style>
-.book-reader{padding:5.5rem 0 4rem;background:#f7f5f0}
-.book-reader__bar{position:sticky;top:3.4rem;z-index:20;background:rgba(247,245,240,.94);backdrop-filter:blur(8px);border-bottom:1px solid rgba(11,31,58,.08);padding:.55rem 0;margin-bottom:1.25rem}
-.book-reader__bar .wrap{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between}
-.book-reader__meta{font-size:.82rem;font-weight:700;color:#0f766e;letter-spacing:.02em}
-.book-reader__nav{display:flex;gap:.5rem;flex-wrap:wrap}
-.book-reader__nav a{font-size:.85rem;font-weight:600;text-decoration:none;color:#0b1f3a;padding:.35rem .65rem;border-radius:8px;border:1px solid rgba(11,31,58,.12);background:#fff}
-.book-reader__nav a:hover{border-color:#0f766e;color:#0f766e}
-.book-shell{display:grid;gap:1.5rem;max-width:980px;margin:0 auto}
-@media(min-width:980px){.book-shell{grid-template-columns:220px minmax(0,42rem)}}
-.book-side{display:none}
-@media(min-width:980px){.book-side{display:block;position:sticky;top:7.2rem;align-self:start;max-height:calc(100vh - 8rem);overflow:auto}}
-.book-side h2{margin:0 0 .65rem;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:#64748b}
-.book-side a{display:block;padding:.4rem .45rem;border-radius:8px;text-decoration:none;color:#334155;font-size:.84rem;line-height:1.35}
-.book-side a:hover,.book-side a.is-active{background:#ecfdf5;color:#0f766e;font-weight:700}
-.book-article{background:#fff;border:1px solid rgba(11,31,58,.08);border-radius:16px;padding:1.5rem 1.25rem 2rem;box-shadow:0 10px 30px rgba(7,20,38,.04)}
-@media(min-width:720px){.book-article{padding:2rem 2.25rem 2.5rem}}
-.book-article h1{font-size:clamp(1.45rem,2.6vw,1.95rem);line-height:1.25;margin:.35rem 0 1rem;color:#0b1f3a;max-width:24ch}
-.book-article h2{margin:1.75rem 0 .75rem;font-size:1.15rem;color:#0b1f3a}
-.book-article h3{margin:1.25rem 0 .5rem;font-size:1.02rem;color:#134e4a}
-.book-article p{margin:0 0 .95rem;color:#1e293b;font-size:1.05rem;line-height:1.75}
-.book-kicker{margin:0;color:#0f766e;font-weight:800;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase}
-.book-pager{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:1.25rem;border-top:1px solid rgba(11,31,58,.1)}
-.book-pager a{text-decoration:none;font-weight:700;color:#0b1f3a}
-.book-pager a:hover{color:#0f766e}
-.book-cover-page{text-align:center}
-.book-cover-page .book-cover-main{
-  display:block;margin:0 auto 1.25rem;width:auto;height:auto;
-  max-width:min(100%,512px);max-height:min(78vh,900px);
-  object-fit:contain;object-position:center;border-radius:0;
-  box-shadow:0 18px 40px rgba(7,20,38,.2);
+.book-open{padding:5.5rem 0 0;background:linear-gradient(165deg,#071426 0%,#0b1f3a 55%,#123a5c 100%);color:#f2f4f7}
+.book-open__grid{display:grid;gap:2rem;align-items:center;padding-bottom:2.75rem}
+@media(min-width:900px){
+  .book-open__grid{grid-template-columns:auto minmax(0,1fr);gap:2.75rem}
 }
-.book-cover-gallery{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:1.5rem;
-}
-.book-cover-gallery img{
-  display:block;width:auto;height:auto;
-  max-width:min(100%,220px);max-height:330px;
-  object-fit:contain;border-radius:0;border:1px solid #e2e8f0;
-}
-.book-hub{padding:5.5rem 0 3.5rem;background:linear-gradient(155deg,#071426 0%,#0b1f3a 45%,#0f766e 130%);color:#f2f4f7}
-.book-hub__grid{display:grid;gap:2rem;align-items:center;justify-items:center}
-@media(min-width:880px){
-  .book-hub__grid{grid-template-columns:auto 1fr;justify-items:stretch;gap:2.5rem}
-}
-.book-hub a.cover-link{display:block;margin:0 auto;line-height:0}
-.book-hub img.cover{
+.book-open a.cover-link{display:block;margin:0 auto;line-height:0}
+.book-open img.cover{
   display:block;width:auto;height:auto;
   max-width:min(100%,280px);max-height:min(70vh,520px);
-  object-fit:contain;object-position:center;border-radius:0;
+  object-fit:contain;object-position:center;
   box-shadow:0 24px 48px rgba(0,0,0,.35);margin:0 auto;
 }
-.book-hub .kicker{color:#99f6e4;font-weight:800;letter-spacing:.05em;text-transform:uppercase;font-size:.78rem}
-.book-hub h1{color:#fff;font-size:clamp(1.75rem,3.2vw,2.6rem);margin:.4rem 0 .75rem;max-width:16ch;line-height:1.15}
-.book-hub .lead{color:#d0d5dd;max-width:40rem;font-size:1.05rem}
-.book-hub .meta{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.1rem 0 1.35rem}
-.book-hub .meta span{padding:.35rem .7rem;border-radius:999px;border:1px solid rgba(255,255,255,.28);font-size:.82rem;font-weight:600}
-.book-hub .actions{display:flex;flex-wrap:wrap;gap:.65rem}
-</style>
+.book-open .eyebrow{margin:0;color:#99f6e4;font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.book-open h1{
+  color:#fff;font-size:clamp(1.7rem,3.2vw,2.55rem);margin:.45rem 0 .55rem;
+  max-width:14ch;line-height:1.15;letter-spacing:.01em;
+}
+.book-open .subtitle{
+  margin:0 0 1.35rem;color:#e2e8f0;font-size:clamp(1.05rem,2vw,1.25rem);
+  font-weight:500;line-height:1.45;max-width:28ch;
+}
+.book-open .byline{margin:0 0 1.35rem;color:#cbd5e1;font-size:.95rem}
+.book-open .actions{display:flex;flex-wrap:wrap;gap:.65rem}
+
+.book-prologue{
+  background:#f7f5f0;
+  padding:3rem 0 4rem;
+  color:#1e293b;
+}
+.book-prologue__inner{max-width:40rem;margin:0 auto}
+.book-prologue p{
+  margin:0 0 1.15rem;
+  font-size:1.08rem;
+  line-height:1.8;
+  color:#1e293b;
+}
+.book-prologue p.lead-line{
+  font-size:1.18rem;
+  font-weight:600;
+  color:#0b1f3a;
+  line-height:1.7;
+}
+.book-prologue p.bridge{
+  font-style:italic;
+  color:#0f766e;
+  font-weight:600;
+  font-size:1.12rem;
+  padding:.35rem 0;
+}
+.book-prologue p.close{
+  margin-top:1.75rem;
+  font-size:1.2rem;
+  font-weight:700;
+  color:#0b1f3a;
+  line-height:1.55;
+}
+.book-prologue .verse{
+  margin:1.5rem 0;
+  padding:1rem 0 1rem 1rem;
+  border-left:3px solid #99f6e4;
+}
+.book-prologue .verse p{margin:0 0 .45rem;color:#134e4a;font-weight:500}
+.book-prologue .verse p:last-child{margin:0}
+.book-prologue .start{
+  margin-top:2rem;
+  display:flex;flex-wrap:wrap;gap:.65rem;align-items:center;
+}
+  </style>
 </head>
 <body>
   <nav class="nav" id="nav"></nav>
-  <header class="book-hub book-hero" id="top">
-    <div class="wrap book-hub__grid">
-      <a class="cover-link" href="bia.html"><img class="cover" src="../../assets/books/hse-dt/cover-01.jpg" width="1024" height="1536" alt="Bìa sách HSE Digital Transformation" /></a>
+
+  <header class="book-open book-hero" id="top">
+    <div class="wrap book-open__grid">
+      <a class="cover-link" href="bia.html">
+        <img class="cover" src="../../assets/books/hse-dt/cover-01.jpg" width="1024" height="1536" alt="Bìa sách HSE Digital Transformation" />
+      </a>
       <div>
-        <p class="kicker">Sách HSE</p>
+        <p class="eyebrow">Sách HSE</p>
         <h1>HSE Digital Transformation</h1>
-        <p class="lead">Cuốn sách dành cho người muốn đưa HSE từ hồ sơ và Excel sang hệ thống dữ liệu. Đọc online đầy đủ trên SA247 — từ trang bìa đến 23 chương.</p>
-        <p class="lead" style="margin-top:.5rem;opacity:.9">Tác giả: <strong>Hồ Hữu Nhàn</strong> (Leo Ho) · Safety and You 247</p>
-        <div class="meta">
-          <span>23 chương</span>
-          <span>Tiếng Việt</span>
-          <span>Đọc online</span>
-        </div>
+        <p class="subtitle">Từ HSE truyền thống đến HSE dựa trên dữ liệu</p>
+        <p class="byline">Hồ Hữu Nhàn · Safety and You 247</p>
         <div class="actions">
           <a class="btn btn--amber" id="book-start" href="bia.html">Bắt đầu đọc</a>
           <a class="btn btn--line" id="book-continue" href="chuong-01.html" hidden style="border-color:rgba(255,255,255,.4);color:#fff">Đọc tiếp</a>
           <a class="btn btn--line" href="muc-luc.html" style="border-color:rgba(255,255,255,.4);color:#fff">Mục lục</a>
-          <a class="btn btn--line" href="bia.html" style="border-color:rgba(255,255,255,.4);color:#fff">Trang bìa</a>
         </div>
       </div>
     </div>
   </header>
+
+  <main class="book-prologue">
+    <div class="wrap book-prologue__inner">
+      <p class="lead-line">Có thể chúng ta không thiếu dữ liệu HSE. Điều chúng ta thiếu đôi khi là khả năng biến dữ liệu đó thành một bức tranh đủ rõ để hành động.</p>
+
+      <p>Mỗi ngày, HSE tạo ra rất nhiều dữ liệu: từ kiểm tra hiện trường, nhận diện mối nguy, đánh giá rủi ro, sự cố, đào tạo, hành động khắc phục đến những hồ sơ và báo cáo được tạo ra liên tục.</p>
+
+      <p>Nhưng dữ liệu chỉ thực sự có giá trị khi nó giúp chúng ta hiểu điều gì đang xảy ra, nhìn thấy điều gì có thể xảy ra và biết cần hành động như thế nào.</p>
+
+      <p class="bridge">HSE Digital Transformation được viết từ chính khoảng cách đó.</p>
+
+      <p>Cuốn sách bắt đầu từ những vấn đề rất thực tế của nghề HSE và mở ra một cách tiếp cận về quá trình chuyển đổi từ tư duy → dữ liệu → quy trình → hệ thống → công nghệ → quyết định.</p>
+
+      <p>Bởi chuyển đổi số HSE không đơn giản là đưa những biểu mẫu giấy lên máy tính, thay Excel bằng một phần mềm hay tạo thêm một dashboard.</p>
+
+      <p>Đó là thay đổi cách chúng ta thu thập, kết nối, sử dụng và biến dữ liệu HSE thành năng lực quản lý.</p>
+
+      <div class="verse">
+        <p>Khi dữ liệu được kết nối, chúng ta nhìn thấy nhiều hơn.</p>
+        <p>Khi thông tin được tổ chức tốt, chúng ta hiểu sâu hơn.</p>
+        <p>Và khi quyết định được đưa ra dựa trên những thông tin đúng, HSE có thể hành động sớm hơn thay vì chỉ phản ứng sau khi sự việc xảy ra.</p>
+      </div>
+
+      <p class="close">Không chỉ số hóa HSE.<br />Mà chuyển đổi cách chúng ta làm HSE.</p>
+
+      <div class="start">
+        <a class="btn btn--amber" href="bia.html">Đọc từ trang bìa</a>
+        <a class="btn btn--line" href="loi-cam-on.html">Sang lời cảm ơn</a>
+      </div>
+    </div>
+  </main>
+
   <footer>
     <div class="wrap footer-brand">
       <strong>SA247 E-LEARNING</strong>
@@ -105,7 +144,7 @@
   </footer>
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
-  <script src="../../assets/js/marketing-nav.js?v=20260926book2"></script>
+  <script src="../../assets/js/marketing-nav.js?v=20260926open"></script>
   <script src="../../assets/js/app-shell.js" defer></script>
   <script src="../../assets/site.js" defer></script>
   <script>
