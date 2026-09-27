@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tạo đơn combo · SA247 Quản trị</title>
+  <title>Tạo đơn · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=20260927combo" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927cart" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
-  <script src="../../assets/js/admin-api.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-tao-don-combo.js?v=20260927cert" defer></script>
+  <script src="../../assets/js/admin-api.js?v=20260927cart" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260927cart" defer></script>
+  <script src="../../assets/js/admin-tao-don-combo.js?v=20260927cart" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,13 +26,13 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tạo đơn combo</h1>
+        <h1 id="page-title">Tạo đơn</h1>
       </header>
       <main class="adm-content">
-        <p class="adm-lead">Chọn người học, các khóa và (nếu khách muốn) đăng ký nhận giấy chứng nhận cho mọi khóa trong đơn. Hệ thống tính <strong>ưu đãi theo số lượng trên từng nhóm sản phẩm</strong> (khóa học / phí cấp GCN), phí vận chuyển 35.000đ/đơn không chiết khấu, sinh mã đơn + mã thanh toán và QR.</p>
+        <p class="adm-lead">Cùng cơ chế với giỏ của khách: chọn người học → thêm khóa → đăng ký nhận giấy chứng nhận theo từng khóa → hệ thống tính ưu đãi theo số lượng → <strong>Lưu nháp</strong> để tư vấn tiếp, hoặc <strong>Tạo đơn chờ thanh toán</strong>. Gửi link cho khách để xem, xác nhận và thanh toán.</p>
 
         <section class="adm-card">
-          <h2>Khách hàng</h2>
+          <h2>Người học</h2>
           <form class="adm-form prf-inline" id="find-form" style="max-width:none">
             <input name="email" type="email" required placeholder="Email người học" style="flex:1 1 220px" />
             <button type="submit" class="adm-btn adm-btn--primary">Tìm</button>
@@ -42,17 +42,19 @@
         </section>
 
         <section class="adm-card" style="margin-top:1rem">
-          <h2>Khóa học</h2>
-          <div id="course-list" class="cmb-courses"></div>
-          <div class="prf-inline" style="margin-top:0.75rem">
-            <label>Đăng ký nhận giấy chứng nhận
-              <select id="cert-option">
-                <option value="none">Chưa đăng ký (chỉ học)</option>
-                <option value="cert_pdf">Đăng ký nhận giấy chứng nhận PDF (mọi khóa)</option>
-                <option value="cert_hard">Đăng ký nhận giấy chứng nhận bản cứng (mọi khóa)</option>
+          <h2>Khóa học &amp; giấy chứng nhận</h2>
+          <div class="prf-inline" style="margin-bottom:0.6rem">
+            <label>GCN cho tất cả khóa đã chọn
+              <select id="cert-all">
+                <option value="">— giữ theo từng khóa —</option>
+                <option value="none">Chưa đăng ký</option>
+                <option value="cert_pdf">PDF</option>
+                <option value="cert_hard">Bản cứng</option>
               </select>
             </label>
           </div>
+          <div id="course-list" class="cmb-courses"></div>
+          <div id="suggest-box" class="adm-muted" style="margin-top:0.6rem"></div>
         </section>
 
         <section class="adm-card" style="margin-top:1rem">
@@ -67,11 +69,14 @@
             </div>
           </div>
           <p class="adm-msg" id="create-msg"></p>
-          <button type="button" class="adm-btn adm-btn--primary" id="btn-create" disabled>Tạo đơn hàng</button>
+          <div class="prf-inline">
+            <button type="button" class="adm-btn adm-btn--line" id="btn-draft" disabled>Lưu nháp</button>
+            <button type="button" class="adm-btn adm-btn--primary" id="btn-create" disabled>Tạo đơn chờ thanh toán</button>
+          </div>
         </section>
 
         <section class="adm-card" id="pay-box" hidden style="margin-top:1rem">
-          <h2>Thông tin thanh toán</h2>
+          <h2>Gửi đơn cho khách</h2>
           <div id="pay-detail"></div>
         </section>
       </main>

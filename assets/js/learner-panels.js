@@ -5,6 +5,7 @@
   function orderStatusVi(status) {
     return (
       {
+        draft: "Chờ bạn xác nhận",
         pending: "Chờ thanh toán",
         paid: "Đã thanh toán · đã cấp quyền",
         cancelled: "Đã hủy",
@@ -189,7 +190,9 @@
       if (!box) return;
       const { data, error } = await sb
         .from("orders")
-        .select("order_code,status,amount,created_at,paid_at,course:courses(code,slug,title)")
+        .select(
+          "order_code,status,amount,created_at,paid_at,view_token,course:courses(code,slug,title),items:order_items(product_code,course:courses(code,slug,title))"
+        )
         .order("created_at", { ascending: false })
         .limit(40);
       const esc = C().esc;
@@ -205,23 +208,37 @@
       if (status) status.textContent = "";
       box.innerHTML = data
         .map((o) => {
-          const c = o.course || {};
+          const lines = (o.items || []).filter((i) => i.course?.code);
+          const courseLines = lines.filter((i) => i.product_code === "course" || !/^cert_|^shipping$/.test(i.product_code || ""));
+          const certCount = lines.filter((i) => i.product_code === "cert_pdf" || i.product_code === "cert_hard").length;
+          const c = o.course || courseLines[0]?.course || {};
           const paid = o.status === "paid";
+          const open = o.status === "pending" || o.status === "draft";
+          const titleLine = courseLines.length > 1
+            ? courseLines.map((i) => esc(i.course.code)).join(", ")
+            : esc(c.title || "");
+          const payHref = o.view_token
+            ? `/don-hang/xem.html?t=${esc(o.view_token)}`
+            : `../${esc(c.slug)}/#dang-ky`;
           return `<article class="order-card ${paid ? "is-paid" : "is-pending"}">
             <div>
-              <strong>${esc(c.code || "")} · ${esc(o.order_code)}</strong>
-              <p>${esc(c.title || "")}</p>
+              <strong>${courseLines.length > 1 ? courseLines.length + " khóa học" : esc(c.code || "")} · ${esc(o.order_code)}</strong>
+              <p>${titleLine}${certCount ? ` · kèm đăng ký nhận ${certCount} giấy chứng nhận` : ""}</p>
               <p class="meta">${fmtVnd(o.amount)} · ${fmtTime(o.created_at)}</p>
               <p class="meta"><strong>${esc(orderStatusVi(o.status))}</strong>${
                 o.paid_at ? " · " + fmtTime(o.paid_at) : ""
               }</p>
             </div>
             <div class="order-card__right">
-              <span class="order-badge">${paid ? "Đã thanh toán" : "Chờ CK"}</span>
+              <span class="order-badge">${paid ? "Đã thanh toán" : o.status === "draft" ? "Chờ xác nhận" : open ? "Chờ CK" : esc(orderStatusVi(o.status))}</span>
               ${
                 paid
-                  ? `<a class="btn btn--line btn--small" href="../${esc(c.slug)}/#learner-root">Vào học</a>`
-                  : `<a class="btn btn--amber btn--small" href="../${esc(c.slug)}/#dang-ky">Thanh toán / QR</a>`
+                  ? courseLines.length > 1
+                    ? `<a class="btn btn--line btn--small" href="../hoc-tap/">Vào học</a>`
+                    : `<a class="btn btn--line btn--small" href="../${esc(c.slug)}/#learner-root">Vào học</a>`
+                  : open
+                    ? `<a class="btn btn--amber btn--small" href="${payHref}">${o.status === "draft" ? "Xem & xác nhận đơn" : "Thanh toán / QR"}</a>`
+                    : ""
               }
             </div>
           </article>`;

@@ -27,7 +27,20 @@
     );
   }
 
+  function sourceVi(s) {
+    return (
+      {
+        KHACH_TU_TAO: "Khách tự tạo",
+        SALE_TAO: "Sale tạo",
+        ADMIN_TAO: "Admin tạo",
+        CAMPUS: "Campus",
+        DOI_TAC: "Đối tác",
+      }[s] || ""
+    );
+  }
+
   function isHardOrder(o) {
+    if ((o.items || []).some((i) => i.product_code === "cert_hard")) return true;
     return o.product_type === "cert_hard" || o.cert_option === "cert_hard";
   }
 
@@ -88,7 +101,9 @@
         return `<tr>
           <td>
             <strong>${o.order_code}</strong>
-            <div class="adm-msg">${productVi(o.product_type)}${o.order_kind === "combo_custom" ? " · combo" : ""}${
+            <div class="adm-msg">${sourceVi(o.order_source) ? sourceVi(o.order_source) + " · " : ""}${
+              o.order_source ? "" : productVi(o.product_type)
+            }${o.order_kind === "combo_custom" ? " · combo" : ""}${
               o.cert_option && o.cert_option !== "none"
                 ? ` · kèm ${o.cert_option === "cert_hard" ? "đăng ký nhận GCN bản cứng" : "đăng ký nhận GCN PDF"}`
                 : ""
@@ -114,14 +129,28 @@
               ? `<div class="adm-msg">ship ${sa247Admin.fmtVnd(o.shipping_fee)}</div>`
               : ""
           }</td>
-          <td>${sa247Admin.statusOrderVi(o.status)}${flag}</td>
+          <td>${sa247Admin.statusOrderVi(o.status)}${flag}${
+            o.sent_at ? `<div class="adm-msg">Đã gửi khách ${sa247Admin.fmtTime(o.sent_at)}</div>` : ""
+          }</td>
           <td>${sa247Admin.fmtTime(o.created_at)}</td>
           <td>
+            ${
+              o.status === "draft"
+                ? `<a class="adm-btn adm-btn--primary adm-btn--small" href="./tao.html?id=${o.id}">Sửa nháp</a>`
+                : ""
+            }
+            ${
+              o.view_token && (o.status === "draft" || o.status === "pending")
+                ? `<button type="button" class="adm-btn adm-btn--line adm-btn--small" data-copy-link="${o.view_token}">Sao chép link đơn</button>`
+                : ""
+            }
             ${
               o.status === "pending"
                 ? `<button type="button" class="adm-btn adm-btn--primary adm-btn--small" data-confirm="${o.order_code}">Xác nhận thanh toán</button>
                    <button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-fail="${o.order_code}">Đánh dấu thất bại</button>`
-                : "—"
+                : o.status === "draft"
+                  ? ""
+                  : "—"
             }
             ${hardCtrl}
           </td>
@@ -141,7 +170,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,order_code,payment_code,status,amount,list_amount,discount_percent,order_kind,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,cert_option,course:courses(code,title),items:order_items(product_code,course:courses(code))"
+            "id,order_code,payment_code,status,amount,list_amount,discount_percent,order_kind,product_type,product_amount,shipping_fee,order_source,view_token,sent_at,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,cert_option,course:courses(code,title),items:order_items(product_code,course:courses(code))"
           )
           .order("created_at", { ascending: false })
           .limit(200);
@@ -153,6 +182,17 @@
       await reload();
       document.getElementById("filter").addEventListener("change", paint);
       document.getElementById("rows").addEventListener("click", async (ev) => {
+        const copyBtn = ev.target.closest("[data-copy-link]");
+        if (copyBtn) {
+          const link = `${location.origin}/don-hang/xem.html?t=${copyBtn.getAttribute("data-copy-link")}`;
+          try {
+            await navigator.clipboard.writeText(link);
+            copyBtn.textContent = "Đã sao chép";
+          } catch {
+            prompt("Link đơn hàng:", link);
+          }
+          return;
+        }
         const btn = ev.target.closest("[data-confirm]");
         if (btn) {
           if (!confirm("Xác nhận thanh toán và cấp quyền / GCN?")) return;

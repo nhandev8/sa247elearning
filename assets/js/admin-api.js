@@ -67,6 +67,7 @@
   function statusOrderVi(s) {
     return (
       {
+        draft: "Đơn nháp",
         pending: "Chờ thanh toán",
         paid: "Đã thanh toán",
         expired: "Hết hạn",

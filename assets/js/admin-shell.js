@@ -77,7 +77,7 @@
       items: [
         { target: "kinh-doanh/", label: "Hub Kinh doanh", key: "kinh-doanh" },
         { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
-        { target: "don-hang/tao.html", label: "Tạo đơn combo", key: "tao-don" },
+        { target: "don-hang/tao.html", label: "Tạo đơn", key: "tao-don" },
         { target: "don-hang/chinh-sach.html", label: "Ưu đãi số lượng", key: "uu-dai-sl" },
         { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
         { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao" },

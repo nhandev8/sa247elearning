@@ -6,12 +6,12 @@
   <title>Đơn hàng · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=20260927combo" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927cart" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
-  <script src="../../assets/js/admin-api.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-don-hang.js?v=20260927cert" defer></script>
+  <script src="../../assets/js/admin-api.js?v=20260927cart" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260927cart" defer></script>
+  <script src="../../assets/js/admin-don-hang.js?v=20260927cart" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -30,9 +30,10 @@
       </header>
       <main class="adm-content">
         <div class="adm-toolbar">
-          <a class="adm-btn adm-btn--primary" href="./tao.html">+ Tạo đơn combo</a>
+          <a class="adm-btn adm-btn--primary" href="./tao.html">+ Tạo đơn</a>
           <select id="filter">
             <option value="all">Tất cả</option>
+            <option value="draft">Đơn nháp</option>
             <option value="pending">Chờ thanh toán</option>
             <option value="paid">Đã thanh toán</option>
             <option value="expired">Hết hạn</option>
