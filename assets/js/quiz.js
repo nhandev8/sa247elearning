@@ -139,6 +139,14 @@
     const status = data.cert_status || "eligible";
     const courseQ = encodeURIComponent(courseCode);
     if (status === "issued" || status === "valid") {
+      if (data.certificate_id && window.sa247Auth?.ready) {
+        sa247Auth
+          .ensureClient()
+          .then((sb) =>
+            sb.functions.invoke("generate-decision-pdf", { body: { cert_id: data.certificate_id } })
+          )
+          .catch(() => {});
+      }
       const code = encodeURIComponent(data.cert_code || "");
       return `<h2>Đạt ${pct}%</h2>
         <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code || "—"}</strong></p>
@@ -294,8 +302,8 @@
               <p class="meta">Phí khóa học là phí tham gia — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
               <p><strong>Chọn hình thức nhận:</strong></p>
               <p class="cert-buy-options">
-                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_pdf">PDF điện tử · ${prices.pdf}</a>
-                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_hard">Bản cứng · ${prices.hard} + ship</a>
+                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF · ${prices.pdf}</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${prices.hard} + 35.000đ phí vận chuyển</a>
                 <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}">Xem các lựa chọn</a>
                 <a class="btn btn--line" href="../dashboard/">Về Học tập · nhận sau</a>
               </p>`;

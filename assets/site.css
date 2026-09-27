@@ -1236,6 +1236,74 @@
 .checkout-terms span {
   flex: 1 1 auto;
 }
+.checkout-offer {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.checkout-offer a {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.checkout-cert {
+  margin: 0.5rem 0 0.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(15, 42, 74, 0.14);
+  border-radius: 12px;
+  background: #fff;
+}
+.checkout-cert legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.checkout-cert__opt,
+.order-form label.checkout-cert__opt {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: var(--ink, #0f2a4a);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 0.35rem 0;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.checkout-cert__opt:has(input:checked) {
+  background: var(--foam);
+}
+.checkout-cert__opt input {
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--green-deep, #128a4a);
+}
+.checkout-cert__opt span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.checkout-cert__opt small {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.checkout-cert__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.checkout-total {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 1.05rem;
+}
+.checkout-breakdown {
+  margin-top: 0.75rem;
+}
 .checkout-terms a {
   color: var(--navy);
   text-decoration: underline;
@@ -1314,6 +1382,43 @@
 }
 .unlock-steps b { color: var(--ink); }
 .faq { padding: 4rem 0; background: var(--foam); }
+.multi-offer { padding: 1.75rem 0; }
+.multi-offer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(15, 42, 74, 0.12);
+  border-radius: 14px;
+  background: #fff;
+}
+.multi-offer__inner .kicker { margin: 0 0 0.35rem; }
+.multi-offer__lead { margin: 0; max-width: 46rem; color: var(--muted); }
+.price-policy { padding: 3rem 0 4rem; }
+.price-policy h2 { margin-top: 2.25rem; }
+.price-policy table {
+  width: 100%;
+  max-width: 44rem;
+  border-collapse: collapse;
+  margin: 0.75rem 0 1rem;
+  background: #fff;
+}
+.price-policy th,
+.price-policy td {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(15, 42, 74, 0.1);
+  text-align: left;
+}
+.price-policy th { background: var(--foam); color: var(--navy); }
+.price-policy .num { text-align: right; white-space: nowrap; }
+.price-policy .note {
+  max-width: 44rem;
+  padding: 0.9rem 1rem;
+  border-left: 3px solid var(--green-deep, #128a4a);
+  background: var(--foam);
+}
 .faq-list { margin-top: 1.5rem; display: grid; gap: 0.65rem; }
 .faq-item {
   background: #fff;

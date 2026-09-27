@@ -11,7 +11,7 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js?v=20260927combo" defer></script>
   <script src="../../assets/js/admin-shell.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-tao-don-combo.js?v=20260927combo" defer></script>
+  <script src="../../assets/js/admin-tao-don-combo.js?v=20260927cert" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -29,7 +29,7 @@
         <h1>Tạo đơn combo</h1>
       </header>
       <main class="adm-content">
-        <p class="adm-lead">Chọn người học và các khóa. Hệ thống tính <strong>ưu đãi theo số lượng</strong>, sinh mã đơn + mã thanh toán và QR. Combo chỉ gồm quyền học — không gồm chứng nhận.</p>
+        <p class="adm-lead">Chọn người học, các khóa và (nếu khách muốn) đăng ký nhận giấy chứng nhận cho mọi khóa trong đơn. Hệ thống tính <strong>ưu đãi theo số lượng trên từng nhóm sản phẩm</strong> (khóa học / phí cấp GCN), phí vận chuyển 35.000đ/đơn không chiết khấu, sinh mã đơn + mã thanh toán và QR.</p>
 
         <section class="adm-card">
           <h2>Khách hàng</h2>
@@ -44,6 +44,15 @@
         <section class="adm-card" style="margin-top:1rem">
           <h2>Khóa học</h2>
           <div id="course-list" class="cmb-courses"></div>
+          <div class="prf-inline" style="margin-top:0.75rem">
+            <label>Đăng ký nhận giấy chứng nhận
+              <select id="cert-option">
+                <option value="none">Chưa đăng ký (chỉ học)</option>
+                <option value="cert_pdf">Đăng ký nhận giấy chứng nhận PDF (mọi khóa)</option>
+                <option value="cert_hard">Đăng ký nhận giấy chứng nhận bản cứng (mọi khóa)</option>
+              </select>
+            </label>
+          </div>
         </section>
 
         <section class="adm-card" style="margin-top:1rem">

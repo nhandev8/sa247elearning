@@ -1,4 +1,4 @@
-/* SA247 — mua GCN PDF / bản cứng sau khi đạt (logged-in)
+/* SA247 — đăng ký nhận GCN PDF / bản cứng sau khi đạt (logged-in)
  * Giá từ get_product_prices(); hard bắt buộc địa chỉ + cộng shipping_default.
  */
 (function () {
@@ -89,14 +89,14 @@
     root.innerHTML = `
       <div class="checkout-panel">
         <p class="kicker">${esc(course)}</p>
-        <h2>Bạn đã đủ điều kiện cấp giấy chứng nhận</h2>
-        <p class="checkout-lead">Bạn đã hoàn thành khóa và đạt kiểm tra. Phí cấp chứng nhận <strong>không gồm lại học phí</strong> — 99.000đ là quyền học; 169.000đ / 199.000đ là phí cấp GCN sau khi đủ điều kiện.</p>
+        <h2>🎓 Bạn đã đủ điều kiện nhận giấy chứng nhận</h2>
+        <p class="checkout-lead">Bạn đã hoàn thành khóa và đạt kiểm tra. Phí cấp giấy chứng nhận <strong>không gồm lại học phí</strong> — 99.000đ là quyền học; 169.000đ / 199.000đ là phí cấp giấy chứng nhận.</p>
         <div class="cert-buy-options">
           <button type="button" class="btn btn--amber" data-type="cert_pdf">
-            PDF điện tử · ${fmtVnd(prices.cert_pdf)}
+            Đăng ký nhận giấy chứng nhận PDF · ${fmtVnd(prices.cert_pdf)}
           </button>
           <button type="button" class="btn btn--line" data-type="cert_hard">
-            Bản cứng · ${fmtVnd(prices.cert_hard)} + ship ${fmtVnd(ship)}
+            Đăng ký nhận giấy chứng nhận bản cứng · ${fmtVnd(prices.cert_hard)} + ${fmtVnd(ship)} phí vận chuyển
           </button>
           <a class="btn btn--line" href="./">Không nhận · Về danh sách</a>
         </div>
@@ -167,7 +167,7 @@
     const code = order.order_code;
     const shipLine =
       type === "cert_hard" && order.shipping_fee
-        ? `<p class="meta">Sản phẩm ${fmtVnd(order.product_amount || prices.cert_hard)} + ship ${fmtVnd(order.shipping_fee)}</p>`
+        ? `<p class="meta">Phí cấp giấy chứng nhận ${fmtVnd(order.product_amount || prices.cert_hard)} + ${fmtVnd(order.shipping_fee)} phí vận chuyển</p>`
         : "";
     root.innerHTML = `
       <div class="checkout-panel">

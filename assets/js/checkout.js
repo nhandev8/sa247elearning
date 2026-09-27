@@ -10,6 +10,110 @@
   let pollTimer = null;
   let guestEmail = "";
   let guestAccountExisted = false;
+  let certOption = "none";
+  let quotes = null;
+
+  const CERT_OPTS = {
+    none: { label: "Chưa đăng ký", summary: "Chỉ học" },
+    cert_pdf: {
+      label: "Đăng ký nhận giấy chứng nhận PDF",
+      summary: "Học + đăng ký nhận giấy chứng nhận bản PDF",
+    },
+    cert_hard: {
+      label: "Đăng ký nhận giấy chứng nhận bản cứng",
+      summary: "Học + đăng ký nhận giấy chứng nhận bản cứng",
+    },
+  };
+
+  function fallbackQuotes(coursePrice) {
+    const c = coursePrice || 99000;
+    return {
+      none: { amount: c, course_pay: c, cert_unit: 0, cert_pay: 0, shipping_fee: 0 },
+      cert_pdf: { amount: c + 169000, course_pay: c, cert_unit: 169000, cert_pay: 169000, shipping_fee: 0 },
+      cert_hard: { amount: c + 199000 + 35000, course_pay: c, cert_unit: 199000, cert_pay: 199000, shipping_fee: 35000 },
+    };
+  }
+
+  async function loadQuotes(sb, courseCode) {
+    const out = fallbackQuotes();
+    try {
+      const keys = ["none", "cert_pdf", "cert_hard"];
+      const res = await Promise.all(
+        keys.map((k) =>
+          sb.rpc("quote_order", { p_course_codes: [courseCode], p_cert_option: k })
+        )
+      );
+      res.forEach((r, i) => {
+        if (!r.error && r.data && r.data.amount != null) out[keys[i]] = r.data;
+      });
+    } catch (_) {
+      /* keep fallback */
+    }
+    return out;
+  }
+
+  function currentQuote(opt) {
+    return (quotes || fallbackQuotes())[opt || certOption] || null;
+  }
+
+  function certOptionLine(key) {
+    const q = currentQuote(key);
+    if (!q) return "";
+    const course = fmtVnd(q.course_pay);
+    if (key === "none") return `Chỉ học · ${course}`;
+    const ship = q.shipping_fee ? ` + ${fmtVnd(q.shipping_fee)} phí vận chuyển` : "";
+    return `${course} + ${fmtVnd(q.cert_pay)} phí cấp giấy chứng nhận${ship} = <b>${fmtVnd(q.amount)}</b>`;
+  }
+
+  function certChooserHtml() {
+    const opt = (key) => `
+      <label class="checkout-cert__opt">
+        <input type="radio" name="certOption" value="${key}" ${certOption === key ? "checked" : ""} />
+        <span><b>${esc(CERT_OPTS[key].label)}</b><small>${certOptionLine(key)}</small></span>
+      </label>`;
+    return `
+      <fieldset class="checkout-cert" data-cert-chooser>
+        <legend>Bạn có muốn đăng ký nhận giấy chứng nhận sau khi hoàn thành khóa học?</legend>
+        ${opt("none")}${opt("cert_pdf")}${opt("cert_hard")}
+        <p class="checkout-cert__note">
+          Chứng nhận chỉ được cấp sau khi bạn hoàn thành khóa học và đạt yêu cầu kiểm tra.
+          Khi đủ điều kiện, hệ thống tự cấp — không cần tạo đơn mới.
+        </p>
+      </fieldset>`;
+  }
+
+  function bindCertChooser(root) {
+    root.querySelectorAll('input[name="certOption"]').forEach((el) => {
+      el.addEventListener("change", () => {
+        if (!el.checked) return;
+        certOption = el.value;
+        const label = root.querySelector("[data-price-total]");
+        const q = currentQuote();
+        if (label && q) label.textContent = fmtVnd(q.amount);
+      });
+    });
+  }
+
+  function offerNoteHtml(root) {
+    const href = root.getAttribute("data-policy-href") || "../chinh-sach-gia/";
+    return `<p class="checkout-offer">🎁 <b>Ưu đãi khi học nhiều khóa</b> · Tối đa 20% khi đăng ký 8–10 khóa.
+      <a href="${esc(href)}">Xem chính sách ưu đãi</a></p>`;
+  }
+
+  function breakdownHtml(order) {
+    const opt = order.cert_option || "none";
+    if (opt === "none") return "";
+    const q = currentQuote(opt);
+    const certName = opt === "cert_hard" ? "bản cứng" : "bản PDF";
+    const ship = Number(order.shipping_fee || q?.shipping_fee || 0);
+    const rows = [
+      `<li><span>Khóa học</span><strong>${fmtVnd(q?.course_pay ?? 0)}</strong></li>`,
+      `<li><span>Phí cấp giấy chứng nhận ${certName}</span><strong>${fmtVnd(q?.cert_pay ?? 0)}</strong></li>`,
+    ];
+    if (ship) rows.push(`<li><span>Phí vận chuyển</span><strong>${fmtVnd(ship)}</strong></li>`);
+    return `<ul class="checkout-bank checkout-breakdown">${rows.join("")}</ul>
+      <p class="form-note">Giấy chứng nhận được cấp tự động khi bạn hoàn thành khóa học và đạt yêu cầu kiểm tra.</p>`;
+  }
 
   function vietQrUrl(amount, addInfo) {
     const base = `https://img.vietqr.io/image/${encodeURIComponent(BANK.bin)}-${encodeURIComponent(BANK.account)}-compact2.png`;
@@ -61,6 +165,7 @@
           status: order.status || "pending",
           mode: mode || "guest",
           email: guestEmail || "",
+          cert_option: order.cert_option || certOption || "none",
         })
       );
     } catch (_) {}
@@ -125,6 +230,7 @@
       p_email: fields.email,
       p_phone: fields.phone,
       p_terms_accepted: fields.terms,
+      p_cert_option: certOption,
     });
     if (error) throw new Error(error.message);
     return normalizeOrder(data);
@@ -139,6 +245,7 @@
     const sb = await sa247Auth.ensureClient();
     const { data, error } = await sb.rpc("create_course_order", {
       p_course_code: courseCode,
+      p_cert_option: certOption,
     });
     if (error) throw new Error(error.message);
     return normalizeOrder(data);
@@ -203,6 +310,13 @@
                    <a class="btn btn--amber" href="../dashboard/">Bắt đầu học</a>
                    <a class="btn btn--line" href="#hoc-thu">Xem bài học</a>
                  </div>`
+        }
+        ${
+          (order.cert_option || certOption) !== "none"
+            ? `<p class="checkout-hint">Bạn đã đăng ký nhận giấy chứng nhận${
+                (order.cert_option || certOption) === "cert_hard" ? " bản cứng" : " bản PDF"
+              }. Chứng nhận sẽ được cấp tự động khi bạn hoàn thành khóa học và đạt yêu cầu kiểm tra.</p>`
+            : ""
         }
         <p class="checkout-order-ref">Đơn <code>${code}</code></p>`;
     }
@@ -366,6 +480,7 @@
               <li><span>Chủ tài khoản</span><strong>${esc(BANK.owner)}</strong></li>
               <li><span>Số tài khoản</span><strong>${esc(BANK.account)}</strong></li>
             </ul>
+            ${breakdownHtml(order)}
           </div>
         </div>
 
@@ -373,7 +488,18 @@
           <strong>Đang chờ xác nhận thanh toán…</strong><br/>
           Đơn <code>${esc(code)}</code> · hệ thống tự kiểm tra giao dịch.
         </p>
+        <p><button type="button" class="btn btn--line btn--small" data-change-option>Đổi lựa chọn giấy chứng nhận</button></p>
       </div>`;
+
+    root.querySelector("[data-change-option]")?.addEventListener("click", () => {
+      stopPoll();
+      forgetOrder(courseCode);
+      if (mode === "guest") {
+        renderGuestForm(root, courseCode, { email: guestEmail });
+      } else {
+        renderAuthedStart(root, courseCode);
+      }
+    });
 
     root.querySelector("[data-copy]")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
@@ -412,6 +538,8 @@
           <div><dt>Họ và tên</dt><dd>${esc(fields.fullName)}</dd></div>
           <div><dt>Email</dt><dd><code>${esc(fields.email)}</code></dd></div>
           <div><dt>Số điện thoại</dt><dd>${esc(fields.phone)}</dd></div>
+          <div><dt>Lựa chọn</dt><dd>${esc(CERT_OPTS[certOption].summary)}</dd></div>
+          <div><dt>Tổng thanh toán</dt><dd><strong>${fmtVnd(currentQuote()?.amount ?? 0)}</strong></dd></div>
         </dl>
         <p class="form-note" data-confirm-note>
           Email này sẽ được dùng để tạo tài khoản học tập SA247 và nhận thông tin khóa học.
@@ -481,12 +609,14 @@
   function renderGuestForm(root, courseCode, prefills, priceLabel) {
     const p = prefills || {};
     const price = priceLabel || "99.000đ";
+    const total = currentQuote()?.amount;
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
           <strong data-price-label>Đăng ký khóa học · ${esc(price)}</strong>
           <span>Phí tham gia khóa · ${esc(courseCode)} · tiến độ + kiểm tra</span>
         </div>
+        ${offerNoteHtml(root)}
         <p class="checkout-lead">
           Chỉ cần họ tên, email và số điện thoại — không cần đăng nhập trước.
           Sau thanh toán, khóa học được gắn vào email bạn nhập.
@@ -501,6 +631,8 @@
           <label>Số điện thoại
             <input name="phone" type="tel" required minlength="8" autocomplete="tel" value="${esc(p.phone || "")}" />
           </label>
+          ${certChooserHtml()}
+          <p class="checkout-total">Tổng thanh toán: <strong data-price-total>${total != null ? fmtVnd(total) : esc(price)}</strong></p>
           <label class="checkout-terms">
             <input name="terms" type="checkbox" value="1" ${p.terms === false ? "" : "checked"} />
             <span>Tôi đồng ý <a href="../terms.html" target="_blank" rel="noopener">điều khoản</a> &amp; <a href="../privacy.html" target="_blank" rel="noopener">chính sách</a> SA247.</span>
@@ -513,6 +645,7 @@
         </form>
       </div>`;
 
+    bindCertChooser(root);
     root.querySelector("[data-buyer-form]")?.addEventListener("submit", (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -533,19 +666,24 @@
 
   function renderAuthedStart(root, courseCode, priceLabel) {
     const price = priceLabel || "";
+    const total = currentQuote()?.amount;
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
-          <strong>Tạo mã thanh toán${price ? ` · ${esc(price)}` : ""}</strong>
+          <strong>Đăng ký khóa học${price ? ` · ${esc(price)}` : ""}</strong>
           <span>1 khóa · ${esc(courseCode)} · đã đăng nhập</span>
         </div>
+        ${offerNoteHtml(root)}
         <p class="checkout-lead">Bạn đã đăng nhập. Tạo mã VietQR để mở khóa khóa học này.</p>
+        ${certChooserHtml()}
+        <p class="checkout-total">Tổng thanh toán: <strong data-price-total>${total != null ? fmtVnd(total) : esc(price)}</strong></p>
         <div class="contact__cta">
           <button type="button" class="btn btn--amber" data-create-order>Tạo mã thanh toán</button>
           <a class="btn btn--line" href="../hoc-tap/">Học tập</a>
         </div>
         <p class="form-msg" data-msg role="status"></p>
       </div>`;
+    bindCertChooser(root);
     root.querySelector("[data-create-order]")?.addEventListener("click", async () => {
       const msg = root.querySelector("[data-msg]");
       if (msg) msg.textContent = "Đang tạo mã thanh toán…";
@@ -582,7 +720,10 @@
     try {
       if (window.sa247Auth?.ready) {
         const sb = await sa247Auth.ensureClient();
-        priceLabel = await loadCoursePriceLabel(sb, courseCode);
+        [priceLabel, quotes] = await Promise.all([
+          loadCoursePriceLabel(sb, courseCode),
+          loadQuotes(sb, courseCode),
+        ]);
         const session = await sa247Auth.getSession();
         if (session) {
           const enrolled = await sa247Auth.hasCourseAccess(null, {
@@ -596,12 +737,13 @@
           }
           const { data: openOrders } = await sb
             .from("orders")
-            .select("order_code,status,amount,paid_at,course:courses!inner(code)")
+            .select("order_code,status,amount,paid_at,cert_option,shipping_fee,order_kind,course:courses!inner(code)")
             .eq("status", "pending")
             .eq("courses.code", courseCode)
             .order("created_at", { ascending: false })
             .limit(1);
-          if (openOrders?.[0]) {
+          if (openOrders?.[0] && (openOrders[0].order_kind || "single") === "single") {
+            certOption = openOrders[0].cert_option || "none";
             renderCheckout(root, openOrders[0], courseCode, "authed");
             return;
           }
@@ -611,9 +753,10 @@
         const saved = recallOrder(courseCode);
         if (saved?.order_code && saved.mode !== "authed") {
           guestEmail = saved.email || "";
+          certOption = saved.cert_option || "none";
           renderCheckout(
             root,
-            { order_code: saved.order_code, amount: saved.amount, status: "pending" },
+            { order_code: saved.order_code, amount: saved.amount, status: "pending", cert_option: certOption },
             courseCode,
             "guest"
           );

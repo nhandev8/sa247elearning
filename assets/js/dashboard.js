@@ -164,7 +164,7 @@
         <div class="profile-nudge__copy">
           <p class="kicker">Hoàn thiện hồ sơ</p>
           <p class="profile-nudge__hint">${hint}</p>
-          <p class="meta">Không bắt buộc để mua khóa.</p>
+          <p class="meta">Không bắt buộc để đăng ký khóa học.</p>
         </div>
         <div class="profile-nudge__meter">
           <div class="progress-bar profile-nudge__bar" aria-label="Độ đầy đủ hồ sơ ${score}%">

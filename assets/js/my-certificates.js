@@ -65,19 +65,78 @@
       .replace(/"/g, "&quot;");
   }
 
-  function paint(list, prices, ships) {
+  const HARD_VI = {
+    CHO_XU_LY: "Chờ xử lý",
+    DA_XAC_NHAN: "Đã xác nhận",
+    DANG_IN: "Đang in",
+    DA_DONG_GOI: "Đã đóng gói",
+    DA_BAN_GIAO_VAN_CHUYEN: "Đã bàn giao vận chuyển",
+    DA_GIAO: "Đã giao",
+    GIAO_KHONG_THANH_CONG: "Giao không thành công",
+    HOAN_VE: "Hoàn về",
+    HUY: "Đã hủy",
+    CAN_BO_SUNG_THONG_TIN: "Cần xác nhận thông tin nhận",
+  };
+
+  function needsShipping(r) {
+    return (
+      r.delivery === "hard" &&
+      r.status === "da_cap" &&
+      (r.hard_fulfillment_status === "CAN_BO_SUNG_THONG_TIN" ||
+        !r.ship_full_name || !r.ship_phone || !r.ship_address || !r.ship_province)
+    );
+  }
+
+  function shipFormHtml(r) {
+    return `<form class="order-form cert-ship-form" data-ship-form="${esc(r.order_code)}">
+        <p><strong>Vui lòng xác nhận thông tin nhận chứng nhận</strong></p>
+        <label>Họ tên người nhận<input name="full_name" required minlength="2" value="${esc(r.ship_full_name || "")}" /></label>
+        <label>Số điện thoại<input name="phone" type="tel" required minlength="8" value="${esc(r.ship_phone || "")}" /></label>
+        <label>Địa chỉ nhận<input name="address" required value="${esc(r.ship_address || "")}" /></label>
+        <label>Tỉnh / thành phố<input name="province" required value="${esc(r.ship_province || "")}" /></label>
+        <label>Ghi chú (không bắt buộc)<input name="note" value="${esc(r.ship_note || "")}" /></label>
+        <button type="submit" class="btn btn--amber">Xác nhận thông tin nhận</button>
+        <p class="form-msg" data-msg role="status"></p>
+      </form>`;
+  }
+
+  function regsHtml(regs) {
+    const rows = (regs || []).filter((r) => r.status === "cho_du_dieu_kien" || needsShipping(r));
+    if (!rows.length) return "";
+    return rows
+      .map((r) => {
+        const kind = r.delivery === "hard" ? "bản cứng" : "bản PDF";
+        const body =
+          r.status === "cho_du_dieu_kien"
+            ? `<p class="meta">Đã đăng ký nhận giấy chứng nhận ${kind} · <strong>Chờ đủ điều kiện</strong></p>
+               <p class="meta">Hoàn thành khóa học và đạt yêu cầu kiểm tra — hệ thống tự cấp chứng nhận, không cần tạo đơn mới.</p>
+               <p class="cert-mine-actions"><a class="btn btn--line" href="../hoc-tap/">Tiếp tục học</a></p>`
+            : `<p class="meta">🎓 Chứng nhận <code>${esc(r.cert_code || "")}</code> đã được cấp. Bản cứng sẽ được gửi sau khi bạn xác nhận thông tin nhận.</p>
+               ${shipFormHtml(r)}`;
+        return `<article class="cert-mine-card">
+          <p class="kicker">${esc(r.course_code)} · Đơn ${esc(r.order_code)}</p>
+          <h2>${esc(r.course_title || "Khóa học")}</h2>
+          ${body}
+        </article>`;
+      })
+      .join("");
+  }
+
+  function paint(list, prices, ships, regs) {
     const box = el("cert-list");
     const status = el("cert-status");
     const pdfL = prices?.pdf || "169.000đ";
     const hardL = prices?.hard || "199.000đ";
+    const regBlock = regsHtml(regs);
     if (!list?.length) {
-      status.innerHTML =
-        'Chứng nhận mở sau khi bạn hoàn thành khóa học và đạt bài kiểm tra. Học phí 99.000đ không gồm GCN. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
-      box.innerHTML = "";
+      status.innerHTML = regBlock
+        ? "Bạn đã đăng ký nhận giấy chứng nhận. Chứng nhận được cấp tự động khi bạn đủ điều kiện."
+        : 'Chứng nhận mở sau khi bạn hoàn thành khóa học và đạt bài kiểm tra. Học phí 99.000đ không gồm GCN. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
+      box.innerHTML = regBlock;
       return;
     }
     status.textContent = `${list.length} bản ghi chứng nhận trong hồ sơ của bạn.`;
-    box.innerHTML = list
+    box.innerHTML = regBlock + list
       .map((c) => {
         const code = encodeURIComponent(c.cert_code || "");
         const courseQ = encodeURIComponent(c.course_code || "");
@@ -103,7 +162,7 @@
                   <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
                   ${
                     c.can_buy_hard
-                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký bản cứng · ${hardL} + ship</a>`
+                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${hardL} + 35.000đ phí vận chuyển</a>`
                       : ""
                   }
                 </p>`
@@ -112,9 +171,9 @@
                     ${
                       c.can_claim_program_cert
                         ? `<button type="button" class="btn btn--amber" data-free-cert="${esc(c.course_code)}">Nhận chứng nhận miễn phí (chương trình đối tác)</button>`
-                        : `<p class="meta">Bạn đã đủ điều kiện nhận chứng nhận. Phí GCN không gồm lại học phí.</p>
-                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">Nhận chứng nhận PDF · ${pdfL}</a>
-                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Nhận bản cứng · ${hardL} + ship</a>
+                        : `<p class="meta">🎓 Bạn đã đủ điều kiện nhận giấy chứng nhận. Phí cấp giấy chứng nhận không gồm lại học phí.</p>
+                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF · ${pdfL}</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${hardL} + 35.000đ phí vận chuyển</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>`
                     }
                   </p>`
@@ -126,7 +185,7 @@
             .filter((s) => s.course_code === c.course_code)
             .map(
               (s) =>
-                `<p class="meta">Bản cứng · ${esc(s.hard_fulfillment_status || s.status || "đang xử lý")}${
+                `<p class="meta">Bản cứng · ${esc(HARD_VI[s.hard_fulfillment_status] || s.hard_fulfillment_status || "đang xử lý")}${
                   s.tracking_code ? " · vận đơn " + esc(s.tracking_code) : ""
                 }${s.carrier_name ? " · " + esc(s.carrier_name) : ""}</p>`
             )
@@ -205,7 +264,40 @@
       const shipRpc = await sb.rpc("my_hard_shipments");
       if (!shipRpc.error && Array.isArray(shipRpc.data)) ships = shipRpc.data;
     } catch (_) {}
-    paint(list || [], prices, ships);
+    let regs = [];
+    try {
+      const regRpc = await sb.rpc("my_cert_registrations");
+      if (!regRpc.error && Array.isArray(regRpc.data)) regs = regRpc.data;
+    } catch (_) {}
+    paint(list || [], prices, ships, regs);
+    el("cert-list")?.addEventListener("submit", async (ev) => {
+      const form = ev.target.closest("[data-ship-form]");
+      if (!form) return;
+      ev.preventDefault();
+      const msg = form.querySelector("[data-msg]");
+      const fd = new FormData(form);
+      const ship = {};
+      ["full_name", "phone", "address", "province", "note"].forEach((k) => {
+        ship[k] = String(fd.get(k) || "").trim();
+      });
+      if (msg) msg.textContent = "Đang lưu…";
+      const { error } = await sb.rpc("submit_cert_shipping", {
+        p_order_code: form.getAttribute("data-ship-form"),
+        p_ship: ship,
+      });
+      if (error) {
+        if (msg) {
+          msg.textContent = /SHIP_ADDRESS_REQUIRED/.test(error.message)
+            ? "Vui lòng nhập đủ họ tên, số điện thoại, địa chỉ và tỉnh / thành phố."
+            : /shipping_locked/.test(error.message)
+              ? "Đơn đã chuyển sang in / giao — liên hệ hỗ trợ để đổi thông tin."
+              : error.message;
+        }
+        return;
+      }
+      if (msg) msg.textContent = "Đã xác nhận. SA247 sẽ in và gửi giấy chứng nhận bản cứng cho bạn.";
+      setTimeout(() => location.reload(), 1200);
+    });
     el("cert-list")?.addEventListener("click", async (ev) => {
       const freeBtn = ev.target.closest("[data-free-cert]");
       if (freeBtn) {

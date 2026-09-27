@@ -37,6 +37,10 @@
     return `${base}?${q.toString()}`;
   }
 
+  function certOptionValue() {
+    return document.getElementById("cert-option")?.value || "none";
+  }
+
   async function refreshQuote(sb) {
     const codes = selectedCodes();
     const box = document.getElementById("quote-box");
@@ -47,7 +51,10 @@
       btn.disabled = true;
       return;
     }
-    const { data, error } = await sb.rpc("sa247_quote_combo", { p_course_codes: codes });
+    const { data, error } = await sb.rpc("sa247_quote_combo", {
+      p_course_codes: codes,
+      p_cert_option: certOptionValue(),
+    });
     if (error) {
       box.innerHTML = `<span class="adm-msg--err">${esc(error.message)}</span>`;
       btn.disabled = true;
@@ -57,8 +64,17 @@
     const needOwner = !!data.needs_owner_quote;
     const canCreate = !!buyer && (!needOwner || isOwner);
     btn.disabled = !canCreate;
+    const pctTxt = data.discount_percent ? ` − ${data.discount_percent}%` : "";
+    const certName = data.cert_option === "cert_hard" ? "bản cứng" : "PDF";
     box.innerHTML = `
       <p><strong>${data.course_count} khóa</strong> · giá niêm yết ${fmt(data.unit_price)}/khóa</p>
+      <p>Khóa học: ${fmt(data.course_list)}${pctTxt}${data.course_pay != null ? ` = <strong>${fmt(data.course_pay)}</strong>` : ""}</p>
+      ${
+        data.cert_count
+          ? `<p>Phí cấp GCN ${certName}: ${data.cert_count} × ${fmt(data.cert_unit)} = ${fmt(data.cert_list)}${pctTxt}${data.cert_pay != null ? ` = <strong>${fmt(data.cert_pay)}</strong>` : ""}</p>`
+          : ""
+      }
+      ${data.shipping_fee ? `<p>Phí vận chuyển (không chiết khấu): ${fmt(data.shipping_fee)}</p>` : ""}
       <p>Giá gốc: <strong>${fmt(data.list_amount)}</strong></p>
       <p>${esc(data.label || "")}${
         data.policy_discount_percent != null
@@ -100,7 +116,11 @@
       <p>Mã thanh toán: <code id="pay-code">${esc(pay)}</code>
         <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="copy-pay">Sao chép thông tin</button></p>
       <p><img alt="QR chuyển khoản" width="220" height="220" src="${esc(vietQrUrl(res.amount, pay))}" /></p>
-      <p class="adm-muted">Khách chuyển đúng ${fmt(res.amount)}, nội dung <strong>${esc(pay)}</strong>. SePay khớp đơn rồi hệ thống cấp quyền học từng khóa. Combo không gồm chứng nhận.</p>`;
+      <p class="adm-muted">Khách chuyển đúng ${fmt(res.amount)}, nội dung <strong>${esc(pay)}</strong>. SePay khớp đơn rồi hệ thống cấp quyền học từng khóa${
+        res.cert_option && res.cert_option !== "none"
+          ? "; giấy chứng nhận đã đăng ký được cấp tự động khi học viên đủ điều kiện"
+          : ""
+      }.</p>`;
     box.hidden = false;
     document.getElementById("copy-pay")?.addEventListener("click", async (ev) => {
       try {
@@ -130,6 +150,7 @@
         )
         .join("");
       document.getElementById("course-list").addEventListener("change", () => refreshQuote(sb));
+      document.getElementById("cert-option")?.addEventListener("change", () => refreshQuote(sb));
 
       document.getElementById("find-form").addEventListener("submit", async (ev) => {
         ev.preventDefault();
@@ -172,6 +193,7 @@
           p_discount_percent: isOwner && ovPct !== "" ? Number(ovPct) : null,
           p_amount_override: isOwner && ovAmt !== "" ? Number(ovAmt) : null,
           p_note: isOwner ? ovNote || null : null,
+          p_cert_option: certOptionValue(),
         };
         const { data, error } = await sb.rpc("admin_create_combo_order", payload);
         if (error) {

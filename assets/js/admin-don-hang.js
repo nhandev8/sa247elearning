@@ -17,17 +17,33 @@
 
   function productVi(t) {
     return (
-      { course: "Khóa học", cert_pdf: "GCN PDF", cert_hard: "GCN cứng" }[t] ||
+      {
+        course: "Khóa học",
+        cert_pdf: "Đăng ký nhận GCN PDF",
+        cert_hard: "Đăng ký nhận GCN bản cứng",
+      }[t] ||
       t ||
       "—"
     );
+  }
+
+  function isHardOrder(o) {
+    return o.product_type === "cert_hard" || o.cert_option === "cert_hard";
+  }
+
+  function itemLabel(i) {
+    const code = i.course?.code || "";
+    if (i.product_code === "cert_pdf") return `GCN PDF ${code}`.trim();
+    if (i.product_code === "cert_hard") return `GCN bản cứng ${code}`.trim();
+    if (i.product_code === "course") return code || "Khóa học";
+    return i.product_code;
   }
 
   function paint() {
     const f = document.getElementById("filter").value;
     const list = cache.filter((o) => {
       if (f === "all") return true;
-      if (f === "cert_hard") return o.product_type === "cert_hard";
+      if (f === "cert_hard") return isHardOrder(o);
       if (f === "amount_mismatch") return o.payment_flag === "amount_mismatch";
       return o.status === f;
     });
@@ -46,7 +62,7 @@
           ? `<div class="adm-msg adm-msg--err">${sa247Admin.paymentFlagVi(o.payment_flag)}</div>`
           : "";
         const hardCtrl =
-          o.product_type === "cert_hard" && o.status === "paid"
+          isHardOrder(o) && o.status === "paid" && o.hard_fulfillment_status
             ? `<div class="adm-hard-ops" data-hard-id="${o.id}">
                 <select data-hard-status>
                   ${HARD_STATUSES.map(
@@ -72,7 +88,11 @@
         return `<tr>
           <td>
             <strong>${o.order_code}</strong>
-            <div class="adm-msg">${productVi(o.product_type)}${o.order_kind === "combo_custom" ? " · combo" : ""}</div>
+            <div class="adm-msg">${productVi(o.product_type)}${o.order_kind === "combo_custom" ? " · combo" : ""}${
+              o.cert_option && o.cert_option !== "none"
+                ? ` · kèm ${o.cert_option === "cert_hard" ? "đăng ký nhận GCN bản cứng" : "đăng ký nhận GCN PDF"}`
+                : ""
+            }</div>
             ${o.payment_code ? `<div class="adm-msg">CK: <code>${o.payment_code}</code></div>` : ""}
             <div class="adm-msg">${o.buyer_email || ""}</div>
             ${shipLine}
@@ -81,7 +101,7 @@
             (o.items || []).filter((i) => i.product_code && i.product_code !== "shipping").length
               ? (o.items || [])
                   .filter((i) => i.product_code && i.product_code !== "shipping")
-                  .map((i) => i.product_code)
+                  .map(itemLabel)
                   .join(", ")
               : `${c.code || ""} · ${c.title || ""}`
           }</td>
@@ -121,7 +141,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,order_code,payment_code,status,amount,list_amount,discount_percent,order_kind,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,course:courses(code,title),items:order_items(product_code)"
+            "id,order_code,payment_code,status,amount,list_amount,discount_percent,order_kind,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,cert_option,course:courses(code,title),items:order_items(product_code,course:courses(code))"
           )
           .order("created_at", { ascending: false })
           .limit(200);
