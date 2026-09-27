@@ -45,6 +45,11 @@
           t: "Cấp quyền học",
           d: "Grant / revoke enrollment (sau thanh toán hoặc thủ công)",
         },
+        {
+          href: "../cho-mo-khoa/",
+          t: "Chờ mở khóa",
+          d: "Người đăng ký nhận thông báo khóa sắp mở · xuất CSV · đánh dấu đã báo",
+        },
       ]
         .map(
           (x) =>

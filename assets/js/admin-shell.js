@@ -83,6 +83,7 @@
         { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao" },
         { target: "quyen-hoc/", label: "Cấp quyền học", key: "quyen-hoc-commerce" },
         { target: "doi-tac/", label: "Campus / Đối tác", key: "doi-tac" },
+        { target: "cho-mo-khoa/", label: "Chờ mở khóa", key: "cho-mo-khoa" },
       ],
       scope: "commerce",
     },
