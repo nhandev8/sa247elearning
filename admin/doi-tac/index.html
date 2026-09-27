@@ -13,7 +13,7 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-doi-tac.js" defer></script>
+  <script src="../../assets/js/admin-doi-tac.js?v=20260927leads" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -96,7 +96,7 @@
               <thead>
                 <tr>
                   <th>Mã</th><th>Tên</th><th>Đối tác</th><th>Trạng thái</th>
-                  <th>Thành viên</th><th>Mã tự phục vụ</th><th></th>
+                  <th>Thành viên</th><th>Mã tự phục vụ</th><th>Mã SV</th><th></th>
                 </tr>
               </thead>
               <tbody id="program-rows"></tbody>
@@ -107,6 +107,13 @@
         <section class="adm-card" id="detail" hidden>
           <h2 id="detail-title">Chi tiết chương trình</h2>
           <p class="meta" id="detail-meta"></p>
+
+          <h3>Kích hoạt bằng mã chương trình</h3>
+          <label style="display:flex;gap:.5rem;align-items:center;font-weight:600">
+            <input type="checkbox" id="require-code" />
+            Bắt buộc mã sinh viên khi kích hoạt
+          </label>
+          <p class="meta">Khi bật: sinh viên phải nhập mã có trong danh sách đã import (Cách 2); khoa, ngành lấy theo danh sách. Khi tắt: ai có mã chương trình đều kích hoạt được (trong giới hạn lượt).</p>
 
           <h3>Quyền lợi khóa / chứng nhận</h3>
           <p class="meta">Mỗi dòng: mã khóa + loại quyền lợi. Ví dụ ATNM-01 miễn phí học và GCN PDF.</p>
@@ -141,6 +148,32 @@
 
           <h3>Báo cáo kết quả</h3>
           <pre id="report-box" style="white-space:pre-wrap;background:#f8fafc;padding:1rem;border-radius:10px"></pre>
+        </section>
+
+        <section class="adm-card" id="leads" style="margin-top:1rem">
+          <h2>Đề xuất từ sinh viên / trường</h2>
+          <p class="meta">Gửi từ form “Trường tôi chưa có chương trình” trên trang /campus/. Cập nhật trạng thái khi liên hệ nhà trường.</p>
+          <label>Lọc trạng thái
+            <select id="lead-filter">
+              <option value="">Tất cả</option>
+              <option value="moi">Mới</option>
+              <option value="dang_lien_he">Đang liên hệ</option>
+              <option value="da_hop_tac">Đã hợp tác</option>
+              <option value="khong_phu_hop">Không phù hợp</option>
+            </select>
+          </label>
+          <p class="adm-msg" id="lead-msg"></p>
+          <div class="adm-table-wrap" style="margin-top:.75rem">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th><th>Trường / khoa</th><th>Người gửi</th><th>Liên hệ</th>
+                  <th>SV dự kiến</th><th>Ghi chú</th><th>Trạng thái</th><th>Ghi chú nội bộ</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="lead-rows"></tbody>
+            </table>
+          </div>
         </section>
       </main>
     </div>

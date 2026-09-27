@@ -18,6 +18,19 @@
     suspended: "Tạm khóa",
     removed: "Đã gỡ",
   };
+  const LEAD_ST_VI = {
+    moi: "Mới",
+    dang_lien_he: "Đang liên hệ",
+    da_hop_tac: "Đã hợp tác",
+    khong_phu_hop: "Không phù hợp",
+  };
+  const LEAD_ROLE_VI = {
+    sinh_vien: "Sinh viên",
+    giang_vien: "Giảng viên",
+    can_bo_truong: "Cán bộ trường",
+    khac: "Khác",
+  };
+  let programsByCode = {};
 
   function esc(s) {
     return String(s || "")
@@ -64,6 +77,7 @@
 
   async function loadPrograms() {
     const list = (await rpc("admin_list_programs")) || [];
+    programsByCode = Object.fromEntries(list.map((p) => [p.code, p]));
     document.getElementById("program-rows").innerHTML = list
       .map(
         (p) => `<tr>
@@ -73,6 +87,7 @@
         <td>${esc(ST_VI[p.status] || p.status)}</td>
         <td>${p.members_active || 0}/${p.members || 0}</td>
         <td>${p.enroll_code ? `<code>${esc(p.enroll_code)}</code> · ${p.enroll_code_used || 0}/${p.enroll_code_max_uses || "∞"}` : "—"}</td>
+        <td>${p.require_external_code ? "Bắt buộc" : "Không"}</td>
         <td><button type="button" class="adm-btn adm-btn--line adm-btn--small" data-open="${esc(p.code)}">Chi tiết</button></td>
       </tr>`
       )
@@ -85,6 +100,7 @@
     const box = document.getElementById("detail");
     box.hidden = false;
     document.getElementById("detail-title").textContent = "Chương trình " + code;
+    document.getElementById("require-code").checked = !!programsByCode[code]?.require_external_code;
     const members = (await rpc("admin_list_program_members", { p_program_code: code })) || [];
     document.getElementById("member-rows").innerHTML = members
       .map(
@@ -127,6 +143,32 @@
       .filter((r) => r.external_code);
   }
 
+  async function loadLeads() {
+    const filter = document.getElementById("lead-filter").value || null;
+    const list = (await rpc("admin_list_campus_leads", { p_status: filter })) || [];
+    const statusOpts = (cur) =>
+      Object.entries(LEAD_ST_VI)
+        .map(([v, t]) => `<option value="${v}"${v === cur ? " selected" : ""}>${t}</option>`)
+        .join("");
+    document.getElementById("lead-rows").innerHTML = list.length
+      ? list
+          .map(
+            (l) => `<tr data-lead="${esc(l.id)}">
+        <td>${esc(new Date(l.created_at).toLocaleString("vi-VN"))}</td>
+        <td><strong>${esc(l.school_name)}</strong>${l.faculty ? "<br />" + esc(l.faculty) : ""}</td>
+        <td>${esc(l.full_name)}<br /><span class="meta">${esc(LEAD_ROLE_VI[l.role] || l.role)}</span></td>
+        <td><a href="mailto:${esc(l.email)}">${esc(l.email)}</a>${l.phone ? "<br />" + esc(l.phone) : ""}</td>
+        <td>${l.expected_students || "—"}</td>
+        <td>${esc(l.note || "")}</td>
+        <td><select data-lead-status>${statusOpts(l.status)}</select></td>
+        <td><input data-lead-note value="${esc(l.admin_note || "")}" placeholder="Ghi chú nội bộ" /></td>
+        <td><button type="button" class="adm-btn adm-btn--line adm-btn--small" data-lead-save>Lưu</button></td>
+      </tr>`
+          )
+          .join("")
+      : `<tr><td colspan="9">Chưa có đề xuất.</td></tr>`;
+  }
+
   async function findUserIdByEmail(email) {
     if (!email) return null;
     const { data, error } = await sb.rpc("admin_find_user_by_email", { p_email: email });
@@ -146,6 +188,48 @@
     } catch (e) {
       status("adm-status", e.message || String(e), false);
     }
+    loadLeads().catch((e) => status("lead-msg", e.message || String(e), false));
+
+    document.getElementById("lead-filter").addEventListener("change", () =>
+      loadLeads().catch((e) => status("lead-msg", e.message || String(e), false))
+    );
+
+    document.getElementById("lead-rows").addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("[data-lead-save]");
+      if (!btn) return;
+      const row = btn.closest("[data-lead]");
+      try {
+        await rpc("admin_update_campus_lead", {
+          p_id: row.getAttribute("data-lead"),
+          p_status: row.querySelector("[data-lead-status]").value,
+          p_admin_note: row.querySelector("[data-lead-note]").value.trim() || null,
+        });
+        status("lead-msg", "Đã cập nhật đề xuất.");
+        await loadLeads();
+      } catch (e) {
+        status("lead-msg", e.message || String(e), false);
+      }
+    });
+
+    document.getElementById("require-code").addEventListener("change", async (ev) => {
+      if (!currentProgram) return;
+      try {
+        await rpc("admin_set_program_require_code", {
+          p_program_code: currentProgram,
+          p_required: ev.target.checked,
+        });
+        status(
+          "adm-status",
+          ev.target.checked
+            ? "Đã bật bắt buộc mã sinh viên cho " + currentProgram + "."
+            : "Đã tắt bắt buộc mã sinh viên cho " + currentProgram + "."
+        );
+        await loadPrograms();
+      } catch (e) {
+        ev.target.checked = !ev.target.checked;
+        status("adm-status", e.message || String(e), false);
+      }
+    });
 
     document.getElementById("partner-form").addEventListener("submit", async (ev) => {
       ev.preventDefault();
