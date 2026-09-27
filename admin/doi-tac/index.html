@@ -13,7 +13,8 @@
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js" defer></script>
   <script src="../../assets/js/admin-shell.js" defer></script>
-  <script src="../../assets/js/admin-doi-tac.js?v=20260927leads" defer></script>
+  <script src="../../assets/js/program-report.js?v=20260927rp" defer></script>
+  <script src="../../assets/js/admin-doi-tac.js?v=20260927rp" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -55,6 +56,20 @@
             <table class="adm-table">
               <thead><tr><th>Mã</th><th>Tên</th><th>Loại</th><th>Liên hệ</th></tr></thead>
               <tbody id="partner-rows"></tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:1.25rem">Người xem báo cáo của đối tác</h3>
+          <p class="meta">Cán bộ nhà trường / doanh nghiệp đăng nhập tại <a href="../../doi-tac/" target="_blank" rel="noopener">sa247.vn/doi-tac/</a> để xem và xuất báo cáo các đợt của đối tác mình. Người xem phải có tài khoản SA247 trước.</p>
+          <form class="adm-form" id="viewer-form">
+            <label>Đối tác <select name="partner_code" id="viewer-partner" required></select></label>
+            <label>Email tài khoản SA247 <input name="email" type="email" required placeholder="canbo@truong.edu.vn" /></label>
+            <button type="submit" class="adm-btn adm-btn--primary">Cấp quyền xem</button>
+          </form>
+          <div class="adm-table-wrap" style="margin-top:.75rem">
+            <table class="adm-table">
+              <thead><tr><th>Email</th><th>Họ tên</th><th>Cấp lúc</th><th></th></tr></thead>
+              <tbody id="viewer-rows"></tbody>
             </table>
           </div>
         </section>
@@ -108,6 +123,9 @@
           <h2 id="detail-title">Chi tiết chương trình</h2>
           <p class="meta" id="detail-meta"></p>
 
+          <h3>Báo cáo đợt đào tạo</h3>
+          <div id="report-box"><p class="meta">Đang tải báo cáo…</p></div>
+
           <h3>Kích hoạt bằng mã chương trình</h3>
           <label style="display:flex;gap:.5rem;align-items:center;font-weight:600">
             <input type="checkbox" id="require-code" />
@@ -146,8 +164,6 @@
             </table>
           </div>
 
-          <h3>Báo cáo kết quả</h3>
-          <pre id="report-box" style="white-space:pre-wrap;background:#f8fafc;padding:1rem;border-radius:10px"></pre>
         </section>
 
         <section class="adm-card" id="leads" style="margin-top:1rem">

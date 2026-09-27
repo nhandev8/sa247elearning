@@ -90,7 +90,10 @@
     },
     {
       group: "Phân tích",
-      items: [{ target: "thong-ke/", label: "Thống kê nền tảng", key: "thong-ke" }],
+      items: [
+        { target: "phan-tich/", label: "Phân tích học tập", key: "phan-tich" },
+        { target: "thong-ke/", label: "Thống kê nền tảng", key: "thong-ke" },
+      ],
       scope: "full",
     },
     {
@@ -126,6 +129,7 @@
     if (path.includes("/gia-ship")) return "gia-ship";
     if (path.includes("/nhat-ky")) return "nhat-ky";
     if (path.includes("/thong-ke")) return "thong-ke";
+    if (path.includes("/phan-tich")) return "phan-tich";
     if (path.includes("/phan-quyen")) return "phan-quyen";
     if (path.includes("/admin/doi-tac")) return "doi-tac";
     if (path.includes("/admin/phan-hoi")) return "phan-hoi";

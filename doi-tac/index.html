@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cổng báo cáo đối tác · SA247</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260927campus" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <script src="../assets/js/program-report.js?v=20260927rp" defer></script>
+  <style>
+    body{background:#f8fafc}
+    .pt-top{background:#0b1f3a;color:#fff}
+    .pt-top .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.9rem 0;flex-wrap:wrap}
+    .pt-top a.brand{color:#fff;font-weight:800;text-decoration:none;font-size:1.1rem}
+    .pt-top a.brand em{color:#fbbf24;font-style:normal}
+    .pt-top .who{font-size:.9rem;color:#cbd5e1;display:flex;gap:.75rem;align-items:center}
+    .pt-top button{font:inherit;font-size:.85rem;background:none;border:1px solid #475569;color:#fff;border-radius:8px;padding:.3rem .7rem;cursor:pointer}
+    .pt-main{padding:2rem 0 3rem}
+    .pt-main h1{font-size:clamp(1.3rem,3vw,1.8rem);margin:0 0 .4rem}
+    .pt-box{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:1.4rem;margin-top:1rem}
+    .pt-programs{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.8rem;margin-top:1rem}
+    .pt-program{display:block;text-align:left;font:inherit;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:1rem;cursor:pointer}
+    .pt-program:hover,.pt-program.is-on{border-color:#0f766e;box-shadow:0 0 0 2px #99f6e4}
+    .pt-program strong{display:block;margin-bottom:.2rem}
+    .pt-program span{color:#475569;font-size:.88rem}
+    .pt-msg{color:#475569;line-height:1.6}
+    .pt-err{color:#b91c1c;font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="pt-top">
+    <div class="wrap">
+      <a class="brand" href="../campus/">SA247 <em>Đối tác</em></a>
+      <div class="who" id="who" hidden><span id="who-email"></span><button type="button" id="logout">Đăng xuất</button></div>
+    </div>
+  </header>
+  <main class="pt-main">
+    <div class="wrap">
+      <h1>Cổng báo cáo đối tác</h1>
+      <p class="pt-msg">Theo dõi kết quả học tập của sinh viên theo từng đợt đào tạo: tiến độ, kết quả kiểm tra và chứng nhận. Xuất Excel hoặc PDF để lưu hồ sơ.</p>
+
+      <div class="pt-box" id="guest" hidden>
+        <p class="pt-msg">Đăng nhập bằng tài khoản SA247 đã được cấp quyền xem báo cáo của nhà trường / đơn vị.</p>
+        <a class="btn btn--amber" href="../auth/login.html?next=../doi-tac/">Đăng nhập</a>
+      </div>
+
+      <div class="pt-box" id="no-access" hidden>
+        <p class="pt-msg">Tài khoản này chưa được cấp quyền xem báo cáo đối tác. Vui lòng liên hệ SA247 qua <a href="mailto:hello@sa247.vn?subject=C%E1%BA%A5p%20quy%E1%BB%81n%20xem%20b%C3%A1o%20c%C3%A1o%20%C4%91%E1%BB%91i%20t%C3%A1c">hello@sa247.vn</a> kèm tên trường và email tài khoản.</p>
+      </div>
+
+      <section id="programs-wrap" hidden>
+        <h2 style="margin:1.5rem 0 0;font-size:1.15rem">Các đợt đào tạo</h2>
+        <div class="pt-programs" id="programs"></div>
+      </section>
+
+      <section class="pt-box" id="report-wrap" hidden>
+        <h2 id="report-title" style="margin:0;font-size:1.2rem"></h2>
+        <div id="report"></div>
+      </section>
+      <p class="pt-err" id="err"></p>
+    </div>
+  </main>
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+      const ST = { draft: "Bản nháp", active: "Đang mở", paused: "Tạm dừng", ended: "Đã kết thúc" };
+      let sb;
+
+      async function openProgram(code, btn) {
+        document.querySelectorAll(".pt-program").forEach((b) => b.classList.toggle("is-on", b === btn));
+        $("report-wrap").hidden = false;
+        $("report").innerHTML = '<p class="pt-msg">Đang tải báo cáo…</p>';
+        $("err").textContent = "";
+        try {
+          const [r1, r2] = await Promise.all([
+            sb.rpc("program_report", { p_program_code: code }),
+            sb.rpc("program_students", { p_program_code: code }),
+          ]);
+          if (r1.error) throw r1.error;
+          if (r2.error) throw r2.error;
+          $("report-title").textContent = r1.data.name;
+          SA247Report.renderProgram($("report"), r1.data, r2.data || []);
+          history.replaceState(null, "", "?dot=" + encodeURIComponent(code));
+          $("report-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (e) {
+          $("report").innerHTML = "";
+          $("err").textContent = String(e?.message || e) === "forbidden"
+            ? "Bạn không có quyền xem đợt này."
+            : "Không tải được báo cáo: " + (e?.message || e);
+        }
+      }
+
+      async function init() {
+        if (!window.sa247Auth?.ready) {
+          $("err").textContent = "Hệ thống chưa sẵn sàng. Vui lòng tải lại trang.";
+          return;
+        }
+        let session = null;
+        try { session = await sa247Auth.getSession(); } catch (_) {}
+        if (!session?.user?.id) { $("guest").hidden = false; return; }
+        $("who").hidden = false;
+        $("who-email").textContent = session.user.email || "";
+        $("logout").addEventListener("click", async () => {
+          await sa247Auth.signOut();
+          location.reload();
+        });
+        sb = await sa247Auth.ensureClient();
+        SA247Report.injectCss();
+        const { data, error } = await sb.rpc("partner_my_programs");
+        if (error) { $("err").textContent = error.message; return; }
+        const list = data || [];
+        if (!list.length) { $("no-access").hidden = false; return; }
+        const esc = SA247Report.esc;
+        $("programs-wrap").hidden = false;
+        $("programs").innerHTML = list
+          .map((p) => {
+            const period = [SA247Report.fmtDate(p.starts_at), SA247Report.fmtDate(p.ends_at)].filter(Boolean).join(" – ");
+            return `<button type="button" class="pt-program" data-code="${esc(p.code)}">
+              <strong>${esc(p.name)}</strong>
+              <span>${esc(p.partner_name)} · ${esc(ST[p.status] || p.status)}${period ? " · " + esc(period) : ""}</span><br />
+              <span>${Number(p.members || 0).toLocaleString("vi-VN")} sinh viên · mã ${esc(p.code)}</span>
+            </button>`;
+          })
+          .join("");
+        $("programs").querySelectorAll(".pt-program").forEach((b) =>
+          b.addEventListener("click", () => openProgram(b.dataset.code, b))
+        );
+        const want = new URLSearchParams(location.search).get("dot");
+        const first = [...$("programs").querySelectorAll(".pt-program")].find((b) => b.dataset.code === want)
+          || (list.length === 1 ? $("programs").querySelector(".pt-program") : null);
+        if (first) openProgram(first.dataset.code, first);
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+      else init();
+    })();
+  </script>
+</body>
+</html>

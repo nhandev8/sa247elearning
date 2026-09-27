@@ -31,6 +31,7 @@
     khac: "Khác",
   };
   let programsByCode = {};
+  let canAnalytics = false;
 
   function esc(s) {
     return String(s || "")
@@ -58,10 +59,14 @@
 
   async function loadPartners() {
     const list = (await rpc("admin_list_partners")) || [];
-    const sel = document.getElementById("program-partner");
-    sel.innerHTML = list
+    const opts = list
       .map((p) => `<option value="${esc(p.code)}">${esc(p.code)} — ${esc(p.name)}</option>`)
       .join("");
+    document.getElementById("program-partner").innerHTML = opts;
+    const vsel = document.getElementById("viewer-partner");
+    const prev = vsel.value;
+    vsel.innerHTML = opts;
+    if (prev) vsel.value = prev;
     document.getElementById("partner-rows").innerHTML = list
       .map(
         (p) => `<tr>
@@ -114,13 +119,24 @@
       </tr>`
       )
       .join("");
-    const report = await rpc("admin_program_report", { p_program_code: code });
+    const [report, rows] = await Promise.all([
+      rpc("admin_program_report", { p_program_code: code }),
+      rpc("program_students", { p_program_code: code }),
+    ]);
     document.getElementById("detail-meta").textContent =
-      `${report.members || 0} thành viên · ${report.linked || 0} đã có tài khoản · ${report.enrollments || 0} quyền học · ${report.passed_quiz || 0} đạt kiểm tra · ${report.certs_issued || 0} GCN đã cấp`;
-    const lines = (report.courses || []).map(
-      (c) => `${c.course_code} · ${c.course_title}: ${c.enrolled} học · ${c.certs} chứng nhận`
-    );
-    document.getElementById("report-box").textContent = lines.join("\n") || "Chưa gắn quyền lợi khóa.";
+      `${report.members || 0} thành viên · ${report.linked || 0} đã có tài khoản · ${report.enrollments || 0} quyền học đang hoạt động`;
+    const reportBox = document.getElementById("report-box");
+    if (!(report.courses || []).length) {
+      reportBox.innerHTML = '<p class="meta">Chưa gắn quyền lợi khóa học — lưu quyền lợi bên dưới để có báo cáo.</p>';
+    } else {
+      SA247Report.renderProgram(reportBox, report, rows || [], {
+        onStudent: canAnalytics
+          ? (r) => {
+              location.href = "../phan-tich/?user=" + encodeURIComponent(r.user_id);
+            }
+          : null,
+      });
+    }
     box.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -141,6 +157,28 @@
         };
       })
       .filter((r) => r.external_code);
+  }
+
+  async function loadViewers() {
+    const code = document.getElementById("viewer-partner").value;
+    const body = document.getElementById("viewer-rows");
+    if (!code) {
+      body.innerHTML = "";
+      return;
+    }
+    const list = (await rpc("admin_list_partner_viewers", { p_partner_code: code })) || [];
+    body.innerHTML = list.length
+      ? list
+          .map(
+            (v) => `<tr>
+        <td>${esc(v.email || "")}</td>
+        <td>${esc(v.full_name || "—")}</td>
+        <td>${esc(new Date(v.created_at).toLocaleString("vi-VN"))}</td>
+        <td><button type="button" class="adm-btn adm-btn--line adm-btn--small" data-viewer-remove="${esc(v.user_id)}">Thu quyền</button></td>
+      </tr>`
+          )
+          .join("")
+      : `<tr><td colspan="4">Chưa có người xem báo cáo cho đối tác này.</td></tr>`;
   }
 
   async function loadLeads() {
@@ -182,6 +220,7 @@
     });
     if (!ctx) return;
     sb = ctx.sb;
+    canAnalytics = !!window.sa247Admin?.isFullAdmin?.(ctx.profile.role);
     try {
       await loadPartners();
       await loadPrograms();
@@ -189,6 +228,50 @@
       status("adm-status", e.message || String(e), false);
     }
     loadLeads().catch((e) => status("lead-msg", e.message || String(e), false));
+    loadViewers().catch((e) => status("adm-status", e.message || String(e), false));
+
+    document.getElementById("viewer-partner").addEventListener("change", () =>
+      loadViewers().catch((e) => status("adm-status", e.message || String(e), false))
+    );
+
+    document.getElementById("viewer-form").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      try {
+        await rpc("admin_add_partner_viewer", {
+          p_partner_code: fd.get("partner_code"),
+          p_email: String(fd.get("email") || "").trim(),
+        });
+        status("adm-status", "Đã cấp quyền xem báo cáo.");
+        ev.target.elements.email.value = "";
+        await loadViewers();
+      } catch (e) {
+        const msg = String(e.message || e);
+        status(
+          "adm-status",
+          msg === "user_not_found"
+            ? "Email này chưa có tài khoản SA247. Nhờ cán bộ đăng ký tài khoản trước rồi cấp quyền."
+            : msg,
+          false
+        );
+      }
+    });
+
+    document.getElementById("viewer-rows").addEventListener("click", async (ev) => {
+      const btn = ev.target.closest("[data-viewer-remove]");
+      if (!btn) return;
+      if (!confirm("Thu quyền xem báo cáo của tài khoản này?")) return;
+      try {
+        await rpc("admin_remove_partner_viewer", {
+          p_partner_code: document.getElementById("viewer-partner").value,
+          p_user_id: btn.getAttribute("data-viewer-remove"),
+        });
+        status("adm-status", "Đã thu quyền xem báo cáo.");
+        await loadViewers();
+      } catch (e) {
+        status("adm-status", e.message || String(e), false);
+      }
+    });
 
     document.getElementById("lead-filter").addEventListener("change", () =>
       loadLeads().catch((e) => status("lead-msg", e.message || String(e), false))
