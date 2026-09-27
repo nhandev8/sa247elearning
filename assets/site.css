@@ -2328,6 +2328,71 @@
 .course-sticky__inner p { margin: 0; font-size: 0.92rem; }
 body.course-page { padding-bottom: 4.5rem; }
 
+/* Course Detail Mobile (course-mobile.js): See → Try → Understand → Buy → Learn */
+.cm-sticky-actions { display: flex; gap: 0.5rem; align-items: center; }
+.classroom__actions .btn--line {
+  color: var(--deep, #0f1c17);
+  border-color: rgba(15, 28, 23, 0.25);
+}
+.cm-tabs { display: none; }
+@media (max-width: 760px) {
+  body.course-page .hero { min-height: auto; }
+  body.course-page main { display: flex; flex-direction: column; }
+  body.course-page main > * { min-width: 0; }
+  #noi-dung-khoa { order: 1; }
+  #sau-khoa-hoc { order: 2; }
+  #lo-trinh { order: 3; }
+  #gia-tri-99k { order: 4; }
+  #dang-ky { order: 5; }
+  #van-de { order: 6; }
+  #giai-phap { order: 7; }
+  #doi-tuong { order: 8; }
+  #cach-hoc { order: 9; }
+  #mau-chung-nhan { order: 10; }
+  #faq { order: 11; }
+  #lien-he { order: 12; }
+  body.course-page main > .course-spine-box { order: 13; margin-bottom: 2rem; }
+  body.course-page main > section { scroll-margin-top: 7rem; }
+
+  .cm-tabs:not([hidden]) {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 39;
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.45rem 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid rgba(15,28,23,0.1);
+    box-shadow: 0 4px 14px rgba(7,20,38,0.06);
+  }
+  .cm-tabs::-webkit-scrollbar { display: none; }
+  .cm-tabs a {
+    flex: 0 0 auto;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .cm-tabs a[data-cm-tab="noi-dung-khoa"] { color: var(--deep, #0f1c17); background: rgba(240,180,41,0.22); }
+  .cm-tabs a.is-active { color: #fff; background: var(--deep, #0f1c17); }
+
+  #lo-trinh .curriculum-acc__desc { display: none; }
+
+  .course-sticky__inner { gap: 0.45rem; padding-top: 0.55rem; padding-bottom: calc(0.55rem + env(safe-area-inset-bottom)); }
+  .course-sticky__inner p { font-size: 0.8rem; opacity: 0.8; text-align: center; }
+  .cm-sticky-actions { display: grid; grid-template-columns: 1fr 1.5fr; }
+  .cm-sticky-actions:has(.cm-sticky-trial[hidden]) { grid-template-columns: 1fr; }
+  .cm-sticky-actions .btn { justify-content: center; text-align: center; min-height: 2.75rem; }
+  .cm-sticky-trial { color: #fff; border-color: rgba(255,255,255,0.45); }
+  body.course-page .sa247-fb-fab { bottom: calc(7rem + env(safe-area-inset-bottom)) !important; }
+}
+
 .classroom {
   margin-top: 1.5rem;
   border: 1px solid rgba(15, 28, 23, 0.12);
