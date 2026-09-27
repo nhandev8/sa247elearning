@@ -31,18 +31,18 @@
   }
 
   async function loadCertPriceLabels(sb) {
-    const fallback = { pdf: "169.000đ", hard: "199.000đ" };
+    const label = (v) => (v != null ? fmtVnd(v) : "");
     try {
       const { data, error } = await sb.rpc("get_product_prices");
-      if (error || !data || typeof data !== "object") return fallback;
-      const pdf = data.cert_pdf?.amount ?? data.cert_pdf;
-      const hard = data.cert_hard?.amount ?? data.cert_hard;
+      if (error || !data || typeof data !== "object") return {};
       return {
-        pdf: pdf != null ? fmtVnd(pdf) : fallback.pdf,
-        hard: hard != null ? fmtVnd(hard) : fallback.hard,
+        pdf: label(data.cert_pdf?.amount),
+        hard: label(data.cert_hard?.amount),
+        ship: label(data.shipping_default?.amount),
+        course: label(data.course_default?.amount),
       };
     } catch {
-      return fallback;
+      return {};
     }
   }
 
@@ -125,13 +125,13 @@
   function paint(list, prices, ships, regs) {
     const box = el("cert-list");
     const status = el("cert-status");
-    const pdfL = prices?.pdf || "169.000đ";
-    const hardL = prices?.hard || "199.000đ";
+    const pdfL = prices?.pdf ? ` · ${prices.pdf}` : "";
+    const hardL = (prices?.hard ? ` · ${prices.hard}` : "") + (prices?.ship ? ` + ${prices.ship} phí vận chuyển` : "");
     const regBlock = regsHtml(regs);
     if (!list?.length) {
       status.innerHTML = regBlock
         ? "Bạn đã đăng ký nhận giấy chứng nhận. Chứng nhận được cấp tự động khi bạn đủ điều kiện."
-        : 'Chứng nhận mở sau khi bạn hoàn thành khóa học và đạt bài kiểm tra. Học phí 99.000đ không gồm GCN. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
+        : `Chứng nhận mở sau khi bạn hoàn thành khóa học và đạt bài kiểm tra. Học phí${prices?.course ? ` ${prices.course}` : ""} không gồm GCN. <a href="../kiem-tra/">Xem bài kiểm tra</a>`;
       box.innerHTML = regBlock;
       return;
     }
@@ -162,7 +162,7 @@
                   <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
                   ${
                     c.can_buy_hard
-                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${hardL} + 35.000đ phí vận chuyển</a>`
+                      ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng${hardL}</a>`
                       : ""
                   }
                 </p>`
@@ -172,8 +172,8 @@
                       c.can_claim_program_cert
                         ? `<button type="button" class="btn btn--amber" data-free-cert="${esc(c.course_code)}">Nhận chứng nhận miễn phí (chương trình đối tác)</button>`
                         : `<p class="meta">🎓 Bạn đã đủ điều kiện nhận giấy chứng nhận. Phí cấp giấy chứng nhận không gồm lại học phí.</p>
-                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF · ${pdfL}</a>
-                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${hardL} + 35.000đ phí vận chuyển</a>
+                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF${pdfL}</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng${hardL}</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>`
                     }
                   </p>`

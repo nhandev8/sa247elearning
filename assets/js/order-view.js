@@ -1,11 +1,6 @@
 /* SA247 — xem / xác nhận / thanh toán đơn qua link bí mật (?t=token). Một trang cho mọi nguồn tạo đơn. */
 (function () {
-  const BANK = window.SA247_BANK || {
-    name: "VPBank",
-    owner: "HO HUU NHAN",
-    account: "0877787988",
-    bin: "VPB",
-  };
+  let BANK = null;
   let pollTimer = null;
 
   function fmt(n) {
@@ -202,7 +197,15 @@
       return;
     }
     const sb = await sa247Auth.ensureClient();
-    const { data, error } = await sb.rpc("get_order_by_token", { p_token: token });
+    const [{ data, error }, bank] = await Promise.all([
+      sb.rpc("get_order_by_token", { p_token: token }),
+      window.sa247PublicConfig?.bank() ?? null,
+    ]);
+    BANK = bank;
+    if (!error && data?.status === "pending" && !BANK) {
+      root.innerHTML = `<p class="form-msg">Chưa tải được thông tin tài khoản nhận thanh toán. Tải lại trang hoặc liên hệ support@sa247.vn kèm mã đơn.</p>`;
+      return;
+    }
     if (error || !data?.found) {
       root.innerHTML = `<h1 class="title">Không tìm thấy đơn hàng</h1>
         <p>Link đơn hàng không đúng hoặc đã bị thay đổi. Liên hệ SA247 để được gửi lại link.</p>`;

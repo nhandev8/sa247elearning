@@ -36,10 +36,11 @@
     ]);
     if (pRes.error || tRes.error || !pRes.data?.length || !tRes.data?.length) return;
 
-    const prices = { course_default: 99000, cert_pdf: 169000, cert_hard: 199000, shipping_default: 35000 };
+    const prices = {};
     pRes.data.forEach((r) => {
       if (r.amount != null) prices[r.code] = Number(r.amount);
     });
+    if (!["course_default", "cert_pdf", "cert_hard", "shipping_default"].every((k) => prices[k] > 0)) return;
     const tiers = tRes.data;
 
     document.querySelectorAll("[data-price]").forEach((el) => {

@@ -2,12 +2,7 @@
  * Giá từ get_product_prices(); hard bắt buộc địa chỉ + cộng shipping_default.
  */
 (function () {
-  const BANK = window.SA247_BANK || {
-    name: "VPBank",
-    owner: "HO HUU NHAN",
-    account: "0877787988",
-    bin: "VPB",
-  };
+  let BANK = null;
 
   const LABELS = {
     cert_pdf: "Giấy chứng nhận điện tử PDF",
@@ -15,11 +10,7 @@
   };
 
   let pollTimer = null;
-  let prices = {
-    cert_pdf: 169000,
-    cert_hard: 199000,
-    shipping_default: 35000,
-  };
+  let prices = {};
 
   function el(id) {
     return document.getElementById(id);
@@ -62,35 +53,22 @@
   }
 
   async function loadPrices() {
-    try {
-      const sb = await sa247Auth.ensureClient();
-      const { data, error } = await sb.rpc("get_product_prices");
-      if (error) throw error;
-      const map = {};
-      if (data && typeof data === "object" && !Array.isArray(data)) {
-        Object.keys(data).forEach((k) => {
-          const v = data[k];
-          if (v && typeof v === "object" && v.amount != null) map[k] = Number(v.amount);
-          else if (typeof v === "number") map[k] = v;
-        });
-      } else if (Array.isArray(data)) {
-        data.forEach((r) => {
-          if (r && r.code != null) map[r.code] = Number(r.amount);
-        });
-      }
-      prices = { ...prices, ...map };
-    } catch (e) {
-      console.warn("[cert-checkout] prices fallback", e);
-    }
+    const cfg = await window.sa247PublicConfig?.load();
+    if (!cfg?.prices || !cfg?.bank) return false;
+    Object.keys(cfg.prices).forEach((k) => {
+      prices[k] = Number(cfg.prices[k]?.amount) || 0;
+    });
+    BANK = cfg.bank;
+    return !!(prices.cert_pdf && prices.cert_hard);
   }
 
   function renderChooser(root, course) {
-    const ship = prices.shipping_default || 35000;
+    const ship = prices.shipping_default;
     root.innerHTML = `
       <div class="checkout-panel">
         <p class="kicker">${esc(course)}</p>
         <h2>🎓 Bạn đã đủ điều kiện nhận giấy chứng nhận</h2>
-        <p class="checkout-lead">Bạn đã hoàn thành khóa và đạt kiểm tra. Phí cấp giấy chứng nhận <strong>không gồm lại học phí</strong> — 99.000đ là quyền học; 169.000đ / 199.000đ là phí cấp giấy chứng nhận.</p>
+        <p class="checkout-lead">Bạn đã hoàn thành khóa và đạt kiểm tra. Phí cấp giấy chứng nhận <strong>không gồm lại học phí</strong> — ${fmtVnd(prices.course_default)} là quyền học; ${fmtVnd(prices.cert_pdf)} / ${fmtVnd(prices.cert_hard)} là phí cấp giấy chứng nhận.</p>
         <div class="cert-buy-options">
           <button type="button" class="btn btn--amber" data-type="cert_pdf">
             Đăng ký nhận giấy chứng nhận PDF · ${fmtVnd(prices.cert_pdf)}
@@ -115,8 +93,8 @@
   }
 
   function renderHardForm(root, course) {
-    const ship = prices.shipping_default || 35000;
-    const product = prices.cert_hard || 199000;
+    const ship = prices.shipping_default;
+    const product = prices.cert_hard;
     const total = product + ship;
     root.innerHTML = `
       <div class="checkout-panel">
@@ -296,7 +274,10 @@
       return;
     }
     el("user-label").textContent = session.user.email || "Học viên";
-    await loadPrices();
+    if (!(await loadPrices())) {
+      status.textContent = "Chưa tải được bảng phí và thông tin thanh toán. Tải lại trang hoặc liên hệ support@sa247.vn.";
+      return;
+    }
 
     const { course, type } = params();
     if (!course) {

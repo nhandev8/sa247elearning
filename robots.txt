@@ -1,3 +1,27 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /cai-dat/
+Disallow: /doi-tac/
+Disallow: /chung-nhan/
+Disallow: /dashboard/
+Disallow: /don-hang/
+Disallow: /gio-hang/
+Disallow: /ho-so/
+Disallow: /hoc-tap/
+Disallow: /khoa-cua-toi/
+Disallow: /kiem-tra/
+Disallow: /lo-trinh/
+Disallow: /phan-hoi/
+Disallow: /quan-tri/
+Disallow: /quiz/
+Disallow: /tien-do/
+Disallow: /dang-ky/
+Disallow: /dang-nhap/
+Disallow: /verify/
+Disallow: /xac-minh/
+Disallow: /data/
+Disallow: /tools/
+
 Sitemap: https://sa247.vn/sitemap.xml

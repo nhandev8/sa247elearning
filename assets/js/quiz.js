@@ -4,6 +4,10 @@
     return document.getElementById(id);
   }
 
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  }
+
   function courseFromQuery() {
     return new URLSearchParams(location.search).get("course")?.trim() || "";
   }
@@ -72,18 +76,17 @@
   }
 
   async function loadCertPriceLabels(sb) {
-    const fallback = { pdf: "169.000đ", hard: "199.000đ" };
+    const label = (v) => (v != null ? fmtVnd(v) : "");
     try {
       const { data, error } = await sb.rpc("get_product_prices");
-      if (error || !data || typeof data !== "object") return fallback;
-      const pdf = data.cert_pdf?.amount ?? data.cert_pdf;
-      const hard = data.cert_hard?.amount ?? data.cert_hard;
+      if (error || !data || typeof data !== "object") return { pdf: "", hard: "", ship: "" };
       return {
-        pdf: pdf != null ? fmtVnd(pdf) : fallback.pdf,
-        hard: hard != null ? fmtVnd(hard) : fallback.hard,
+        pdf: label(data.cert_pdf?.amount),
+        hard: label(data.cert_hard?.amount),
+        ship: label(data.shipping_default?.amount),
       };
     } catch {
-      return fallback;
+      return { pdf: "", hard: "", ship: "" };
     }
   }
 
@@ -220,13 +223,13 @@
             const key = typeof c === "object" ? c.key : String(c);
             const text = typeof c === "object" ? c.text : c;
             return `<label class="quiz-choice">
-            <input type="radio" name="${q.id}" value="${key}" required />
-            <span>${text}</span>
+            <input type="radio" name="${esc(q.id)}" value="${esc(key)}" required />
+            <span>${esc(text)}</span>
           </label>`;
           })
           .join("");
         return `<fieldset class="quiz-q">
-        <legend>${idx + 1}. ${q.q}</legend>
+        <legend>${idx + 1}. ${esc(q.q)}</legend>
         ${choices}
       </fieldset>`;
       })
@@ -302,8 +305,8 @@
               <p class="meta">Phí khóa học là phí tham gia — GCN là lựa chọn hình thức nhận (không bắt buộc).</p>
               <p><strong>Chọn hình thức nhận:</strong></p>
               <p class="cert-buy-options">
-                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF · ${prices.pdf}</a>
-                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng · ${prices.hard} + 35.000đ phí vận chuyển</a>
+                <a class="btn btn--amber" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_pdf">Đăng ký nhận giấy chứng nhận PDF${prices.pdf ? ` · ${prices.pdf}` : ""}</a>
+                <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng${prices.hard ? ` · ${prices.hard}` : ""}${prices.ship ? ` + ${prices.ship} phí vận chuyển` : ""}</a>
                 <a class="btn btn--line" href="../chung-nhan/mua.html?course=${encodeURIComponent(courseCode)}">Xem các lựa chọn</a>
                 <a class="btn btn--line" href="../dashboard/">Về Học tập · nhận sau</a>
               </p>`;

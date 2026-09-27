@@ -70,7 +70,10 @@
         ["iso9001/", "ISO 9001", "Hệ thống quản lý QMS"],
       ], r),
       h("div", { className: "mega__foot mega__foot--cta" }, [
-        h("p", { className: "mega__prompt", text: "9 khóa học · Từ 99.000đ" }),
+        h("p", {
+          className: "mega__prompt",
+          html: '<span data-sa247-course-count>9</span> khóa học · Từ <span data-sa247-price="course_default">99.000đ</span>',
+        }),
         h("a", { href: r + "index.html#chuong-trinh", className: "btn btn--amber mega__cta-btn", text: "Xem tất cả khóa học" }),
       ]),
     ]);
@@ -550,10 +553,29 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount);
-  } else {
+  function loadPublicConfig() {
+    if (window.sa247PublicConfig) {
+      window.sa247PublicConfig.hydrate();
+      return;
+    }
+    if (document.querySelector("script[data-sa247-public-config]")) return;
+    const self = document.querySelector('script[src*="marketing-nav.js"]');
+    const s = document.createElement("script");
+    s.src = self ? self.src.replace(/marketing-nav\.js/, "public-config.js") : rootPrefix() + "assets/js/public-config.js";
+    s.defer = true;
+    s.setAttribute("data-sa247-public-config", "");
+    document.head.appendChild(s);
+  }
+
+  function boot() {
     mount();
+    loadPublicConfig();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
   }
 
   window.sa247MountMarketingNav = mount;

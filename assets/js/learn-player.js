@@ -168,7 +168,7 @@
         is_free: l.access === "hoc_thu",
         sort_order: l.sort_order || 0,
         publish_status: l.publish_status || "draft",
-        has_video: !!(l.youtube_video_id || l.local_mp4),
+        has_video: !!(l.youtube_video_id || l.has_video),
         description: l.description || l.youtube_description || "",
         description_short: l.description_short || "",
       })),

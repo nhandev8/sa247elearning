@@ -34,7 +34,7 @@
     root.innerHTML = `
       <div class="checkout-panel">
         <div class="price-tag">
-          <strong>Đăng ký khóa học · ${esc(priceLabel)}</strong>
+          <strong>Đăng ký khóa học${priceLabel ? ` · ${esc(priceLabel)}` : ""}</strong>
           <span>Phí tham gia khóa · ${esc(courseCode)} · tiến độ + kiểm tra</span>
         </div>
         ${offerNoteHtml(root)}
@@ -63,7 +63,7 @@
     const courseCode = root.getAttribute("data-course-code");
     if (!courseCode) return;
 
-    let priceLabel = "99.000đ";
+    let priceLabel = root.getAttribute("data-price-label") || "";
     let pending = null;
     try {
       if (window.sa247Auth?.ready) {

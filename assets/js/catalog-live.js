@@ -2,13 +2,10 @@
  * Không thay layout nhóm tĩnh từ build — chỉ cập nhật [data-live-meta] / [data-live-price].
  */
 (function () {
-  const SA247_COURSE_PRICE = 99000;
-  const SA247_LEGACY_COURSE = 69e3; // số cũ — không paint lên UI
   function money(n) {
     const v = Number(n);
     if (!Number.isFinite(v) || v <= 0) return "";
-    const safe = v === SA247_LEGACY_COURSE ? SA247_COURSE_PRICE : v;
-    return safe.toLocaleString("vi-VN") + "đ";
+    return v.toLocaleString("vi-VN") + "đ";
   }
 
   async function client() {
@@ -37,7 +34,6 @@
           meta.textContent =
             meta.getAttribute("data-fallback-meta") || "Lộ trình trên hệ thống";
         }
-        if (price && !price.dataset.filled) price.textContent = "99.000đ";
       });
       return;
     }
@@ -116,15 +112,17 @@
         meta.dataset.filled = "1";
       }
       if (priceEl) {
-        priceEl.textContent = money(row.price) || "99.000đ";
+        const text = money(row.price);
+        if (text) priceEl.textContent = text;
         priceEl.dataset.filled = "1";
       }
     });
 
     // Hero / CTA price banner if present
     const banner = document.querySelector("[data-live-course-from-price]");
-    if (banner && courses.length) {
-      const min = Math.min(...courses.map((c) => Number(c.price) || 99000));
+    const prices = courses.map((c) => Number(c.price)).filter((n) => n > 0);
+    if (banner && prices.length) {
+      const min = Math.min(...prices);
       banner.textContent = "KHÓA HỌC CHÍNH THỨC TỪ " + money(min);
     }
   }

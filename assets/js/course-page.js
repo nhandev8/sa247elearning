@@ -10,13 +10,10 @@
     }
   }
 
-  const SA247_COURSE_PRICE = 99000;
-  const SA247_LEGACY_COURSE = 69e3; // số cũ — không paint lên UI
   function money(n) {
     const v = Number(n);
     if (!Number.isFinite(v) || v <= 0) return "";
-    const safe = v === SA247_LEGACY_COURSE ? SA247_COURSE_PRICE : v;
-    return safe.toLocaleString("vi-VN") + "đ";
+    return v.toLocaleString("vi-VN") + "đ";
   }
 
   function paintHeroMeta(detail, boot, priceLabel) {
@@ -74,7 +71,7 @@
   }
 
   async function resolveState(boot) {
-    let priceLabel = money(boot.price) || boot.price_label || "99.000đ";
+    let priceLabel = money(boot.price) || boot.price_label || "";
     const slug = boot.slug || "";
 
     if (window.sa247Auth?.ready) {
@@ -239,7 +236,7 @@
   function paintTrust(boot, priceLabel) {
     const host = document.getElementById("course-trust");
     if (!host) return;
-    const price = priceLabel || boot.price_label || "99.000đ";
+    const price = priceLabel || boot.price_label || "";
     const items = boot.deliverables || [];
     if (!items.length) {
       host.innerHTML = `<ul class="trust-list">
@@ -261,7 +258,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const boot = bootJson();
-    const fallback = boot.price_label || "99.000đ";
+    const fallback = boot.price_label || "";
     paintHeroMeta(null, boot, fallback);
     paintTrust(boot, fallback);
     enhanceCurriculumAccordion();

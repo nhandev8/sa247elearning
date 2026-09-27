@@ -1,11 +1,6 @@
 /* Admin · Tạo / sửa đơn (Sale · Admin) — cùng cơ chế giá với giỏ khách; nháp → gửi link → khách xác nhận → thanh toán */
 (function () {
-  const BANK = window.SA247_BANK || {
-    name: "VPBank",
-    owner: "HO HUU NHAN",
-    account: "0877787988",
-    bin: "VPB",
-  };
+  let BANK = null;
 
   let buyer = null;
   let courses = [];
@@ -30,6 +25,7 @@
   }
 
   function vietQrUrl(amount, addInfo) {
+    if (!BANK) return "";
     const base = `https://img.vietqr.io/image/${encodeURIComponent(BANK.bin)}-${encodeURIComponent(BANK.account)}-compact2.png`;
     const q = new URLSearchParams({ amount: String(amount), addInfo: String(addInfo), accountName: BANK.owner });
     return `${base}?${q.toString()}`;
@@ -133,7 +129,7 @@
         ${draft ? `<a class="adm-btn adm-btn--line adm-btn--small" href="./tao.html?id=${esc(res.order_id)}">Sửa nháp</a>` : ""}
       </p>
       ${
-        draft
+        draft || !BANK
           ? ""
           : `<p><img alt="QR chuyển khoản" width="200" height="200" src="${esc(vietQrUrl(res.amount, res.payment_code))}" /></p>
              <p class="adm-muted">Nội dung CK: <strong>${esc(res.payment_code)}</strong> · ${fmt(res.amount)}. SePay khớp đơn → cấp quyền học từng khóa; GCN đã đăng ký được cấp tự động khi học viên đủ điều kiện.</p>`
@@ -223,6 +219,7 @@
       const ctx = await sa247AdminShell.boot("Tạo đơn", { requireCommerce: true });
       if (!ctx) return;
       const { sb, session } = ctx;
+      BANK = (await window.sa247PublicConfig?.bank()) || null;
       isOwner = sa247Admin.isOwner(session);
       document.getElementById("owner-box").hidden = !isOwner;
 
