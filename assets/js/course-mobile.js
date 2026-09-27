@@ -295,20 +295,14 @@
     return i >= 0 ? all.slice(i + 1).find((b) => !b.classList.contains("is-locked")) || null : null;
   }
 
-  /* Primary action mirrors the classroom: complete-screen CTA first, else "mark complete". */
+  /* Primary action mirrors the classroom: next-step CTA once completed, else watch status (read-only). */
   function primaryAction() {
     const meta = document.getElementById("classroom-meta");
-    const doneCta = meta?.querySelector(".lesson-next__actions .btn--amber");
+    const doneCta = meta?.querySelector(".lesson-next__actions .btn--amber, [data-watch-next]:not([hidden]) .btn--amber");
     if (doneCta) return { el: doneCta, label: doneCta.textContent.trim(), strong: true };
-    const complete = meta?.querySelector("[data-complete]");
-    if (complete) {
-      const finished = /Đã hoàn thành/.test(complete.textContent);
-      return {
-        el: complete,
-        label: finished ? "✓ Đã học" : "✓ Hoàn thành",
-        strong: complete.classList.contains("btn--amber"),
-        disabled: complete.disabled,
-      };
+    const status = meta?.querySelector("[data-watch-status]");
+    if (status) {
+      return { el: status, label: status.getAttribute("data-label") || "Đã xem 0%", strong: false, disabled: true };
     }
     return null;
   }
@@ -321,7 +315,7 @@
     bar.hidden = true;
     bar.innerHTML =
       '<button type="button" class="cm-learnbar__btn" data-cm-side>☰ Mục lục</button>' +
-      '<button type="button" class="cm-learnbar__btn cm-learnbar__main" data-cm-main>✓ Hoàn thành</button>' +
+      '<button type="button" class="cm-learnbar__btn cm-learnbar__main" data-cm-main>Đã xem 0%</button>' +
       '<button type="button" class="cm-learnbar__btn" data-cm-next>Bài tiếp →</button>';
     bar.addEventListener("click", (e) => {
       const classroom = document.querySelector("#learner-root .classroom");
@@ -355,7 +349,7 @@
     if (!bar) return;
     const act = primaryAction();
     const main = bar.querySelector("[data-cm-main]");
-    main.textContent = act ? act.label : "✓ Hoàn thành";
+    main.textContent = act ? act.label : "Đã xem 0%";
     main.disabled = !act || !!act.disabled;
     main.classList.toggle("is-strong", !!act?.strong);
     const hasNext = !!(document.querySelector("#classroom-meta [data-next-lesson]") || nextLessonButton());
@@ -410,6 +404,7 @@
       attributeFilter: ["data-enrolled", "class", "disabled"],
     });
     mq.addEventListener?.("change", update);
+    window.addEventListener("sa247:watch", paintLearnBar);
     update();
   }
 

@@ -72,62 +72,51 @@
     return ytApiReady;
   }
 
-  async function markComplete(sb, lessonId, watchedSeconds, playedSeconds) {
-    const session = await sa247Auth.getSession();
-    if (!session) return { error: { message: "Chưa đăng nhập" } };
-    if (String(lessonId).startsWith("static:")) {
-      return { error: { message: "Đăng ký khóa để lưu tiến độ trên hệ thống" } };
-    }
-    const now = new Date().toISOString();
-    const row = {
-      user_id: session.user.id,
-      lesson_id: lessonId,
-      progress_percent: 100,
-      completed: true,
-      last_watched_at: now,
-      completed_at: now,
-    };
-    if (watchedSeconds != null && watchedSeconds >= 0) {
-      row.watched_seconds = Math.floor(watchedSeconds);
-    }
-    const played = Math.floor(Number(playedSeconds) || 0);
-    if (played > 0) row.played_seconds = played;
-    let res = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
-    if (res.error && /played_seconds/i.test(res.error.message || "")) {
-      delete row.played_seconds;
-      res = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
-    }
-    return res;
+  /* Hoàn thành bài do server quyết định (record_watch): chỉ tính đoạn phát thật ở tốc độ 1×. */
+  async function recordWatch(sb, lessonId, segments, position, duration) {
+    if (String(lessonId).startsWith("static:")) return null;
+    const { data, error } = await sb.rpc("record_watch", {
+      p_lesson_id: lessonId,
+      p_segments: segments,
+      p_position: Math.max(0, Math.floor(Number(position) || 0)),
+      p_client_duration: duration > 0 ? Math.round(duration) : null,
+    });
+    if (error) throw error;
+    return data;
   }
 
-  async function saveWatch(sb, lessonId, opts) {
-    const session = await sa247Auth.getSession();
-    if (!session || String(lessonId).startsWith("static:")) return;
-    const now = new Date().toISOString();
-    const row = {
-      user_id: session.user.id,
-      lesson_id: lessonId,
-      last_watched_at: now,
-    };
-    if (opts?.watchedSeconds != null && opts.watchedSeconds >= 0) {
-      row.watched_seconds = Math.floor(opts.watchedSeconds);
+  function mergeSegs(list) {
+    const s = (list || [])
+      .filter((x) => Array.isArray(x) && Number(x[1]) > Number(x[0]))
+      .map((x) => [Number(x[0]), Number(x[1])])
+      .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const out = [];
+    s.forEach(([a, b]) => {
+      const last = out[out.length - 1];
+      if (last && a <= last[1] + 1) last[1] = Math.max(last[1], b);
+      else out.push([a, b]);
+    });
+    return out.map(([a, b]) => [Math.round(a * 10) / 10, Math.round(b * 10) / 10]);
+  }
+
+  function segSeconds(list) {
+    return (list || []).reduce((n, x) => n + (x[1] - x[0]), 0);
+  }
+
+  function localSegs(lessonId) {
+    try {
+      return JSON.parse(localStorage.getItem("sa247_watch_" + lessonId) || "[]");
+    } catch {
+      return [];
     }
-    if (opts?.progressPercent != null) {
-      row.progress_percent = Math.min(99, Math.max(0, Math.floor(opts.progressPercent)));
-    }
-    if (opts?.playedSeconds != null && opts.playedSeconds >= 0) {
-      row.played_seconds = Math.floor(opts.playedSeconds);
-    }
-    let { error } = await sb
-      .from("lesson_progress")
-      .upsert(row, { onConflict: "user_id,lesson_id" });
-    if (error && /played_seconds/i.test(error.message || "")) {
-      delete row.played_seconds;
-      ({ error } = await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" }));
-    }
-    if (error && /watched_seconds/i.test(error.message || "")) {
-      delete row.watched_seconds;
-      await sb.from("lesson_progress").upsert(row, { onConflict: "user_id,lesson_id" });
+  }
+
+  function storeLocalSegs(lessonId, segs) {
+    try {
+      if (segs) localStorage.setItem("sa247_watch_" + lessonId, JSON.stringify(segs));
+      else localStorage.removeItem("sa247_watch_" + lessonId);
+    } catch {
+      /* ignore */
     }
   }
 
@@ -258,7 +247,18 @@
     let watchTimer = null;
     let currentLesson = null;
 
+    let flushOnLeave = null;
+    window.addEventListener("pagehide", () => flushOnLeave && flushOnLeave());
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && flushOnLeave) flushOnLeave();
+    });
+
     function stopWatch() {
+      if (flushOnLeave) {
+        const f = flushOnLeave;
+        flushOnLeave = null;
+        f();
+      }
       if (watchTimer) {
         clearInterval(watchTimer);
         watchTimer = null;
@@ -341,7 +341,7 @@
             <p class="meta">Tiến độ: <strong>${done}/${flat.length}</strong> video (${pct}%)</p>
             <p class="meta">${
               enrolled
-                ? "Bạn đã mở khóa toàn bộ lộ trình."
+                ? "Xem hết từng video (tốc độ 1×) để mở bài tiếp theo."
                 : `Mở sẵn <strong>${openN}</strong> video · còn lại khóa đến khi đăng ký.`
             }</p>
             <div class="progress-bar" aria-hidden="true"><span style="width:${pct}%"></span></div>
@@ -373,6 +373,13 @@
       </div>`;
 
     const modsEl = $(".classroom__mods", host);
+    const isSeqLocked = (l) => enrolled && l.locked === true;
+
+    function renderSide() {
+    const openIds = new Set(
+      [...modsEl.querySelectorAll("details[open]")].map((d) => d.getAttribute("data-mod"))
+    );
+    modsEl.innerHTML = "";
     (modules || []).forEach((m, mi) => {
       const lessons = (m.lessons || [])
         .slice()
@@ -387,19 +394,25 @@
       const modDone = lessons.filter((l) => progressMap[l.id]?.completed).length;
       const details = document.createElement("details");
       details.className = "classroom__mod";
-      details.open = mi === 0 || lessons.some((l) => l.id === resume?.id);
+      details.setAttribute("data-mod", String(m.id || mi));
+      const activeId = currentLesson?.id || resume?.id;
+      details.open =
+        openIds.has(String(m.id || mi)) || (!openIds.size && mi === 0) || lessons.some((l) => l.id === activeId);
       details.innerHTML = `<summary><span>${esc(m.title)}</span><small>${modDone}/${lessons.length}</small></summary>`;
       const ul = document.createElement("ul");
       lessons.forEach((l) => {
         const li = document.createElement("li");
-        const locked = !enrolled && !l.is_free;
+        const seqLocked = isSeqLocked(l);
+        const locked = (!enrolled && !l.is_free) || seqLocked;
         const doneL = progressMap[l.id]?.completed;
-        const playable = !!(l.youtube_video_id || l.has_video);
-        li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}" data-lesson="${esc(l.id)}">
+        const pctL = Number(progressMap[l.id]?.progress_percent) || 0;
+        const playable = !!(l.youtube_video_id || l.has_video || seqLocked);
+        li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}${l.id === activeId ? " is-active" : ""}" data-lesson="${esc(l.id)}">
           <span class="classroom__lesson-title">${esc(l.title)}</span>
-          ${l.is_free ? '<span class="badge badge--free">Mở sẵn</span>' : ""}
+          ${l.is_free && !enrolled ? '<span class="badge badge--free">Mở sẵn</span>' : ""}
           ${doneL ? '<span class="badge">Đã học</span>' : ""}
-          ${locked ? '<span class="badge">Khóa</span>' : ""}
+          ${enrolled && !doneL && !locked && pctL > 0 ? `<span class="badge">${pctL}%</span>` : ""}
+          ${seqLocked ? '<span class="badge">🔒</span>' : locked ? '<span class="badge">Khóa</span>' : ""}
           ${!locked && !playable ? '<span class="badge">Sắp có</span>' : ""}
         </button>`;
         ul.appendChild(li);
@@ -407,6 +420,45 @@
       details.appendChild(ul);
       modsEl.appendChild(details);
     });
+    }
+    renderSide();
+
+    function updateHead() {
+      const doneN = flat.filter((l) => progressMap[l.id]?.completed).length;
+      const pctN = Math.round((doneN / (flat.length || 1)) * 100);
+      host.querySelector(".classroom__head .progress-bar > span")?.style.setProperty("width", pctN + "%");
+      const headMeta = host.querySelector(".classroom__head .meta strong");
+      if (headMeta) headMeta.textContent = `${doneN}/${flat.length}`;
+    }
+
+    async function refreshLocks() {
+      if (!enrolled || !sb) return;
+      try {
+        const { data } = await sb.rpc("get_course_outline", { p_course_code: course.code });
+        const byId = Object.create(null);
+        (data?.modules || []).forEach((m) => (m.lessons || []).forEach((l) => (byId[l.id] = l)));
+        const apply = (l) => {
+          const s = byId[l.id];
+          if (!s) return;
+          l.locked = s.locked === true;
+          if (s.youtube_video_id) l.youtube_video_id = s.youtube_video_id;
+          l.has_video = !!s.youtube_video_id;
+        };
+        flat.forEach(apply);
+        (modules || []).forEach((m) => (m.lessons || []).forEach(apply));
+        renderSide();
+      } catch (e) {
+        console.warn("[learn-player] refresh locks", e);
+      }
+    }
+
+    function firstOpenLesson() {
+      return (
+        flat.find((l) => !progressMap[l.id]?.completed && !isSeqLocked(l) && l.youtube_video_id) ||
+        flat.find((l) => !isSeqLocked(l)) ||
+        null
+      );
+    }
 
     const player = $("#classroom-player", host);
     const meta = $("#classroom-meta", host);
@@ -419,13 +471,27 @@
         btn.classList.toggle("is-active", btn.getAttribute("data-lesson") === lesson.id);
       });
       const title = esc(lesson.title);
+      const where = `${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}`;
 
       if (!enrolled && !lesson.is_free) {
         player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
           <p class="lead">Video này nằm trong phần khóa — đăng ký để xem toàn bộ lộ trình.</p>
           <p><a class="btn btn--amber" href="#dang-ky">Mở khóa khóa học</a>
           <a class="btn btn--line" href="${esc(loginHref)}">Đăng nhập</a></p>`;
-        meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
+        meta.innerHTML = `<p class="meta">${where}</p>`;
+        host.querySelector(".classroom")?.classList.remove("is-side-open");
+        return;
+      }
+
+      if (isSeqLocked(lesson)) {
+        const open = firstOpenLesson();
+        player.innerHTML = `<div class="lesson-locked">
+          <p class="lesson-locked__icon" aria-hidden="true">🔒</p>
+          <h3>${title}</h3>
+          <p class="lead">Bài này mở khi bạn xem hết các bài trước.</p>
+          ${open ? `<p><button type="button" class="btn btn--amber" data-next-lesson="${esc(open.id)}">Học bài đang dở →</button></p>` : ""}
+        </div>`;
+        meta.innerHTML = `<p class="meta">${where}</p>`;
         host.querySelector(".classroom")?.classList.remove("is-side-open");
         return;
       }
@@ -433,41 +499,34 @@
       if (!lesson.youtube_video_id) {
         player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
           <p class="lead">Video đang hoàn thiện / đồng bộ YouTube.</p>`;
-        meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
+        meta.innerHTML = `<p class="meta">${where}</p>`;
         return;
       }
 
-      const startAt = Math.max(
-        0,
-        Number(progressMap[lesson.id]?.watched_seconds) || 0
-      );
-      // Chỉ seek nếu đã xem > 15s và chưa hoàn thành
-      const seek =
-        !progressMap[lesson.id]?.completed && startAt > 15 ? startAt : 0;
-      let playedAcc = Math.max(0, Number(progressMap[lesson.id]?.played_seconds) || 0);
-      let playTick = 0;
+      const prog = progressMap[lesson.id] || {};
+      const wasDone = !!prog.completed;
+      const startAt = Math.max(0, Number(prog.watched_seconds) || 0);
+      const seek = !wasDone && startAt > 15 ? startAt : 0;
+      const track = enrolled && sb && !String(lesson.id).startsWith("static:");
 
       player.innerHTML = `<div class="trial-video__frame classroom__frame">
           <div id="sa247-yt-player"></div>
         </div>`;
 
-      const doneL = progressMap[lesson.id]?.completed;
       const full = (lesson.description || "").trim();
       const short = (lesson.description_short || "").trim() || full;
       let descHtml = "";
       if (short) {
         const needFold = full && full !== short && full.length > short.length + 40;
-        if (needFold) {
-          descHtml = `<div class="classroom__desc desc-fold">
+        descHtml = needFold
+          ? `<div class="classroom__desc desc-fold">
             <div class="desc-fold__short">${esc(short)}</div>
             <details class="desc-fold__more">
               <summary>Xem đầy đủ</summary>
               <div class="desc-fold__full">${esc(full)}</div>
             </details>
-          </div>`;
-        } else {
-          descHtml = `<div class="classroom__desc">${esc(short)}</div>`;
-        }
+          </div>`
+          : `<div class="classroom__desc">${esc(short)}</div>`;
       }
       const resumeHint =
         seek > 0
@@ -478,14 +537,23 @@
 
       meta.innerHTML = `
         <h4>${title}</h4>
-        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Mở sẵn" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
+        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free && !enrolled ? " · Mở sẵn" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
         ${resumeHint}
-        ${descHtml}
         ${
-          enrolled
-            ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
-            : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
+          track
+            ? `<div class="watch-status" data-watch-status data-label="">
+                <div class="watch-status__row">
+                  <strong data-watch-pct></strong>
+                  <span data-watch-note></span>
+                </div>
+                <div class="progress-bar" aria-hidden="true"><span data-watch-bar style="width:0%"></span></div>
+                <div class="watch-status__next" data-watch-next hidden></div>
+              </div>`
+            : enrolled
+              ? ""
+              : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
         }
+        ${descHtml}
         <p class="classroom__fb">
           <button type="button" class="btn btn--line btn--small" data-lesson-fb>💬 Có vấn đề với bài học này?</button>
         </p>
@@ -493,13 +561,134 @@
 
       window.dispatchEvent(
         new CustomEvent("sa247:progress", {
-          detail: {
-            courseCode: course.code,
-            lessonCode: lesson.lesson_code || "",
-            started: true,
-          },
+          detail: { courseCode: course.code, lessonCode: lesson.lesson_code || "", started: true },
         })
       );
+
+      /* ---- Theo dõi đoạn đã xem (chỉ phát thật, 1×) ---- */
+      let segs = mergeSegs([...(Array.isArray(prog.watched_segments) ? prog.watched_segments : []), ...localSegs(lesson.id)]);
+      let duration = Number(lesson.duration_seconds) || 0;
+      let serverPct = wasDone ? 100 : Number(prog.progress_percent) || 0;
+      let done = wasDone;
+      let lastT = null;
+      let lastWall = 0;
+      let dirty = segs.length > 0 && !wasDone;
+      let inflight = false;
+      let lastFlush = 0;
+      let lastPos = seek;
+      let rateNote = "";
+      let showDoneOnEnd = false;
+      const statusEl = $("[data-watch-status]", meta);
+
+      function paintStatus() {
+        if (!statusEl) return;
+        const localPct = duration > 0 ? Math.min(99, Math.floor((100 * segSeconds(segs)) / duration)) : 0;
+        const pctNow = done ? 100 : Math.max(serverPct, localPct);
+        const label = done ? "✓ Đã hoàn thành" : `Đã xem ${pctNow}%`;
+        $("[data-watch-pct]", statusEl).textContent = label;
+        $("[data-watch-note]", statusEl).textContent = done
+          ? "Bài học đã được ghi nhận hoàn thành."
+          : rateNote || "Xem hết video (tốc độ 1×) để hoàn thành bài — tua qua không được tính.";
+        $("[data-watch-bar]", statusEl).style.width = pctNow + "%";
+        statusEl.classList.toggle("is-done", done);
+        if (statusEl.getAttribute("data-label") !== label) {
+          statusEl.setAttribute("data-label", label);
+          window.dispatchEvent(new CustomEvent("sa247:watch", { detail: { lessonId: lesson.id, done, pct: pctNow } }));
+        }
+      }
+
+      function addSeg(a, b) {
+        if (!(b > a)) return;
+        segs = mergeSegs([...segs, [a, b]]);
+        dirty = true;
+        storeLocalSegs(lesson.id, segs);
+      }
+
+      function closeSegment(tEnd) {
+        if (lastT == null) return;
+        const wall = (performance.now() - lastWall) / 1000;
+        const dt = tEnd - lastT;
+        if (dt > 0 && dt <= wall + 0.75) addSeg(lastT, tEnd);
+        lastT = null;
+      }
+
+      function nextAfter() {
+        return (
+          (window.sa247Continue && sa247Continue.nextLessonAfter(flat, lesson.id)) ||
+          flat[flat.findIndex((l) => l.id === lesson.id) + 1] ||
+          null
+        );
+      }
+
+      async function onCompleted() {
+        progressMap[lesson.id] = {
+          ...(progressMap[lesson.id] || {}),
+          completed: true,
+          progress_percent: 100,
+          watched_segments: segs,
+          last_watched_at: new Date().toISOString(),
+        };
+        storeLocalSegs(lesson.id, null);
+        window.dispatchEvent(
+          new CustomEvent("sa247:progress", {
+            detail: { courseCode: course.code, lessonCode: lesson.lesson_code || "", completed: true },
+          })
+        );
+        await refreshLocks();
+        updateHead();
+        const nextEl = $("[data-watch-next]", meta);
+        const next = nextAfter();
+        if (nextEl) {
+          const modCode = String(lesson.moduleCode || "").toUpperCase();
+          const sameMod = next && String(next.moduleCode || "").toUpperCase() === modCode;
+          nextEl.innerHTML = sameMod
+            ? `<button type="button" class="btn btn--amber btn--small" data-next-lesson="${esc(next.id)}">Bài tiếp theo →</button>`
+            : `<a class="btn btn--amber btn--small" href="../quiz/?course=${encodeURIComponent(course.code)}&module=${encodeURIComponent(modCode)}">Kiểm tra cuối chương ${esc(modCode)}</a>`;
+          nextEl.hidden = false;
+        }
+        paintStatus();
+        const st = ytPlayer?.getPlayerState?.();
+        if (window.YT && st === YT.PlayerState.ENDED) showCompleteScreen(lesson);
+        else showDoneOnEnd = true;
+      }
+
+      async function flush(force) {
+        if (!track || inflight || done) return;
+        if (!dirty && !force) return;
+        inflight = true;
+        const sent = segs;
+        try {
+          const res = await recordWatch(sb, lesson.id, sent, lastPos, duration);
+          lastFlush = Date.now();
+          if (res) {
+            if (Number(res.duration_seconds) > 0) duration = Number(res.duration_seconds);
+            serverPct = Number(res.progress_percent) || serverPct;
+            const server = Array.isArray(res.segments) ? res.segments : [];
+            segs = mergeSegs([...segs, ...server]);
+            dirty = segSeconds(segs) > segSeconds(server) + 0.5;
+            progressMap[lesson.id] = {
+              ...(progressMap[lesson.id] || {}),
+              progress_percent: serverPct,
+              watched_segments: server,
+              watched_seconds: Math.floor(lastPos),
+              last_watched_at: new Date().toISOString(),
+            };
+            if (res.completed && !done) {
+              done = true;
+              await onCompleted();
+            }
+          }
+        } catch (e) {
+          const msg = String(e?.message || "");
+          if (/lesson_locked/.test(msg)) rateNote = "Bài này đang khóa — hãy xem hết bài trước.";
+          console.warn("[learn-player] record_watch", e);
+        } finally {
+          inflight = false;
+          paintStatus();
+        }
+      }
+
+      paintStatus();
 
       await loadYtApi();
       if (window.YT && window.YT.Player) {
@@ -513,70 +702,97 @@
           },
           events: {
             onReady: () => {
-              if (enrolled && sb) {
-                saveWatch(sb, lesson.id, { watchedSeconds: seek || 0 }).catch(() => {});
-                watchTimer = setInterval(() => {
-                  try {
-                    const t = ytPlayer?.getCurrentTime?.();
-                    const d = ytPlayer?.getDuration?.();
-                    const state = ytPlayer?.getPlayerState?.();
-                    if (state === YT.PlayerState.PLAYING) {
-                      const now = Date.now();
-                      if (playTick) {
-                        const delta = Math.min(12, Math.max(0, (now - playTick) / 1000));
-                        playedAcc += delta;
-                      }
-                      playTick = now;
-                    } else {
-                      playTick = 0;
-                    }
-                    if (typeof t === "number" && t > 0) {
-                      if (window.SA247_FEEDBACK_CONTEXT) {
-                        window.SA247_FEEDBACK_CONTEXT.video_position_seconds = Math.floor(t);
-                      }
-                      const pp =
-                        typeof d === "number" && d > 0
-                          ? Math.min(99, Math.round((t / d) * 100))
-                          : undefined;
-                      saveWatch(sb, lesson.id, {
-                        watchedSeconds: t,
-                        progressPercent: pp,
-                        playedSeconds: playedAcc,
-                      }).catch(() => {});
-                    }
-                  } catch {
-                    /* ignore */
+              if (!track) return;
+              const d = ytPlayer?.getDuration?.();
+              if (!duration && d > 0) duration = d;
+              flush(true);
+              watchTimer = setInterval(() => {
+                try {
+                  const t = ytPlayer?.getCurrentTime?.();
+                  const d2 = ytPlayer?.getDuration?.();
+                  if (!duration && d2 > 0) duration = d2;
+                  const state = ytPlayer?.getPlayerState?.();
+                  const rate = ytPlayer?.getPlaybackRate?.() || 1;
+                  if (typeof t === "number") {
+                    lastPos = t;
+                    if (window.SA247_FEEDBACK_CONTEXT) window.SA247_FEEDBACK_CONTEXT.video_position_seconds = Math.floor(t);
                   }
-                }, 8000);
+                  if (state === YT.PlayerState.PLAYING && rate <= 1.01 && typeof t === "number") {
+                    const now = performance.now();
+                    if (lastT != null) {
+                      const dt = t - lastT;
+                      const wall = (now - lastWall) / 1000;
+                      if (dt > 0 && dt <= wall + 0.75) addSeg(lastT, t);
+                    }
+                    lastT = t;
+                    lastWall = now;
+                  } else {
+                    lastT = null;
+                  }
+                  paintStatus();
+                  if (dirty && Date.now() - lastFlush > 10000) flush();
+                } catch {
+                  /* ignore */
+                }
+              }, 1000);
+            },
+            onPlaybackRateChange: (ev) => {
+              if (ev.data > 1.01) {
+                closeSegment(ytPlayer?.getCurrentTime?.() || 0);
+                try {
+                  ytPlayer.setPlaybackRate(1);
+                } catch {
+                  /* ignore */
+                }
+                rateNote = "SA247 tính hoàn thành ở tốc độ 1× — đã đặt lại tốc độ bình thường.";
+                paintStatus();
               }
             },
             onStateChange: (ev) => {
-              if (ev.data === YT.PlayerState.PLAYING) {
-                playTick = Date.now();
-              } else if (ev.data !== YT.PlayerState.BUFFERING) {
-                playTick = 0;
-              }
-              if (ev.data === YT.PlayerState.ENDED && enrolled && sb) {
-                // Gợi ý hoàn thành — không auto sang bài
-                const btn = $("[data-complete]", meta);
-                if (btn && !progressMap[lesson.id]?.completed) {
-                  btn.classList.add("btn--amber");
-                  btn.textContent = "Đánh dấu hoàn thành · sang bài tiếp theo";
-                }
+              if (!track) return;
+              const t = ytPlayer?.getCurrentTime?.() || 0;
+              if (ev.data === YT.PlayerState.PAUSED) {
+                closeSegment(t);
+                lastPos = t;
+                flush(true);
+              } else if (ev.data === YT.PlayerState.ENDED) {
+                closeSegment(duration > 0 ? Math.max(t, duration) : t);
+                lastPos = 0;
+                flush(true).then(() => {
+                  if (done && showDoneOnEnd) showCompleteScreen(lesson);
+                });
+              } else if (ev.data === YT.PlayerState.BUFFERING) {
+                closeSegment(t);
               }
             },
           },
         });
       } else {
-        // Fallback iframe
         const startQ = seek > 0 ? `&start=${Math.floor(seek)}` : "";
         player.innerHTML = `<div class="trial-video__frame classroom__frame">
           <iframe src="https://www.youtube-nocookie.com/embed/${esc(lesson.youtube_video_id)}?rel=0${startQ}"
             title="${title}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>`;
-        if (enrolled && sb) saveWatch(sb, lesson.id, { watchedSeconds: seek }).catch(() => {});
+        if (statusEl) {
+          rateNote = "Không kết nối được trình theo dõi YouTube — tải lại trang để tiến độ được ghi nhận.";
+          paintStatus();
+        }
       }
+
+      flushOnLeave = () => {
+        if (!track || done) return;
+        try {
+          const t = ytPlayer?.getCurrentTime?.();
+          if (typeof t === "number") {
+            closeSegment(t);
+            lastPos = t;
+          }
+        } catch {
+          /* ignore */
+        }
+        flush(true);
+      };
 
       window.SA247_FEEDBACK_CONTEXT = {
         source: "VIDEO",
@@ -608,50 +824,6 @@
         else alert("Đang tải hộp phản hồi… thử lại sau vài giây.");
       });
 
-      if (enrolled && sb) {
-        $("[data-complete]", meta)?.addEventListener("click", async (ev) => {
-          const btn = ev.currentTarget;
-          btn.disabled = true;
-          let t = 0;
-          try {
-            t = ytPlayer?.getCurrentTime?.() || progressMap[lesson.id]?.watched_seconds || 0;
-          } catch {
-            t = 0;
-          }
-          if (playedAcc < 45) {
-            btn.disabled = false;
-            btn.textContent = "Xem thêm một lúc rồi đánh dấu hoàn thành";
-            return;
-          }
-          const { error } = await markComplete(sb, lesson.id, t, playedAcc);
-          if (error) {
-            btn.disabled = false;
-            const msg = String(error.message || "");
-            btn.textContent = /CHUA_DU_THOI_GIAN_XEM/i.test(msg)
-              ? "Xem thêm một lúc rồi đánh dấu hoàn thành"
-              : msg || "Lỗi lưu";
-            return;
-          }
-          progressMap[lesson.id] = {
-            ...(progressMap[lesson.id] || {}),
-            completed: true,
-            watched_seconds: Math.floor(t),
-            last_watched_at: new Date().toISOString(),
-          };
-          const b = host.querySelector(`[data-lesson="${CSS.escape(lesson.id)}"]`);
-          b?.classList.add("is-done");
-          window.dispatchEvent(
-            new CustomEvent("sa247:progress", {
-              detail: {
-                courseCode: course.code,
-                lessonCode: lesson.lesson_code || "",
-                completed: true,
-              },
-            })
-          );
-          showCompleteScreen(lesson);
-        });
-      }
       host.querySelector(".classroom")?.classList.remove("is-side-open");
     }
 
@@ -810,13 +982,13 @@
       const ids = flat.map((l) => l.id).filter((id) => !String(id).startsWith("static:"));
       if (ids.length) {
         let sel =
-          "lesson_id,completed,progress_percent,last_watched_at,watched_seconds,played_seconds";
+          "lesson_id,completed,progress_percent,last_watched_at,watched_seconds,watched_segments,covered_seconds";
         let { data: prog, error } = await sb
           .from("lesson_progress")
           .select(sel)
           .eq("user_id", session.user.id)
           .in("lesson_id", ids);
-        if (error && /played_seconds|watched_seconds/i.test(error.message || "")) {
+        if (error && /watched_segments|covered_seconds|watched_seconds/i.test(error.message || "")) {
           ({ data: prog } = await sb
             .from("lesson_progress")
             .select("lesson_id,completed,progress_percent,last_watched_at")

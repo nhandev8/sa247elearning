@@ -25,7 +25,7 @@
       }</span>`;
     }
     if (!row.unlocked) {
-      return '<span class="badge">Chưa mở</span>';
+      return '<span class="badge">🔒 Chưa mở</span>';
     }
     if (row.attempts_used > 0) {
       return `<span class="badge">Chưa đạt${
@@ -45,9 +45,11 @@
     if (!row.unlocked) {
       const why =
         kind === "final" && row.module_quizzes_passed === false
-          ? "Cần đạt hết quiz chương"
-          : `Cần ≥ ${row.min_progress_percent || 0}% tiến độ`;
-      return `<span class="meta" title="${esc(why)}">Chưa mở</span>`;
+          ? "Đạt hết bài kiểm tra các chương để mở đề cuối khóa."
+          : Number(row.min_progress_percent) >= 100
+            ? "Hoàn thành tất cả bài học của chương trước khi kiểm tra."
+            : `Cần ≥ ${row.min_progress_percent || 0}% tiến độ chương.`;
+      return `<span class="meta">${esc(why)}</span>`;
     }
     const label = row.passed ? "Làm lại" : "Làm bài";
     const cls = row.passed ? "btn btn--line btn--small" : "btn btn--amber btn--small";

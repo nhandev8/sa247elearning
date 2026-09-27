@@ -38,7 +38,9 @@
     }
     if (raw.includes("progress_required")) {
       const n = raw.split(":").pop();
-      return `Cần hoàn thành ít nhất ${n}% nội dung trước khi làm bài.`;
+      return Number(n) >= 100
+        ? "🔒 Hoàn thành tất cả bài học của chương (xem hết từng video) trước khi kiểm tra."
+        : `Cần hoàn thành ít nhất ${n}% nội dung trước khi làm bài.`;
     }
     if (raw.includes("attempts_exhausted")) {
       const parts = raw.split(":");
