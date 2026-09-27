@@ -131,7 +131,10 @@
     }
     const session = await sa247Auth.getSession();
     if (!session) {
-      const login = new URL("../auth/login.html", location.href).href;
+      const path = location.pathname;
+      const idx = path.lastIndexOf("/admin/");
+      const root = idx >= 0 ? path.slice(0, idx + 1) : "/";
+      const login = new URL(root + "auth/login.html", location.origin).href;
       location.href = login + "?next=" + encodeURIComponent(location.href);
       return null;
     }
