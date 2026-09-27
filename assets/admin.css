@@ -318,6 +318,12 @@ body.adm-body {
 .prf-sys code { background: var(--adm-bg); padding: 0.15rem 0.35rem; border-radius: 6px; font-size: 0.82rem; }
 .prf-inline { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
 .prf-inline select { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--adm-line); border-radius: 8px; }
+.cmb-courses { display: grid; gap: 0.4rem; }
+.cmb-course { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.45rem 0.55rem; background: var(--adm-bg); border-radius: 8px; font-size: 0.92rem; }
+.cmb-quote p { margin: 0.25rem 0; }
+.cmb-owner { margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px dashed var(--adm-line); }
+.cmb-owner label { display: grid; gap: 0.25rem; font-size: 0.85rem; font-weight: 600; }
+.cmb-owner input { font: inherit; font-weight: 500; padding: 0.4rem 0.55rem; border: 1px solid var(--adm-line); border-radius: 8px; }
 
 @media (max-width: 1180px) {
   .lrn-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }

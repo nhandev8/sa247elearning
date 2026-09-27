@@ -72,7 +72,7 @@
     const hardL = prices?.hard || "199.000đ";
     if (!list?.length) {
       status.innerHTML =
-        'Bạn chưa có chứng nhận nào. Hoàn thành khóa học và đạt bài kiểm tra cuối khóa để nhận chứng nhận. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
+        'Chứng nhận mở sau khi bạn hoàn thành khóa học và đạt bài kiểm tra. Học phí 99.000đ không gồm GCN. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
       box.innerHTML = "";
       return;
     }
@@ -112,8 +112,9 @@
                     ${
                       c.can_claim_program_cert
                         ? `<button type="button" class="btn btn--amber" data-free-cert="${esc(c.course_code)}">Nhận chứng nhận miễn phí (chương trình đối tác)</button>`
-                        : `<a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${pdfL}</a>
-                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${hardL} + ship</a>
+                        : `<p class="meta">Bạn đã đủ điều kiện nhận chứng nhận. Phí GCN không gồm lại học phí.</p>
+                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">Nhận chứng nhận PDF · ${pdfL}</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Nhận bản cứng · ${hardL} + ship</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>`
                     }
                   </p>`

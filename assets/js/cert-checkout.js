@@ -90,7 +90,7 @@
       <div class="checkout-panel">
         <p class="kicker">${esc(course)}</p>
         <h2>Bạn đã đủ điều kiện cấp giấy chứng nhận</h2>
-        <p class="checkout-lead">Chọn hình thức nhận (không bắt buộc). Phí khóa học là phí tham gia — GCN là lựa chọn sau khi đạt.</p>
+        <p class="checkout-lead">Bạn đã hoàn thành khóa và đạt kiểm tra. Phí cấp chứng nhận <strong>không gồm lại học phí</strong> — 99.000đ là quyền học; 169.000đ / 199.000đ là phí cấp GCN sau khi đủ điều kiện.</p>
         <div class="cert-buy-options">
           <button type="button" class="btn btn--amber" data-type="cert_pdf">
             PDF điện tử · ${fmtVnd(prices.cert_pdf)}

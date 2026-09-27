@@ -77,6 +77,8 @@
       items: [
         { target: "kinh-doanh/", label: "Hub Kinh doanh", key: "kinh-doanh" },
         { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
+        { target: "don-hang/tao.html", label: "Tạo đơn combo", key: "tao-don" },
+        { target: "don-hang/chinh-sach.html", label: "Ưu đãi số lượng", key: "uu-dai-sl" },
         { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
         { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao" },
         { target: "quyen-hoc/", label: "Cấp quyền học", key: "quyen-hoc-commerce" },
@@ -133,6 +135,8 @@
     }
     if (path.includes("/tai-khoan")) return "tai-khoan";
     if (path.includes("/quyen-hoc")) return "quyen-hoc";
+    if (path.includes("/don-hang/tao")) return "tao-don";
+    if (path.includes("/don-hang/chinh-sach")) return "uu-dai-sl";
     if (path.includes("/don-hang")) return "don-hang";
     if (path.includes("/gia-ship")) return "gia-ship";
     if (path.includes("/nhat-ky")) return "nhat-ky";

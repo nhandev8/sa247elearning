@@ -37,6 +37,15 @@
     return FULL_ADMIN_ROLES.includes(role);
   }
 
+  /** Ngoại lệ giá / báo giá riêng: chỉ tài khoản chủ sở hữu */
+  function isOwner(sessionOrEmail) {
+    const email =
+      typeof sessionOrEmail === "string"
+        ? sessionOrEmail
+        : sessionOrEmail?.user?.email || sessionOrEmail?.email || "";
+    return String(email).trim().toLowerCase() === "ysafe247@gmail.com";
+  }
+
   /** Role chỉ Kinh doanh — không CMS / hệ thống */
   function isCommerceOnly(role) {
     return role === "kinh_doanh";
@@ -159,6 +168,7 @@
     canManageCommerce,
     canManageContent,
     isFullAdmin,
+    isOwner,
     isCommerceOnly,
     fmtVnd,
     fmtTime,

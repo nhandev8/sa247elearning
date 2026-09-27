@@ -72,12 +72,24 @@
         return `<tr>
           <td>
             <strong>${o.order_code}</strong>
-            <div class="adm-msg">${productVi(o.product_type)}</div>
-            <div class="adm-msg">${o.user_id || o.buyer_email || ""}</div>
+            <div class="adm-msg">${productVi(o.product_type)}${o.order_kind === "combo_custom" ? " · combo" : ""}</div>
+            ${o.payment_code ? `<div class="adm-msg">CK: <code>${o.payment_code}</code></div>` : ""}
+            <div class="adm-msg">${o.buyer_email || ""}</div>
             ${shipLine}
           </td>
-          <td>${c.code || ""} · ${c.title || ""}</td>
+          <td>${
+            (o.items || []).filter((i) => i.product_code && i.product_code !== "shipping").length
+              ? (o.items || [])
+                  .filter((i) => i.product_code && i.product_code !== "shipping")
+                  .map((i) => i.product_code)
+                  .join(", ")
+              : `${c.code || ""} · ${c.title || ""}`
+          }</td>
           <td>${sa247Admin.fmtVnd(o.amount)}${
+            o.list_amount && o.list_amount !== o.amount
+              ? `<div class="adm-msg">gốc ${sa247Admin.fmtVnd(o.list_amount)}${o.discount_percent ? " · −" + o.discount_percent + "%" : ""}</div>`
+              : ""
+          }${
             o.shipping_fee
               ? `<div class="adm-msg">ship ${sa247Admin.fmtVnd(o.shipping_fee)}</div>`
               : ""
@@ -109,7 +121,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,order_code,status,amount,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,course:courses(code,title)"
+            "id,order_code,payment_code,status,amount,list_amount,discount_percent,order_kind,product_type,product_amount,shipping_fee,hard_fulfillment_status,tracking_code,carrier_name,ship_full_name,ship_phone,ship_address,ship_province,buyer_email,payment_flag,created_at,user_id,course:courses(code,title),items:order_items(product_code)"
           )
           .order("created_at", { ascending: false })
           .limit(200);

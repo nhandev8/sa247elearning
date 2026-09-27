@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tạo đơn combo · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927combo" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js?v=20260927combo" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260927combo" defer></script>
+  <script src="../../assets/js/admin-tao-don-combo.js?v=20260927combo" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Tạo đơn combo</h1>
+      </header>
+      <main class="adm-content">
+        <p class="adm-lead">Chọn người học và các khóa. Hệ thống tính <strong>ưu đãi theo số lượng</strong>, sinh mã đơn + mã thanh toán và QR. Combo chỉ gồm quyền học — không gồm chứng nhận.</p>
+
+        <section class="adm-card">
+          <h2>Khách hàng</h2>
+          <form class="adm-form prf-inline" id="find-form" style="max-width:none">
+            <input name="email" type="email" required placeholder="Email người học" style="flex:1 1 220px" />
+            <button type="submit" class="adm-btn adm-btn--primary">Tìm</button>
+            <span class="adm-msg" id="find-msg"></span>
+          </form>
+          <p id="buyer-box" class="adm-msg" hidden></p>
+        </section>
+
+        <section class="adm-card" style="margin-top:1rem">
+          <h2>Khóa học</h2>
+          <div id="course-list" class="cmb-courses"></div>
+        </section>
+
+        <section class="adm-card" style="margin-top:1rem">
+          <h2>Giá</h2>
+          <div id="quote-box" class="cmb-quote">Chọn khóa để xem ưu đãi theo số lượng.</div>
+          <div id="owner-box" hidden class="cmb-owner">
+            <p class="adm-msg">Ngoại lệ — chỉ chủ sở hữu ysafe247@gmail.com</p>
+            <div class="prf-inline">
+              <label>% ưu đãi thủ công <input id="ov-pct" type="number" min="0" max="90" step="1" placeholder="Để trống = theo bảng" /></label>
+              <label>Số tiền thu (đ) <input id="ov-amt" type="number" min="1000" step="1000" placeholder="Để trống = theo %" /></label>
+              <label>Ghi chú ngoại lệ <input id="ov-note" type="text" maxlength="200" placeholder="Lý do" /></label>
+            </div>
+          </div>
+          <p class="adm-msg" id="create-msg"></p>
+          <button type="button" class="adm-btn adm-btn--primary" id="btn-create" disabled>Tạo đơn hàng</button>
+        </section>
+
+        <section class="adm-card" id="pay-box" hidden style="margin-top:1rem">
+          <h2>Thông tin thanh toán</h2>
+          <div id="pay-detail"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

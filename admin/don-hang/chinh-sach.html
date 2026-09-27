@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tất cả khóa học · SA247 Quản trị</title>
+  <title>Ưu đãi theo số lượng · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../../assets/admin.css?v=20260927combo" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js?v=20260927combo" defer></script>
   <script src="../../assets/js/admin-shell.js?v=20260927combo" defer></script>
-  <script src="../../assets/js/admin-khoa-hoc.js" defer></script>
+  <script src="../../assets/js/admin-uu-dai-so-luong.js?v=20260927combo" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -28,36 +26,19 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tất cả khóa học</h1>
+        <h1>Ưu đãi theo số lượng</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm tên khóa học hoặc mã khóa học…" />
-          <select id="filter">
-            <option value="all">Tất cả</option>
-            <option value="open">Đang mở</option>
-            <option value="draft">Bản nháp</option>
-          </select>
-          <button type="button" class="adm-btn adm-btn--primary" id="btn-create">Tạo khóa học</button>
-        </div>
-        <p class="adm-msg" id="adm-status"></p>
-        <section class="adm-card" id="create-box" hidden style="margin-bottom:1rem"></section>
+        <p class="adm-lead">99.000đ/khóa là giá niêm yết. Bảng này là quyền lợi khi đăng ký nhiều khóa cùng lúc — không phải mặc cả từng khách. Combo không gồm chứng nhận. Sửa bảng chỉ tài khoản ysafe247@gmail.com.</p>
+        <p class="adm-msg" id="adm-status">Đang tải…</p>
         <div class="adm-table-wrap">
-          <table class="adm-table">
-            <thead>
-              <tr>
-                <th>Tên khóa học</th>
-                <th>Mã khóa</th>
-                <th>Trạng thái</th>
-                <th>Học viên</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
+          <table class="adm-table" id="tier-table">
+            <thead><tr><th>Từ</th><th>Đến</th><th>%</th><th>Nhãn</th></tr></thead>
+            <tbody></tbody>
           </table>
         </div>
-        <section class="adm-card" id="detail" hidden style="margin-top:1rem"></section>
+        <p class="adm-msg" id="save-msg"></p>
+        <button type="button" class="adm-btn adm-btn--primary" id="btn-save" hidden>Lưu chính sách</button>
       </main>
     </div>
   </div>
