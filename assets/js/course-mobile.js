@@ -33,7 +33,8 @@
 
   function headerOffset() {
     const nav = document.getElementById("nav")?.getBoundingClientRect().height || 56;
-    return nav + (mq.matches ? 60 : 12);
+    const tabs = mq.matches && !document.body.classList.contains("cm-learning");
+    return nav + (tabs ? 60 : 12);
   }
 
   function trialsBlock() {
@@ -280,11 +281,135 @@
     });
   }
 
+  /* ---- Learning mode (enrolled, mobile): classroom first + learner action bar ---- */
+
+  function scrollToPlayer() {
+    if (!mq.matches) return;
+    const p = document.getElementById("classroom-player");
+    if (p) landOn(p);
+  }
+
+  function nextLessonButton() {
+    const all = [...document.querySelectorAll("#learner-root .classroom__lesson")];
+    const i = all.findIndex((b) => b.classList.contains("is-active"));
+    return i >= 0 ? all.slice(i + 1).find((b) => !b.classList.contains("is-locked")) || null : null;
+  }
+
+  /* Primary action mirrors the classroom: complete-screen CTA first, else "mark complete". */
+  function primaryAction() {
+    const meta = document.getElementById("classroom-meta");
+    const doneCta = meta?.querySelector(".lesson-next__actions .btn--amber");
+    if (doneCta) return { el: doneCta, label: doneCta.textContent.trim(), strong: true };
+    const complete = meta?.querySelector("[data-complete]");
+    if (complete) {
+      const finished = /Đã hoàn thành/.test(complete.textContent);
+      return {
+        el: complete,
+        label: finished ? "✓ Đã học" : "✓ Hoàn thành",
+        strong: complete.classList.contains("btn--amber"),
+        disabled: complete.disabled,
+      };
+    }
+    return null;
+  }
+
+  function buildLearnBar() {
+    if (document.querySelector(".cm-learnbar")) return document.querySelector(".cm-learnbar");
+    const bar = document.createElement("nav");
+    bar.className = "cm-learnbar";
+    bar.setAttribute("aria-label", "Điều khiển bài học");
+    bar.hidden = true;
+    bar.innerHTML =
+      '<button type="button" class="cm-learnbar__btn" data-cm-side>☰ Mục lục</button>' +
+      '<button type="button" class="cm-learnbar__btn cm-learnbar__main" data-cm-main>✓ Hoàn thành</button>' +
+      '<button type="button" class="cm-learnbar__btn" data-cm-next>Bài tiếp →</button>';
+    bar.addEventListener("click", (e) => {
+      const classroom = document.querySelector("#learner-root .classroom");
+      if (e.target.closest("[data-cm-side]")) {
+        classroom?.classList.toggle("is-side-open");
+        return;
+      }
+      if (e.target.closest("[data-cm-main]")) {
+        const act = primaryAction();
+        if (!act) return;
+        if (act.el.tagName === "A") {
+          window.location.href = act.el.href;
+          return;
+        }
+        act.el.click();
+        window.setTimeout(scrollToPlayer, 400);
+        return;
+      }
+      if (e.target.closest("[data-cm-next]")) {
+        const inDone = document.querySelector("#classroom-meta [data-next-lesson]");
+        (inDone || nextLessonButton())?.click();
+        window.setTimeout(scrollToPlayer, 60);
+      }
+    });
+    document.body.appendChild(bar);
+    return bar;
+  }
+
+  function paintLearnBar() {
+    const bar = document.querySelector(".cm-learnbar");
+    if (!bar) return;
+    const act = primaryAction();
+    const main = bar.querySelector("[data-cm-main]");
+    main.textContent = act ? act.label : "✓ Hoàn thành";
+    main.disabled = !act || !!act.disabled;
+    main.classList.toggle("is-strong", !!act?.strong);
+    const hasNext = !!(document.querySelector("#classroom-meta [data-next-lesson]") || nextLessonButton());
+    bar.querySelector("[data-cm-next]").disabled = !hasNext;
+    const open = document.querySelector("#learner-root .classroom")?.classList.contains("is-side-open");
+    bar.querySelector("[data-cm-side]").classList.toggle("is-on", !!open);
+  }
+
+  function ensureSideClose() {
+    const side = document.getElementById("classroom-side");
+    if (!side || side.querySelector(".cm-side-close")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "cm-side-close";
+    btn.textContent = "✕ Đóng mục lục";
+    btn.addEventListener("click", () => document.querySelector("#learner-root .classroom")?.classList.remove("is-side-open"));
+    side.insertBefore(btn, side.firstChild);
+  }
+
+  let learningLanded = false;
+
+  function paintLearningMode() {
+    const on = enrolled();
+    document.body.classList.toggle("cm-learning", on);
+    if (!on) return;
+    if (!learningLanded) {
+      learningLanded = true;
+      const deepLink = /learner-root|noi-dung-khoa/.test(location.hash) || /[?&]lesson(_id)?=/.test(location.search);
+      if (deepLink && mq.matches) window.setTimeout(scrollToPlayer, 250);
+    }
+    const bar = buildLearnBar();
+    bar.hidden = !mq.matches;
+    ensureSideClose();
+    paintLearnBar();
+  }
+
   function watchClassroom() {
     const root = document.getElementById("learner-root");
     if (!root) return;
-    const update = () => paintTrialLabels();
-    new MutationObserver(update).observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-enrolled"] });
+    root.addEventListener("click", (e) => {
+      if (!enrolled()) return;
+      if (e.target.closest(".classroom__lesson, [data-next-lesson], [data-resume]")) window.setTimeout(scrollToPlayer, 60);
+    });
+    const update = () => {
+      paintTrialLabels();
+      paintLearningMode();
+    };
+    new MutationObserver(update).observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-enrolled", "class", "disabled"],
+    });
+    mq.addEventListener?.("change", update);
     update();
   }
 

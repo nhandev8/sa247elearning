@@ -47,7 +47,7 @@
         box.innerHTML = "";
         return;
       }
-      if (status) status.textContent = `${snapshots.length} khóa trong tài khoản (enrollment).`;
+      if (status) status.textContent = `${snapshots.length} khóa đang có trong tài khoản.`;
       box.innerHTML = snapshots
         .map((s) => {
           const c = s.course || {};
@@ -116,10 +116,10 @@
                 ? `../${esc(c.slug)}/#learner-root`
                 : C().learnHref(c.slug, s.lesson);
             return `<tr>
-              <td><strong>${esc(c.code || "")}</strong><div class="meta">${esc(c.title || "")}</div></td>
-              <td><strong>${s.pct}%</strong><div class="meta">${s.done}/${s.total} bài</div>${C().progressBarHtml(s.pct)}</td>
-              <td>${lesson}</td>
-              <td><a class="btn btn--line btn--small" href="${href}">Mở</a></td>
+              <td data-label="Khóa"><strong>${esc(c.code || "")}</strong><div class="meta">${esc(c.title || "")}</div></td>
+              <td data-label="Tiến độ"><strong>${s.pct}%</strong><div class="meta">${s.done}/${s.total} bài</div>${C().progressBarHtml(s.pct)}</td>
+              <td data-label="Bài gần nhất">${lesson}</td>
+              <td class="learn-table__act"><a class="btn btn--line btn--small" href="${href}">Mở</a></td>
             </tr>`;
           })
           .join("")}

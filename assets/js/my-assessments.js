@@ -62,10 +62,12 @@
     mods.forEach((m) => {
       rows.push(`<li>
         <div>
-          <strong>${esc(m.module_code)}</strong> — ${esc(m.title || "Chương")}
-          <span class="meta">Kiểm tra cuối chương · ${m.n_questions || 0} câu · đạt từ ${
+          <strong>${esc(m.module_code)}</strong> — ${esc(
+            String(m.title || "Chương").replace(new RegExp("^" + m.module_code + "\\s*[·:\\-—]\\s*"), "")
+          )}
+          <div class="meta">Kiểm tra cuối chương · ${m.n_questions || 0} câu · đạt từ ${
             m.pass_percent || 70
-          }%</span>
+          }%</div>
           <div class="meta">Tiến độ chương: ${m.progress_percent ?? 0}% · lần làm: ${
             m.attempts_used || 0
           }${m.attempts_left != null ? " / còn " + m.attempts_left : ""}</div>
@@ -190,18 +192,18 @@
                 : "Cuối khóa";
               const pass = a.passed ? "Đạt" : "Chưa đạt";
               return `<tr>
-                <td><strong>${esc(c.code || "")}</strong> · ${scope}
+                <td data-label="Khóa / phạm vi"><strong>${esc(c.code || "")}</strong> · ${scope}
                   <div class="meta">${esc(c.title || "")}</div></td>
-                <td><strong>${a.score_percent != null ? a.score_percent + "%" : "—"}</strong></td>
-                <td>${pass}</td>
-                <td class="meta">${esc(fmtTime(a.created_at))}</td>
+                <td data-label="Điểm"><strong>${a.score_percent != null ? a.score_percent + "%" : "—"}</strong></td>
+                <td data-label="Kết quả">${pass}</td>
+                <td data-label="Thời điểm" class="meta">${esc(fmtTime(a.created_at))}</td>
               </tr>`;
             })
             .join("")}
           </tbody></table>`;
       }
     } catch (e) {
-      attemptHost.innerHTML = `<p class="meta">${esc(e.message || "Chưa đọc được lịch sử (RLS).")}</p>`;
+      attemptHost.innerHTML = `<p class="meta">${esc(e.message || "Chưa tải được lịch sử làm bài. Vui lòng thử lại sau.")}</p>`;
     }
   });
 })();

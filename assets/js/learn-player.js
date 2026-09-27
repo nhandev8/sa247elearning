@@ -703,6 +703,11 @@
     };
     let enrolled = false;
 
+    // supabase-client.js is deferred after this script — wait for it before deciding access.
+    for (let i = 0; i < 100 && !window.sa247Auth?.ready; i++) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+
     if (window.sa247Auth?.ready) {
       try {
         sb = await sa247Auth.ensureClient();

@@ -2330,6 +2330,23 @@ body.course-page { padding-bottom: 4.5rem; }
 
 /* Course Detail Mobile (course-mobile.js): See → Try → Understand → Buy → Learn */
 .cm-sticky-actions { display: flex; gap: 0.5rem; align-items: center; }
+.cm-sticky-trial[hidden] { display: none !important; }
+#sach-hse .btn--line,
+.career-help .btn--line,
+.proof-card .btn--line,
+#chung-nhan.why .btn--line,
+.campus-card .btn--line,
+.campus-section .btn--line,
+.course-block__notify .btn--line,
+.book-prologue .btn--line,
+.classroom__meta .btn--line,
+.cert-preview .btn--line,
+.unlock-stub__panel .btn--line {
+  color: var(--deep, #0f1c17);
+  border-color: rgba(15, 28, 23, 0.3);
+}
+.cm-sticky-trial { color: #fff; border-color: rgba(255, 255, 255, 0.45); }
+body.course-page .sa247-fb-fab { bottom: calc(5rem + env(safe-area-inset-bottom)); }
 .cm-trial-section {
   padding: 3rem 0;
   background: #f4f1e8;
@@ -2416,6 +2433,96 @@ body.course-page { padding-bottom: 4.5rem; }
   font-size: 0.98rem;
   line-height: 1.4;
   color: #0f1c17;
+}
+@media (max-width: 560px) {
+  .nav__brand { white-space: nowrap; }
+  .nav .nav__link--btn:not(.nav__avatar) { display: none; }
+  .nav .nav__avatar {
+    max-width: 7.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.cm-learnbar { display: none; }
+.cm-side-close { display: none; }
+@media (max-width: 760px) {
+  body.cm-learning #noi-dung-khoa { order: 0; }
+  body.cm-learning #van-de,
+  body.cm-learning #giai-phap,
+  body.cm-learning #doi-tuong,
+  body.cm-learning #gia-tri-99k,
+  body.cm-learning #cach-hoc,
+  body.cm-learning #lien-he,
+  body.cm-learning main > .course-spine-box,
+  body.cm-learning .cm-tabs,
+  body.cm-learning #course-sticky-cta { display: none !important; }
+  body.cm-learning #noi-dung-khoa > .wrap > .lead,
+  body.cm-learning #noi-dung-khoa .trial-cta { display: none; }
+  body.cm-learning #noi-dung-khoa { padding-top: 1.25rem; }
+  body.cm-learning #noi-dung-khoa .wrap { padding-left: 0.5rem; padding-right: 0.5rem; }
+  body.cm-learning .sa247-fb-fab { bottom: calc(4.6rem + env(safe-area-inset-bottom)) !important; }
+  body.cm-learning { padding-bottom: calc(4.2rem + env(safe-area-inset-bottom)); }
+
+  .cm-learnbar:not([hidden]) {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 46;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem calc(0.5rem + env(safe-area-inset-bottom));
+    background: #071426;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+  }
+  .cm-learnbar__btn {
+    min-height: 2.9rem;
+    padding: 0 0.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cm-learnbar__btn:disabled { opacity: 0.4; }
+  .cm-learnbar__btn.is-on { background: rgba(255, 255, 255, 0.14); }
+  .cm-learnbar__main { border-color: rgba(212, 167, 44, 0.8); color: #f3d27a; }
+  .cm-learnbar__main.is-strong { background: #d4a72c; border-color: #d4a72c; color: #071426; }
+
+  body.cm-learning .classroom.is-side-open .classroom__side {
+    position: fixed;
+    top: 3.6rem;
+    bottom: calc(4rem + env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    z-index: 45;
+    overflow-y: auto;
+    border: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  body.cm-learning .cm-side-close {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 0;
+    border-bottom: 1px solid rgba(15, 28, 23, 0.1);
+    background: #fff;
+    color: #0f1c17;
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+  }
+  body.cm-learning .classroom__lesson { min-height: 2.9rem; }
 }
 .classroom__actions .btn--line {
   color: var(--deep, #0f1c17);
@@ -4311,3 +4418,48 @@ body.nav-drawer-open .nav {
 .auth-links{margin-top:1.1rem;font-size:.92rem;line-height:1.7;color:#475569}
 .auth-links a{font-weight:600;color:#0b1f3a}
 .auth-box .lead{color:#475569;font-size:.95rem;margin:0 0 1rem}
+
+/* ---- App (học viên): không kế thừa padding section marketing ---- */
+:where(.app-content) section { padding: 0; }
+.app-content > .learn-section:first-child { margin-top: 0.5rem; }
+.app-content select,
+.app-content input,
+.app-content textarea { max-width: 100%; box-sizing: border-box; }
+.app-content select { width: 100%; text-overflow: ellipsis; }
+:where(.app-content) .btn--line {
+  color: var(--deep, #0f1c17);
+  border-color: rgba(15, 28, 23, 0.25);
+}
+:where(.app-content) .btn--line:hover { border-color: var(--amber-hot); background: rgba(212, 167, 44, 0.08); }
+.quiz-q legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 0.6rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.quiz-q legend + * { clear: both; }
+@media (max-width: 760px) {
+  .app-content { padding: 1rem 1rem 5.5rem; }
+  .app-section { margin-top: 1.75rem; }
+  .app-content .btn { min-height: 2.75rem; }
+  .profile-save-bar { bottom: calc(4.2rem + env(safe-area-inset-bottom, 0px)); z-index: 5; }
+  .learn-table, .learn-table tbody, .learn-table tr, .learn-table td { display: block; width: 100%; }
+  .learn-table thead { display: none; }
+  .learn-table tr { padding: 1rem; border-bottom: 1px solid var(--line); }
+  .learn-table tr:last-child { border-bottom: 0; }
+  .learn-table td { padding: 0.35rem 0; border: 0; }
+  .learn-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .learn-table__act { padding-top: 0.6rem !important; }
+  .learn-table__act .btn { width: 100%; justify-content: center; }
+}

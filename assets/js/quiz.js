@@ -407,7 +407,8 @@
           const mark = m.passed ? " · đã đạt" : m.unlocked ? "" : " · chưa mở";
           const opt = document.createElement("option");
           opt.value = m.module_code;
-          opt.textContent = `${m.module_code} — ${m.title || "Chương"}${mark}`;
+          const mt = String(m.title || "Chương").replace(new RegExp("^" + m.module_code + "\\s*[·:\\-—]\\s*"), "");
+          opt.textContent = `${m.module_code} — ${mt}${mark}`;
           if (m.module_code === presetMod) opt.selected = true;
           pickMod.appendChild(opt);
         });

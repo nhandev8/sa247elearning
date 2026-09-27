@@ -72,7 +72,7 @@
     const hardL = prices?.hard || "199.000đ";
     if (!list?.length) {
       status.innerHTML =
-        'Bạn chưa có chứng nhận / đủ điều kiện nào. Hoàn thành khóa → đạt kỳ thi. <a href="../quiz/">Vào kỳ thi</a>';
+        'Bạn chưa có chứng nhận nào. Hoàn thành khóa học và đạt bài kiểm tra cuối khóa để nhận chứng nhận. <a href="../kiem-tra/">Xem bài kiểm tra</a>';
       box.innerHTML = "";
       return;
     }
