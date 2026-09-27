@@ -29,7 +29,7 @@
     return (q.get("id") || q.get("user") || "").trim();
   }
 
-  // Người dùng = hub thao tác theo tài khoản (hồ sơ sâu). Quyền học / tiến độ gộp vào đây.
+  // Đào tạo · Người học (vòng đời học tập) tách khỏi Hệ thống · Tài khoản (danh tính & vai trò).
   const MENU = [
     {
       group: "Tổng quan",
@@ -42,11 +42,12 @@
       scope: "content",
     },
     {
-      group: "Người dùng",
+      group: "Đào tạo",
       items: [
-        { target: "tai-khoan/", label: "Tất cả người dùng", key: "tai-khoan" },
+        { target: "nguoi-hoc/", label: "Người học", key: "nguoi-hoc" },
+        { target: "nguoi-hoc/?tab=attention", label: "Cần chú ý", key: "nguoi-hoc-attention" },
         {
-          target: "tai-khoan/ho-so.html",
+          target: "nguoi-hoc/ho-so.html",
           label: "Hồ sơ đang xem",
           key: "ho-so",
           keepUser: true,
@@ -54,7 +55,7 @@
         },
         { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc", keepUser: true },
         { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do", keepUser: true },
-        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen" },
+        { target: "doi-tac/", label: "Nhập danh sách (Campus)", key: "nhap-ds" },
       ],
       scope: "full",
     },
@@ -99,6 +100,8 @@
     {
       group: "Hệ thống",
       items: [
+        { target: "tai-khoan/", label: "Tài khoản", key: "tai-khoan", adminOnly: true },
+        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen", adminOnly: true },
         { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
         {
           target: "auth/doi-mat-khau.html",
@@ -122,7 +125,12 @@
     if (path.includes("/cau-hoi")) return "cau-hoi";
     if (path.includes("/bai-kiem-tra")) return "bai-kiem-tra";
     if (path.includes("/chung-nhan")) return "chung-nhan";
-    if (path.includes("/tai-khoan/ho-so")) return "ho-so";
+    if (path.includes("/ho-so")) return "ho-so";
+    if (path.includes("/nguoi-hoc")) {
+      return new URLSearchParams(location.search).get("tab") === "attention"
+        ? "nguoi-hoc-attention"
+        : "nguoi-hoc";
+    }
     if (path.includes("/tai-khoan")) return "tai-khoan";
     if (path.includes("/quyen-hoc")) return "quyen-hoc";
     if (path.includes("/don-hang")) return "don-hang";
@@ -159,17 +167,17 @@
       if (g.scope === "commerce") return !!canCommerce;
       if (g.scope === "content") return !!canContent || !!fullAdmin;
       if (g.scope === "full") {
-        if (g.group === "Người dùng") return !!fullAdmin || role === "quan_ly_noi_dung" || role === "giang_vien";
+        if (g.group === "Đào tạo") return !!fullAdmin || role === "quan_ly_noi_dung" || role === "giang_vien";
         if (g.group === "Chứng nhận" || g.group === "Phân tích") return !!fullAdmin;
         return true;
       }
       if (g.scope === "system") return true;
       return true;
     }).map((g) => {
-      if (g.group === "Người dùng" && !fullAdmin) {
+      if (g.group === "Đào tạo" && !fullAdmin) {
         return {
           ...g,
-          items: g.items.filter((it) => it.key !== "phan-quyen"),
+          items: g.items.filter((it) => it.key !== "nhap-ds"),
         };
       }
       if (g.group === "Hệ thống" && !fullAdmin) {

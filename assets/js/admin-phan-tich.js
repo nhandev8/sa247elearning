@@ -159,7 +159,7 @@
         <p class="rp-note">${esc(d.email || "")} · Đăng nhập gần nhất: ${esc(fmtDateTime(d.last_sign_in_at)) || "chưa đăng nhập"}</p>
         ${programs ? `<p class="rp-note">Chương trình đối tác: ${programs}</p>` : ""}
         <p style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 0">
-          <a class="adm-btn adm-btn--line adm-btn--small" href="../tai-khoan/ho-so.html?id=${encodeURIComponent(uid)}">Hồ sơ người dùng</a>
+          <a class="adm-btn adm-btn--line adm-btn--small" href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(uid)}">Hồ sơ người học</a>
           <a class="adm-btn adm-btn--line adm-btn--small" href="../tien-do/?id=${encodeURIComponent(uid)}">Tiến độ từng bài</a>
         </p>
       </section>

@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kinh doanh · SA247 Quản trị</title>
+  <title>Hồ sơ người học · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927learner" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js?v=20260927login" defer></script>
   <script src="../../assets/js/admin-shell.js?v=20260927learner" defer></script>
-  <script src="../../assets/js/admin-kinh-doanh.js" defer></script>
+  <script src="../../assets/js/admin-learner-common.js?v=20260927learner" defer></script>
+  <script src="../../assets/js/admin-ho-so-nguoi-hoc.js?v=20260927learner" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,12 +27,12 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Kinh doanh</h1>
+        <h1>Hồ sơ người học</h1>
       </header>
       <main class="adm-content">
+        <p class="adm-msg"><a href="./">← Người học</a></p>
         <p class="adm-lead" id="adm-status">Đang tải…</p>
-        <div class="adm-stats" id="adm-stats"></div>
-        <div class="adm-grid-2" id="adm-links" style="margin-top:1.25rem"></div>
+        <div id="dossier"></div>
       </main>
     </div>
   </div>

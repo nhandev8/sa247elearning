@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Người học · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927learner" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js?v=20260927login" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260927learner" defer></script>
+  <script src="../../assets/js/admin-learner-common.js?v=20260927learner" defer></script>
+  <script src="../../assets/js/admin-nguoi-hoc.js?v=20260927learner" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Người học</h1>
+      </header>
+      <main class="adm-content">
+        <div class="lrn-head">
+          <div>
+            <strong>Quản lý người học</strong>
+            <p>Theo dõi quyền học, tiến độ và hoạt động học tập — biết ai đang ở đâu và cần làm gì tiếp theo.</p>
+          </div>
+          <div class="lrn-head__actions">
+            <a class="adm-btn adm-btn--line" href="../doi-tac/" data-admin-only hidden>Nhập danh sách</a>
+            <button type="button" class="adm-btn adm-btn--primary" id="lrn-add" data-admin-only hidden>+ Thêm người học</button>
+          </div>
+        </div>
+
+        <div class="lrn-kpis" id="lrn-kpis"></div>
+        <div class="lrn-attn" id="lrn-attn" hidden></div>
+
+        <div class="adm-filters lrn-filters">
+          <input type="search" id="f-q" placeholder="Tìm tên, email, SĐT, mã sinh viên…" />
+          <select id="f-status" aria-label="Trạng thái học tập">
+            <option value="">Trạng thái học tập</option>
+            <option value="not_started">Chưa bắt đầu</option>
+            <option value="learning">Đang học</option>
+            <option value="completed">Đã hoàn thành</option>
+            <option value="inactive">Không hoạt động</option>
+            <option value="no_access">Chưa có quyền học</option>
+          </select>
+          <select id="f-access" aria-label="Quyền học">
+            <option value="">Quyền học</option>
+            <option value="has">Có quyền học</option>
+            <option value="none">Chưa có quyền học</option>
+            <option value="expiring">Sắp hết hạn (14 ngày)</option>
+            <option value="expired">Đã hết hạn</option>
+          </select>
+          <select id="f-source" aria-label="Nguồn">
+            <option value="">Nguồn</option>
+            <option value="mua_khoa">Mua khóa học</option>
+            <option value="campus">SA247 Campus</option>
+            <option value="admin">Quản trị viên cấp quyền</option>
+            <option value="khac">Khác / chưa ghi nguồn</option>
+            <option value="direct">Đăng ký trực tiếp (chưa có quyền học)</option>
+          </select>
+          <select id="f-course" aria-label="Khóa học"><option value="">Khóa học</option></select>
+          <select id="f-type" aria-label="Loại người học">
+            <option value="">Loại người học</option>
+            <option value="ca_nhan">Cá nhân</option>
+            <option value="sinh_vien">Sinh viên</option>
+            <option value="doanh_nghiep">Doanh nghiệp</option>
+            <option value="doi_tac">Đối tác</option>
+            <option value="khac">Khác</option>
+          </select>
+          <select id="f-joined" aria-label="Ngày tham gia">
+            <option value="">Ngày tham gia</option>
+            <option value="7">7 ngày qua</option>
+            <option value="30">30 ngày qua</option>
+            <option value="90">90 ngày qua</option>
+          </select>
+        </div>
+
+        <div class="lrn-count">
+          <p class="adm-msg" id="adm-status">Đang tải…</p>
+          <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="lrn-export">Xuất Excel</button>
+        </div>
+
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Người học</th>
+                <th>Trạng thái</th>
+                <th>Khóa học · tiến độ</th>
+                <th>Quyền học</th>
+                <th>Hoạt động gần nhất</th>
+                <th>Tham gia</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="lrn-dialog" id="lrn-add-dialog">
+    <form class="adm-form" id="lrn-add-form" method="dialog">
+      <h2>Thêm người học</h2>
+      <p class="adm-msg">Hệ thống tạo tài khoản và gửi email mời người học tự đặt mật khẩu.</p>
+      <label>Họ và tên
+        <input name="full_name" required maxlength="120" autocomplete="off" />
+      </label>
+      <label>Email
+        <input name="email" type="email" required autocomplete="off" />
+      </label>
+      <label>Số điện thoại (tuỳ chọn)
+        <input name="phone" type="tel" maxlength="30" autocomplete="off" />
+      </label>
+      <label>Loại người học
+        <select name="learner_type">
+          <option value="ca_nhan">Cá nhân</option>
+          <option value="sinh_vien">Sinh viên</option>
+          <option value="doanh_nghiep">Doanh nghiệp</option>
+          <option value="doi_tac">Đối tác</option>
+          <option value="khac">Khác</option>
+        </select>
+      </label>
+      <label>Cấp quyền học ngay (tuỳ chọn)
+        <select name="course_code" id="lrn-add-course"><option value="">— Chưa cấp —</option></select>
+      </label>
+      <p class="adm-msg" id="lrn-add-msg"></p>
+      <div class="lrn-dialog__actions">
+        <button type="button" class="adm-btn adm-btn--line" id="lrn-add-cancel">Hủy</button>
+        <button type="submit" class="adm-btn adm-btn--primary" id="lrn-add-submit">Tạo &amp; gửi lời mời</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

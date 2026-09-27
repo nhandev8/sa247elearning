@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tất cả tài khoản · SA247 Quản trị</title>
+  <title>Tài khoản · SA247 Quản trị</title>
   <meta name="robots" content="noindex" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css" />
+  <link rel="stylesheet" href="../../assets/admin.css?v=20260927learner" />
   <script src="../../assets/supabase-config.js"></script>
   <script src="../../assets/js/supabase-client.js" defer></script>
   <script src="../../assets/js/admin-api.js?v=20260927login" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=20260916user" defer></script>
-  <script src="../../assets/js/admin-tai-khoan.js?v=20260916user" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=20260927learner" defer></script>
+  <script src="../../assets/js/admin-learner-common.js?v=20260927learner" defer></script>
+  <script src="../../assets/js/admin-tai-khoan.js?v=20260927learner" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,36 +27,40 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Tất cả người dùng</h1>
+        <h1>Tài khoản</h1>
       </header>
       <main class="adm-content">
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Tìm họ tên / SĐT…" />
-          <select id="filter">
-            <option value="all">Tất cả</option>
+        <p class="adm-lead">Danh tính đăng nhập và vai trò hệ thống. Theo dõi học tập tại <a href="../nguoi-hoc/">Đào tạo · Người học</a>.</p>
+        <div class="adm-filters lrn-filters">
+          <input type="search" id="q" placeholder="Tìm tên, email, SĐT…" />
+          <select id="filter" aria-label="Vai trò">
+            <option value="all">Tất cả vai trò</option>
             <option value="learner">Học viên</option>
-            <option value="staff">Staff</option>
-            <option value="quan_tri_cao_nhat">QT cao nhất</option>
+            <option value="staff">Nhân sự (mọi vai trò quản trị)</option>
+            <option value="quan_tri_cao_nhat">Quản trị cao nhất</option>
+            <option value="quan_tri">Quản trị</option>
+            <option value="quan_ly_noi_dung">Quản lý nội dung</option>
+            <option value="giang_vien">Giảng viên</option>
             <option value="kinh_doanh">Kinh doanh</option>
-            <option value="hoc_vien">hoc_vien</option>
           </select>
         </div>
-        <p class="adm-msg" id="adm-status"></p>
+        <p class="adm-msg" id="adm-status">Đang tải…</p>
         <div class="adm-table-wrap">
           <table class="adm-table">
             <thead>
               <tr>
-                <th>Họ tên</th>
-                <th>Vai trò</th>
+                <th>Tài khoản</th>
+                <th>Vai trò hệ thống</th>
+                <th>Loại người học</th>
                 <th>Điện thoại</th>
-                <th>Ngày đăng ký</th>
-                <th>Số quyền học</th>
+                <th>Đăng nhập bằng</th>
+                <th>Tham gia</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
-        <p class="adm-lead">Bấm <strong>Mở hồ sơ</strong> để xem và thao tác toàn bộ: tài khoản, quyền học, tiến độ, kiểm tra, chứng nhận, đơn hàng.</p>
       </main>
     </div>
   </div>

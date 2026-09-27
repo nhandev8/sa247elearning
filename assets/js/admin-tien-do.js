@@ -128,7 +128,7 @@
 
     setMain(`
       <p class="adm-msg">
-        <a href="../tai-khoan/ho-so.html?id=${encodeURIComponent(uid)}">← Hồ sơ người dùng</a>
+        <a href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(uid)}">← Hồ sơ người học</a>
         · <a href="../tai-khoan/">Tất cả người dùng</a>
       </p>
       <section class="adm-card">
@@ -143,7 +143,7 @@
       ${
         courseBlocks.length
           ? courseBlocks.join("")
-          : '<section class="adm-card"><p class="adm-muted">Người dùng chưa có quyền học active. Cấp quyền trong <a href="../tai-khoan/ho-so.html?id=' +
+          : '<section class="adm-card"><p class="adm-muted">Người dùng chưa có quyền học active. Cấp quyền trong <a href="../nguoi-hoc/ho-so.html?id=' +
             encodeURIComponent(uid) +
             '#sec-access">hồ sơ</a>.</p></section>'
       }
@@ -225,7 +225,7 @@
           const name = e.profile?.full_name || e.user_id;
           return `<tr>
             <td><a href="./?id=${encodeURIComponent(e.user_id)}">${esc(name)}</a>
-              <div class="adm-msg"><a href="../tai-khoan/ho-so.html?id=${encodeURIComponent(e.user_id)}">Hồ sơ</a></div>
+              <div class="adm-msg"><a href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(e.user_id)}">Hồ sơ</a></div>
             </td>
             <td>${done}</td>
             <td>${total}</td>
