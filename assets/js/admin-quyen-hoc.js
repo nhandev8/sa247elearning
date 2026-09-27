@@ -1,86 +1,135 @@
-/* Quyền học — cấp / thu hồi */
+/* Quản lý quyền học — 1 người học = 1 dòng; lọc 1 khóa → xem quyền của khóa đó */
 (function () {
-  let rows = [];
-  let profiles = {};
+  const L = () => window.sa247Learner;
+  const esc = (s) => L().esc(s);
+  const CHIP_LIMIT = 4;
+  let people = [];
+  let canGrant = false;
+  const expanded = new Set();
 
-  async function load(sb, role) {
-    const commerceOnly = window.sa247Admin?.isCommerceOnly?.(role) === true;
+  function filters() {
+    return {
+      q: (document.getElementById("q").value || "").trim().toLowerCase(),
+      course: document.getElementById("f-course").value,
+      state: document.getElementById("f-state").value,
+      source: document.getElementById("f-source").value,
+      term: document.getElementById("f-term").value,
+    };
+  }
 
-    const enrollP = sb
-      .from("enrollments")
-      .select("id,user_id,status,enrolled_at,course:courses(code,title)")
-      .order("enrolled_at", { ascending: false });
-    const courseP = sb.from("courses").select("code,title").order("code");
+  function matchEnroll(e, f) {
+    if (f.course && e.code !== f.course) return false;
+    if (f.state && L().enrollState(e) !== f.state) return false;
+    if (f.source && L().sourceKey(e.source) !== f.source) return false;
+    if (f.term === "unlimited" && e.expires_at) return false;
+    if (f.term === "limited" && !e.expires_at) return false;
+    return true;
+  }
 
-    let profs = [];
-    let courses = [];
-    if (commerceOnly) {
-      const [{ data: enrolls, error }, courseRes, learners] = await Promise.all([
-        enrollP,
-        courseP,
-        sb.rpc("commerce_list_learners"),
-      ]);
-      if (error) throw error;
-      if (courseRes.error) throw courseRes.error;
-      if (learners.error) throw learners.error;
-      rows = enrolls || [];
-      courses = courseRes.data || [];
-      profs = Array.isArray(learners.data) ? learners.data : [];
-    } else {
-      const [{ data: enrolls, error }, courseRes, { data: profRows, error: pErr }] =
-        await Promise.all([
-          enrollP,
-          courseP,
-          sb.from("profiles").select("id,full_name,role"),
-        ]);
-      if (error) throw error;
-      if (courseRes.error) throw courseRes.error;
-      if (pErr) throw pErr;
-      rows = enrolls || [];
-      courses = courseRes.data || [];
-      profs = profRows || [];
-    }
+  const isActive = (e) => e.active === true;
 
-    profiles = {};
-    (profs || []).forEach((p) => {
-      profiles[p.id] = p;
-    });
-    const sel = document.getElementById("course-select");
-    sel.innerHTML = (courses || [])
-      .map((c) => `<option value="${c.code}">${c.code} · ${c.title}</option>`)
-      .join("");
-    paint();
+  function paintKpi() {
+    const all = people.flatMap((p) => p.enrollments || []);
+    document.getElementById("kpi-people").textContent = people.length;
+    document.getElementById("kpi-active").textContent = people.filter((p) => (p.enrollments || []).some(isActive)).length;
+    document.getElementById("kpi-multi").textContent = people.filter(
+      (p) => (p.enrollments || []).filter(isActive).length > 1
+    ).length;
+    document.getElementById("kpi-expiring").textContent = all.filter((e) => e.expiring).length;
+  }
+
+  function who(p) {
+    return `<td class="lrn-name"><a href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(p.id)}#sec-access">
+      <strong>${esc(p.full_name || "(chưa đặt tên)")}</strong></a><small>${esc(p.email || "")}</small></td>`;
+  }
+
+  function openBtn(p) {
+    return `<a class="adm-btn adm-btn--line adm-btn--small" href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(p.id)}#sec-access">Mở hồ sơ</a>`;
+  }
+
+  function chips(p) {
+    const list = p.enrollments || [];
+    const open = expanded.has(p.id);
+    const shown = open ? list : list.slice(0, CHIP_LIMIT);
+    const more = list.length - shown.length;
+    return `<div class="enr-chips">${shown
+      .map((e) => {
+        const st = L().enrollState(e);
+        return `<span class="enr-chip enr-chip--${st}" title="${esc(e.title)} · ${esc(L().ENROLL_STATE[st].label)}">${esc(e.code)}</span>`;
+      })
+      .join("")}${
+      more > 0
+        ? `<button type="button" class="enr-chip enr-chip--more" data-expand="${esc(p.id)}">+${more}</button>`
+        : open && list.length > CHIP_LIMIT
+          ? `<button type="button" class="enr-chip enr-chip--more" data-expand="${esc(p.id)}">Thu gọn</button>`
+          : ""
+    }</div>`;
   }
 
   function paint() {
-    const q = (document.getElementById("q").value || "").trim().toLowerCase();
-    const list = rows.filter((r) => {
-      if (!q) return true;
-      const code = (r.course && r.course.code) || "";
-      return code.toLowerCase().includes(q);
+    const f = filters();
+    const byEnroll = f.course || f.state || f.source || f.term;
+    const list = people.filter((p) => {
+      if (f.q && ![p.full_name, p.email, p.phone].join(" ").toLowerCase().includes(f.q)) return false;
+      if (byEnroll && !(p.enrollments || []).some((e) => matchEnroll(e, f))) return false;
+      return true;
     });
-    document.getElementById("rows").innerHTML = list
-      .map((r) => {
-        const p = profiles[r.user_id] || {};
-        const c = r.course || {};
-        return `<tr>
-          <td><strong>${p.full_name || "(không tên)"}</strong>
-            <div class="adm-msg">${r.user_id}</div>
-            <a class="adm-btn adm-btn--line adm-btn--small" href="../nguoi-hoc/ho-so.html?id=${encodeURIComponent(r.user_id)}">Hồ sơ</a>
-          </td>
-          <td>${c.code || ""} · ${c.title || ""}</td>
-          <td>${sa247Admin.statusEnrollVi(r.status)}</td>
-          <td>${sa247Admin.fmtTime(r.enrolled_at)}</td>
-          <td>
-            ${
-              r.status === "active"
-                ? `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${r.id}">Thu hồi</button>`
-                : "—"
-            }
-          </td>
-        </tr>`;
-      })
-      .join("");
+    const head = document.getElementById("enr-head");
+    const body = document.getElementById("rows");
+
+    if (f.course) {
+      head.innerHTML = `<tr><th>Người học</th><th>Quyền ${esc(f.course)}</th><th>Tiến độ</th><th>Kiểm tra</th>
+        <th>Giấy chứng nhận</th><th>Ngày cấp</th><th>Thao tác</th></tr>`;
+      body.innerHTML = list
+        .map((p) => {
+          const e = (p.enrollments || []).find((x) => x.code === f.course);
+          return `<tr>${who(p)}
+            <td>${L().enrollBadge(e)}${e.expires_at ? `<div class="adm-msg">Hết hạn ${L().fmtDate(e.expires_at)}</div>` : ""}</td>
+            <td><div class="lrn-course" style="grid-template-columns:1fr 2.6rem">${L().bar(e.progress)}<span>${e.progress || 0}%</span></div></td>
+            <td>${L().quizResult(e)}</td>
+            <td>${L().certLabel(e)}</td>
+            <td>${L().fmtDate(e.enrolled_at)}</td>
+            <td class="enr-actions">${openBtn(p)}${
+              canGrant && e.status === "active"
+                ? `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${esc(e.id)}" data-label="${esc(e.code)} của ${esc(p.full_name || p.email)}">Thu hồi</button>`
+                : ""
+            }</td>
+          </tr>`;
+        })
+        .join("");
+    } else {
+      head.innerHTML = `<tr><th>Người học</th><th>Khóa học được cấp</th><th class="num">Tổng</th>
+        <th class="num">Hoạt động</th><th class="num">Thu hồi</th><th>Hoạt động gần nhất</th><th>Thao tác</th></tr>`;
+      body.innerHTML = list
+        .map((p) => {
+          const en = p.enrollments || [];
+          return `<tr>${who(p)}
+            <td>${chips(p)}</td>
+            <td class="num">${en.length}</td>
+            <td class="num">${en.filter(isActive).length}</td>
+            <td class="num">${en.filter((e) => e.status === "cancelled").length}</td>
+            <td>${esc(L().relTime(p.last_activity_at))}</td>
+            <td>${openBtn(p)}</td>
+          </tr>`;
+        })
+        .join("");
+    }
+    if (!list.length) body.innerHTML = `<tr><td colspan="7" class="adm-muted">Không có người học phù hợp.</td></tr>`;
+    document.getElementById("adm-status").textContent = `${list.length} / ${people.length} người học`;
+  }
+
+  async function load(sb) {
+    const { data, error } = await sb.rpc("admin_enrollment_overview");
+    if (error) throw error;
+    people = data?.rows || [];
+    const codes = [...new Set(people.flatMap((p) => (p.enrollments || []).map((e) => e.code)))].sort();
+    const sel = document.getElementById("f-course");
+    const cur = sel.value;
+    sel.innerHTML =
+      '<option value="">Tất cả khóa học</option>' + codes.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+    if (codes.includes(cur)) sel.value = cur;
+    paintKpi();
+    paint();
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
@@ -88,43 +137,45 @@
       const ctx = await sa247AdminShell.boot("Quyền học");
       if (!ctx) return;
       const { sb } = ctx;
-      await load(sb, ctx.profile?.role);
-      document.getElementById("q").addEventListener("input", paint);
+      canGrant = sa247Admin.canManageCommerce(ctx.profile?.role);
+      document.querySelectorAll("[data-commerce-only]").forEach((el) => (el.hidden = !canGrant));
 
-      document.getElementById("grant-form").addEventListener("submit", async (ev) => {
-        ev.preventDefault();
-        const fd = new FormData(ev.target);
-        const msg = document.getElementById("grant-msg");
-        msg.textContent = "Đang cấp quyền…";
-        const { data, error } = await sb.rpc("admin_grant_enrollment", {
-          p_user_email: String(fd.get("user_email") || "").trim(),
-          p_course_code: String(fd.get("course_code")),
-          p_note: String(fd.get("note") || ""),
-        });
-        if (error) {
-          msg.innerHTML = `<span class="adm-msg--err">${error.message}</span>`;
-          return;
-        }
-        msg.innerHTML = `<span class="adm-msg--ok">Đã cấp quyền học thành công.</span>`;
-        ev.target.reset();
-        await load(sb, ctx.profile?.role);
-      });
+      const params = new URLSearchParams(location.search);
+      if (params.get("q")) document.getElementById("q").value = params.get("q");
+      await load(sb);
+      if (params.get("course")) {
+        document.getElementById("f-course").value = params.get("course");
+        paint();
+      }
+
+      ["q", "f-course", "f-state", "f-source", "f-term"].forEach((id) =>
+        document.getElementById(id).addEventListener(id === "q" ? "input" : "change", paint)
+      );
+
+      document.getElementById("enr-grant").addEventListener("click", () =>
+        L().openGrantDialog(sb, { onDone: () => load(sb) })
+      );
 
       document.getElementById("rows").addEventListener("click", async (ev) => {
+        const exp = ev.target.closest("[data-expand]");
+        if (exp) {
+          const id = exp.getAttribute("data-expand");
+          expanded.has(id) ? expanded.delete(id) : expanded.add(id);
+          paint();
+          return;
+        }
         const btn = ev.target.closest("[data-revoke]");
         if (!btn) return;
-        if (!confirm("Thu hồi quyền học này?")) return;
-        const { error } = await sb.rpc("admin_revoke_enrollment", {
-          p_enrollment_id: btn.getAttribute("data-revoke"),
-        });
+        if (!confirm(`Thu hồi quyền học ${btn.getAttribute("data-label")}?`)) return;
+        const { error } = await sb.rpc("admin_revoke_enrollment", { p_enrollment_id: btn.getAttribute("data-revoke") });
         if (error) {
           alert(error.message);
           return;
         }
-        await load(sb, ctx.profile?.role);
+        await load(sb);
       });
     } catch (e) {
-      alert(e.message || e);
+      document.getElementById("adm-status").innerHTML = `<span class="adm-msg--err">${esc(e.message || e)}</span>`;
     }
   });
 })();

@@ -42,8 +42,8 @@
         },
         {
           href: "../quyen-hoc/",
-          t: "Cấp quyền học",
-          d: "Grant / revoke enrollment (sau thanh toán hoặc thủ công)",
+          t: "Quản lý quyền học",
+          d: "Cấp / thu hồi quyền học theo từng người học",
         },
         {
           href: "../cho-mo-khoa/",

@@ -301,6 +301,31 @@ body.adm-body {
 .lrn-dialog h2 { margin: 0 0 0.3rem; font-size: 1.1rem; }
 .lrn-dialog__actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.4rem; }
 
+/* Quản lý quyền học */
+.adm-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.enr-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; max-width: 34rem; }
+.enr-chip { display: inline-block; font: inherit; font-size: 0.78rem; font-weight: 600; line-height: 1.5; padding: 0.05rem 0.5rem; border-radius: 99px; border: 1px solid transparent; background: rgba(24,163,90,0.12); color: #0f6b3c; white-space: nowrap; }
+.enr-chip--expiring { background: rgba(154,107,0,0.12); color: var(--adm-warn); }
+.enr-chip--expired { background: rgba(91,107,100,0.12); color: var(--adm-muted); }
+.enr-chip--revoked { background: transparent; border-color: var(--adm-line); color: var(--adm-muted); text-decoration: line-through; }
+.enr-chip--more { background: #fff; border-color: var(--adm-line); color: var(--adm-accent); cursor: pointer; }
+.enr-chip--more:hover { border-color: var(--adm-accent); }
+.enr-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.enr-who { margin: 0.2rem 0 0.4rem; }
+.enr-who strong, .enr-who small { display: block; }
+.enr-who small { color: var(--adm-muted); }
+.enr-courses { border: 1px solid var(--adm-line); border-radius: 10px; padding: 0.5rem 0.7rem; margin: 0; max-height: 17rem; overflow: auto; display: grid; gap: 0.15rem; }
+.enr-courses legend { font-weight: 600; font-size: 0.9rem; padding: 0 0.3rem; }
+.adm-form .enr-course { display: flex; flex-direction: row; align-items: flex-start; gap: 0.5rem; font-weight: 400; font-size: 0.9rem; padding: 0.2rem 0; }
+.adm-form .enr-course input { width: auto; margin-top: 0.2rem; }
+.enr-course.is-owned { color: var(--adm-muted); }
+.enr-course em { font-style: normal; font-size: 0.82rem; }
+.enr-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; margin: 0.4rem 0 0.9rem; }
+.enr-summary div { border: 1px solid var(--adm-line); border-radius: 10px; padding: 0.5rem 0.7rem; }
+.enr-summary strong { display: block; font-size: 1.2rem; }
+.enr-summary span { color: var(--adm-muted); font-size: 0.82rem; }
+@media (max-width: 720px) { .enr-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* Hồ sơ người học */
 .prf-hero { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .prf-hero h2 { margin: 0; font-size: 1.35rem; }

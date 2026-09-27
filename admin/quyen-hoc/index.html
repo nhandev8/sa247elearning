@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quyền học · SA247 Quản trị</title>
+  <title>Quản lý quyền học · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609272345" />
-  <script src="../../assets/supabase-config.js?v=202609272345"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609272345" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609272345" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609272345" defer></script>
-  <script src="../../assets/js/admin-quyen-hoc.js?v=202609272345" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202609272355" />
+  <script src="../../assets/supabase-config.js?v=202609272355"></script>
+  <script src="../../assets/js/supabase-client.js?v=202609272355" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202609272355" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202609272355" defer></script>
+  <script src="../../assets/js/admin-learner-common.js?v=202609272355" defer></script>
+  <script src="../../assets/js/admin-quyen-hoc.js?v=202609272355" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,40 +27,47 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Quyền học</h1>
+        <h1>Quản lý quyền học</h1>
       </header>
       <main class="adm-content">
-        <p class="adm-lead">Cốt lõi vận hành: Tài khoản → Quyền học → Khóa học. Cấp / thu hồi không cần sửa mã nguồn.</p>
-        <section class="adm-card" style="margin-bottom:1rem">
-          <h2>Cấp quyền học thủ công</h2>
-          <form class="adm-form" id="grant-form">
-            <label>Email học viên
-              <input name="user_email" type="email" required placeholder="hocvien@email.com" autocomplete="off" />
-            </label>
-            <label>Khóa học
-              <select name="course_code" id="course-select" required></select>
-            </label>
-            <label>Ghi chú
-              <input name="note" placeholder="VD: cấp nội bộ / hỗ trợ" />
-            </label>
-            <button type="submit" class="adm-btn adm-btn--primary">Xác nhận cấp quyền</button>
-            <p class="adm-msg" id="grant-msg"></p>
-          </form>
-        </section>
-        <div class="adm-toolbar">
-          <input type="search" id="q" placeholder="Lọc theo mã khóa…" />
+        <p class="adm-lead">Quản lý toàn bộ quyền học của từng người học. Mỗi người học một dòng; mở hồ sơ để quản lý từng khóa.</p>
+
+        <div class="adm-stats" id="enr-kpi">
+          <div class="adm-stat"><strong id="kpi-people">—</strong><span>Người học có quyền</span></div>
+          <div class="adm-stat"><strong id="kpi-active">—</strong><span>Đang hoạt động</span></div>
+          <div class="adm-stat"><strong id="kpi-multi">—</strong><span>Có nhiều khóa học</span></div>
+          <div class="adm-stat"><strong id="kpi-expiring">—</strong><span>Sắp hết hạn (14 ngày)</span></div>
         </div>
+
+        <div class="adm-filters lrn-filters">
+          <input type="search" id="q" placeholder="Tìm theo tên, email, số điện thoại…" />
+          <select id="f-course" aria-label="Khóa học"><option value="">Tất cả khóa học</option></select>
+          <select id="f-state" aria-label="Trạng thái quyền">
+            <option value="">Mọi trạng thái quyền</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="expiring">Sắp hết hạn</option>
+            <option value="expired">Hết hạn</option>
+            <option value="revoked">Đã thu hồi</option>
+          </select>
+          <select id="f-source" aria-label="Nguồn cấp">
+            <option value="">Mọi nguồn cấp</option>
+            <option value="mua_khoa">Mua khóa học</option>
+            <option value="admin">Quản trị viên cấp</option>
+            <option value="campus">SA247 Campus</option>
+            <option value="khac">Khác</option>
+          </select>
+          <select id="f-term" aria-label="Thời hạn">
+            <option value="">Mọi thời hạn</option>
+            <option value="unlimited">Không thời hạn</option>
+            <option value="limited">Có thời hạn</option>
+          </select>
+          <button type="button" class="adm-btn adm-btn--primary" id="enr-grant" data-commerce-only hidden>+ Cấp quyền học</button>
+        </div>
+
+        <p class="adm-msg" id="adm-status">Đang tải…</p>
         <div class="adm-table-wrap">
           <table class="adm-table">
-            <thead>
-              <tr>
-                <th>Học viên</th>
-                <th>Khóa học</th>
-                <th>Trạng thái</th>
-                <th>Ngày cấp</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
+            <thead id="enr-head"></thead>
             <tbody id="rows"></tbody>
           </table>
         </div>

@@ -44,7 +44,7 @@
     add(sum.joined_at, "Tạo tài khoản SA247");
     add(sum.last_sign_in_at, "Đăng nhập gần nhất");
     d.enrollments.forEach((e) =>
-      add(e.enrolled_at, `Được cấp quyền học <strong>${esc(e.course?.code)}</strong> · ${esc(L().SOURCE[L().sourceKey(e.source)])}`)
+      add(e.enrolled_at, `Được cấp quyền học <strong>${esc(e.code)}</strong> · ${esc(L().SOURCE[L().sourceKey(e.source)])}`)
     );
     d.progress.forEach((p) => {
       const title = `${esc(p.lesson?.lesson_code || "")} — ${esc(p.lesson?.title || "")}`;
@@ -188,7 +188,7 @@
 
   async function fetchAll(sb, uid, canCommerce) {
     const q = (p) => p.then((r) => r.data || []);
-    const [overview, profile, email, enrollments, attempts, certs, orders, feedback, progress, courses] =
+    const [overview, profile, email, enrollments, attempts, certs, orders, feedback, progress] =
       await Promise.all([
         sb.rpc("admin_learner_overview", { p_user_id: uid, p_inactive_days: 14 }),
         sb
@@ -197,13 +197,9 @@
           .eq("id", uid)
           .maybeSingle(),
         sb.rpc("admin_get_user_email", { p_user_id: uid }),
-        q(
-          sb
-            .from("enrollments")
-            .select("id,status,source,grant_reason,enrolled_at,expires_at,course:courses(code,title)")
-            .eq("user_id", uid)
-            .order("enrolled_at", { ascending: false })
-        ),
+        sb
+          .rpc("admin_enrollment_overview", { p_user_id: uid })
+          .then((r) => (r.data?.rows || [])[0]?.enrollments || []),
         q(
           sb
             .from("quiz_attempts")
@@ -245,9 +241,7 @@
             .order("last_watched_at", { ascending: false, nullsFirst: false })
             .limit(60)
         ),
-        q(sb.from("courses").select("code,title").order("code")),
       ]);
-    if (overview.error) throw overview.error;
     if (profile.error) throw profile.error;
     return {
       summary: (overview.data?.rows || [])[0] || null,
@@ -259,7 +253,6 @@
       orders,
       feedback,
       progress,
-      courses,
     };
   }
 
@@ -306,19 +299,30 @@
       </tr>`
     );
 
+    const enrollCount = (st) => d.enrollments.filter((e) => L().enrollState(e) === st).length;
+    const accessSummary = `<div class="enr-summary">
+      <div><strong>${d.enrollments.length}</strong><span>Khóa học</span></div>
+      <div><strong>${d.enrollments.filter((e) => e.active).length}</strong><span>Đang hoạt động</span></div>
+      <div><strong>${enrollCount("revoked")}</strong><span>Đã thu hồi</span></div>
+      <div><strong>${enrollCount("expiring")}</strong><span>Sắp hết hạn</span></div>
+    </div>`;
     const accessRows = d.enrollments.map((e) => {
-      const expired = e.expires_at && new Date(e.expires_at) < new Date();
-      const revoke =
-        canCommerce && e.status === "active"
-          ? `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${esc(e.id)}">Thu hồi</button>`
-          : "";
+      let action = "";
+      if (canCommerce && e.status === "active" && !e.expired) {
+        action = `<button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-revoke="${esc(e.id)}" data-code="${esc(e.code)}">Thu hồi</button>`;
+      } else if (canCommerce) {
+        action = `<button type="button" class="adm-btn adm-btn--line adm-btn--small" data-regrant="${esc(e.code)}">Cấp lại</button>`;
+      }
       return `<tr>
-        <td><strong>${esc(e.course?.code)}</strong><div class="adm-msg">${esc(e.course?.title)}</div></td>
-        <td>${esc(L().SOURCE[L().sourceKey(e.source)])}${e.grant_reason ? `<div class="adm-msg">${esc(e.grant_reason)}</div>` : ""}</td>
+        <td><strong>${esc(e.code)}</strong><div class="adm-msg">${esc(e.title)}</div></td>
+        <td>${L().enrollBadge(e)}
+          <div class="adm-msg">${esc(L().SOURCE[L().sourceKey(e.source)])}${e.expires_at ? ` · hết hạn ${L().fmtDate(e.expires_at)}` : ""}</div>
+          ${e.grant_reason ? `<div class="adm-msg">${esc(e.grant_reason)}</div>` : ""}</td>
+        <td><div class="lrn-course" style="grid-template-columns:1fr 2.6rem">${L().bar(e.progress)}<span>${e.progress || 0}%</span></div></td>
+        <td>${L().quizResult(e)}</td>
+        <td>${L().certLabel(e)}</td>
         <td>${L().fmtDate(e.enrolled_at)}</td>
-        <td>${e.expires_at ? L().fmtDate(e.expires_at) : "Không thời hạn"}</td>
-        <td>${expired ? "Hết hạn" : esc(sa247Admin.statusEnrollVi(e.status))}</td>
-        <td>${revoke}</td>
+        <td>${action}</td>
       </tr>`;
     });
 
@@ -360,10 +364,6 @@
         <td>${L().fmtDate(f.created_at)}</td>
       </tr>`
     );
-
-    const courseOpts = d.courses
-      .map((c) => `<option value="${esc(c.code)}">${esc(c.code)} · ${esc(c.title)}</option>`)
-      .join("");
 
     const flags = sum.flags || {};
     const attn = [
@@ -412,18 +412,12 @@
         </section>
 
         <section class="adm-card" id="sec-access">
-          <h2>Quyền học</h2>
-          ${
-            canCommerce
-              ? `<form id="grant-form" class="adm-form prf-inline" style="max-width:none;margin-bottom:.9rem">
-                  <select name="course_code" required aria-label="Khóa học">${courseOpts}</select>
-                  <input name="note" type="text" placeholder="Lý do cấp quyền (tuỳ chọn)" style="flex:1 1 220px" />
-                  <button type="submit" class="adm-btn adm-btn--primary">Cấp quyền học</button>
-                  <span class="adm-msg" id="grant-msg"></span>
-                </form>`
-              : ""
-          }
-          ${table(["Khóa học", "Nguồn cấp", "Bắt đầu", "Hết hạn", "Trạng thái", ""], accessRows, "Chưa có quyền học.")}
+          <div class="prf-inline" style="justify-content:space-between">
+            <h2 style="margin:0">Quyền học</h2>
+            ${canCommerce ? '<button type="button" class="adm-btn adm-btn--primary adm-btn--small" id="grant-more">+ Cấp thêm khóa học</button>' : ""}
+          </div>
+          ${accessSummary}
+          ${table(["Khóa học", "Quyền học", "Tiến độ", "Kiểm tra", "Giấy chứng nhận", "Ngày cấp", "Thao tác"], accessRows, "Chưa có quyền học.")}
         </section>
 
         <section class="adm-card" id="sec-quiz">
@@ -526,26 +520,32 @@
       await reload();
     });
 
-    document.getElementById("grant-form")?.addEventListener("submit", async (ev) => {
-      ev.preventDefault();
-      const fd = new FormData(ev.target);
-      const msg = document.getElementById("grant-msg");
-      msg.textContent = "Đang cấp quyền…";
-      const { error } = await sb.rpc("admin_grant_enrollment_for_user", {
-        p_user_id: uid,
-        p_course_code: String(fd.get("course_code") || ""),
-        p_note: String(fd.get("note") || ""),
+    document.getElementById("grant-more")?.addEventListener("click", () =>
+      L().openGrantDialog(sb, {
+        userId: uid,
+        name: p.full_name,
+        email,
+        activeCodes: d.enrollments.filter((e) => e.active).map((e) => e.code),
+        onDone: reload,
+      })
+    );
+
+    host.querySelectorAll("[data-regrant]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const code = btn.getAttribute("data-regrant");
+        if (!confirm(`Cấp lại quyền học ${code}?`)) return;
+        const { error } = await sb.rpc("admin_grant_enrollments", { p_course_codes: [code], p_user_id: uid });
+        if (error) {
+          alert(error.message);
+          return;
+        }
+        await reload();
       });
-      if (error) {
-        msg.innerHTML = `<span class="adm-msg--err">${esc(error.message)}</span>`;
-        return;
-      }
-      await reload();
     });
 
     host.querySelectorAll("[data-revoke]").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        if (!confirm("Thu hồi quyền học này?")) return;
+        if (!confirm(`Thu hồi quyền học ${btn.getAttribute("data-code")}?`)) return;
         const { error } = await sb.rpc("admin_revoke_enrollment", {
           p_enrollment_id: btn.getAttribute("data-revoke"),
         });
