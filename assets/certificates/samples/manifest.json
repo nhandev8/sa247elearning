@@ -1,5 +1,5 @@
 {
-  "verify_base_url": "https://nhandev8.github.io/sa247elearning/verify/",
+  "verify_base_url": "https://sa247.vn/verify/",
   "policy": {
     "form_mau": "showcase only",
     "phoi": "design blank only — no trial fill UI",
