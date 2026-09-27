@@ -7,6 +7,10 @@
     return document.getElementById(id);
   }
 
+  function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  }
+
   function fmtDate(iso) {
     try {
       return new Date(iso).toLocaleDateString("vi-VN");
@@ -35,8 +39,8 @@
     const kind =
       data?.certificate_kind ||
       "Giấy chứng nhận hoàn thành khóa học của Safety and You 247 Academy";
-    return `<p class="verify-kind">${kind}</p>
-      <p class="verify-disclaimer">${text}</p>`;
+    return `<p class="verify-kind">${esc(kind)}</p>
+      <p class="verify-disclaimer">${esc(text)}</p>`;
   }
 
   async function verify(code) {
@@ -62,8 +66,8 @@
         msg.textContent = "Chứng nhận đã bị thu hồi — không còn hiệu lực.";
         card.hidden = false;
         card.innerHTML = `<p class="kicker">${statusVi("revoked")}</p>
-          <p><strong>${data.cert_code || code}</strong></p>
-          <p>${data.course_code || ""} · ${data.course_title || ""}</p>
+          <p><strong>${esc(data.cert_code || code)}</strong></p>
+          <p>${esc(data.course_code)} · ${esc(data.course_title)}</p>
           <p class="lead">Safety and You 247 Academy không xác nhận hiệu lực của mã này.</p>
           ${disclaimerHtml(data)}`;
         return;
@@ -72,8 +76,8 @@
         msg.textContent = "Mã này đã được thay thế bằng bản cấp lại.";
         card.hidden = false;
         card.innerHTML = `<p class="kicker">${statusVi("replaced")}</p>
-          <p><strong>${data.cert_code || code}</strong></p>
-          <p>${data.course_code || ""} · ${data.course_title || ""}</p>
+          <p><strong>${esc(data.cert_code || code)}</strong></p>
+          <p>${esc(data.course_code)} · ${esc(data.course_title)}</p>
           <p class="lead">Vui lòng xác minh bằng mã chứng nhận mới (nếu đã được cấp lại).</p>
           ${disclaimerHtml(data)}`;
         return;
@@ -83,8 +87,8 @@
           "Đã đủ điều kiện nhưng chưa đăng ký nhận GCN (chưa thanh toán hình thức nhận).";
         card.hidden = false;
         card.innerHTML = `<p class="kicker">${statusVi("eligible")}</p>
-          <p><strong>${data.cert_code || code}</strong></p>
-          <p>${data.course_code || ""} · ${data.course_title || ""}</p>
+          <p><strong>${esc(data.cert_code || code)}</strong></p>
+          <p>${esc(data.course_code)} · ${esc(data.course_title)}</p>
           <p class="lead">Học viên cần đăng ký nhận PDF hoặc bản cứng sau khi đạt kiểm tra.</p>
           ${disclaimerHtml(data)}`;
         return;
@@ -95,17 +99,15 @@
     msg.textContent = "Hợp lệ.";
     card.hidden = false;
     const enc = encodeURIComponent(data.cert_code);
-    const score =
-      data.score_percent != null ? `Điểm: ${data.score_percent}% · ` : "";
     const programLine = data.program_name
-      ? `<p>thuộc <strong>${data.program_name}</strong>${data.member_code ? " · Mã sinh viên / đối tượng: " + data.member_code : ""}</p>`
+      ? `<p>thuộc <strong>${esc(data.program_name)}</strong>${data.member_code ? " · Mã sinh viên / đối tượng: " + esc(data.member_code) : ""}</p>`
       : `<p class="meta">Chứng nhận hoàn thành khóa học Academy</p>`;
-    card.innerHTML = `<p class="kicker">${statusVi(data.status || "valid")}</p>
-      <h2>${data.full_name || "—"}</h2>
-      <p><strong>${data.course_code}</strong> · ${data.course_title}</p>
+    card.innerHTML = `<p class="kicker">${esc(statusVi(data.status || "valid"))}</p>
+      <h2>${esc(data.full_name || "—")}</h2>
+      <p><strong>${esc(data.course_code)}</strong> · ${esc(data.course_title)}</p>
       ${programLine}
-      <p>${score}Ngày cấp: ${fmtDate(data.issued_at)}</p>
-      <p class="meta">Mã: ${data.cert_code} · Trạng thái: ${statusVi(data.status || "valid")}</p>
+      <p>Ngày cấp: ${esc(fmtDate(data.issued_at))}</p>
+      <p class="meta">Mã: ${esc(data.cert_code)} · Trạng thái: ${esc(statusVi(data.status || "valid"))}</p>
       ${disclaimerHtml(data)}
       <p><a class="btn btn--amber" href="./chung-nhan.html?code=${enc}">Xem giấy chứng nhận</a>
       <a class="btn btn--line" href="./chung-nhan.html?code=${enc}" target="_blank" rel="noopener">In / PDF</a></p>`;

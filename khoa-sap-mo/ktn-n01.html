@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KTN-N01 — An toàn thiết bị nâng — mở rộng từ kho HSE (sắp mở) · SA247</title>
-  <link rel="stylesheet" href="../assets/site.css?v=202609271900" />
+  <link rel="stylesheet" href="../assets/site.css?v=202609272240" />
   <style>
 .waitlist{margin:2rem 0;padding:1.25rem 1.35rem;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12)}
 .waitlist label{display:block;font-size:.9rem;margin:.75rem 0 .35rem;color:#667085}
@@ -39,7 +39,7 @@
     <div class="waitlist" id="cho-mo-khoa">
       <h2>Đăng ký nhận thông báo khi khóa mở</h2>
       <p>Bạn sẽ nhận thông báo khi khóa KTN-N01 chính thức mở. Để lại họ tên và email/SĐT — SA247 sẽ báo khi có lịch (không spam).</p>
-      <form id="waitlist-form" action="#" method="get">
+      <form id="waitlist-form" action="#" method="post" data-course-code="KTN-N01" data-course-title="An toàn thiết bị nâng — mở rộng từ kho HSE">
         <input type="hidden" name="ma" value="KTN-N01" />
         
         <label for="wl-name">Họ và tên</label>
@@ -61,38 +61,13 @@
         <p style="margin-top:1rem">
           <button type="submit" class="btn btn--amber">Nhận thông báo khi khóa mở</button>
         </p>
-        <p class="hint">Form mở email tới SA247 Support (support@sa247.vn) — chưa có máy chủ thu form. Dữ liệu cũng lưu tạm trên trình duyệt của bạn.</p>
+        <p class="hint">Thông tin chỉ dùng để báo lịch mở khóa — không chia sẻ cho bên thứ ba.</p>
       </form>
     </div>
-    <script>
-    (function(){
-      var f=document.getElementById('waitlist-form');
-      if(!f) return;
-      f.addEventListener('submit', function(e){
-        e.preventDefault();
-        var name=(document.getElementById('wl-name')&&document.getElementById('wl-name').value||'').trim();
-        var email=document.getElementById('wl-email').value.trim();
-        var phone=(document.getElementById('wl-phone')&&document.getElementById('wl-phone').value||'').trim();
-        var role=document.getElementById('wl-role').value;
-        var note=document.getElementById('wl-note').value.trim();
-        var ma='KTN-N01';
-        var ten="An toàn thiết bị nâng — mở rộng từ kho HSE";
-        var payload={ma:ma,ten:ten,name:name,email:email,phone:phone,role:role,note:note,ts:new Date().toISOString()};
-        try {
-          var key='sa247_waitlist';
-          var arr=JSON.parse(localStorage.getItem(key)||'[]');
-          arr.push(payload);
-          localStorage.setItem(key, JSON.stringify(arr));
-        } catch (err) {}
-        var sub='SA247 nhận thông báo khi mở khóa '+ma;
-        var body='Mã khóa: '+ma+'\nTên khóa: '+ten+'\nHọ tên: '+name+'\nEmail: '+email+'\nSĐT: '+phone+'\nVai trò: '+role+'\nGhi chú: '+note;
-        window.location.href='mailto:support@sa247.vn?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);
-      });
-    })();
-    </script>
+    <script src="../assets/js/waitlist.js?v=202609272240"></script>
 
     <p>Liên hệ tư vấn — SA247 Support: <a href="mailto:support@sa247.vn">support@sa247.vn</a> · 08 77 78 79 88</p>
   </main>
-  <script src="../assets/js/marketing-nav.js?v=202609271900"></script>
+  <script src="../assets/js/marketing-nav.js?v=202609272240"></script>
 </body>
 </html>

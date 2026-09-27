@@ -56,6 +56,33 @@
     return pending;
   }
 
+  let pendingCourses = null;
+
+  async function fetchCourses() {
+    const key = "sa247.publicCourses.v1";
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(key) || "null");
+      if (cached && Date.now() - cached.at < TTL_MS) return cached.data;
+    } catch (_) {}
+    const cfg = await supabaseConfig();
+    if (!cfg?.url || !cfg?.anonKey) return [];
+    const res = await fetch(
+      `${cfg.url}/rest/v1/courses?is_published=eq.true&select=code,slug,title,category&order=code.asc`,
+      { headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}` } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    try {
+      sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), data }));
+    } catch (_) {}
+    return Array.isArray(data) ? data : [];
+  }
+
+  function courses() {
+    if (!pendingCourses) pendingCourses = fetchCourses().catch(() => []);
+    return pendingCourses;
+  }
+
   function price(cfg, key) {
     return Number(cfg?.prices?.[key]?.amount) || 0;
   }
@@ -81,8 +108,10 @@
     money,
     price: async (key) => price(await load(), key),
     bank: async () => (await load())?.bank || null,
+    courses,
     hydrate,
   };
+  document.dispatchEvent(new CustomEvent("sa247:public-config-ready"));
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => hydrate());

@@ -11,21 +11,34 @@
     return;
   }
 
-  function loadScript(src) {
+  const SUPABASE_JS = {
+    src: "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js",
+    integrity: "sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok",
+  };
+
+  function loadScript(src, integrity) {
     return new Promise((resolve, reject) => {
       const s = document.createElement("script");
       s.src = src;
+      if (integrity) {
+        s.integrity = integrity;
+        s.crossOrigin = "anonymous";
+      }
       s.onload = resolve;
       s.onerror = reject;
       document.head.appendChild(s);
     });
   }
 
+  let libLoading = null;
+
   async function ensureClient() {
     if (window.__sa247Sb) return window.__sa247Sb;
     if (!window.supabase) {
-      await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
+      libLoading = libLoading || loadScript(SUPABASE_JS.src, SUPABASE_JS.integrity);
+      await libLoading;
     }
+    if (window.__sa247Sb) return window.__sa247Sb;
     window.__sa247Sb = window.supabase.createClient(cfg.url, cfg.anonKey, {
       auth: {
         persistSession: true,

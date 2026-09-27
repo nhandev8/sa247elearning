@@ -59,6 +59,8 @@
     });
   }
 
+  let defaultPrice = 0;
+
   function renderCreateForm() {
     const box = document.getElementById("create-box");
     box.hidden = false;
@@ -70,7 +72,7 @@
         <label>Mô tả ngắn <input name="short_description" /></label>
         <label>Mô tả đầy đủ <textarea name="description" rows="3"></textarea></label>
         <label>Danh mục <input name="category" placeholder="ATVSLĐ" /></label>
-        <label>Giá (VND) <input name="price" type="number" value="99000" /></label>
+        <label>Giá (VND) <input name="price" type="number" min="1" required value="${defaultPrice || ""}" /></label>
         <label>Trạng thái ${statusSelect("create-status", "ban_nhap")}</label>
         <div>
           <button type="submit" class="adm-btn adm-btn--primary">Lưu khóa học</button>
@@ -201,7 +203,7 @@
           short_description: (fd.get("short_description") || "").toString().trim() || null,
           description: (fd.get("description") || "").toString().trim() || null,
           category: (fd.get("category") || "").toString().trim() || null,
-          price: Number(fd.get("price")) || 99000,
+          price: Number(fd.get("price")),
           status,
           is_published: status === "dang_mo",
         };
@@ -332,8 +334,11 @@
         }
       });
 
+      const { data: pubCfg } = await sb.rpc("get_public_config");
+      defaultPrice = Number(pubCfg?.prices?.course_default?.amount) || 0;
       document.getElementById("adm-status").textContent =
-        `${cache.length} khóa học · giá mặc định 99.000đ`;
+        `${cache.length} khóa học` +
+        (defaultPrice ? ` · giá mặc định ${defaultPrice.toLocaleString("vi-VN")}đ` : "");
     } catch (e) {
       document.getElementById("adm-status").innerHTML =
         `<span class="adm-msg--err">${e.message || e}</span>`;

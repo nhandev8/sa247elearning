@@ -553,11 +553,34 @@
     });
   }
 
+  const COURSE_GROUP_ORDER = ["ATVSLĐ", "An toàn xây dựng", "Kỹ thuật & nghiệp vụ", "Hệ thống quản lý"];
+
+  async function refreshCourseMenu() {
+    const list = await window.sa247PublicConfig?.courses?.();
+    const current = document.querySelector('#nav .mega[aria-label="Khóa học"]');
+    if (!current || !list?.length) return;
+    const groups = new Map();
+    list.forEach((c) => {
+      const g = c.category || "Khóa học khác";
+      if (!groups.has(g)) groups.set(g, []);
+      groups.get(g).push([`${c.slug}/`, c.code, c.title]);
+    });
+    const rank = (g) => (COURSE_GROUP_ORDER.indexOf(g) + 1) || 99;
+    const r = rootPrefix();
+    const foot = current.querySelector(".mega__foot");
+    current.querySelectorAll(".mega__col").forEach((col) => col.remove());
+    [...groups.keys()]
+      .sort((a, b) => rank(a) - rank(b))
+      .forEach((g) => current.insertBefore(megaCol(g, groups.get(g), r), foot));
+  }
+
   function loadPublicConfig() {
     if (window.sa247PublicConfig) {
       window.sa247PublicConfig.hydrate();
+      refreshCourseMenu();
       return;
     }
+    document.addEventListener("sa247:public-config-ready", refreshCourseMenu, { once: true });
     if (document.querySelector("script[data-sa247-public-config]")) return;
     const self = document.querySelector('script[src*="marketing-nav.js"]');
     const s = document.createElement("script");
