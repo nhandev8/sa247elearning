@@ -122,12 +122,62 @@
       .join("");
   }
 
-  function paint(list, prices, ships, regs) {
+  /* Checklist điều kiện nhận GCN — dữ liệu từ Eligibility Engine phía máy chủ */
+  function eligHtml(elig) {
+    const rows = (elig || []).filter(
+      (r) => !r.eligible && !["valid", "issued", "eligible"].includes(r.certificate_status || "")
+    );
+    if (!rows.length) return "";
+    const item = (ok, text) =>
+      `<li class="${ok ? "is-ok" : "is-missing"}"><span aria-hidden="true">${ok ? "☑" : "☐"}</span> ${text}</li>`;
+    return rows
+      .map((r) => {
+        const missing = r.missing || [];
+        const regVi =
+          r.registration_status === "cho_du_dieu_kien"
+            ? "Đã đăng ký nhận giấy chứng nhận · chờ đủ điều kiện"
+            : r.registration_status === "cho_thanh_toan"
+              ? "Đăng ký nhận giấy chứng nhận · chờ thanh toán"
+              : "Chưa đăng ký nhận giấy chứng nhận (có thể đăng ký sau khi đủ điều kiện)";
+        const revoked = missing.includes("revoked");
+        return `<article class="cert-mine-card cert-mine-card--progress">
+          <p class="kicker">${esc(r.course_code)} · Tiến trình nhận giấy chứng nhận</p>
+          <h2>${esc(r.course_title || "Khóa học")}</h2>
+          ${
+            revoked
+              ? `<p class="meta">Giấy chứng nhận của khóa này đã bị thu hồi. Liên hệ SA247 nếu cần xem xét cấp lại.</p>`
+              : `<ul class="cert-checklist">
+              ${item(!missing.includes("enrollment"), "Quyền học hợp lệ")}
+              ${item(
+                !missing.includes("progress"),
+                `Hoàn thành bài học: <strong>${esc(r.progress_percent ?? 0)}%</strong> / yêu cầu ${esc(r.progress_required ?? 0)}%`
+              )}
+              ${item(
+                !missing.includes("module_quizzes"),
+                `Bài kiểm tra cuối chương: <strong>${esc(r.module_quizzes_passed ?? 0)}/${esc(r.module_quizzes_total ?? 0)}</strong> đã đạt`
+              )}
+              ${item(
+                !missing.includes("final_quiz") && !missing.includes("final_quiz_not_configured"),
+                `Bài kiểm tra cuối khóa${r.final_pass_percent ? ` (đạt từ ${esc(r.final_pass_percent)}%)` : ""}${
+                  r.final_best_score != null ? ` · điểm cao nhất ${esc(r.final_best_score)}%` : ""
+                }`
+              )}
+            </ul>
+            <p class="meta">${esc(regVi)}</p>
+            <p class="cert-mine-actions"><a class="btn btn--line" href="../hoc-tap/">Tiếp tục học</a>
+              <a class="btn btn--line" href="../kiem-tra/">Bài kiểm tra</a></p>`
+          }
+        </article>`;
+      })
+      .join("");
+  }
+
+  function paint(list, prices, ships, regs, elig) {
     const box = el("cert-list");
     const status = el("cert-status");
     const pdfL = prices?.pdf ? ` · ${prices.pdf}` : "";
     const hardL = (prices?.hard ? ` · ${prices.hard}` : "") + (prices?.ship ? ` + ${prices.ship} phí vận chuyển` : "");
-    const regBlock = regsHtml(regs);
+    const regBlock = regsHtml(regs) + eligHtml(elig);
     if (!list?.length) {
       status.innerHTML = regBlock
         ? "Bạn đã đăng ký nhận giấy chứng nhận. Chứng nhận được cấp tự động khi bạn đủ điều kiện."
@@ -269,7 +319,12 @@
       const regRpc = await sb.rpc("my_cert_registrations");
       if (!regRpc.error && Array.isArray(regRpc.data)) regs = regRpc.data;
     } catch (_) {}
-    paint(list || [], prices, ships, regs);
+    let elig = [];
+    try {
+      const eligRpc = await sb.rpc("get_my_certificate_eligibility");
+      if (!eligRpc.error && Array.isArray(eligRpc.data)) elig = eligRpc.data;
+    } catch (_) {}
+    paint(list || [], prices, ships, regs, elig);
     el("cert-list")?.addEventListener("submit", async (ev) => {
       const form = ev.target.closest("[data-ship-form]");
       if (!form) return;

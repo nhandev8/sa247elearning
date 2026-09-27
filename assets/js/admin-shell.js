@@ -106,6 +106,7 @@
         { target: "tai-khoan/", label: "Tài khoản", key: "tai-khoan", adminOnly: true },
         { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen", adminOnly: true },
         { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
+        { target: "bao-mat/", label: "Nhật ký bảo mật", key: "bao-mat", adminOnly: true },
         {
           target: "auth/doi-mat-khau.html",
           label: "Đổi mật khẩu",
@@ -141,6 +142,7 @@
     if (path.includes("/don-hang")) return "don-hang";
     if (path.includes("/gia-ship")) return "gia-ship";
     if (path.includes("/nhat-ky")) return "nhat-ky";
+    if (path.includes("/admin/bao-mat")) return "bao-mat";
     if (path.includes("/thong-ke")) return "thong-ke";
     if (path.includes("/phan-tich")) return "phan-tich";
     if (path.includes("/phan-quyen")) return "phan-quyen";

@@ -12,9 +12,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=202609272300" />
-  <script src="../assets/supabase-config.js?v=202609272300"></script>
-  <script src="../assets/js/supabase-client.js?v=202609272300" defer></script>
+  <link rel="stylesheet" href="../assets/site.css?v=202609272330" />
+  <script src="../assets/supabase-config.js?v=202609272330"></script>
+  <script src="../assets/js/supabase-client.js?v=202609272330" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
     {"@type":"Question","name":"Sinh viên có phải trả phí không?","acceptedAnswer":{"@type":"Answer","text":"Không. Sinh viên thuộc chương trình đối tác được học miễn phí các khóa trong chương trình và nhận chứng nhận PDF miễn phí khi đạt yêu cầu."}},
     {"@type":"Question","name":"Lấy mã chương trình ở đâu?","acceptedAnswer":{"@type":"Answer","text":"Mã chương trình do nhà trường hoặc đầu mối khoa cung cấp. Nếu trường bạn chưa tham gia, bạn có thể đề xuất SA247 Campus với nhà trường ngay trên trang này."}},
@@ -466,6 +466,9 @@
         name_required: "Vui lòng nhập họ tên.",
         email_invalid: "Email chưa đúng định dạng.",
         too_many_requests: "Bạn đã gửi nhiều đề xuất trong hôm nay. Vui lòng thử lại sau.",
+        code_unavailable: "Mã không hợp lệ hoặc chương trình hiện không khả dụng. Kiểm tra lại mã hoặc liên hệ khoa.",
+        member_verification_failed: "Không xác minh được thông tin sinh viên. Vui lòng liên hệ khoa hoặc SA247 để được hỗ trợ.",
+        rate_limited: "Bạn đã thử quá nhiều lần. Vui lòng đợi ít phút rồi thử lại.",
       };
       const errText = (e, fallback) => {
         const key = String(e?.message || e || "").trim();
@@ -543,6 +546,7 @@
           const sb = await client();
           const { data, error } = await sb.rpc("preview_program_code", { p_enroll_code: code });
           if (error) throw error;
+          if (data && data.ok === false) throw new Error(data.error || "code_unavailable");
           remember(code);
           setMsg(msg, "");
           showPreview(code, data || {});
@@ -573,6 +577,7 @@
             p_external_code: ext || null,
           });
           if (error) throw error;
+          if (data && data.ok === false) throw new Error(data.error || "code_unavailable");
           forget();
           const n = Number(data?.enrolled_courses) || 0;
           $("redeem-form").hidden = true;

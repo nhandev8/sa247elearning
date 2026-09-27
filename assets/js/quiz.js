@@ -139,8 +139,19 @@
   }
 
   function renderPassedFinal(data, courseCode, pct) {
-    const status = data.cert_status || "eligible";
+    const status = data.cert_status || (data.cert_code ? "eligible" : "");
     const courseQ = encodeURIComponent(courseCode);
+    if (status === "revoked") {
+      return `<h2>Đạt ${pct}%</h2>
+        <p>Giấy chứng nhận của khóa này đã bị thu hồi. Kết quả thi lại không tự cấp lại chứng nhận.</p>
+        <p class="meta">Nếu cần xem xét cấp lại, vui lòng liên hệ SA247 qua mục Phản hồi &amp; Hỗ trợ.</p>
+        <p class="cert-buy-options"><a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a></p>`;
+    }
+    if (!status) {
+      return `<h2>Đạt ${pct}%</h2>
+        <p>Bạn đã đạt bài kiểm tra cuối khóa, nhưng còn điều kiện chưa hoàn thành để nhận giấy chứng nhận.</p>
+        <p class="cert-buy-options"><a class="btn btn--amber" href="../chung-nhan/">Xem điều kiện còn thiếu</a></p>`;
+    }
     if (status === "issued" || status === "valid") {
       if (data.certificate_id && window.sa247Auth?.ready) {
         sa247Auth

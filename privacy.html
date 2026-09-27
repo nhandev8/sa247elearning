@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/site.css?v=202609272300" />
+  <link rel="stylesheet" href="assets/site.css?v=202609272330" />
 </head>
 <body>
   <nav class="nav">
@@ -23,16 +23,38 @@
     <div class="wrap">
       <p class="kicker">Pháp lý</p>
       <h1 class="title">Chính sách bảo mật</h1>
-      <p class="lead">Cập nhật: tháng 9/2026 · Áp dụng cho SA247 E-Learning (nhandev8.github.io/sa247elearning).</p>
+      <p class="lead">Cập nhật: tháng 9/2026 · Áp dụng cho SA247 E-Learning, SA247 Campus và trang xác minh giấy chứng nhận tại <a href="https://sa247.vn">sa247.vn</a>.</p>
       <h2>1. Dữ liệu chúng tôi thu thập</h2>
-      <p>Email và mật khẩu tài khoản (xử lý bởi Supabase Auth); thông tin đơn hàng/thanh toán (mã đơn, số tiền, trạng thái); tiến độ học và kết quả quiz/chứng chỉ khi bạn dùng các tính năng đó.</p>
+      <ul>
+        <li><strong>Tài khoản:</strong> email, họ tên, số điện thoại (nếu bạn cung cấp); mật khẩu được mã hóa bởi Supabase Auth — SA247 không xem được mật khẩu. Đăng nhập Google chỉ nhận email và tên hiển thị.</li>
+        <li><strong>Học tập:</strong> quyền học, tiến độ xem video, kết quả bài kiểm tra, giấy chứng nhận và họ tên in trên giấy chứng nhận.</li>
+        <li><strong>Đơn hàng &amp; thanh toán:</strong> mã đơn, số tiền, trạng thái, mã giao dịch chuyển khoản do SePay gửi. SA247 không lưu thông tin thẻ hay tài khoản ngân hàng của bạn.</li>
+        <li><strong>Giao giấy chứng nhận bản cứng:</strong> họ tên người nhận, số điện thoại, địa chỉ giao hàng.</li>
+        <li><strong>SA247 Campus:</strong> mã chương trình, mã sinh viên/đối tượng, khoa, ngành, khóa do bạn hoặc nhà trường cung cấp.</li>
+        <li><strong>Nhật ký kỹ thuật &amp; bảo mật:</strong> thời điểm đăng nhập, địa chỉ IP, trình duyệt, các thao tác quan trọng (thanh toán, cấp/thu hồi giấy chứng nhận, thay đổi quyền) để phòng chống gian lận và điều tra sự cố.</li>
+      </ul>
       <h2>2. Mục đích sử dụng</h2>
-      <p>Cung cấp khóa học, mở khóa sau thanh toán, hỗ trợ học viên, xác minh chứng chỉ, cải thiện sản phẩm. Không bán dữ liệu cá nhân cho bên thứ ba để quảng cáo.</p>
-      <h2>3. Đối tác xử lý</h2>
-      <p>Supabase (auth/database), SePay (xác nhận chuyển khoản), YouTube (phát video nhúng), GitHub Pages (hosting tĩnh).</p>
-      <h2>4. Bảo mật &amp; lưu trữ</h2>
-      <p>Truy cập dữ liệu học viên theo Row Level Security. Bạn có thể yêu cầu hỗ trợ về tài khoản qua email/Zalo trên trang liên hệ.</p>
-      <h2>5. Liên hệ</h2>
+      <p>Cung cấp khóa học, mở quyền học sau thanh toán, chấm bài và xét điều kiện cấp giấy chứng nhận, giao bản cứng, hỗ trợ học viên, xác minh giấy chứng nhận, bảo mật hệ thống và cải thiện sản phẩm. SA247 không bán dữ liệu cá nhân cho bên thứ ba.</p>
+      <h2>3. Chia sẻ dữ liệu</h2>
+      <ul>
+        <li><strong>Đơn vị xử lý kỹ thuật:</strong> Supabase (tài khoản, cơ sở dữ liệu), SePay (xác nhận chuyển khoản), YouTube (phát video), GitHub Pages (lưu trữ website), dịch vụ email giao dịch.</li>
+        <li><strong>Đơn vị vận chuyển:</strong> chỉ thông tin cần để giao giấy chứng nhận bản cứng.</li>
+        <li><strong>Nhà trường/đối tác Campus:</strong> chỉ tiến độ, kết quả và giấy chứng nhận của học viên thuộc chương trình của đối tác đó.</li>
+        <li><strong>Trang xác minh công khai:</strong> ai có mã giấy chứng nhận sẽ thấy họ tên, khóa học, ngày cấp và trạng thái; mã sinh viên (nếu có) được che một phần. Không hiển thị email, số điện thoại hay điểm chi tiết.</li>
+      </ul>
+      <h2>4. Bảo mật</h2>
+      <p>Dữ liệu được bảo vệ bằng kiểm soát truy cập phía máy chủ (Row Level Security): học viên chỉ xem được dữ liệu của mình. Tài khoản quản trị bắt buộc xác thực hai lớp. Các thao tác nhạy cảm được ghi nhật ký không thể sửa/xóa.</p>
+      <h2>5. Thời gian lưu trữ</h2>
+      <ul>
+        <li>Hồ sơ giấy chứng nhận và dữ liệu xác minh: lưu lâu dài để phục vụ việc xác minh, kể cả khi bạn ngừng học.</li>
+        <li>Đơn hàng, chứng từ thanh toán và thông tin giao hàng đi kèm đơn: theo thời hạn lưu trữ chứng từ kế toán theo quy định pháp luật.</li>
+        <li>Nhật ký bảo mật: tối đa 24 tháng, sau đó hệ thống tự xóa.</li>
+      </ul>
+      <h2>6. Quyền của bạn</h2>
+      <p>Bạn có quyền yêu cầu xem, chỉnh sửa, hoặc xóa dữ liệu cá nhân và rút lại sự đồng ý. Với dữ liệu phải lưu theo pháp luật (đơn hàng, chứng từ) hoặc cần cho việc xác minh giấy chứng nhận đã cấp, SA247 sẽ giới hạn xử lý thay vì xóa. Gửi yêu cầu tới <a href="mailto:support@sa247.vn">support@sa247.vn</a>; SA247 phản hồi trong vòng 15 ngày làm việc.</p>
+      <h2>7. Sự cố bảo mật</h2>
+      <p>Nếu phát hiện truy cập trái phép hoặc lỗ hổng, vui lòng báo ngay tới <a href="mailto:support@sa247.vn">support@sa247.vn</a> (tiêu đề "Sự cố bảo mật"). Khi có sự cố ảnh hưởng tới dữ liệu của bạn, SA247 sẽ thông báo theo quy định pháp luật.</p>
+      <h2>8. Liên hệ</h2>
       <p>SA247 Support: <a href="mailto:support@sa247.vn">support@sa247.vn</a> · Điện thoại: 08 77 78 79 88</p>
       <p><a href="terms.html">Điều khoản sử dụng</a> · <a href="index.html">Về trang chủ</a></p>
     </div>
@@ -43,6 +65,6 @@
       <p><a href="privacy.html">Bảo mật</a> · <a href="terms.html">Điều khoản</a> · <a href="verify/">Xác minh chứng chỉ</a></p>
     </div>
   </footer>
-  <script src="assets/js/marketing-nav.js?v=202609272300"></script>
+  <script src="assets/js/marketing-nav.js?v=202609272330"></script>
 </body>
 </html>

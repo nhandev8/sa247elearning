@@ -2819,6 +2819,19 @@ body.course-page .sa247-fb-fab { bottom: calc(5rem + env(safe-area-inset-bottom)
   margin: 0.25rem 0 0.85rem;
   font-size: 1.2rem;
 }
+.cert-checklist {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.cert-checklist li.is-ok {
+  color: #166534;
+}
+.cert-checklist li.is-missing {
+  color: #92400e;
+}
 .cert-mine-meta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));

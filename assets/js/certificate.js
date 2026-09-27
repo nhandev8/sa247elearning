@@ -200,6 +200,9 @@
       if (reason === "replaced") {
         throw new Error("Mã đã được thay thế — dùng mã chứng nhận mới.");
       }
+      if (reason === "rate_limited") {
+        throw new Error("Tra cứu quá nhiều lần. Vui lòng đợi khoảng 10 phút rồi tải lại.");
+      }
       throw new Error(
         "Không tìm thấy chứng nhận hợp lệ. Giấy chỉ hiển thị sau khi hệ thống đã cấp."
       );

@@ -82,15 +82,8 @@
           ${disclaimerHtml(data)}`;
         return;
       }
-      if (data?.reason === "eligible_unpaid") {
-        msg.textContent =
-          "Đã đủ điều kiện nhưng chưa đăng ký nhận GCN (chưa thanh toán hình thức nhận).";
-        card.hidden = false;
-        card.innerHTML = `<p class="kicker">${statusVi("eligible")}</p>
-          <p><strong>${esc(data.cert_code || code)}</strong></p>
-          <p>${esc(data.course_code)} · ${esc(data.course_title)}</p>
-          <p class="lead">Học viên cần đăng ký nhận PDF hoặc bản cứng sau khi đạt kiểm tra.</p>
-          ${disclaimerHtml(data)}`;
+      if (data?.reason === "rate_limited") {
+        msg.textContent = "Bạn đã tra cứu quá nhiều lần. Vui lòng đợi khoảng 10 phút rồi thử lại.";
         return;
       }
       msg.textContent = "Không tìm thấy chứng nhận hợp lệ.";

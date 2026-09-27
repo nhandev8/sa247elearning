@@ -47,12 +47,17 @@
           p_enroll_code: code, p_external_code: ext || null,
         });
         if (error) throw error;
+        if (data && data.ok === false) throw new Error(data.error || "code_unavailable");
         msg.className = "campus-mine-msg ok";
         msg.innerHTML = `Đã kích hoạt <strong>${esc(data?.program_name || data?.program || code)}</strong> · mở ${data?.enrolled_courses || 0} khóa.`;
         setTimeout(() => load(host), 800);
       } catch (e) {
-        const map = { invalid_code: "Mã không đúng.", program_not_active: "Chương trình chưa mở.",
-          program_ended: "Chương trình đã kết thúc.", code_exhausted: "Mã đã hết lượt." };
+        const map = {
+          code_unavailable: "Mã không hợp lệ hoặc chương trình hiện không khả dụng.",
+          member_verification_failed: "Không xác minh được thông tin sinh viên. Liên hệ khoa hoặc SA247.",
+          external_code_required: "Nhà trường yêu cầu mã sinh viên.",
+          rate_limited: "Bạn đã thử quá nhiều lần. Vui lòng đợi ít phút rồi thử lại.",
+        };
         msg.className = "campus-mine-msg err";
         msg.textContent = map[String(e?.message || "").trim()] || ("Lỗi: " + (e?.message || e));
       }
