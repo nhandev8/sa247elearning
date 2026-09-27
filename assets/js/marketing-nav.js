@@ -187,6 +187,10 @@
 
   function item(label, href, megaBuilder, r) {
     const wrap = h("div", { className: "nav-item" });
+    if (!megaBuilder) {
+      wrap.appendChild(h("a", { className: "nav-item__trigger", href: r + href }, [label]));
+      return wrap;
+    }
     const btn = h("a", {
       className: "nav-item__trigger",
       href: r + href,
