@@ -3909,15 +3909,24 @@ body.course-page { padding-bottom: 4.5rem; }
 }
 .acct-menu a:hover,
 .acct-menu__btn:hover { background: #f1f5f9; }
+/* backdrop-filter on .nav makes it the containing block for the fixed drawer */
+body.nav-drawer-open .nav {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: #071426;
+}
 .nav-drawer {
   position: fixed;
   inset: 3.6rem 0 0;
-  background: rgba(7,20,38,0.97);
+  height: calc(100vh - 3.6rem);
+  height: calc(100dvh - 3.6rem);
+  background: #071426;
   padding: 1rem 1.25rem 2rem;
   overflow: auto;
   z-index: 45;
 }
-.nav-drawer[hidden] { display: none !important; }
+.nav-drawer[hidden],
+.nav-drawer [hidden] { display: none !important; }
 .nav-drawer__nav { display: grid; gap: 0.15rem; }
 .nav-drawer__link {
   display: flex;
