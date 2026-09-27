@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 5,
     "lesson_code_format": "KTN01-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -15,11 +15,11 @@
   "stats": {
     "modules": 6,
     "lessons": 30,
-    "hoc_thu": 0,
+    "hoc_thu": 5,
     "mo_khoa": 25,
     "published": 0,
     "draft": 30,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {
@@ -92,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Cáp thép, móc cẩu và tiêu chí loại bỏ định lượng",
           "youtube_title": "Cáp thép, móc cẩu và tiêu chí loại bỏ định lượng | KTN-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "4gVLoQqYnIk",
@@ -176,7 +176,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Bảng tải trọng, bán kính và giới hạn nâng",
           "youtube_title": "Bảng tải trọng, bán kính và giới hạn nâng | KTN-01 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "M1XYjGQUKN4",
@@ -420,7 +420,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Lối đi, tốc độ và phòng lật xe",
           "youtube_title": "Lối đi, tốc độ và phòng lật xe | KTN-01 · M04 | Safety and You 247 Academy",
           "youtube_video_id": "bEZlE5mSFAU",
@@ -504,7 +504,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Lan can, dây an toàn và cấm đứng guardrail",
           "youtube_title": "Lan can, dây an toàn và cấm đứng guardrail | KTN-01 · M05 | Safety and You 247 Academy",
           "youtube_video_id": "7B5ofcmGkO0",
@@ -569,7 +569,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "WLL, góc sling và hệ số an toàn",
           "youtube_title": "WLL, góc sling và hệ số an toàn | KTN-01 · M06 | Safety and You 247 Academy",
           "youtube_video_id": "i_qo4Ui0gSY",

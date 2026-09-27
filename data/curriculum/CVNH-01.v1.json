@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 5,
     "lesson_code_format": "CVNH01-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -15,11 +15,11 @@
   "stats": {
     "modules": 6,
     "lessons": 30,
-    "hoc_thu": 0,
+    "hoc_thu": 5,
     "mo_khoa": 25,
     "published": 0,
     "draft": 30,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {
@@ -54,7 +54,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Ngưỡng làm việc trên cao, cơ chế chấn thương do rơi ngã và t",
           "youtube_title": "Ngưỡng làm việc trên cao, cơ chế chấn thương do rơi ngã và t | CVNH-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "yBjUMWW7GEs",
@@ -176,7 +176,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Mối nguy khí quyển, ngưỡng an toàn và kỹ thuật đo khí trước",
           "youtube_title": "Mối nguy khí quyển, ngưỡng an toàn và kỹ thuật đo khí trước | CVNH-01 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "CFtIfBmBF8w",
@@ -317,7 +317,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Giấy phép làm việc sinh nhiệt, kiểm soát vùng bắn tia lửa và",
           "youtube_title": "Giấy phép làm việc sinh nhiệt, kiểm soát vùng bắn tia lửa và | CVNH-01 · M03 | Safety and You 247 Academy",
           "youtube_video_id": "1NtAeUHOMjY",
@@ -466,7 +466,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Phân loại đất Type A/B/C và góc mái talus theo OSHA Subpart",
           "youtube_title": "Phân loại đất Type A/B/C và góc mái talus theo OSHA Subpart | CVNH-01 · M05 | Safety and You 247 Academy",
           "youtube_video_id": "US4lX9_h9m4",
@@ -588,7 +588,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Móng giàn, tỷ lệ 4:1 và giằng chéo trong quy trình lắp dựng",
           "youtube_title": "Móng giàn, tỷ lệ 4:1 và giằng chéo trong quy trình lắp dựng | CVNH-01 · M06 | Safety and You 247 Academy",
           "youtube_video_id": "AtDjlDb2Cl0",

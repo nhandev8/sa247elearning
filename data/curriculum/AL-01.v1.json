@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 3,
     "lesson_code_format": "AL01-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -15,11 +15,11 @@
   "stats": {
     "modules": 3,
     "lessons": 15,
-    "hoc_thu": 0,
+    "hoc_thu": 3,
     "mo_khoa": 12,
     "published": 0,
     "draft": 15,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {
@@ -73,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Hệ thống thiết bị an toàn của lò hơi: van an toàn, áp kế, ốn",
           "youtube_title": "Hệ thống thiết bị an toàn của lò hơi: van an toàn, áp kế, ốn | AL-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "kEF0xLJcy_E",
@@ -92,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Chế độ nước cấp, cáu cặn, ăn mòn và các cơ chế dẫn tới nổ lò",
           "youtube_title": "Chế độ nước cấp, cáu cặn, ăn mòn và các cơ chế dẫn tới nổ lò | AL-01 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "RwUx-Me5w7g",
@@ -157,7 +157,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Amoniac R717: độc tính, TLV 25 ppm và ngưỡng cháy nổ LEL 16–",
           "youtube_title": "Amoniac R717: độc tính, TLV 25 ppm và ngưỡng cháy nổ LEL 16– | AL-01 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "VxjlfO7Z35I",

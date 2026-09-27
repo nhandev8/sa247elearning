@@ -2330,6 +2330,83 @@ body.course-page { padding-bottom: 4.5rem; }
 
 /* Course Detail Mobile (course-mobile.js): See → Try → Understand → Buy → Learn */
 .cm-sticky-actions { display: flex; gap: 0.5rem; align-items: center; }
+.cm-trials {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+}
+.cm-trials[hidden] { display: none; }
+.cm-trials__kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b7860f;
+}
+.cm-trials__title {
+  margin: 0.25rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+.cm-trial {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(15, 28, 23, 0.1);
+  box-shadow: 0 6px 18px rgba(7, 20, 38, 0.08);
+}
+.cm-trial__frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+  background: #071426;
+  cursor: pointer;
+}
+.cm-trial__frame img,
+.cm-trial__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+.cm-trial__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(212, 167, 44, 0.95);
+  color: #071426;
+  font-size: 1.3rem;
+  padding-left: 0.2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.cm-trial__meta {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.95rem 0.9rem;
+}
+.cm-trial__where {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7a74;
+}
+.cm-trial__name {
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: #0f1c17;
+}
 .classroom__actions .btn--line {
   color: var(--deep, #0f1c17);
   border-color: rgba(15, 28, 23, 0.25);

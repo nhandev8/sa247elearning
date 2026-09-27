@@ -153,26 +153,15 @@
       (m.lessons || []).forEach((l) => flat.push(l));
     });
     const quota = freePreviewCount(flat.length);
-    // Nếu curriculum đã chỉ định tập học thử (đúng trong quota) thì tôn trọng lựa chọn đó
-    // — không ép về N bài đầu. Chỉ fallback vị trí khi chưa có chỉ định hợp lệ.
-    const marked = flat.filter((l) => l.access === "hoc_thu" || l.is_free === true);
-    const useExplicit = marked.length > 0 && marked.length <= Math.max(quota, marked.length);
-    if (useExplicit) {
-      const openSet = new Set(marked);
-      flat.forEach((l) => {
-        const open = openSet.has(l);
-        l.is_free = open;
-        l.access = open ? "hoc_thu" : l.access === "hoc_thu" ? "mo_khoa" : l.access || "mo_khoa";
-      });
-      return marked.length;
-    }
-    flat.forEach((l, i) => {
-      const open = i < quota;
+    // Học thử = đúng các bài được đánh dấu (tối đa quota 1/5, ≤ 5). Không tự mở bài khác.
+    const marked = flat.filter((l) => l.access === "hoc_thu" || l.is_free === true).slice(0, quota);
+    const openSet = new Set(marked);
+    flat.forEach((l) => {
+      const open = openSet.has(l);
       l.is_free = open;
-      if (open) l.access = "hoc_thu";
-      else if (l.access === "hoc_thu") l.access = "mo_khoa";
+      l.access = open ? "hoc_thu" : l.access === "hoc_thu" ? "mo_khoa" : l.access || "mo_khoa";
     });
-    return quota;
+    return marked.length;
   }
 
   function curriculumToModules(cur) {

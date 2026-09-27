@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 5,
     "lesson_code_format": "ATXD02-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -19,7 +19,7 @@
     "mo_khoa": 40,
     "published": 0,
     "draft": 45,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {

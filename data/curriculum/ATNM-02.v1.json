@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 5,
     "lesson_code_format": "ATNM02-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -15,11 +15,11 @@
   "stats": {
     "modules": 12,
     "lessons": 60,
-    "hoc_thu": 0,
+    "hoc_thu": 5,
     "mo_khoa": 55,
     "published": 0,
     "draft": 60,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {
@@ -157,7 +157,7 @@
           "video_id": "B01",
           "sort_order": 2,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Bradley curve và bốn giai đoạn phát triển văn hóa an toàn",
           "youtube_title": "Bradley curve và bốn giai đoạn phát triển văn hóa an toàn | ATNM-02 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "CB5X8x8VYRw",
@@ -279,7 +279,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "KPI HSE: TRIR, LTIFR, CAR, PTW và giờ quan sát",
           "youtube_title": "KPI HSE: TRIR, LTIFR, CAR, PTW và giờ quan sát | ATNM-02 · M03 | Safety and You 247 Academy",
           "youtube_video_id": "La3UcPSwxVg",
@@ -485,7 +485,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Quy trình LOTO 8 bước chi tiết",
           "youtube_title": "Quy trình LOTO 8 bước chi tiết | ATNM-02 · M05 | Safety and You 247 Academy",
           "youtube_video_id": "GSE2OqfaU6M",
@@ -813,7 +813,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Phân tích nguyên nhân gốc bằng 5 Why, xương cá, cây sự kiện",
           "youtube_title": "Phân tích nguyên nhân gốc bằng 5 Why, xương cá, cây sự kiện | ATNM-02 · M08 | Safety and You 247 Academy",
           "youtube_video_id": "_dbqb-X69pg",
@@ -1206,7 +1206,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "ROI đầu tư an toàn và thứ bậc kiểm soát",
           "youtube_title": "ROI đầu tư an toàn và thứ bậc kiểm soát | ATNM-02 · M12 | Safety and You 247 Academy",
           "youtube_video_id": "ax9cMUiHiok",

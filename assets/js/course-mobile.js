@@ -36,9 +36,28 @@
     return nav + (mq.matches ? 60 : 12);
   }
 
-  /* Tap "Học thử" → land on the video itself and make sure a free lesson is loaded (no login needed). */
+  function trialsBlock() {
+    const el = document.querySelector(".cm-trials");
+    return el && !el.hidden ? el : null;
+  }
+
+  function landOn(target) {
+    const land = (behavior) => {
+      const y = target.getBoundingClientRect().top + window.scrollY - headerOffset();
+      window.scrollTo({ top: Math.max(0, y), behavior });
+    };
+    land("smooth");
+    /* Layout can still shift while scrolling (lesson swap, thumbnails) — settle once more. */
+    window.setTimeout(() => {
+      if (Math.abs(target.getBoundingClientRect().top - headerOffset()) > 8) land("auto");
+    }, 900);
+  }
+
+  /* Tap "Học thử" → land on the trial videos (no login needed). */
   function goTrial(e) {
     if (e) e.preventDefault();
+    const trials = trialsBlock();
+    if (trials) return landOn(trials);
     if (!enrolled()) {
       const active = document.querySelector("#learner-root .classroom__lesson.is-active");
       const activeIsFree = active && active.querySelector(".badge--free");
@@ -46,16 +65,85 @@
       if (!activeIsFree || !hasVideo) freeLessonButton()?.click();
     }
     const target = document.getElementById("classroom-player") || document.getElementById("noi-dung-khoa");
-    if (!target) return;
-    const land = (behavior) => {
-      const y = target.getBoundingClientRect().top + window.scrollY - headerOffset();
-      window.scrollTo({ top: Math.max(0, y), behavior });
+    if (target) landOn(target);
+  }
+
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  /* Trial videos = lessons marked hoc_thu in the course curriculum, each with its own video. */
+  async function buildTrials() {
+    const root = document.getElementById("learner-root");
+    const url = root?.getAttribute("data-curriculum-url");
+    if (!root || !url || document.querySelector(".cm-trials")) return;
+    let cur;
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) return;
+      cur = await res.json();
+    } catch {
+      return;
+    }
+    const lessons = [];
+    (cur.modules || []).forEach((m) => {
+      (m.lessons || []).forEach((l) => {
+        if (l.access === "hoc_thu" && l.youtube_video_id) lessons.push({ ...l, module: m.module_id || l.module_id || "" });
+      });
+    });
+    if (!lessons.length) return;
+
+    const box = document.createElement("div");
+    box.className = "cm-trials";
+    box.setAttribute("aria-label", "Video học thử miễn phí");
+    const head = document.createElement("div");
+    head.className = "cm-trials__head";
+    head.innerHTML =
+      '<p class="cm-trials__kicker">Học thử miễn phí</p>' +
+      `<h3 class="cm-trials__title">${lessons.length} bài học thật của khóa — xem ngay, không cần đăng nhập</h3>`;
+    box.appendChild(head);
+
+    let playing = null;
+    const reset = (card) => {
+      const frame = card.querySelector(".cm-trial__frame");
+      frame.innerHTML = frame.dataset.thumb;
+      frame.classList.remove("is-playing");
     };
-    land("smooth");
-    /* The lesson swap can shift layout while scrolling — settle once more. */
-    window.setTimeout(() => {
-      if (Math.abs(target.getBoundingClientRect().top - headerOffset()) > 8) land("auto");
-    }, 900);
+
+    lessons.forEach((l) => {
+      const card = document.createElement("article");
+      card.className = "cm-trial";
+      const frame = document.createElement("button");
+      frame.type = "button";
+      frame.className = "cm-trial__frame";
+      frame.setAttribute("aria-label", "Phát video: " + (l.display_title || l.lesson_code));
+      frame.dataset.thumb =
+        `<img src="https://i.ytimg.com/vi/${encodeURIComponent(l.youtube_video_id)}/hqdefault.jpg" alt="" loading="lazy" decoding="async">` +
+        '<span class="cm-trial__play" aria-hidden="true">▶</span>';
+      frame.innerHTML = frame.dataset.thumb;
+      frame.addEventListener("click", () => {
+        if (frame.classList.contains("is-playing")) return;
+        if (playing && playing !== card) reset(playing);
+        frame.classList.add("is-playing");
+        frame.innerHTML =
+          `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(l.youtube_video_id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1" ` +
+          'title="Video học thử" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+        playing = card;
+      });
+      const meta = document.createElement("div");
+      meta.className = "cm-trial__meta";
+      const m = /M(\d+)-B(\d+)/.exec(l.lesson_code || "");
+      const where = m ? `Mô-đun ${pad2(+m[1])} · Bài ${pad2(+m[2])}` : l.lesson_code || "";
+      meta.innerHTML = `<span class="cm-trial__where"></span><strong class="cm-trial__name"></strong>`;
+      meta.querySelector(".cm-trial__where").textContent = where;
+      meta.querySelector(".cm-trial__name").textContent = l.display_title || l.title || l.lesson_code;
+      card.appendChild(frame);
+      card.appendChild(meta);
+      box.appendChild(card);
+    });
+
+    root.parentNode.insertBefore(box, root);
+    paintTrialLabels();
   }
 
   function relabelHero() {
@@ -75,6 +163,8 @@
     document.querySelectorAll("[data-cm-trial]").forEach((b) => {
       b.hidden = isIn;
     });
+    const trials = document.querySelector(".cm-trials");
+    if (trials) trials.hidden = isIn;
   }
 
   function addStickyTrial() {
@@ -179,6 +269,7 @@
     buildTabs();
     collapseCurriculum();
     watchClassroom();
+    buildTrials();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

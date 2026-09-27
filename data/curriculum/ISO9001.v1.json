@@ -6,7 +6,7 @@
   "source": "SA247 2.0 NEW work/*/Bxx + VIDEO_CATALOG",
   "generated_at": "2026-09-14T00:11:26",
   "policy": {
-    "hoc_thu_rule": "min(5, round(lessons/5))",
+    "hoc_thu_rule": "explicit:lead-videos.json",
     "hoc_thu_count": 5,
     "lesson_code_format": "ISO9001-M{mm}-B{nn}",
     "stats_unit": "Bxx.mp4",
@@ -15,11 +15,11 @@
   "stats": {
     "modules": 6,
     "lessons": 30,
-    "hoc_thu": 0,
+    "hoc_thu": 5,
     "mo_khoa": 25,
     "published": 0,
     "draft": 30,
-    "hoc_thu_rule": "explicit:lead-videos.json:CHO_PHEP_PUBLIC|PUBLIC"
+    "hoc_thu_rule": "explicit:lead-videos.json:HOC_THU|CHO_PHEP_PUBLIC|PUBLIC · quota min(5, round(lessons/5))"
   },
   "modules": [
     {
@@ -73,7 +73,7 @@
           "video_id": "B02",
           "sort_order": 3,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Cấu trúc bậc cao HLS, mười điều khoản ISO 9001:2015 và ánh x",
           "youtube_title": "Cấu trúc bậc cao HLS, mười điều khoản ISO 9001:2015 và ánh x | ISO9001 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "bwQgrPwINgg",
@@ -92,7 +92,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Tư duy theo quá trình, mô hình SIPOC và tư duy dựa trên rủi",
           "youtube_title": "Tư duy theo quá trình, mô hình SIPOC và tư duy dựa trên rủi | ISO9001 · M01 | Safety and You 247 Academy",
           "youtube_video_id": "IhnEq6vsN58",
@@ -214,7 +214,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Thực hiện gap analysis theo điều khoản và lập kế hoạch khắc",
           "youtube_title": "Thực hiện gap analysis theo điều khoản và lập kế hoạch khắc | ISO9001 · M02 | Safety and You 247 Academy",
           "youtube_video_id": "ulgYxTbI5To",
@@ -420,7 +420,7 @@
           "video_id": "B04",
           "sort_order": 5,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Sản xuất, phát hành, NC và hoạt động sau giao hàng theo điều",
           "youtube_title": "Sản xuất, phát hành, NC và hoạt động sau giao hàng theo điều | ISO9001 · M04 | Safety and You 247 Academy",
           "youtube_video_id": "WqhprCLmMpQ",
@@ -504,7 +504,7 @@
           "video_id": "B03",
           "sort_order": 4,
           "content_kind": "bai",
-          "access": "mo_khoa",
+          "access": "hoc_thu",
           "display_title": "Chương trình đánh giá nội bộ theo ISO 19011",
           "youtube_title": "Chương trình đánh giá nội bộ theo ISO 19011 | ISO9001 · M05 | Safety and You 247 Academy",
           "youtube_video_id": "0Fr2nG0QUKI",
