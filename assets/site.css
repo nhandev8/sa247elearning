@@ -2330,25 +2330,35 @@ body.course-page { padding-bottom: 4.5rem; }
 
 /* Course Detail Mobile (course-mobile.js): See → Try → Understand → Buy → Learn */
 .cm-sticky-actions { display: flex; gap: 0.5rem; align-items: center; }
+.cm-trial-section {
+  padding: 3rem 0;
+  background: #f4f1e8;
+}
+.cm-trial-section[hidden] { display: none; }
 .cm-trials {
   display: grid;
   gap: 1.1rem;
   max-width: 44rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto;
 }
-.cm-trials[hidden] { display: none; }
-.cm-trials__kicker {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #b7860f;
+.cm-trials__head .title { margin-bottom: 0.2rem; }
+.cm-trials__cta {
+  justify-self: stretch;
+  justify-content: center;
+  text-align: center;
+  min-height: 3rem;
 }
-.cm-trials__title {
-  margin: 0.25rem 0 0;
-  font-size: 1.05rem;
-  line-height: 1.4;
+@media (min-width: 761px) {
+  .cm-trials {
+    max-width: none;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  }
+  .cm-trials__head { grid-column: 1 / -1; }
+  .cm-trials__cta { grid-column: 1 / -1; justify-self: center; min-width: 18rem; }
+}
+@media (max-width: 760px) {
+  .cm-trial-section { padding: 2rem 0; }
+  .cm-trials__head .title { font-size: 1.25rem; }
 }
 .cm-trial {
   border-radius: 14px;
@@ -2416,19 +2426,20 @@ body.course-page { padding-bottom: 4.5rem; }
   body.course-page .hero { min-height: auto; }
   body.course-page main { display: flex; flex-direction: column; }
   body.course-page main > * { min-width: 0; }
-  #noi-dung-khoa { order: 1; }
-  #sau-khoa-hoc { order: 2; }
-  #lo-trinh { order: 3; }
-  #gia-tri-99k { order: 4; }
-  #dang-ky { order: 5; }
-  #van-de { order: 6; }
-  #giai-phap { order: 7; }
+  #hoc-thu { order: 1; }
+  #giai-phap { order: 2; }
+  #sau-khoa-hoc { order: 3; }
+  #lo-trinh { order: 4; }
+  #noi-dung-khoa { order: 5; }
+  #gia-tri-99k { order: 6; }
+  #dang-ky { order: 7; }
   #doi-tuong { order: 8; }
-  #cach-hoc { order: 9; }
-  #mau-chung-nhan { order: 10; }
-  #faq { order: 11; }
-  #lien-he { order: 12; }
-  body.course-page main > .course-spine-box { order: 13; margin-bottom: 2rem; }
+  #van-de { order: 9; }
+  #cach-hoc { order: 10; }
+  #mau-chung-nhan { order: 11; }
+  #faq { order: 12; }
+  #lien-he { order: 13; }
+  body.course-page main > .course-spine-box { order: 14; margin-bottom: 2rem; }
   body.course-page main > section { scroll-margin-top: 7rem; }
 
   .cm-tabs:not([hidden]) {

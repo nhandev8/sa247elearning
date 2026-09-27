@@ -8,9 +8,9 @@
   const mq = window.matchMedia("(max-width: 760px)");
 
   const TABS = [
-    ["noi-dung-khoa", "Học thử"],
+    ["hoc-thu", "Học thử"],
     ["sau-khoa-hoc", "Kết quả"],
-    ["lo-trinh", "Nội dung"],
+    ["lo-trinh", "Mục lục"],
     ["dang-ky", "Học phí"],
     ["faq", "Hỏi đáp"],
   ];
@@ -37,8 +37,8 @@
   }
 
   function trialsBlock() {
-    const el = document.querySelector(".cm-trials");
-    return el && !el.hidden ? el : null;
+    const el = document.getElementById("hoc-thu");
+    return el && !el.hidden && el.querySelector(".cm-trial") ? el : null;
   }
 
   function landOn(target) {
@@ -72,18 +72,42 @@
     return String(n).padStart(2, "0");
   }
 
+  /* "Học thử" is its own section right after the hero — never merged into the course outline. */
+  function createTrialSection() {
+    const main = document.querySelector("main");
+    if (!main || document.getElementById("hoc-thu")) return null;
+    const section = document.createElement("section");
+    section.id = "hoc-thu";
+    section.className = "cm-trial-section";
+    section.hidden = true;
+    section.innerHTML = '<div class="wrap"></div>';
+    main.insertBefore(section, main.firstElementChild);
+    return section;
+  }
+
+  function trialRegisterButton() {
+    const hero = document.querySelector("#top [data-hero-cta]");
+    const a = document.createElement("a");
+    a.className = "btn btn--amber cm-trials__cta";
+    a.href = hero?.getAttribute("href") || "#dang-ky";
+    a.textContent = hero?.textContent.trim() || "Đăng ký khóa học";
+    return a;
+  }
+
   /* Trial videos = lessons marked hoc_thu in the course curriculum, each with its own video. */
-  async function buildTrials() {
+  async function buildTrials(section) {
     const root = document.getElementById("learner-root");
     const url = root?.getAttribute("data-curriculum-url");
-    if (!root || !url || document.querySelector(".cm-trials")) return;
+    if (!section) return;
+    const drop = () => section.remove();
+    if (!url) return drop();
     let cur;
     try {
       const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok) return drop();
       cur = await res.json();
     } catch {
-      return;
+      return drop();
     }
     const lessons = [];
     (cur.modules || []).forEach((m) => {
@@ -91,7 +115,7 @@
         if (l.access === "hoc_thu" && l.youtube_video_id) lessons.push({ ...l, module: m.module_id || l.module_id || "" });
       });
     });
-    if (!lessons.length) return;
+    if (!lessons.length) return drop();
 
     const box = document.createElement("div");
     box.className = "cm-trials";
@@ -99,8 +123,8 @@
     const head = document.createElement("div");
     head.className = "cm-trials__head";
     head.innerHTML =
-      '<p class="cm-trials__kicker">Học thử miễn phí</p>' +
-      `<h3 class="cm-trials__title">${lessons.length} bài học thật của khóa — xem ngay, không cần đăng nhập</h3>`;
+      '<p class="kicker">Học thử miễn phí</p>' +
+      `<h2 class="title">${lessons.length} video học thử — xem ngay, không cần đăng nhập</h2>`;
     box.appendChild(head);
 
     let playing = null;
@@ -142,7 +166,9 @@
       box.appendChild(card);
     });
 
-    root.parentNode.insertBefore(box, root);
+    box.appendChild(trialRegisterButton());
+    section.querySelector(".wrap").appendChild(box);
+    section.hidden = false;
     paintTrialLabels();
   }
 
@@ -163,8 +189,8 @@
     document.querySelectorAll("[data-cm-trial]").forEach((b) => {
       b.hidden = isIn;
     });
-    const trials = document.querySelector(".cm-trials");
-    if (trials) trials.hidden = isIn;
+    const trials = document.getElementById("hoc-thu");
+    if (trials && trials.querySelector(".cm-trial")) trials.hidden = isIn;
   }
 
   function addStickyTrial() {
@@ -264,12 +290,13 @@
 
   function init() {
     document.documentElement.classList.add("cm-ready");
+    const trialSection = createTrialSection();
     relabelHero();
     addStickyTrial();
     buildTabs();
     collapseCurriculum();
     watchClassroom();
-    buildTrials();
+    buildTrials(trialSection);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
