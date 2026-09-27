@@ -1,6 +1,7 @@
 /**
  * SA247 marketing navigation — 5 content items + CTA + account.
  * Mounts into #nav. Public: no Xác minh / Học tập / Quản trị / Đăng ký.
+ * Mobile drawer: visitor menu vs learner menu, switched by html.sa247-signed-in (app-shell.js).
  */
 (function () {
   function rootPrefix() {
@@ -265,33 +266,132 @@
     ]);
   }
 
-  function buildMobileDrawer(r) {
-    const drawer = h("div", { className: "nav-drawer", id: "nav-drawer", hidden: true });
-    const links = [
-      ["Lộ trình HSE", "index.html#career-map"],
-      ["Khóa học", "index.html#chuong-trinh"],
-      ["Sách HSE", "sach/hse-digital-transformation/"],
-      ["Kiến thức", "kien-thuc/"],
-      ["Campus", "campus/"],
-      ["Về SA247", "ve-sa247/"],
-    ];
-    const list = h(
+  function drawerLinks(links, r, label) {
+    return h(
       "nav",
-      { className: "nav-drawer__nav", "aria-label": "Menu di động" },
+      { className: "nav-drawer__nav", "aria-label": label },
       links.map(([t, href]) => h("a", { href: r + href, className: "nav-drawer__link", text: t }))
     );
-    drawer.appendChild(list);
-    drawer.appendChild(h("hr", { className: "nav-drawer__hr" }));
-    drawer.appendChild(
-      h("a", { href: r + "tim-khoa/", className: "nav-drawer__cta", text: "Tìm khóa phù hợp" })
-    );
-    drawer.appendChild(
-      h("a", { href: r + "auth/login.html", className: "nav-drawer__login", "data-nav-login-mobile": "", text: "Đăng nhập" })
-    );
-    drawer.appendChild(
-      h("a", { href: r + "dashboard/", className: "nav-drawer__login", "data-nav-learn-mobile": "", hidden: true, text: "Học tập" })
-    );
+  }
+
+  /* Visitor: "SA247 có khóa gì phù hợp với tôi?" */
+  function buildGuestDrawer(r) {
+    return h("div", { className: "nav-drawer__guest" }, [
+      drawerLinks([
+        ["Trang chủ", "index.html"],
+        ["Khóa học", "index.html#chuong-trinh"],
+        ["Lộ trình HSE", "index.html#career-map"],
+        ["Kiến thức", "kien-thuc/"],
+        ["Chứng nhận", "verify/"],
+        ["Nhà trường", "campus/"],
+        ["Hỗ trợ", "ve-sa247/#faq"],
+      ], r, "Khám phá SA247"),
+      h("div", { className: "nav-drawer__actions" }, [
+        h("a", { href: r + "index.html#chuong-trinh", className: "nav-drawer__cta", text: "Xem khóa học" }),
+        h("a", { href: r + "auth/login.html", className: "nav-drawer__cta nav-drawer__cta--line", "data-nav-login-mobile": "", text: "Đăng nhập" }),
+      ]),
+      h("p", { className: "nav-drawer__minor" }, [
+        h("a", { href: r + "sach/hse-digital-transformation/", text: "Sách HSE miễn phí" }),
+        " · ",
+        h("a", { href: r + "ve-sa247/", text: "Về SA247" }),
+      ]),
+    ]);
+  }
+
+  /* Learner: "Tôi đang học đến đâu và tiếp tục ở đâu?" */
+  function buildLearnerDrawer(r) {
+    const logout = h("button", { type: "button", className: "nav-drawer__logout", text: "Đăng xuất" });
+    logout.addEventListener("click", () => {
+      document.querySelector("[data-nav-logout]")?.click();
+    });
+    return h("div", { className: "nav-drawer__learner" }, [
+      h("div", { className: "nav-resume", "data-nav-resume": "" }, [
+        h("p", { className: "nav-resume__hello", "data-nav-resume-hello": "", text: "Xin chào" }),
+        h("p", { className: "nav-resume__label", text: "Tiếp tục học" }),
+        h("p", { className: "nav-resume__title", "data-nav-resume-title": "", text: "Khóa học của bạn" }),
+        h("div", { className: "nav-resume__bar", "data-nav-resume-bar": "", hidden: true }, [
+          h("span", { "data-nav-resume-fill": "" }),
+        ]),
+        h("p", { className: "nav-resume__meta", "data-nav-resume-meta": "", hidden: true }),
+        h("a", { href: r + "dashboard/", className: "nav-drawer__cta", "data-nav-resume-cta": "", text: "Tiếp tục học" }),
+      ]),
+      drawerLinks([
+        ["Học tập", "dashboard/"],
+        ["Khóa học của tôi", "khoa-cua-toi/"],
+        ["Tiến độ", "tien-do/"],
+        ["Kiểm tra", "kiem-tra/"],
+        ["Chứng nhận", "chung-nhan/"],
+        ["Tài khoản", "ho-so/"],
+      ], r, "Học tập"),
+      h("p", { className: "nav-drawer__minor" }, [
+        h("a", { href: r + "don-hang/", text: "Đơn hàng" }),
+        " · ",
+        h("a", { href: r + "index.html#chuong-trinh", text: "Khám phá khóa học" }),
+        h("span", { className: "nav-drawer__staff" }, [" · ", h("a", { href: r + "admin/", text: "Quản trị" })]),
+      ]),
+      logout,
+    ]);
+  }
+
+  function buildMobileDrawer(r) {
+    const drawer = h("div", { className: "nav-drawer", id: "nav-drawer", hidden: true });
+    drawer.appendChild(buildGuestDrawer(r));
+    drawer.appendChild(buildLearnerDrawer(r));
     return drawer;
+  }
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function fillResume(nav, r) {
+    const card = nav.querySelector("[data-nav-resume]");
+    if (!card || card.dataset.loaded === "1") return;
+    if (!document.documentElement.classList.contains("sa247-signed-in")) return;
+    card.dataset.loaded = "1";
+
+    const name = nav.querySelector("[data-nav-account]")?.textContent?.trim();
+    if (name && name !== "Tài khoản") card.querySelector("[data-nav-resume-hello]").textContent = "Xin chào, " + name;
+
+    try {
+      if (!window.sa247Auth?.ensureClient) return;
+      if (!window.sa247Continue) await loadScriptOnce(r + "assets/js/continue-learning.js?v=20260915p0");
+      const sb = await sa247Auth.ensureClient();
+      const session = await sa247Auth.getSession();
+      if (!session?.user?.id || !window.sa247Continue) return;
+      const { primary } = await sa247Continue.loadPrimaryContinue(sb, session.user.id);
+      const title = card.querySelector("[data-nav-resume-title]");
+      const cta = card.querySelector("[data-nav-resume-cta]");
+      if (!primary) {
+        title.textContent = "Bạn chưa có khóa học nào";
+        cta.textContent = "Xem khóa học";
+        cta.setAttribute("href", r + "index.html#chuong-trinh");
+        return;
+      }
+      const course = primary.course || {};
+      title.textContent = course.title || course.code || "Khóa học của bạn";
+      const pct = Math.max(0, Math.min(100, Math.round(Number(primary.pct) || 0)));
+      const bar = card.querySelector("[data-nav-resume-bar]");
+      bar.querySelector("[data-nav-resume-fill]").style.width = pct + "%";
+      bar.hidden = false;
+      const meta = card.querySelector("[data-nav-resume-meta]");
+      meta.textContent = primary.total
+        ? `${pct}% · ${primary.done}/${primary.total} bài`
+        : `${pct}% hoàn thành`;
+      meta.hidden = false;
+      cta.textContent = sa247Continue.ctaLabels(primary.state).text;
+      if (course.slug) {
+        cta.setAttribute("href", r + sa247Continue.learnHref(course.slug, primary.lesson).replace(/^\.\.\//, ""));
+      }
+    } catch (err) {
+      console.warn("[nav resume]", err);
+    }
   }
 
   function mount() {
@@ -390,11 +490,11 @@
     nav.appendChild(inner);
     nav.appendChild(buildMobileDrawer(r));
 
-    wireDrawer(nav);
+    wireDrawer(nav, r);
     wireAccountMenus(nav);
   }
 
-  function wireDrawer(nav) {
+  function wireDrawer(nav, r) {
     const burger = nav.querySelector("[data-nav-burger]");
     const drawer = nav.querySelector("#nav-drawer");
     if (!burger || !drawer) return;
@@ -402,8 +502,10 @@
       const open = drawer.hidden;
       drawer.hidden = !open;
       burger.setAttribute("aria-expanded", open ? "true" : "false");
+      burger.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
       burger.textContent = open ? "✕" : "☰";
       document.body.classList.toggle("nav-drawer-open", open);
+      if (open) fillResume(nav, r);
     });
     drawer.querySelectorAll("a").forEach((a) => {
       a.addEventListener("click", () => {

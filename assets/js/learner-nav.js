@@ -1,16 +1,22 @@
 /* SA247 · Nav học viên theo IA Platform (docs/SA247-PLATFORM-IA.md) */
 (function () {
   const ITEMS = [
-    { key: "hoc-tap", href: "../dashboard/", label: "Học tập" },
-    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi" },
-    { key: "lo-trinh", href: "../lo-trinh/", label: "Lộ trình của tôi" },
-    { key: "tien-do", href: "../tien-do/", label: "Tiến độ" },
-    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả" },
-    { key: "chung-nhan", href: "../chung-nhan/", label: "Chứng nhận" },
-    { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán" },
-    { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ" },
-    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ" },
-    { key: "cai-dat", href: "../cai-dat/", label: "Cài đặt" },
+    { key: "hoc-tap", href: "../dashboard/", label: "Học tập", group: "learn", tab: "Học tập", icon: "▶" },
+    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi", group: "learn", tab: "Khóa học", icon: "▦" },
+    { key: "lo-trinh", href: "../lo-trinh/", label: "Lộ trình của tôi", group: "learn" },
+    { key: "tien-do", href: "../tien-do/", label: "Tiến độ", group: "learn" },
+    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả", group: "learn", tab: "Kiểm tra", icon: "✎" },
+    { key: "chung-nhan", href: "../chung-nhan/", label: "Chứng nhận", group: "learn", tab: "Chứng nhận", icon: "★" },
+    { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán", group: "customer" },
+    { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ", group: "customer" },
+    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ", group: "account" },
+    { key: "cai-dat", href: "../cai-dat/", label: "Cài đặt", group: "account" },
+  ];
+
+  const GROUPS = [
+    ["learn", "Học tập"],
+    ["customer", "Đơn hàng & hỗ trợ"],
+    ["account", "Tài khoản"],
   ];
 
   function activeKeyFromPath() {
@@ -32,10 +38,37 @@
     const nav = document.querySelector(".app-side__nav[data-learner-nav]");
     if (!nav) return;
     const active = activeKey || nav.getAttribute("data-active") || activeKeyFromPath();
-    nav.innerHTML = ITEMS.map((it) => {
-      const cls = it.key === active ? ' class="is-active"' : "";
-      return `<a${cls} href="${it.href}">${it.label}</a>`;
+    nav.innerHTML = GROUPS.map(([g, title]) => {
+      const links = ITEMS.filter((it) => it.group === g)
+        .map((it) => `<a${it.key === active ? ' class="is-active" aria-current="page"' : ""} href="${it.href}">${it.label}</a>`)
+        .join("");
+      return `<p class="app-side__group">${title}</p>${links}`;
     }).join("");
+    paintTabbar(active);
+  }
+
+  /* Mobile: "Tôi đang học đến đâu và tiếp tục ở đâu?" — 5 tab cố định dưới màn hình */
+  function paintTabbar(active) {
+    if (!document.body.classList.contains("app-body")) return;
+    let bar = document.querySelector(".app-tabbar");
+    if (!bar) {
+      bar = document.createElement("nav");
+      bar.className = "app-tabbar";
+      bar.setAttribute("aria-label", "Điều hướng học tập");
+      document.body.appendChild(bar);
+      document.body.classList.add("has-tabbar");
+    }
+    const accountKeys = ["ho-so", "cai-dat", "don-hang", "phan-hoi"];
+    const html = ITEMS.filter((it) => it.tab)
+      .map((it) => {
+        const on = it.key === active || (it.key === "hoc-tap" && (active === "tien-do" || active === "lo-trinh"));
+        return `<a href="${it.href}"${on ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">${it.icon}</span>${it.tab}</a>`;
+      })
+      .join("");
+    const accOn = accountKeys.includes(active);
+    bar.innerHTML =
+      html +
+      `<a href="../ho-so/"${accOn ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">●</span>Tài khoản</a>`;
   }
 
   window.sa247LearnerNav = { ITEMS, paintNav, activeKeyFromPath };

@@ -1886,6 +1886,48 @@
   .app-shell.is-side-open .app-side { transform: none; }
   .app-menu-btn { display: inline-flex; }
 }
+.app-side__group {
+  margin: 1rem 0 0.3rem;
+  padding: 0 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.42);
+}
+.app-side__group:first-child { margin-top: 0.25rem; }
+.app-side { overflow-y: auto; }
+.app-tabbar { display: none; }
+@media (max-width: 900px) {
+  .app-tabbar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 35;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: #fff;
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -6px 18px rgba(7,20,38,0.06);
+  }
+  .app-tabbar a {
+    display: grid;
+    justify-items: center;
+    gap: 0.15rem;
+    padding: 0.5rem 0.1rem 0.55rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+    color: #64748b;
+    text-decoration: none;
+  }
+  .app-tabbar a span { font-size: 1.05rem; line-height: 1; }
+  .app-tabbar a.is-active { color: var(--navy); }
+  .app-tabbar a.is-active span { color: var(--amber-hot, var(--amber)); }
+  body.has-tabbar .app-main { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+  body.has-tabbar .sa247-fb-fab { bottom: calc(4.4rem + env(safe-area-inset-bottom)) !important; }
+}
 
 /* Career path finder · progress · quiz · legal */
 .career {
@@ -3965,6 +4007,65 @@ body.nav-drawer-open .nav {
   text-decoration: none;
   padding: 0.65rem;
 }
+/* Visitor vs learner drawer — html.sa247-signed-in is set by app-shell.js */
+.nav-drawer__learner { display: none; }
+.sa247-signed-in .nav-drawer__guest { display: none; }
+.sa247-signed-in .nav-drawer__learner { display: block; }
+.nav-drawer__staff { display: none; }
+.sa247-staff .nav-drawer__staff { display: inline; }
+.nav-drawer__actions { display: grid; gap: 0.6rem; margin-top: 1.25rem; }
+.nav-drawer__actions .nav-drawer__cta { margin: 0; }
+.nav-drawer__cta--line {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+}
+.nav-drawer__minor {
+  margin: 1.1rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.45);
+}
+.nav-drawer__minor a { color: rgba(255,255,255,0.75); text-decoration: none; font-weight: 600; }
+.nav-drawer__logout {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  background: none;
+  border: 0;
+  color: rgba(255,255,255,0.6);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nav-resume {
+  margin: 0 0 1rem;
+  padding: 1rem 1.1rem 1.1rem;
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(240,180,41,0.16), rgba(255,255,255,0.04));
+  border: 1px solid rgba(240,180,41,0.35);
+  color: #fff;
+}
+.nav-resume__hello { margin: 0 0 0.6rem; font-weight: 700; font-size: 1.05rem; }
+.nav-resume__label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.nav-resume__title { margin: 0.2rem 0 0.6rem; font-weight: 800; font-size: 1.1rem; line-height: 1.3; }
+.nav-resume__bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  overflow: hidden;
+}
+.nav-resume__bar span { display: block; height: 100%; width: 0; background: var(--amber); transition: width 0.4s ease; }
+.nav-resume__meta { margin: 0.4rem 0 0.8rem; font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+.nav-resume .nav-drawer__cta { margin: 0.8rem 0 0; }
 .finder-page { padding: 6.5rem 0 4rem; }
 .finder-grid {
   display: grid;
