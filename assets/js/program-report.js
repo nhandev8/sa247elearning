@@ -39,6 +39,17 @@
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmtDate = (v) => (v ? new Date(v).toLocaleDateString("vi-VN") : "");
   const fmtDateTime = (v) => (v ? new Date(v).toLocaleString("vi-VN") : "");
+  const pad = (n) => String(n).padStart(2, "0");
+  const isoDate = (v) => {
+    if (!v) return "";
+    const d = new Date(v);
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  };
+  const isoDateTime = (v) => {
+    if (!v) return "";
+    const d = new Date(v);
+    return `${isoDate(v)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
   const fmtNum = (v) => (v === null || v === undefined || v === "" ? "—" : Number(v).toLocaleString("vi-VN"));
   const fmtPct = (v) => (v === null || v === undefined || v === "" ? "—" : Number(v).toLocaleString("vi-VN") + "%");
 
@@ -112,7 +123,7 @@
 
   // ---- Cột xuất file ----
   const COLS_PROGRAM = [
-    ["Mã SV", (r) => r.external_code],
+    ["Mã SV", (r) => (/^0\d+$/.test(r.external_code || "") ? `="${r.external_code}"` : r.external_code)],
     ["Họ tên", (r) => r.full_name],
     ["Email", (r) => r.email],
     ["Khoa", (r) => r.faculty],
@@ -122,16 +133,16 @@
     ["Khóa học", (r) => r.course_code + " · " + (r.course_title || "")],
     ["Trạng thái học", (r) => learnState(r).label],
     ["% hoàn thành", (r) => r.progress_percent ?? 0],
-    ["Bài đã xong", (r) => (r.done_lessons || 0) + "/" + (r.total_lessons || 0)],
+    ["Bài đã xong", (r) => (r.done_lessons || 0) + " trên " + (r.total_lessons || 0)],
     ["Số lần kiểm tra", (r) => r.attempts || 0],
     ["Điểm cao nhất", (r) => (r.attempts > 0 ? r.best_score : "")],
     ["Kết quả", (r) => resultState(r).label],
-    ["Ngày đạt", (r) => fmtDate(r.passed_at)],
-    ["Ngày hoàn thành", (r) => fmtDate(r.completed_at)],
+    ["Ngày đạt", (r) => isoDate(r.passed_at)],
+    ["Ngày hoàn thành", (r) => isoDate(r.completed_at)],
     ["Chứng nhận", (r) => certState(r).label],
     ["Mã chứng nhận", (r) => r.cert_code],
-    ["Ngày cấp", (r) => fmtDate(r.cert_issued_at)],
-    ["Đăng nhập gần nhất", (r) => fmtDateTime(r.last_sign_in_at)],
+    ["Ngày cấp", (r) => isoDate(r.cert_issued_at)],
+    ["Đăng nhập gần nhất", (r) => isoDateTime(r.last_sign_in_at)],
   ];
   const SOURCE_VI = { paid: "Tự mua", admin_grant: "Admin cấp", partner_program: "Chương trình đối tác" };
   const COLS_ENROLLMENT = [
@@ -140,19 +151,19 @@
     ["Khóa học", (r) => r.course_code + " · " + (r.course_title || "")],
     ["Nguồn quyền học", (r) => SOURCE_VI[r.source] || r.source],
     ["Chương trình", (r) => r.program_name],
-    ["Ngày đăng ký", (r) => fmtDate(r.enrolled_at)],
+    ["Ngày đăng ký", (r) => isoDate(r.enrolled_at)],
     ["Trạng thái học", (r) => learnState(r).label],
     ["% hoàn thành", (r) => r.progress_percent ?? 0],
-    ["Bài đã xong", (r) => (r.done_lessons || 0) + "/" + (r.total_lessons || 0)],
+    ["Bài đã xong", (r) => (r.done_lessons || 0) + " trên " + (r.total_lessons || 0)],
     ["Số lần kiểm tra", (r) => r.attempts || 0],
     ["Điểm cao nhất", (r) => (r.attempts > 0 ? r.best_score : "")],
     ["Kết quả", (r) => resultState(r).label],
-    ["Ngày đạt", (r) => fmtDate(r.passed_at)],
-    ["Ngày hoàn thành", (r) => fmtDate(r.completed_at)],
+    ["Ngày đạt", (r) => isoDate(r.passed_at)],
+    ["Ngày hoàn thành", (r) => isoDate(r.completed_at)],
     ["Chứng nhận", (r) => certState(r).label],
     ["Mã chứng nhận", (r) => r.cert_code],
-    ["Ngày cấp", (r) => fmtDate(r.cert_issued_at)],
-    ["Đăng nhập gần nhất", (r) => fmtDateTime(r.last_sign_in_at)],
+    ["Ngày cấp", (r) => isoDate(r.cert_issued_at)],
+    ["Đăng nhập gần nhất", (r) => isoDateTime(r.last_sign_in_at)],
   ];
 
   function toCsv(cols, rows, ctx) {
