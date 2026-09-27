@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phản hồi & Hỗ trợ · SA247 Quản trị</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/admin.css" />
+  <script src="../../assets/supabase-config.js"></script>
+  <script src="../../assets/js/supabase-client.js" defer></script>
+  <script src="../../assets/js/admin-api.js" defer></script>
+  <script src="../../assets/js/admin-shell.js" defer></script>
+  <script src="../../assets/js/admin-phan-hoi.js" defer></script>
+</head>
+<body class="adm-body">
+  <div class="adm-shell">
+    <aside class="adm-side">
+      <a class="adm-side__brand" href="../">SA247 <em>Quản trị</em></a>
+      <nav class="adm-nav" id="adm-side-nav"></nav>
+      <div class="adm-side__foot">
+        <p class="adm-side__user" id="adm-user">…</p>
+        <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="adm-logout">Đăng xuất</button>
+      </div>
+    </aside>
+    <div class="adm-main">
+      <header class="adm-top">
+        <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
+        <h1>Phản hồi & Hỗ trợ</h1>
+      </header>
+      <main class="adm-content">
+        <p class="adm-lead">Cửa người học: Phản hồi &amp; Hỗ trợ. Nội bộ: xác minh → nếu là lỗi hệ thống thì ghi mã Defect Register.</p>
+        <section class="adm-card" id="stats-box" style="margin-bottom:1rem"></section>
+        <div class="adm-toolbar">
+          <select id="f-status">
+            <option value="">Mọi trạng thái</option>
+            <option value="MOI_TAO">Mới tạo</option>
+            <option value="DA_TIEP_NHAN">Đã tiếp nhận</option>
+            <option value="DANG_XU_LY">Đang xử lý</option>
+            <option value="CHO_XAC_MINH">Chờ xác minh</option>
+            <option value="CHO_THONG_TIN">Chờ thông tin</option>
+            <option value="DA_KHAC_PHUC">Đã khắc phục</option>
+            <option value="DA_DONG">Đã đóng</option>
+            <option value="KHONG_PHAI_LOI">Không phải lỗi</option>
+            <option value="TRUNG_LAP">Trùng lặp</option>
+            <option value="KHONG_THE_TAI_HIEN">Không tái hiện</option>
+          </select>
+          <select id="f-source">
+            <option value="">Mọi nguồn</option>
+            <option>BAI_HOC</option><option>VIDEO</option><option>QUIZ</option>
+            <option>THANH_TOAN</option><option>CHUNG_NHAN</option>
+            <option>TAI_KHOAN</option><option>WEBSITE</option>
+            <option>MOBILE</option><option>NOI_DUNG</option><option>KHAC</option>
+          </select>
+          <select id="f-severity">
+            <option value="">Mọi mức</option>
+            <option>P0</option><option>P1</option><option>P2</option><option>P3</option>
+          </select>
+          <button type="button" class="adm-btn adm-btn--primary" id="btn-reload">Lọc</button>
+        </div>
+        <p class="adm-msg" id="adm-status"></p>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Mã</th><th>Mức</th><th>Nguồn</th><th>Trạng thái</th>
+                <th>Tiêu đề</th><th>Ngữ cảnh</th><th>Defect</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <section class="adm-card" id="detail" hidden style="margin-top:1rem">
+          <h2 id="d-title">Xử lý phản hồi</h2>
+          <form class="adm-form" id="d-form">
+            <label>Trạng thái
+              <select name="status" id="d-status">
+                <option value="DA_TIEP_NHAN">Đã tiếp nhận</option>
+                <option value="DANG_XU_LY">Đang xử lý</option>
+                <option value="CHO_XAC_MINH">Chờ xác minh</option>
+                <option value="CHO_THONG_TIN">Chờ thông tin</option>
+                <option value="DA_KHAC_PHUC">Đã khắc phục</option>
+                <option value="DA_DONG">Đã đóng</option>
+                <option value="KHONG_PHAI_LOI">Không phải lỗi</option>
+                <option value="TRUNG_LAP">Trùng lặp</option>
+                <option value="KHONG_THE_TAI_HIEN">Không tái hiện</option>
+              </select>
+            </label>
+            <label>Mức độ
+              <select name="severity" id="d-severity">
+                <option>P0</option><option>P1</option><option>P2</option><option>P3</option>
+              </select>
+            </label>
+            <label>Mã Defect Register <input name="defect_ref" id="d-defect" placeholder="DEF-2026-014" /></label>
+            <label>Ghi chú gửi học viên <textarea name="resolution_note" id="d-note" rows="3"></textarea></label>
+            <label>Ghi chú nội bộ <textarea name="internal_note" id="d-internal" rows="2"></textarea></label>
+            <button type="submit" class="adm-btn adm-btn--primary">Cập nhật</button>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

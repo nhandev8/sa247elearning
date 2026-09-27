@@ -79,8 +79,14 @@
         { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
         { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao" },
         { target: "quyen-hoc/", label: "Cấp quyền học", key: "quyen-hoc-commerce" },
+        { target: "doi-tac/", label: "Campus / Đối tác", key: "doi-tac" },
       ],
       scope: "commerce",
+    },
+    {
+      group: "Cải tiến",
+      items: [{ target: "phan-hoi/", label: "Phản hồi & Hỗ trợ", key: "phan-hoi" }],
+      scope: "full",
     },
     {
       group: "Phân tích",
@@ -121,6 +127,8 @@
     if (path.includes("/nhat-ky")) return "nhat-ky";
     if (path.includes("/thong-ke")) return "thong-ke";
     if (path.includes("/phan-quyen")) return "phan-quyen";
+    if (path.includes("/admin/doi-tac")) return "doi-tac";
+    if (path.includes("/admin/phan-hoi")) return "phan-hoi";
     return "home";
   }
 
@@ -179,6 +187,7 @@
       "bao-cao",
       "quyen-hoc",
       "quyen-hoc-commerce",
+      "doi-tac",
       "doi-mat-khau",
       "home",
     ]);

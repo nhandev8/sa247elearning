@@ -97,10 +97,13 @@
     const enc = encodeURIComponent(data.cert_code);
     const score =
       data.score_percent != null ? `Điểm: ${data.score_percent}% · ` : "";
+    const programLine = data.program_name
+      ? `<p>thuộc <strong>${data.program_name}</strong>${data.member_code ? " · Mã sinh viên / đối tượng: " + data.member_code : ""}</p>`
+      : `<p class="meta">Chứng nhận hoàn thành khóa học Academy</p>`;
     card.innerHTML = `<p class="kicker">${statusVi(data.status || "valid")}</p>
       <h2>${data.full_name || "—"}</h2>
       <p><strong>${data.course_code}</strong> · ${data.course_title}</p>
-      <p class="meta">Chứng nhận hoàn thành khóa học Academy</p>
+      ${programLine}
       <p>${score}Ngày cấp: ${fmtDate(data.issued_at)}</p>
       <p class="meta">Mã: ${data.cert_code} · Trạng thái: ${statusVi(data.status || "valid")}</p>
       ${disclaimerHtml(data)}

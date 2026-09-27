@@ -152,6 +152,24 @@
     el("cert-name").textContent = data.full_name || "—";
     el("cert-code").textContent = code;
     el("cert-date").textContent = fmtDate(data.issued_at);
+    let progLine = el("cert-program");
+    if (!progLine) {
+      progLine = document.createElement("p");
+      progLine.id = "cert-program";
+      progLine.className = "cert-disclaimer";
+      el("cert-stage")?.after(progLine);
+    }
+    if (data.program_name) {
+      progLine.hidden = false;
+      progLine.textContent =
+        "Thuộc " +
+        data.program_name +
+        (data.member_code ? " · Mã sinh viên / đối tượng: " + data.member_code : "") +
+        " · do SA247 E-Learning tổ chức.";
+    } else {
+      progLine.hidden = true;
+      progLine.textContent = "";
+    }
     el("toolbar-code").textContent = code;
     el("btn-verify").href = `./?code=${encodeURIComponent(code)}`;
     el("btn-print").hidden = false;

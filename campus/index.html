@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SA247 Campus · HSE cho thế hệ kỹ sư tương lai</title>
+  <meta name="description" content="SA247 Campus — chương trình đào tạo HSE miễn phí dành cho sinh viên qua đối tác trường đại học. Học ATNM-01, ATXD-01, làm kiểm tra và nhận chứng nhận." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=20260927campus" />
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js" defer></script>
+  <style>
+    .campus-hero{background:linear-gradient(135deg,#0b1f3a,#123a5c);color:#f2f4f7;padding:3rem 0 2.5rem}
+    .campus-hero .kicker{color:#99f6e4;margin:0 0 .5rem}
+    .campus-hero h1{font-size:clamp(1.7rem,4vw,2.6rem);margin:0 0 .75rem;color:#fff;line-height:1.15}
+    .campus-hero .lead{color:#d0d5dd;max-width:42rem;font-size:1.05rem;line-height:1.6}
+    .campus-hero .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem}
+    .campus-topbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 0}
+    .campus-topbar a.brand{font-weight:800;color:#fff;text-decoration:none;font-size:1.15rem}
+    .campus-topbar em{color:#fbbf24;font-style:normal}
+    .campus-topbar nav{display:flex;gap:.85rem;align-items:center}
+    .campus-topbar nav a{color:#e5e7eb;text-decoration:none;font-size:.95rem}
+    .campus-section{padding:2.5rem 0;border-bottom:1px solid #eef2f6}
+    .campus-tabs{display:flex;gap:.5rem;margin:0 0 1.5rem;flex-wrap:wrap}
+    .campus-tab{font:inherit;font-weight:700;padding:.55rem 1.15rem;border-radius:999px;border:1px solid #d0d5dd;background:#fff;color:#0f172a;cursor:pointer}
+    .campus-tab.is-on{background:#0b1f3a;color:#fff;border-color:#0b1f3a}
+    .campus-panel{display:none}
+    .campus-panel.is-on{display:block}
+    .campus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1.1rem;margin-top:1.25rem}
+    .campus-card{border:1px solid #e5e7eb;border-radius:16px;padding:1.35rem;background:#fff}
+    .campus-card h3{margin:0 0 .5rem;font-size:1.1rem}
+    .campus-card p{color:#475569;margin:0;line-height:1.55;font-size:.96rem}
+    .campus-steps{counter-reset:st;display:grid;gap:.75rem;margin:1.25rem 0 0;padding:0;list-style:none}
+    .campus-steps li{position:relative;padding-left:2.4rem;color:#334155;line-height:1.5}
+    .campus-steps li::before{counter-increment:st;content:counter(st);position:absolute;left:0;top:-.1rem;width:1.7rem;height:1.7rem;border-radius:50%;background:#0b1f3a;color:#fff;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+    .campus-redeem{max-width:34rem;margin-top:1.5rem;padding:1.5rem;border-radius:16px;background:#f8fafc;border:1px solid #e2e8f0}
+    .campus-redeem label{display:block;font-weight:700;margin:0 0 .4rem}
+    .campus-redeem input{width:100%;font:inherit;padding:.7rem .9rem;border-radius:12px;border:1px solid #cbd5e1;margin-bottom:.85rem}
+    .campus-redeem .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+    .campus-msg{margin:.75rem 0 0;font-size:.95rem;min-height:1.2rem}
+    .campus-msg--ok{color:#047857;font-weight:600}
+    .campus-msg--err{color:#b91c1c;font-weight:600}
+    .campus-cta-final{background:#0b1f3a;color:#fff;text-align:center;padding:3rem 1rem}
+    .campus-cta-final h2{color:#fff;font-size:clamp(1.4rem,3vw,2rem);margin:0 0 .75rem}
+    .campus-cta-final p{color:#cbd5e1;max-width:38rem;margin:0 auto 1.5rem}
+    @media(max-width:520px){.campus-redeem .grid2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="campus-hero">
+    <div class="wrap">
+      <div class="campus-topbar">
+        <a class="brand" href="../index.html">SA247 <em>Campus</em></a>
+        <nav>
+          <a href="../kien-thuc/">Kiến thức miễn phí</a>
+          <a href="../index.html#chuong-trinh">Khóa học</a>
+          <a id="nav-account" href="../auth/login.html">Đăng nhập</a>
+        </nav>
+      </div>
+      <p class="kicker">SA247 CAMPUS · HỢP TÁC ĐÀO TẠO</p>
+      <h1>Học HSE hôm nay.<br />Sẵn sàng cho công việc ngày mai.</h1>
+      <p class="lead">Chương trình đào tạo HSE miễn phí dành cho sinh viên thông qua đối tác trường đại học. Học kiến thức nền tảng <strong>trước khi</strong> bước vào nhà máy, công trường và môi trường làm việc thực tế.</p>
+      <div class="hero-actions">
+        <a class="btn btn--amber" href="#kich-hoat">Kích hoạt bằng mã chương trình →</a>
+        <a class="btn btn--line" href="#truong">Dành cho trường đại học</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="campus-section">
+      <div class="wrap">
+        <div class="campus-tabs" role="tablist">
+          <button type="button" class="campus-tab is-on" data-tab="sv" role="tab">Dành cho sinh viên</button>
+          <button type="button" class="campus-tab" data-tab="truong" role="tab">Dành cho trường đại học</button>
+        </div>
+
+        <div class="campus-panel is-on" data-panel="sv">
+          <h2>Bạn đang chuẩn bị bước vào nghề?</h2>
+          <p class="lead" style="max-width:44rem;color:#475569">Sinh viên thuộc chương trình đối tác được cấp <strong>quyền học miễn phí</strong> các khóa nền tảng, làm bài kiểm tra và nhận chứng nhận khi đạt yêu cầu — không thu phí.</p>
+          <div class="campus-grid">
+            <article class="campus-card"><h3>ATNM-01</h3><p>An toàn vệ sinh lao động nhà máy — nền tảng cho kỹ sư sản xuất, cơ khí, điện.</p></article>
+            <article class="campus-card"><h3>ATXD-01</h3><p>An toàn lao động công trường xây dựng — cho sinh viên xây dựng, kiến trúc, hạ tầng.</p></article>
+            <article class="campus-card"><h3>Kiến thức + Sách HSE</h3><p>Đọc kho kiến thức HSE miễn phí và tài liệu nền tảng song song với khóa học.</p></article>
+          </div>
+          <ol class="campus-steps">
+            <li>Nhận <strong>mã chương trình</strong> từ trường / đầu mối đối tác.</li>
+            <li>Tạo tài khoản SA247 (hoặc đăng nhập) bằng email của bạn.</li>
+            <li>Nhập mã ở ô bên dưới để kích hoạt quyền học miễn phí.</li>
+            <li>Học → làm kiểm tra → đạt → nhận chứng nhận miễn phí.</li>
+          </ol>
+
+          <div class="campus-redeem" id="kich-hoat">
+            <h3 style="margin:0 0 1rem">Kích hoạt mã chương trình</h3>
+            <div id="redeem-guest" hidden>
+              <p class="lead" style="color:#475569">Bạn cần đăng nhập bằng tài khoản SA247 trước khi kích hoạt.</p>
+              <a class="btn btn--amber" id="redeem-login" href="../auth/login.html">Đăng nhập / Đăng ký</a>
+            </div>
+            <form id="redeem-form" hidden>
+              <label for="rc">Mã chương trình</label>
+              <input id="rc" name="enroll_code" placeholder="VD: ABC-HSE-2026" autocomplete="off" required />
+              <label for="rext">Mã sinh viên (nếu trường yêu cầu)</label>
+              <input id="rext" name="external_code" placeholder="VD: 22123456" autocomplete="off" />
+              <div class="grid2">
+                <div><label for="rfac">Khoa</label><input id="rfac" name="faculty" autocomplete="off" /></div>
+                <div><label for="rmaj">Ngành</label><input id="rmaj" name="major" autocomplete="off" /></div>
+              </div>
+              <button type="submit" class="btn btn--amber">Kích hoạt quyền học miễn phí</button>
+              <p class="campus-msg" id="redeem-msg" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+
+        <div class="campus-panel" data-panel="truong" id="truong">
+          <h2>Đưa sinh viên vào chương trình HSE nền tảng</h2>
+          <p class="lead" style="max-width:44rem;color:#475569">SA247 hợp tác với trường đại học để trang bị kiến thức an toàn cho sinh viên kỹ thuật trước khi đi thực tập và đi làm. Không thay đổi mô hình khóa học 99.000đ — sinh viên nhận quyền lợi riêng do chương trình đối tác cấp.</p>
+          <div class="campus-grid">
+            <article class="campus-card"><h3>1 · Thỏa thuận</h3><p>Chốt danh sách khóa được cấp (ATNM-01, ATXD-01…) và quyền lợi chứng nhận.</p></article>
+            <article class="campus-card"><h3>2 · Cấp quyền</h3><p>3 cách: SA247 gán từng sinh viên · import danh sách Excel · phát mã chương trình tự phục vụ.</p></article>
+            <article class="campus-card"><h3>3 · Theo dõi</h3><p>Báo cáo tiến độ, kết quả kiểm tra và chứng nhận theo từng đợt sinh viên.</p></article>
+          </div>
+          <div class="campus-grid">
+            <article class="campus-card"><h3>Điều kiện tham gia</h3><p>Trường ký thỏa thuận chương trình. Sinh viên thuộc danh sách hoặc có mã chương trình còn hạn.</p></article>
+            <article class="campus-card"><h3>Quy trình triển khai</h3><p>Thỏa thuận → import danh sách hoặc cấp mã → sinh viên học → kiểm tra → chứng nhận.</p></article>
+            <article class="campus-card"><h3>Báo cáo kết quả</h3><p>SA247 gửi báo cáo số sinh viên đã học, đạt kiểm tra và được cấp chứng nhận theo từng đợt.</p></article>
+            <article class="campus-card"><h3>Chứng nhận</h3><p>GCN PDF miễn phí khi đạt yêu cầu, ghi rõ chương trình hợp tác. Bản cứng chỉ khi thỏa thuận tài trợ.</p></article>
+          </div>
+          <p style="margin-top:1.5rem">
+            <a class="btn btn--amber" href="mailto:hello@sa247.vn?subject=Hợp%20tác%20SA247%20Campus">Liên hệ hợp tác đào tạo →</a>
+            <a class="btn btn--line" href="../kien-thuc/">Xem nội dung nền tảng</a>
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="campus-section">
+      <div class="wrap">
+        <h2>Sau khi ra trường</h2>
+        <p class="lead" style="max-width:44rem;color:#475569">Campus là cửa vào. Khi bước vào nghề, bạn có thể học nâng cao theo đúng công việc — giá khóa học thông thường không đổi.</p>
+        <div class="campus-grid">
+          <article class="campus-card"><h3>HSE nhà máy</h3><p>ATNM-02 · hệ thống, KPI, họp HSE.</p></article>
+          <article class="campus-card"><h3>HSE xây dựng</h3><p>ATXD-02 · kiểm soát theo giai đoạn và nhà thầu.</p></article>
+          <article class="campus-card"><h3>Thiết bị · ISO · công việc nguy hiểm</h3><p>KTN-01, AL-01, CVNH-01, ISO 45001 / 9001.</p></article>
+        </div>
+        <p style="margin-top:1.25rem"><a class="btn btn--line" href="../index.html#career-map">Xem lộ trình nghề →</a></p>
+      </div>
+    </section>
+  </main>
+
+  <section class="campus-cta-final">
+    <h2>Kiến thức HSE nên bắt đầu từ giảng đường</h2>
+    <p>Học nền tảng an toàn trước khi bước vào môi trường làm việc thực tế — miễn phí cho sinh viên thuộc chương trình đối tác SA247.</p>
+    <a class="btn btn--amber" href="#kich-hoat">Kích hoạt mã chương trình</a>
+    <a class="btn btn--line" href="../index.html" style="color:#fff;border-color:#475569">Về trang chủ SA247</a>
+  </section>
+
+  <script>
+    (function () {
+      // Tabs
+      const tabs = document.querySelectorAll(".campus-tab");
+      const panels = document.querySelectorAll(".campus-panel");
+      tabs.forEach((t) => t.addEventListener("click", () => {
+        tabs.forEach((x) => x.classList.toggle("is-on", x === t));
+        panels.forEach((p) => p.classList.toggle("is-on", p.dataset.panel === t.dataset.tab));
+      }));
+      document.querySelector('[href="#truong"]')?.addEventListener("click", () => {
+        document.querySelector('[data-tab="truong"]')?.click();
+      });
+
+      const NEXT = "../campus/";
+      const guest = document.getElementById("redeem-guest");
+      const form = document.getElementById("redeem-form");
+      const msg = document.getElementById("redeem-msg");
+      const loginLink = document.getElementById("redeem-login");
+      const navAccount = document.getElementById("nav-account");
+      if (loginLink) loginLink.href = "../auth/login.html?next=" + encodeURIComponent(NEXT);
+
+      async function init() {
+        if (!window.sa247Auth?.ready) { guest.hidden = false; return; }
+        let session = null;
+        try { session = await sa247Auth.getSession(); } catch (_) {}
+        if (!session?.user?.id) { guest.hidden = false; return; }
+        if (navAccount) { navAccount.textContent = "Học tập"; navAccount.href = "../dashboard/"; }
+        form.hidden = false;
+        form.addEventListener("submit", onSubmit);
+      }
+
+      async function onSubmit(ev) {
+        ev.preventDefault();
+        const fd = new FormData(form);
+        const code = String(fd.get("enroll_code") || "").trim();
+        if (!code) return;
+        msg.className = "campus-msg";
+        msg.textContent = "Đang kích hoạt…";
+        try {
+          const sb = await sa247Auth.ensureClient();
+          const { data, error } = await sb.rpc("redeem_program_code", {
+            p_enroll_code: code,
+            p_external_code: String(fd.get("external_code") || "").trim() || null,
+            p_faculty: String(fd.get("faculty") || "").trim() || null,
+            p_major: String(fd.get("major") || "").trim() || null,
+          });
+          if (error) throw error;
+          const n = data?.enrolled_courses || 0;
+          msg.className = "campus-msg campus-msg--ok";
+          msg.innerHTML = `Kích hoạt thành công chương trình <strong>${(data?.program_name || data?.program || code)}</strong>. Đã mở ${n} khóa. <a href="../dashboard/">Vào Học tập →</a>`;
+          form.reset();
+        } catch (e) {
+          const map = {
+            invalid_code: "Mã chương trình không đúng.",
+            program_not_active: "Chương trình chưa mở.",
+            program_not_started: "Chương trình chưa tới ngày bắt đầu.",
+            program_ended: "Chương trình đã kết thúc.",
+            code_exhausted: "Mã đã hết lượt sử dụng.",
+            not_authenticated: "Bạn cần đăng nhập trước.",
+          };
+          const key = String(e?.message || "").trim();
+          msg.className = "campus-msg campus-msg--err";
+          msg.textContent = map[key] || ("Không kích hoạt được: " + key);
+        }
+      }
+      document.addEventListener("DOMContentLoaded", init);
+      if (document.readyState !== "loading") init();
+    })();
+  </script>
+</body>
+</html>

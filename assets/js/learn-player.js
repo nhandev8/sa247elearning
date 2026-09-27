@@ -353,7 +353,7 @@
             <p class="meta">${
               enrolled
                 ? "Bạn đã mở khóa toàn bộ lộ trình."
-                : `Xem trước <strong>${openN}</strong> video · còn lại khóa đến khi đăng ký.`
+                : `Mở sẵn <strong>${openN}</strong> video · còn lại khóa đến khi đăng ký.`
             }</p>
             <div class="progress-bar" aria-hidden="true"><span style="width:${pct}%"></span></div>
           </div>
@@ -408,7 +408,7 @@
         const playable = !!(l.youtube_video_id || l.has_video);
         li.innerHTML = `<button type="button" class="classroom__lesson${doneL ? " is-done" : ""}${locked ? " is-locked" : ""}" data-lesson="${esc(l.id)}">
           <span class="classroom__lesson-title">${esc(l.title)}</span>
-          ${l.is_free ? '<span class="badge badge--free">Xem trước</span>' : ""}
+          ${l.is_free ? '<span class="badge badge--free">Mở sẵn</span>' : ""}
           ${doneL ? '<span class="badge">Đã học</span>' : ""}
           ${locked ? '<span class="badge">Khóa</span>' : ""}
           ${!locked && !playable ? '<span class="badge">Sắp có</span>' : ""}
@@ -433,8 +433,8 @@
 
       if (!enrolled && !lesson.is_free) {
         player.innerHTML = `<p class="lead"><strong>${title}</strong></p>
-          <p class="lead">Muốn học đầy đủ và có hệ thống? Tiếp tục với toàn bộ khóa học <strong>99.000đ</strong>.</p>
-          <p><a class="btn btn--amber" href="#dang-ky">Bắt đầu khóa học</a>
+          <p class="lead">Video này nằm trong phần khóa — đăng ký để xem toàn bộ lộ trình.</p>
+          <p><a class="btn btn--amber" href="#dang-ky">Mở khóa khóa học</a>
           <a class="btn btn--line" href="${esc(loginHref)}">Đăng nhập</a></p>`;
         meta.innerHTML = `<p class="meta">${esc(lesson.moduleTitle || "")}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>`;
         host.querySelector(".classroom")?.classList.remove("is-side-open");
@@ -489,14 +489,18 @@
 
       meta.innerHTML = `
         <h4>${title}</h4>
-        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Xem trước" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
+        <p class="meta">${esc(lesson.moduleTitle || "")}${lesson.is_free ? " · Mở sẵn" : ""}${lesson.lesson_code ? " · " + esc(lesson.lesson_code) : ""}</p>
         ${resumeHint}
         ${descHtml}
         ${
           enrolled
             ? `<button type="button" class="btn btn--line btn--small" data-complete>${doneL ? "Đã hoàn thành · đánh dấu lại" : "Đánh dấu hoàn thành"}</button>`
             : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
-        }`;
+        }
+        <p class="classroom__fb">
+          <button type="button" class="btn btn--line btn--small" data-lesson-fb>💬 Có vấn đề với bài học này?</button>
+        </p>
+        <p class="meta">Kiến thức HSE phải chính xác. Nếu bạn phát hiện nội dung cần kiểm tra, hãy phản hồi để SA247 cùng bạn cải thiện bài học.</p>`;
 
       window.dispatchEvent(
         new CustomEvent("sa247:progress", {
@@ -538,6 +542,9 @@
                       playTick = 0;
                     }
                     if (typeof t === "number" && t > 0) {
+                      if (window.SA247_FEEDBACK_CONTEXT) {
+                        window.SA247_FEEDBACK_CONTEXT.video_position_seconds = Math.floor(t);
+                      }
                       const pp =
                         typeof d === "number" && d > 0
                           ? Math.min(99, Math.round((t / d) * 100))
@@ -581,6 +588,36 @@
         </div>`;
         if (enrolled && sb) saveWatch(sb, lesson.id, { watchedSeconds: seek }).catch(() => {});
       }
+
+      window.SA247_FEEDBACK_CONTEXT = {
+        source: "VIDEO",
+        course_code: course.code || "",
+        lesson_id: lesson.id || "",
+        video_position_seconds: seek || 0,
+      };
+      if (!window.sa247Feedback) {
+        const existing = document.querySelector("script[data-sa247-fb]");
+        if (!existing) {
+          const s = document.createElement("script");
+          s.src = "../assets/js/sa247-feedback.js?v=20260927campus2";
+          s.defer = true;
+          s.dataset.sa247Fb = "1";
+          document.body.appendChild(s);
+        }
+      }
+      $("[data-lesson-fb]", meta)?.addEventListener("click", () => {
+        try {
+          const t = ytPlayer?.getCurrentTime?.();
+          if (typeof t === "number") {
+            window.SA247_FEEDBACK_CONTEXT = Object.assign({}, window.SA247_FEEDBACK_CONTEXT, {
+              source: "BAI_HOC",
+              video_position_seconds: Math.floor(t),
+            });
+          }
+        } catch (_) {}
+        if (window.sa247Feedback) window.sa247Feedback.open({ source: "BAI_HOC", category: "content" });
+        else alert("Đang tải hộp phản hồi… thử lại sau vài giây.");
+      });
 
       if (enrolled && sb) {
         $("[data-complete]", meta)?.addEventListener("click", async (ev) => {
@@ -697,7 +734,7 @@
         }
         if (enrolled) {
           document.getElementById("dang-ky")?.setAttribute("hidden", "");
-          document.getElementById("dang-ky")?.setAttribute("hidden", "");
+          document.getElementById("goi-pro")?.setAttribute("hidden", "");
           document.documentElement.classList.add("sa247-enrolled");
         }
       } catch (e) {

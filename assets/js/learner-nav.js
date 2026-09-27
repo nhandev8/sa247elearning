@@ -8,6 +8,7 @@
     { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả" },
     { key: "chung-nhan", href: "../chung-nhan/", label: "Chứng nhận" },
     { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán" },
+    { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ" },
     { key: "ho-so", href: "../ho-so/", label: "Hồ sơ" },
     { key: "cai-dat", href: "../cai-dat/", label: "Cài đặt" },
   ];
@@ -20,6 +21,7 @@
     if (p.includes("/kiem-tra") || p.includes("/quiz/")) return "kiem-tra";
     if (p.includes("/chung-nhan")) return "chung-nhan";
     if (p.includes("/don-hang") && !p.includes("/admin/")) return "don-hang";
+    if (p.includes("/phan-hoi")) return "phan-hoi";
     if (p.includes("/ho-so")) return "ho-so";
     if (p.includes("/cai-dat") || p.includes("/doi-mat-khau")) return "cai-dat";
     if (p.includes("/dashboard") || p.includes("/hoc-tap")) return "hoc-tap";

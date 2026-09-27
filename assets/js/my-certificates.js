@@ -93,6 +93,7 @@
             <div><dt>Trạng thái</dt><dd>${esc(statusVi(c.status))}</dd></div>
             ${c.score_percent != null ? `<div><dt>Điểm</dt><dd>${esc(c.score_percent)}%</dd></div>` : ""}
             ${c.delivery_type ? `<div><dt>Hình thức</dt><dd>${c.delivery_type === "hard" ? "Bản cứng" : "PDF"}</dd></div>` : ""}
+            ${c.program_name ? `<div><dt>Chương trình</dt><dd>${esc(c.program_name)}</dd></div>` : ""}
           </dl>
           ${
             issued
@@ -108,9 +109,13 @@
                 </p>`
               : eligible
                 ? `<p class="cert-mine-actions">
-                    <a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${pdfL}</a>
+                    ${
+                      c.can_claim_program_cert
+                        ? `<button type="button" class="btn btn--amber" data-free-cert="${esc(c.course_code)}">Nhận chứng nhận miễn phí (chương trình đối tác)</button>`
+                        : `<a class="btn btn--amber" href="./mua.html?course=${courseQ}&amp;type=cert_pdf">PDF điện tử · ${pdfL}</a>
                     <a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Bản cứng · ${hardL} + ship</a>
-                    <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>
+                    <a class="btn btn--line" href="./mua.html?course=${courseQ}">Chọn hình thức nhận</a>`
+                    }
                   </p>`
                 : replaced
                   ? `<p class="meta">Mã này đã được thay thế — dùng mã chứng nhận mới trong danh sách.</p>`
@@ -201,6 +206,29 @@
     } catch (_) {}
     paint(list || [], prices, ships);
     el("cert-list")?.addEventListener("click", async (ev) => {
+      const freeBtn = ev.target.closest("[data-free-cert]");
+      if (freeBtn) {
+        freeBtn.disabled = true;
+        const prev = freeBtn.textContent;
+        freeBtn.textContent = "Đang kiểm tra quyền lợi…";
+        try {
+          const { data, error } = await sb.rpc("claim_program_certificate", {
+            p_course_code: freeBtn.getAttribute("data-free-cert"),
+          });
+          if (error) throw error;
+          freeBtn.textContent = "Đã cấp chứng nhận miễn phí";
+          setTimeout(() => location.reload(), 800);
+        } catch (e) {
+          const m = String(e?.message || "");
+          freeBtn.disabled = false;
+          freeBtn.textContent = /no_free_cert_benefit/.test(m)
+            ? "Khóa này không thuộc chương trình miễn phí"
+            : /not_eligible/.test(m)
+              ? "Cần đạt kỳ thi trước"
+              : m || prev;
+        }
+        return;
+      }
       const btn = ev.target.closest("[data-pdf]");
       if (!btn) return;
       btn.disabled = true;

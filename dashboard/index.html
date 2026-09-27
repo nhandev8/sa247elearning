@@ -15,6 +15,20 @@
   <script src="../assets/js/continue-learning.js?v=20260915p0" defer></script>
   <script src="../assets/js/sa247-track.js?v=20260917" defer></script>
   <script src="../assets/js/dashboard.js?v=20260915ia" defer></script>
+  <script src="../assets/js/campus-learner.js?v=20260927campus" defer></script>
+  <script src="../assets/js/sa247-feedback.js?v=20260927campus" defer></script>
+  <style>
+    .campus-mine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.85rem;margin:.5rem 0 1rem}
+    .campus-mine-card{border:1px solid #e5e7eb;border-radius:14px;padding:1rem 1.15rem;background:#fff}
+    .campus-mine-card h3{margin:.15rem 0 .35rem;font-size:1.05rem}
+    .campus-mine-redeem{border:1px dashed #cbd5e1;border-radius:14px;padding:1rem 1.15rem;background:#f8fafc}
+    .campus-mine-redeem label{display:block;font-weight:700;margin:0 0 .5rem}
+    .campus-mine-redeem__row{display:flex;gap:.5rem;flex-wrap:wrap}
+    .campus-mine-redeem__row input{flex:1 1 10rem;font:inherit;padding:.55rem .75rem;border:1px solid #cbd5e1;border-radius:10px}
+    .campus-mine-msg{margin:.6rem 0 .25rem;font-size:.92rem;min-height:1rem}
+    .campus-mine-msg.ok{color:#047857;font-weight:600}
+    .campus-mine-msg.err{color:#b91c1c;font-weight:600}
+  </style>
 </head>
 <body class="app-body">
   <div class="app-shell">
@@ -46,6 +60,7 @@
           <div class="learn-section__head"><h2>Việc cần làm</h2></div>
           <ul class="todo-learn" id="todo-list"></ul>
         </section>
+        <section id="campus-programs" class="app-section learn-section" hidden></section>
         <p class="learn-more-links meta">
           <a href="../khoa-cua-toi/">Khóa học của tôi</a> ·
           <a href="../lo-trinh/">Lộ trình</a> ·

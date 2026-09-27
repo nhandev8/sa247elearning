@@ -148,6 +148,7 @@
       megaCol("Tài nguyên", [
         ["sach/hse-digital-transformation/", "Framework", null],
         ["kien-thuc/#checklist", "Biểu mẫu", null],
+        ["campus/", "SA247 Campus (sinh viên)", null],
         ["sach/hse-digital-transformation/", "Công cụ HSE", null],
       ], r),
       h("div", { className: "mega__foot" }, [
@@ -267,6 +268,7 @@
       ["Khóa học", "index.html#chuong-trinh"],
       ["Sách HSE", "sach/hse-digital-transformation/"],
       ["Kiến thức", "kien-thuc/"],
+      ["Campus", "campus/"],
       ["Về SA247", "ve-sa247/"],
     ];
     const list = h(
@@ -323,6 +325,7 @@
       item("Khóa học", "index.html#chuong-trinh", buildMegaCourses, r),
       item("Sách HSE", "sach/hse-digital-transformation/", buildMegaBook, r),
       item("Kiến thức", "kien-thuc/", buildMegaKnowledge, r),
+      item("Campus", "campus/", null, r),
       item("Về SA247", "ve-sa247/", buildMegaAbout, r),
     ]);
 
