@@ -3,6 +3,11 @@
   const SEV_VI = { critical: "Nghiêm trọng", warning: "Cảnh báo", info: "Thông tin" };
   const TYPE_VI = {
     role_changed: "Đổi vai trò",
+    user_created: "Tạo tài khoản",
+    user_deleted: "Xoá tài khoản",
+    user_delete_blocked: "Chặn xoá tài khoản",
+    user_locked: "Khoá đăng nhập",
+    user_unlocked: "Mở khoá đăng nhập",
     role_assigned: "Gán vai trò khi tạo",
     rate_limited: "Vượt giới hạn tần suất",
     campus_code_failed: "Nhập mã Campus thất bại",

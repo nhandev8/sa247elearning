@@ -6,13 +6,13 @@
   <title>Tài khoản · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609272330" />
-  <script src="../../assets/supabase-config.js?v=202609272330"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609272330" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609272330" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609272330" defer></script>
-  <script src="../../assets/js/admin-learner-common.js?v=202609272330" defer></script>
-  <script src="../../assets/js/admin-tai-khoan.js?v=202609272330" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202609272345" />
+  <script src="../../assets/supabase-config.js?v=202609272345"></script>
+  <script src="../../assets/js/supabase-client.js?v=202609272345" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202609272345" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202609272345" defer></script>
+  <script src="../../assets/js/admin-learner-common.js?v=202609272345" defer></script>
+  <script src="../../assets/js/admin-tai-khoan.js?v=202609272345" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -43,6 +43,7 @@
             <option value="giang_vien">Giảng viên</option>
             <option value="kinh_doanh">Kinh doanh</option>
           </select>
+          <button type="button" class="adm-btn adm-btn--primary" id="acc-add">+ Tạo tài khoản</button>
         </div>
         <p class="adm-msg" id="adm-status">Đang tải…</p>
         <div class="adm-table-wrap">
@@ -64,5 +65,45 @@
       </main>
     </div>
   </div>
+
+  <dialog class="lrn-dialog" id="acc-add-dialog">
+    <form class="adm-form" id="acc-add-form" method="dialog">
+      <h2>Tạo tài khoản</h2>
+      <p class="adm-msg">Hệ thống tạo tài khoản và gửi email mời tự đặt mật khẩu. Tài khoản nhân sự phải bật xác thực 2 lớp ở lần đăng nhập quản trị đầu tiên.</p>
+      <label>Họ và tên
+        <input name="full_name" required maxlength="120" autocomplete="off" />
+      </label>
+      <label>Email
+        <input name="email" type="email" required autocomplete="off" />
+      </label>
+      <label>Số điện thoại (tuỳ chọn)
+        <input name="phone" type="tel" maxlength="30" autocomplete="off" />
+      </label>
+      <label>Vai trò hệ thống
+        <select name="role" id="acc-add-role">
+          <option value="hoc_vien">Học viên</option>
+          <option value="quan_tri" data-owner-only>Quản trị</option>
+          <option value="quan_ly_noi_dung" data-owner-only>Quản lý nội dung</option>
+          <option value="giang_vien" data-owner-only>Giảng viên</option>
+          <option value="kinh_doanh" data-owner-only>Kinh doanh</option>
+        </select>
+      </label>
+      <p class="adm-msg" id="acc-add-role-note" hidden>Chỉ Quản trị cao nhất được tạo tài khoản nhân sự.</p>
+      <label>Loại người học
+        <select name="learner_type">
+          <option value="ca_nhan">Cá nhân</option>
+          <option value="sinh_vien">Sinh viên</option>
+          <option value="doanh_nghiep">Doanh nghiệp</option>
+          <option value="doi_tac">Đối tác</option>
+          <option value="khac">Khác</option>
+        </select>
+      </label>
+      <p class="adm-msg" id="acc-add-msg"></p>
+      <div class="lrn-dialog__actions">
+        <button type="button" class="adm-btn adm-btn--line" id="acc-add-cancel">Hủy</button>
+        <button type="submit" class="adm-btn adm-btn--primary" id="acc-add-submit">Tạo &amp; gửi lời mời</button>
+      </div>
+    </form>
+  </dialog>
 </body>
 </html>

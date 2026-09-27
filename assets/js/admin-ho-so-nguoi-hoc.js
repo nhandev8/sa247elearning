@@ -67,6 +67,125 @@
       .join("");
   }
 
+  const BLOCKER_VI = {
+    self: "Không thể thao tác trên chính tài khoản của bạn.",
+    owner_account: "Tài khoản Quản trị cao nhất không thể khoá hoặc xoá.",
+    staff_requires_owner: "Chỉ Quản trị cao nhất được khoá hoặc xoá tài khoản nhân sự.",
+    paid_orders: "Có đơn hàng đã thanh toán — cần giữ chứng từ kế toán.",
+    issued_certificates: "Có giấy chứng nhận đã cấp — cần giữ để tra cứu xác thực.",
+    rate_limited: "Thao tác quá nhiều lần. Thử lại sau.",
+  };
+
+  const MANAGE_ERR_VI = {
+    reason_required: "Cần nhập lý do (ít nhất 5 ký tự).",
+    confirm_email_mismatch: "Email xác nhận không khớp.",
+    forbidden: "Chỉ quản trị viên mới được thao tác.",
+    not_found: "Không tìm thấy tài khoản.",
+    delete_failed: "Không xoá được tài khoản.",
+    lock_failed: "Không khoá được tài khoản.",
+    unlock_failed: "Không mở khoá được tài khoản.",
+  };
+
+  async function manageUser(sb, body) {
+    const { data, error } = await sb.functions.invoke("admin-manage-user", { body });
+    if (!error) return data;
+    try {
+      return await error.context.json();
+    } catch {
+      return { ok: false, error: error.message };
+    }
+  }
+
+  function manageErrText(res) {
+    if (res?.error === "blocked") return (res.blockers || []).map((b) => BLOCKER_VI[b] || b).join(" ");
+    return MANAGE_ERR_VI[res?.error] || res?.detail || res?.error || "Có lỗi xảy ra.";
+  }
+
+  async function paintAccount(sb, uid, reload) {
+    const box = document.getElementById("sec-account");
+    if (!box) return;
+    const { data: c, error } = await sb.rpc("admin_user_account_check", { p_user_id: uid, p_intent: "view" });
+    if (error || !c?.ok) {
+      box.innerHTML = `<h2>Quản lý tài khoản</h2><p class="adm-msg adm-msg--err">${esc(error?.message || c?.error || "Không kiểm tra được.")}</p>`;
+      return;
+    }
+    const n = c.counts || {};
+    const delBlock = (c.delete_blockers || []).map((b) => `<li>${esc(BLOCKER_VI[b] || b)}</li>`).join("");
+    const lockBlock = (c.lock_blockers || []).length > 0;
+    box.innerHTML = `
+      <h2>Quản lý tài khoản</h2>
+      <p>Trạng thái đăng nhập: ${
+        c.locked ? '<span class="adm-badge adm-badge--warn">Đã khoá</span>' : '<span class="adm-badge adm-badge--ok">Đang hoạt động</span>'
+      }
+        · ${n.enrollments || 0} quyền học · ${n.paid_orders || 0} đơn đã thanh toán · ${n.issued_certificates || 0} GCN đã cấp</p>
+      ${
+        lockBlock
+          ? ""
+          : `<form class="adm-form prf-inline" id="acc-lock-form" style="max-width:none;margin:.6rem 0">
+              ${c.locked ? "" : '<input name="reason" type="text" placeholder="Lý do khoá (bắt buộc)" style="flex:1 1 240px" />'}
+              <button type="submit" class="adm-btn ${c.locked ? "adm-btn--line" : "adm-btn--danger"}">${c.locked ? "Mở khoá đăng nhập" : "Khoá đăng nhập"}</button>
+              <span class="adm-msg" id="acc-lock-msg"></span>
+            </form>`
+      }
+      <details style="margin-top:.6rem">
+        <summary>Xoá tài khoản vĩnh viễn</summary>
+        ${
+          c.can_delete
+            ? `<p class="adm-msg adm-msg--err" style="margin-top:.6rem">Xoá vĩnh viễn tài khoản, hồ sơ, quyền học, tiến độ, bài kiểm tra và đơn chưa thanh toán. Không thể hoàn tác.</p>
+              <form class="adm-form" id="acc-del-form" style="max-width:32rem">
+                <label>Lý do xoá
+                  <input name="reason" type="text" required minlength="5" maxlength="300" autocomplete="off" />
+                </label>
+                <label>Nhập lại email <strong>${esc(c.email || "")}</strong> để xác nhận
+                  <input name="confirm_email" type="email" required autocomplete="off" />
+                </label>
+                <button type="submit" class="adm-btn adm-btn--danger">Xoá vĩnh viễn</button>
+                <span class="adm-msg" id="acc-del-msg"></span>
+              </form>`
+            : `<p class="adm-msg" style="margin-top:.6rem">Không thể xoá tài khoản này:</p><ul class="adm-todo">${delBlock}</ul>
+               ${lockBlock ? "" : '<p class="adm-msg">Dùng <strong>Khoá đăng nhập</strong> để chặn truy cập mà vẫn giữ hồ sơ.</p>'}`
+        }
+      </details>`;
+
+    document.getElementById("acc-lock-form")?.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const msg = document.getElementById("acc-lock-msg");
+      const reason = String(new FormData(ev.target).get("reason") || "").trim();
+      msg.className = "adm-msg";
+      msg.textContent = "Đang xử lý…";
+      const res = await manageUser(sb, { action: c.locked ? "unlock" : "lock", user_id: uid, reason });
+      if (!res?.ok) {
+        msg.className = "adm-msg adm-msg--err";
+        msg.textContent = manageErrText(res);
+        return;
+      }
+      await reload();
+    });
+
+    document.getElementById("acc-del-form")?.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const msg = document.getElementById("acc-del-msg");
+      if (!confirm(`Xoá vĩnh viễn tài khoản ${c.email}? Không thể hoàn tác.`)) return;
+      msg.className = "adm-msg";
+      msg.textContent = "Đang xoá…";
+      const res = await manageUser(sb, {
+        action: "delete",
+        user_id: uid,
+        reason: String(fd.get("reason") || "").trim(),
+        confirm_email: String(fd.get("confirm_email") || "").trim(),
+      });
+      if (!res?.ok) {
+        msg.className = "adm-msg adm-msg--err";
+        msg.textContent = manageErrText(res);
+        return;
+      }
+      msg.className = "adm-msg adm-msg--ok";
+      msg.textContent = "Đã xoá tài khoản.";
+      setTimeout(() => (location.href = "../tai-khoan/"), 900);
+    });
+  }
+
   async function fetchAll(sb, uid, canCommerce) {
     const q = (p) => p.then((r) => r.data || []);
     const [overview, profile, email, enrollments, attempts, certs, orders, feedback, progress, courses] =
@@ -351,6 +470,8 @@
             : ""
         }
 
+        ${isAdmin ? '<section class="adm-card" id="sec-account"><h2>Quản lý tài khoản</h2><p class="adm-msg">Đang kiểm tra…</p></section>' : ""}
+
         <section class="adm-card prf-sys" id="sec-system">
           <details>
             <summary>Thông tin hệ thống</summary>
@@ -376,6 +497,8 @@
       </div>`;
 
     const reload = () => loadDossier(ctx, uid, host, statusEl);
+
+    if (isAdmin) paintAccount(sb, uid, reload);
 
     document.getElementById("copy-uid")?.addEventListener("click", async (ev) => {
       try {
