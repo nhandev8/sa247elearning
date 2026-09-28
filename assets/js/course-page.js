@@ -243,7 +243,7 @@
         <li>Đăng ký ${price} → học toàn bộ khóa học</li>
         <li>Không khóa từng video · tiến độ trên hệ thống</li>
         <li>Kiểm tra cuối khóa học · GCN tùy chọn sau khi đạt</li>
-        <li><a href="../verify/">Xác minh chứng nhận công khai</a></li>
+        <li><a href="../xac-minh/">Xác minh chứng nhận công khai</a></li>
       </ul>`;
       return;
     }
@@ -253,7 +253,7 @@
         .slice(0, 6)
         .map((d) => `<li>${typeof d === "string" ? d : d.title || d.body || ""}</li>`)
         .join("") +
-      '<li><a href="../verify/">Xác minh chứng nhận</a></li></ul>';
+      '<li><a href="../xac-minh/">Xác minh chứng nhận</a></li></ul>';
   }
 
   document.addEventListener("DOMContentLoaded", () => {

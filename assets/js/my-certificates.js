@@ -207,9 +207,9 @@
           ${
             issued
               ? `<p class="cert-mine-actions">
-                  <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+                  <a class="btn btn--amber" href="../xac-minh/chung-nhan.html?code=${code}">Xem chứng nhận</a>
                   <button type="button" class="btn btn--line" data-pdf="${esc(c.cert_code)}">Tải PDF (15 phút)</button>
-                  <a class="btn btn--line" href="../verify/?code=${code}">Xác minh</a>
+                  <a class="btn btn--line" href="../xac-minh/?code=${code}">Xác minh</a>
                   ${
                     c.can_buy_hard
                       ? `<a class="btn btn--line" href="./mua.html?course=${courseQ}&amp;type=cert_hard">Đăng ký nhận giấy chứng nhận bản cứng${hardL}</a>`

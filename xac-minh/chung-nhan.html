@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Giấy chứng nhận hoàn thành khóa học · SA247 Academy</title>
+  <meta name="description" content="Giấy chứng nhận hoàn thành khóa học Safety and You 247 Academy — form mẫu thiết kế; giấy đã cấp chỉ mở bằng mã hệ thống." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/certificate.css?v=202609282330" />
+  <script src="../assets/supabase-config.js?v=202609282330"></script>
+  <script src="../assets/js/supabase-client.js?v=202609282330" defer></script>
+  <!-- qrcodejs (CDN cũ npm/qrcode@…/build/qrcode.min.js đã 404) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="../assets/js/certificate.js?v=202609282330" defer></script>
+</head>
+<body>
+  <header class="cert-toolbar no-print">
+    <div>
+      <strong>Giấy chứng nhận hoàn thành khóa học · SA247 Academy</strong>
+      <span id="toolbar-code" style="opacity:0.75;margin-left:0.5rem"></span>
+    </div>
+    <div class="cert-toolbar__actions">
+      <button type="button" class="btn btn--amber" id="btn-print">In / Lưu PDF</button>
+      <a class="btn btn--line" id="btn-verify" href="./">Xác minh mã</a>
+      <a class="btn btn--line" href="../index.html">Về trang chủ</a>
+    </div>
+  </header>
+
+  <p class="cert-status" id="cert-status" role="status">Đang tải giấy chứng nhận…</p>
+  <p class="cert-disclaimer no-print" id="cert-disclaimer" hidden></p>
+
+  <!-- Form mẫu trưng bày (khi ?sample=) -->
+  <div class="cert-stage" id="showcase-stage" hidden>
+    <figure class="cert-showcase">
+      <img id="showcase-img" src="" alt="Mẫu giấy chứng nhận SA247" />
+    </figure>
+  </div>
+
+  <!-- Phôi in + trường động -->
+  <div class="cert-stage" id="cert-stage" hidden>
+    <article class="cert-sheet" id="certificate" aria-label="Giấy chứng nhận hoàn thành khóa học">
+      <img class="cert-sheet__phoi" id="cert-phoi" alt="" />
+      <div class="cert-field cert-field--name" id="cert-name">—</div>
+      <div class="cert-field cert-field--code-cover" aria-hidden="true"></div>
+      <div class="cert-field cert-field--code" id="cert-code">—</div>
+      <div class="cert-field cert-field--date" id="cert-date">—</div>
+      <div class="cert-field cert-field--qr" id="cert-qr" aria-label="Mã QR xác minh chứng nhận"></div>
+    </article>
+  </div>
+</body>
+</html>

@@ -384,7 +384,7 @@
         <table><thead><tr><th>Mã SV</th><th>Họ tên</th><th>Email</th><th>Khóa học</th><th class="num">% hoàn thành</th>
         <th class="num">Điểm</th><th>Kết quả</th><th>Ngày hoàn thành</th><th>Chứng nhận</th><th>Mã chứng nhận</th></tr></thead>
         <tbody>${rowsHtml}</tbody></table>
-        <p class="foot">Số liệu tính từ hệ thống học tập SA247 tại thời điểm lập báo cáo. Chứng nhận tra cứu công khai tại sa247.vn/verify/.</p>`
+        <p class="foot">Số liệu tính từ hệ thống học tập SA247 tại thời điểm lập báo cáo. Chứng nhận tra cứu công khai tại sa247.vn/xac-minh/.</p>`
       );
       o.onExport?.("pdf");
     });

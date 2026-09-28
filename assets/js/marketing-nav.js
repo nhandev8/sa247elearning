@@ -256,7 +256,7 @@
     return h("div", { className: "acct-menu", "data-nav-account-menu": "", hidden: true }, [
       h("a", { href: r + "ho-so/", text: "Hồ sơ" }),
       h("a", { href: r + "cai-dat/", text: "Cài đặt" }),
-      h("a", { href: r + "verify/", text: "Xác minh chứng nhận" }),
+      h("a", { href: r + "xac-minh/", text: "Xác minh chứng nhận" }),
       h("a", { href: r + "admin/", "data-nav-admin": "", hidden: true, text: "Quản trị" }),
       h("button", {
         type: "button",
@@ -285,7 +285,7 @@
         ["Khóa học", "index.html#chuong-trinh"],
         ["Lộ trình HSE", "index.html#career-map"],
         ["Kiến thức", "kien-thuc/"],
-        ["Chứng nhận", "verify/"],
+        ["Chứng nhận", "xac-minh/"],
         ["Nhà trường", "campus/"],
         ["Hỗ trợ", "ve-sa247/#faq"],
       ], r, "Khám phá SA247"),

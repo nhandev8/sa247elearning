@@ -31,7 +31,7 @@
     const p = location.pathname.toLowerCase();
     if (p.includes("/hoc-tap") || p.includes("/khoa-hoc") || p.includes("/atnm") || p.includes("/atxd")) return "BAI_HOC";
     if (p.includes("/quiz") || p.includes("/kiem-tra")) return "QUIZ";
-    if (p.includes("/chung-nhan") || p.includes("/verify")) return "CHUNG_NHAN";
+    if (p.includes("/chung-nhan") || p.includes("/xac-minh") || p.includes("/verify")) return "CHUNG_NHAN";
     if (p.includes("/don-hang")) return "THANH_TOAN";
     if (p.includes("/ho-so") || p.includes("/cai-dat")) return "TAI_KHOAN";
     if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) return "MOBILE";

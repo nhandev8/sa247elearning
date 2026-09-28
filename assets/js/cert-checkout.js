@@ -179,7 +179,7 @@
             (c) => c.course_code === course && (c.status === "issued" || c.status === "valid")
           );
           const viewHref = hit?.cert_code
-            ? `../verify/chung-nhan.html?code=${encodeURIComponent(hit.cert_code)}`
+            ? `../xac-minh/chung-nhan.html?code=${encodeURIComponent(hit.cert_code)}`
             : "./";
           root.innerHTML = `
             <div class="checkout-panel checkout-panel--paid">

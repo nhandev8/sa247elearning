@@ -149,7 +149,7 @@
         <td>${esc(fmtDateTime(r.last_activity_at)) || "—"}</td>
         <td class="num">${r.attempts || 0} lần · cao nhất ${r.attempts > 0 ? esc(r.best_score) + "%" : "—"}</td>
         <td>${pill(resultState(r))}${r.passed_at ? `<div class="rp-note">${esc(fmtDate(r.passed_at))}</div>` : ""}</td>
-        <td>${pill(certState(r))}${r.cert_code ? `<div class="rp-note"><a href="../../verify/?code=${encodeURIComponent(r.cert_code)}" target="_blank" rel="noopener">${esc(r.cert_code)}</a></div>` : ""}</td>
+        <td>${pill(certState(r))}${r.cert_code ? `<div class="rp-note"><a href="../../xac-minh/?code=${encodeURIComponent(r.cert_code)}" target="_blank" rel="noopener">${esc(r.cert_code)}</a></div>` : ""}</td>
       </tr>`
       )
       .join("");

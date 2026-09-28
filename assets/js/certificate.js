@@ -20,7 +20,7 @@
 
   function verifyPageUrl(code) {
     // URL tuyệt đối để QR mở đúng trang xác minh (không phụ thuộc path tương đối)
-    const u = new URL("../verify/", location.href);
+    const u = new URL("../xac-minh/", location.href);
     u.searchParams.set("code", code);
     return u.href;
   }

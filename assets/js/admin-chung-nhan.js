@@ -73,8 +73,8 @@
           <td>${sa247Admin.fmtTime(c.issued_at)}</td>
           <td><span class="adm-badge ${statusBadgeClass(st)}">${statusVi(st)}</span><div class="adm-muted" style="margin-top:0.25rem">${qd}</div></td>
           <td class="adm-actions">
-            <a class="adm-btn adm-btn--line adm-btn--small" href="../../verify/chung-nhan.html?code=${code}" target="_blank" rel="noopener">Xem / In</a>
-            <a class="adm-btn adm-btn--line adm-btn--small" href="../../verify/?code=${code}" target="_blank" rel="noopener">Xác minh</a>
+            <a class="adm-btn adm-btn--line adm-btn--small" href="../../xac-minh/chung-nhan.html?code=${code}" target="_blank" rel="noopener">Xem / In</a>
+            <a class="adm-btn adm-btn--line adm-btn--small" href="../../xac-minh/?code=${code}" target="_blank" rel="noopener">Xác minh</a>
             <button type="button" class="adm-btn adm-btn--line adm-btn--small" data-events="${c.cert_code}">Timeline</button>
             ${
               c.decision_id || c.decision_no

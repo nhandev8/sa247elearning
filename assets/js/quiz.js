@@ -165,7 +165,7 @@
       return `<h2>Đạt ${pct}%</h2>
         <p>Bạn đã có giấy chứng nhận. Mã: <strong>${data.cert_code || "—"}</strong></p>
         <p class="cert-buy-options">
-          <a class="btn btn--amber" href="../verify/chung-nhan.html?code=${code}">Xem chứng nhận</a>
+          <a class="btn btn--amber" href="../xac-minh/chung-nhan.html?code=${code}">Xem chứng nhận</a>
           <a class="btn btn--line" href="../chung-nhan/">Chứng nhận của tôi</a>
           <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
         </p>`;
