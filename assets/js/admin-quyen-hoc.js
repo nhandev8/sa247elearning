@@ -166,8 +166,16 @@
         }
         const btn = ev.target.closest("[data-revoke]");
         if (!btn) return;
-        if (!confirm(`Thu hồi quyền học ${btn.getAttribute("data-label")}?`)) return;
-        const { error } = await sb.rpc("admin_revoke_enrollment", { p_enrollment_id: btn.getAttribute("data-revoke") });
+        const reason = prompt(`Thu hồi quyền học ${btn.getAttribute("data-label")}?\n\nLý do (bắt buộc, ít nhất 5 ký tự):`);
+        if (reason == null) return;
+        if (reason.trim().length < 5) {
+          alert("Lý do cần ít nhất 5 ký tự.");
+          return;
+        }
+        const { error } = await sb.rpc("admin_revoke_enrollment", {
+          p_enrollment_id: btn.getAttribute("data-revoke"),
+          p_reason: reason.trim(),
+        });
         if (error) {
           alert(error.message);
           return;

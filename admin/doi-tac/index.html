@@ -3,18 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Campus / Chương trình đối tác · SA247 Quản trị</title>
+  <title>Campus · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609282330" />
-  <script src="../../assets/supabase-config.js?v=202609282330"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609282330" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609282330" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609282330" defer></script>
-  <script src="../../assets/js/program-report.js?v=202609282330" defer></script>
-  <script src="../../assets/js/admin-doi-tac.js?v=202609282330" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202609282340" />
+  <script src="../../assets/supabase-config.js?v=202609282340"></script>
+  <script src="../../assets/js/supabase-client.js?v=202609282340" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202609282340" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202609282340" defer></script>
+  <script src="../../assets/js/program-report.js?v=202609282340" defer></script>
+  <script src="../../assets/js/admin-doi-tac.js?v=202609282340" defer></script>
+  <style>
+    .cp-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; border-bottom: 1px solid var(--adm-line); }
+    .cp-tabs button { font: inherit; font-weight: 700; border: 0; background: none; padding: .6rem .9rem; cursor: pointer; color: var(--adm-muted); border-bottom: 3px solid transparent; }
+    .cp-tabs button[aria-selected="true"] { color: inherit; border-bottom-color: var(--adm-accent, #18a35a); }
+    .cp-subtabs { display: flex; flex-wrap: wrap; gap: .35rem; margin: .75rem 0; }
+    .cp-subtabs button { font: inherit; font-size: .9rem; border: 1px solid var(--adm-line); background: none; border-radius: 999px; padding: .35rem .8rem; cursor: pointer; }
+    .cp-subtabs button[aria-selected="true"] { background: rgba(24,163,90,.12); border-color: rgba(24,163,90,.5); font-weight: 700; }
+    .cp-steps { counter-reset: step; }
+    .cp-steps fieldset { border: 1px solid var(--adm-line); border-radius: var(--adm-radius); padding: .75rem 1rem 1rem; margin: 0 0 .85rem; }
+    .cp-steps legend { font-weight: 800; padding: 0 .35rem; }
+    .cp-steps legend::before { counter-increment: step; content: "Bước " counter(step) " · "; color: var(--adm-muted); }
+    .cp-check { display: flex; gap: .5rem; align-items: flex-start; font-weight: 500; margin: .3rem 0; }
+    .cp-check input { margin-top: .25rem; }
+    .cp-code { font-size: 1.05rem; font-weight: 800; letter-spacing: .02em; }
+    .cp-inline { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+    .cp-note { color: var(--adm-muted); font-size: .88rem; margin: .25rem 0 .5rem; }
+    .cp-course { display: inline-block; margin: 0 .35rem .2rem 0; font-size: .82rem; }
+    .cp-state-co_tai_khoan { color: #0f6b3c; font-weight: 700; }
+    .cp-state-cho_dang_ky { color: var(--adm-warn); font-weight: 700; }
+    .cp-state-da_co { color: var(--adm-muted); font-weight: 700; }
+    .cp-state-loi_email, .cp-state-loi_ma, .cp-state-trung_trong_file { color: var(--adm-danger); font-weight: 700; }
+    .cp-activity li { margin: .3rem 0; }
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -29,166 +53,370 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Campus / Chương trình đối tác</h1>
+        <h1>Campus</h1>
       </header>
       <main class="adm-content">
-        <p class="adm-lead">Cấp quyền học miễn phí theo chương trình — không giảm giá 100%. Sinh viên vẫn phải học và đạt kiểm tra mới nhận chứng nhận.</p>
+        <p class="adm-lead">Đối tác trước, chương trình sau. Chương trình cấp quyền học miễn phí theo đối tác — người học vẫn phải học và đạt kiểm tra mới đủ điều kiện nhận giấy chứng nhận.</p>
         <p class="adm-msg" id="adm-status"></p>
 
-        <section class="adm-card" style="margin-bottom:1rem">
-          <h2>Đối tác</h2>
-          <form class="adm-form" id="partner-form">
-            <label>Mã đối tác <input name="code" required placeholder="DH-ABC" /></label>
-            <label>Tên đối tác <input name="name" required placeholder="Trường Đại học ABC" /></label>
-            <label>Loại
-              <select name="partner_type">
-                <option value="university">Trường đại học</option>
-                <option value="enterprise">Doanh nghiệp</option>
-                <option value="association">Hiệp hội</option>
-                <option value="community">Cộng đồng</option>
-              </select>
-            </label>
-            <label>Người liên hệ <input name="contact_name" /></label>
-            <label>Email liên hệ <input name="contact_email" type="email" /></label>
-            <button type="submit" class="adm-btn adm-btn--primary">Lưu đối tác</button>
-          </form>
-          <div class="adm-table-wrap" style="margin-top:1rem">
-            <table class="adm-table">
-              <thead><tr><th>Mã</th><th>Tên</th><th>Loại</th><th>Liên hệ</th></tr></thead>
-              <tbody id="partner-rows"></tbody>
-            </table>
+        <nav class="cp-tabs" role="tablist">
+          <button type="button" role="tab" data-area="partners" aria-selected="true">Đối tác</button>
+          <button type="button" role="tab" data-area="programs" aria-selected="false">Chương trình</button>
+          <button type="button" role="tab" data-area="members" aria-selected="false">Thành viên</button>
+          <button type="button" role="tab" data-area="leads" aria-selected="false">Đề xuất hợp tác</button>
+        </nav>
+
+        <!-- ================= ĐỐI TÁC ================= -->
+        <section data-area-panel="partners">
+          <div class="adm-card" id="partner-list-card">
+            <div class="adm-toolbar">
+              <input type="search" id="partner-search" placeholder="Tìm theo mã, tên đối tác, người liên hệ" />
+              <button type="button" class="adm-btn adm-btn--primary" id="btn-partner-new">+ Thêm đối tác</button>
+            </div>
+            <div class="adm-table-wrap">
+              <table class="adm-table">
+                <thead><tr><th>Mã</th><th>Đối tác</th><th>Loại</th><th>Người liên hệ</th><th>Điện thoại</th><th>Chương trình</th><th>Trạng thái</th><th></th></tr></thead>
+                <tbody id="partner-rows"><tr><td colspan="8">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
           </div>
 
-          <h3 style="margin-top:1.25rem">Người xem báo cáo của đối tác</h3>
-          <p class="meta">Cán bộ nhà trường / doanh nghiệp đăng nhập tại <a href="../../doi-tac/" target="_blank" rel="noopener">sa247.vn/doi-tac/</a> để xem và xuất báo cáo các đợt của đối tác mình. Người xem phải có tài khoản SA247 trước.</p>
-          <form class="adm-form" id="viewer-form">
-            <label>Đối tác <select name="partner_code" id="viewer-partner" required></select></label>
-            <label>Email tài khoản SA247 <input name="email" type="email" required placeholder="canbo@truong.edu.vn" /></label>
-            <button type="submit" class="adm-btn adm-btn--primary">Cấp quyền xem</button>
-          </form>
-          <div class="adm-table-wrap" style="margin-top:.75rem">
-            <table class="adm-table">
-              <thead><tr><th>Email</th><th>Họ tên</th><th>Cấp lúc</th><th></th></tr></thead>
-              <tbody id="viewer-rows"></tbody>
-            </table>
+          <div class="adm-card" id="partner-new-card" hidden>
+            <h2>Thêm đối tác</h2>
+            <p class="cp-note" id="partner-new-lead" hidden></p>
+            <form class="adm-form cp-steps" id="partner-new-form" autocomplete="off">
+              <input type="hidden" name="lead_id" />
+              <fieldset>
+                <legend>Chọn loại đối tác</legend>
+                <label class="cp-check"><input type="radio" name="partner_type" value="university" required /> Trường đại học / cao đẳng</label>
+                <label class="cp-check"><input type="radio" name="partner_type" value="enterprise" /> Doanh nghiệp</label>
+                <label class="cp-check"><input type="radio" name="partner_type" value="association" /> Hiệp hội</label>
+                <label class="cp-check"><input type="radio" name="partner_type" value="community" /> Cộng đồng</label>
+              </fieldset>
+              <fieldset id="partner-step2" disabled>
+                <legend>Thông tin đối tác</legend>
+                <label>Tên đầy đủ * <input name="name" required minlength="3" placeholder="Trường Đại học Sư phạm Kỹ thuật TP.HCM" /></label>
+                <label>Tên viết tắt (sửa được) <input name="abbr" maxlength="10" placeholder="UTE" /></label>
+                <p>Mã đối tác (hệ thống tự cấp): <span class="cp-code" id="partner-code-preview">—</span></p>
+                <p class="cp-note">Mã chỉ gồm tiền tố loại + viết tắt + số thứ tự, cấp khi lưu và không đổi được sau đó.</p>
+                <h3>Người liên hệ chính</h3>
+                <label>Họ tên * <input name="c_full_name" required minlength="2" /></label>
+                <label>Chức vụ <input name="c_position" placeholder="Phó trưởng khoa / HR" /></label>
+                <label>Email * <input name="c_email" type="email" required /></label>
+                <label>Số điện thoại * <input name="c_phone" type="tel" required pattern="[0-9+ .()-]{8,}" /></label>
+                <h3>Thông tin thêm (tùy chọn)</h3>
+                <label>Địa chỉ <input name="address" /></label>
+                <label>Website <input name="website" placeholder="https://" /></label>
+                <label>Ghi chú <textarea name="note" rows="2"></textarea></label>
+              </fieldset>
+              <div class="adm-actions">
+                <button type="submit" class="adm-btn adm-btn--primary">Lưu đối tác</button>
+                <button type="button" class="adm-btn adm-btn--line" data-cancel-partner-new>Hủy</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="adm-card" id="partner-profile" hidden>
+            <div class="cp-inline">
+              <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="btn-partner-back">← Danh sách đối tác</button>
+              <h2 id="pp-title" style="margin:0">Đối tác</h2>
+              <span class="adm-badge" id="pp-status"></span>
+            </div>
+            <p class="cp-note" id="pp-meta"></p>
+            <nav class="cp-subtabs" role="tablist">
+              <button type="button" data-pp-tab="overview" aria-selected="true">Tổng quan</button>
+              <button type="button" data-pp-tab="programs" aria-selected="false">Chương trình</button>
+              <button type="button" data-pp-tab="access" aria-selected="false">Người được cấp quyền xem báo cáo</button>
+              <button type="button" data-pp-tab="members" aria-selected="false">Thành viên</button>
+              <button type="button" data-pp-tab="activity" aria-selected="false">Hoạt động</button>
+            </nav>
+
+            <div data-pp-panel="overview">
+              <form class="adm-form" id="pp-edit-form">
+                <label>Tên đối tác <input name="name" required minlength="3" /></label>
+                <label>Địa chỉ <input name="address" /></label>
+                <label>Website <input name="website" /></label>
+                <label>Trạng thái
+                  <select name="status"><option value="active">Đang hợp tác</option><option value="inactive">Ngừng hợp tác</option></select>
+                </label>
+                <label>Ghi chú <textarea name="note" rows="2"></textarea></label>
+                <button type="submit" class="adm-btn adm-btn--primary">Lưu thông tin</button>
+              </form>
+              <h3 style="margin-top:1.25rem">Người liên hệ</h3>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Họ tên</th><th>Chức vụ</th><th>Email</th><th>Điện thoại</th><th></th><th></th></tr></thead>
+                  <tbody id="pp-contacts"></tbody>
+                </table>
+              </div>
+              <form class="adm-form" id="pp-contact-form" style="margin-top:.75rem">
+                <input type="hidden" name="id" />
+                <label>Họ tên * <input name="full_name" required minlength="2" /></label>
+                <label>Chức vụ <input name="position" /></label>
+                <label>Email * <input name="email" type="email" required /></label>
+                <label>Số điện thoại * <input name="phone" type="tel" required /></label>
+                <label class="cp-check"><input type="checkbox" name="is_primary" /> Đặt làm liên hệ chính</label>
+                <div class="adm-actions">
+                  <button type="submit" class="adm-btn adm-btn--primary" id="pp-contact-submit">Thêm người liên hệ</button>
+                  <button type="button" class="adm-btn adm-btn--line" id="pp-contact-reset" hidden>Hủy sửa</button>
+                </div>
+              </form>
+            </div>
+
+            <div data-pp-panel="programs" hidden>
+              <p><button type="button" class="adm-btn adm-btn--primary" id="pp-new-program">+ Tạo chương trình cho đối tác này</button></p>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Mã</th><th>Chương trình</th><th>Đối tượng</th><th>Thời gian</th><th>Thành viên</th><th>Trạng thái</th><th></th></tr></thead>
+                  <tbody id="pp-programs"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div data-pp-panel="access" hidden>
+              <p class="cp-note">Cán bộ nhà trường / doanh nghiệp đăng nhập tại <a href="../../doi-tac/" target="_blank" rel="noopener">sa247.vn/doi-tac/</a> để xem báo cáo các chương trình của đối tác mình. Chỉ cấp cho tài khoản SA247 đã xác minh email.</p>
+              <form class="adm-form" id="pp-access-form">
+                <label>Email tài khoản SA247 * <input name="email" type="email" required placeholder="canbo@truong.edu.vn" /></label>
+                <div>
+                  <strong>Quyền được cấp</strong>
+                  <label class="cp-check"><input type="checkbox" name="perm" value="XEM_BAO_CAO" checked /> Xem báo cáo tổng hợp</label>
+                  <label class="cp-check"><input type="checkbox" name="perm" value="XUAT_BAO_CAO" /> Xuất báo cáo (CSV)</label>
+                  <label class="cp-check"><input type="checkbox" name="perm" value="XEM_THANH_VIEN" /> Xem danh sách thành viên</label>
+                  <label class="cp-check"><input type="checkbox" name="perm" value="XEM_TIEN_DO" /> Xem tiến độ học của từng người</label>
+                  <label class="cp-check"><input type="checkbox" name="perm" value="XEM_KET_QUA_KIEM_TRA" /> Xem kết quả kiểm tra của từng người</label>
+                </div>
+                <button type="submit" class="adm-btn adm-btn--primary">Cấp quyền</button>
+              </form>
+              <div id="pp-access-missing" class="adm-card" style="margin-top:.75rem" hidden>
+                <p class="adm-msg adm-msg--err">Email này chưa có tài khoản SA247. Người dùng cần đăng ký tài khoản bằng email này trước khi được cấp quyền.</p>
+                <button type="button" class="adm-btn adm-btn--line" id="pp-copy-guide">Sao chép hướng dẫn đăng ký</button>
+              </div>
+              <div class="adm-table-wrap" style="margin-top:.75rem">
+                <table class="adm-table">
+                  <thead><tr><th>Người được cấp quyền</th><th>Quyền</th><th>Trạng thái</th><th>Thời điểm</th><th></th></tr></thead>
+                  <tbody id="pp-access"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div data-pp-panel="members" hidden>
+              <p id="pp-members-total" class="adm-lead"></p>
+              <p class="cp-note">Chi tiết thành viên xem ở khu vực <strong>Thành viên</strong> theo từng chương trình.</p>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Chương trình</th><th>Thành viên</th><th>Trạng thái</th><th></th></tr></thead>
+                  <tbody id="pp-members"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div data-pp-panel="activity" hidden>
+              <ul class="cp-activity" id="pp-activity"></ul>
+            </div>
           </div>
         </section>
 
-        <section class="adm-card" style="margin-bottom:1rem">
-          <h2>Chương trình</h2>
-          <form class="adm-form" id="program-form">
-            <label>Mã chương trình <input name="code" required placeholder="SV-HSE-2026" /></label>
-            <label>Tên chương trình <input name="name" required placeholder="HSE dành cho sinh viên 2026" /></label>
-            <label>Đối tác
-              <select name="partner_code" id="program-partner" required></select>
-            </label>
-            <label>Đối tượng
-              <select name="audience_type">
-                <option value="SINH_VIEN">Sinh viên</option>
-                <option value="NHAN_VIEN_DOANH_NGHIEP">Nhân viên doanh nghiệp</option>
-                <option value="HOC_VIEN">Học viên</option>
-                <option value="GIANG_VIEN">Giảng viên</option>
-                <option value="KHACH_MOI">Khách mời</option>
-                <option value="DOI_TAC">Đối tác</option>
-              </select>
-            </label>
-            <label>Mã tự phục vụ (Cách 3) <input name="enroll_code" placeholder="ABC-HSE-2026" /></label>
-            <label>Giới hạn lượt <input name="enroll_code_max_uses" type="number" min="1" placeholder="Để trống = không giới hạn" /></label>
-            <label>Ngày bắt đầu <input name="starts_at" type="datetime-local" /></label>
-            <label>Ngày kết thúc <input name="ends_at" type="datetime-local" /></label>
-            <label>Trạng thái
-              <select name="status">
+        <!-- ================= CHƯƠNG TRÌNH ================= -->
+        <section data-area-panel="programs" hidden>
+          <div class="adm-card" id="program-list-card">
+            <div class="adm-toolbar">
+              <select id="program-filter">
+                <option value="">Mọi trạng thái</option>
                 <option value="draft">Bản nháp</option>
                 <option value="active">Đang mở</option>
                 <option value="paused">Tạm dừng</option>
                 <option value="ended">Đã kết thúc</option>
               </select>
-            </label>
-            <button type="submit" class="adm-btn adm-btn--primary">Lưu chương trình</button>
-          </form>
-          <div class="adm-table-wrap" style="margin-top:1rem">
-            <table class="adm-table">
-              <thead>
-                <tr>
-                  <th>Mã</th><th>Tên</th><th>Đối tác</th><th>Trạng thái</th>
-                  <th>Thành viên</th><th>Mã tự phục vụ</th><th>Mã SV</th><th></th>
-                </tr>
-              </thead>
-              <tbody id="program-rows"></tbody>
-            </table>
+              <button type="button" class="adm-btn adm-btn--primary" id="btn-program-new">+ Tạo chương trình</button>
+            </div>
+            <div class="adm-table-wrap">
+              <table class="adm-table">
+                <thead>
+                  <tr>
+                    <th>Mã</th><th>Chương trình</th><th>Đối tác</th><th>Khóa học</th>
+                    <th>Thành viên</th><th>Chờ đăng ký</th><th>Đã hoàn thành</th><th>Đạt kiểm tra</th><th>Đủ điều kiện GCN</th>
+                    <th>Trạng thái</th><th></th>
+                  </tr>
+                </thead>
+                <tbody id="program-rows"><tr><td colspan="11">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="adm-card" id="program-form-card" hidden>
+            <h2 id="program-form-title">Tạo chương trình</h2>
+            <form class="adm-form cp-steps" id="program-form" autocomplete="off">
+              <input type="hidden" name="program_code" />
+              <fieldset>
+                <legend>Chọn đối tác</legend>
+                <label>Đối tác * <select name="partner_code" id="program-partner" required></select></label>
+                <p class="cp-note">Chưa có đối tác? Tạo đối tác ở khu vực <strong>Đối tác</strong> trước.</p>
+              </fieldset>
+              <fieldset>
+                <legend>Thông tin chương trình</legend>
+                <label>Tên chương trình * <input name="name" required minlength="3" placeholder="An toàn công trường cho sinh viên năm cuối 2026" /></label>
+                <label>Đối tượng *
+                  <select name="audience_type" required>
+                    <option value="SINH_VIEN">Sinh viên</option>
+                    <option value="NHAN_VIEN_DOANH_NGHIEP">Nhân viên doanh nghiệp</option>
+                    <option value="HOC_VIEN">Học viên</option>
+                    <option value="GIANG_VIEN">Giảng viên</option>
+                    <option value="KHACH_MOI">Khách mời</option>
+                    <option value="DOI_TAC">Đối tác</option>
+                  </select>
+                </label>
+                <label>Ngày bắt đầu <input name="starts_at" type="datetime-local" /></label>
+                <label>Ngày kết thúc <input name="ends_at" type="datetime-local" /></label>
+                <label>Mô tả <textarea name="description" rows="2"></textarea></label>
+                <p class="cp-note">Mã chương trình do hệ thống cấp khi lưu (viết tắt đối tác – đối tượng – năm – số thứ tự).</p>
+              </fieldset>
+              <fieldset>
+                <legend>Khóa học</legend>
+                <div id="program-courses"><p class="cp-note">Đang tải khóa học…</p></div>
+              </fieldset>
+              <fieldset>
+                <legend>Quyền lợi</legend>
+                <p><strong>Học phí:</strong> Miễn phí theo chương trình (cấp quyền học, không phải giảm giá).</p>
+                <p><strong>Giấy chứng nhận</strong> — chỉ cấp khi hoàn thành khóa học và đạt yêu cầu kiểm tra:</p>
+                <label class="cp-check"><input type="radio" name="certificate_benefit" value="MIEN_PHI_PDF" /> Miễn phí giấy chứng nhận bản PDF</label>
+                <label class="cp-check"><input type="radio" name="certificate_benefit" value="MIEN_PHI_BAN_CUNG" /> Miễn phí giấy chứng nhận bản cứng</label>
+                <label class="cp-check"><input type="radio" name="certificate_benefit" value="TU_DANG_KY" checked /> Người học tự đăng ký nhận giấy chứng nhận (theo phí cấp thông thường)</label>
+              </fieldset>
+              <fieldset>
+                <legend>Mã kích hoạt chương trình</legend>
+                <label class="cp-check"><input type="checkbox" name="activation_enabled" /> Cho phép người học tự kích hoạt bằng mã chương trình</label>
+                <label>Giới hạn lượt dùng <input name="max_uses" type="number" min="1" placeholder="Để trống = không giới hạn" /></label>
+                <label class="cp-check"><input type="checkbox" name="require_external_code" /> Bắt buộc mã thành viên (mã SV / mã NV) có trong danh sách khi kích hoạt</label>
+                <label class="cp-check"><input type="checkbox" name="auto_link_on_signup" checked /> Tự liên kết thành viên "chờ đăng ký" khi họ đăng ký và xác minh đúng email</label>
+                <p class="cp-note">Mã kích hoạt được sinh ngẫu nhiên khi lưu; có thể tạo mã mới (mã cũ hết hiệu lực) trong chi tiết chương trình.</p>
+              </fieldset>
+              <div class="adm-actions">
+                <button type="submit" class="adm-btn adm-btn--primary" id="program-submit">Lưu bản nháp</button>
+                <button type="button" class="adm-btn adm-btn--line" data-cancel-program>Hủy</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="adm-card" id="program-detail" hidden>
+            <div class="cp-inline">
+              <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="btn-program-back">← Danh sách chương trình</button>
+              <h2 id="pd-title" style="margin:0">Chương trình</h2>
+              <span class="adm-badge" id="pd-status"></span>
+            </div>
+            <p class="cp-note" id="pd-meta"></p>
+            <div class="adm-stats" id="pd-kpi"></div>
+            <h3>Trạng thái</h3>
+            <div class="adm-actions" id="pd-status-actions"></div>
+            <p class="cp-note">Bản nháp → Đang mở → Tạm dừng ↔ Đang mở → Đã kết thúc. <strong>Đã kết thúc là trạng thái cuối</strong> — muốn tiếp tục cần tạo đợt mới.</p>
+            <h3>Mã kích hoạt chương trình</h3>
+            <div id="pd-activation"></div>
+            <div class="adm-actions" style="margin-top:.5rem">
+              <button type="button" class="adm-btn adm-btn--line" id="pd-edit">Sửa chương trình</button>
+              <button type="button" class="adm-btn adm-btn--line" id="pd-members">Xem thành viên</button>
+            </div>
+            <h3>Báo cáo đợt đào tạo</h3>
+            <div id="report-box"><p class="cp-note">Đang tải báo cáo…</p></div>
           </div>
         </section>
 
-        <section class="adm-card" id="detail" hidden>
-          <h2 id="detail-title">Chi tiết chương trình</h2>
-          <p class="meta" id="detail-meta"></p>
+        <!-- ================= THÀNH VIÊN ================= -->
+        <section data-area-panel="members" hidden>
+          <div class="adm-card">
+            <div class="adm-toolbar">
+              <label>Chương trình <select id="member-program"></select></label>
+              <input type="search" id="member-search" placeholder="Tìm họ tên, email, mã" />
+            </div>
+            <nav class="cp-subtabs" role="tablist">
+              <button type="button" data-mem-tab="all" aria-selected="true">Thành viên</button>
+              <button type="button" data-mem-tab="pending" aria-selected="false">Chờ đăng ký</button>
+              <button type="button" data-mem-tab="import" aria-selected="false">Nhập hàng loạt</button>
+              <button type="button" data-mem-tab="add" aria-selected="false">Thêm 1 thành viên</button>
+            </nav>
 
-          <h3>Báo cáo đợt đào tạo</h3>
-          <div id="report-box"><p class="meta">Đang tải báo cáo…</p></div>
+            <div data-mem-panel="all">
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Họ tên</th><th>Mã SV / NV</th><th>Email</th><th>Khóa học · quyền học · tiến độ · kiểm tra · GCN</th><th>Trạng thái</th><th></th></tr></thead>
+                  <tbody id="member-rows"></tbody>
+                </table>
+              </div>
+            </div>
 
-          <h3>Kích hoạt bằng mã chương trình</h3>
-          <label style="display:flex;gap:.5rem;align-items:center;font-weight:600">
-            <input type="checkbox" id="require-code" />
-            Bắt buộc mã sinh viên khi kích hoạt
-          </label>
-          <p class="meta">Khi bật: sinh viên phải nhập mã có trong danh sách đã import (Cách 2); khoa, ngành lấy theo danh sách. Khi tắt: ai có mã chương trình đều kích hoạt được (trong giới hạn lượt).</p>
+            <div data-mem-panel="pending" hidden>
+              <p class="cp-note">Người trong danh sách nhưng chưa có tài khoản SA247 đã xác minh. Khi họ đăng ký và xác minh đúng email này, hệ thống tự liên kết (nếu chương trình bật tự liên kết) và cấp quyền học khi chương trình đang mở.</p>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Họ tên</th><th>Mã SV / NV</th><th>Email</th><th>Khoa / lớp</th><th></th></tr></thead>
+                  <tbody id="pending-rows"></tbody>
+                </table>
+              </div>
+            </div>
 
-          <h3>Quyền lợi khóa / chứng nhận</h3>
-          <p class="meta">Mỗi dòng: mã khóa + loại quyền lợi. Ví dụ ATNM-01 miễn phí học và GCN PDF.</p>
-          <textarea id="benefits-text" rows="5" style="width:100%;font:inherit" placeholder="ATNM-01,course_free&#10;ATNM-01,cert_pdf_free&#10;ATXD-01,course_free&#10;ATXD-01,cert_pdf_free"></textarea>
-          <p><button type="button" class="adm-btn adm-btn--primary" id="save-benefits">Lưu quyền lợi</button></p>
+            <div data-mem-panel="import" hidden>
+              <p class="cp-note">Cột theo thứ tự: <code>email, họ tên, mã SV/NV, khoa, ngành, khóa, lớp</code>. Chọn file CSV (từ Excel: Lưu thành CSV UTF-8) hoặc dán trực tiếp các dòng copy từ Excel. Dòng tiêu đề sẽ tự bỏ qua.</p>
+              <div class="cp-inline">
+                <input type="file" id="import-file" accept=".csv,.txt,text/csv" />
+              </div>
+              <textarea id="import-text" rows="7" style="width:100%;font:inherit;margin-top:.5rem" placeholder="a@truong.edu.vn,Nguyễn Văn A,221001,Cơ khí,Cơ khí động lực,2022,22CK1"></textarea>
+              <div class="adm-actions" style="margin-top:.5rem">
+                <button type="button" class="adm-btn adm-btn--primary" id="btn-import-preview">Kiểm tra danh sách</button>
+              </div>
+              <p class="adm-msg" id="import-msg"></p>
+              <div id="import-preview" hidden>
+                <div class="adm-stats" id="import-summary"></div>
+                <div class="adm-table-wrap" style="margin-top:.5rem;max-height:360px;overflow:auto">
+                  <table class="adm-table">
+                    <thead><tr><th>Dòng</th><th>Email</th><th>Họ tên</th><th>Mã</th><th>Kết quả kiểm tra</th></tr></thead>
+                    <tbody id="import-preview-rows"></tbody>
+                  </table>
+                </div>
+                <div class="adm-actions" style="margin-top:.5rem">
+                  <button type="button" class="adm-btn adm-btn--primary" id="btn-import-confirm">Xác nhận nhập các dòng hợp lệ</button>
+                </div>
+              </div>
+            </div>
 
-          <h3>Gán 1 thành viên (Cách 1)</h3>
-          <form class="adm-form" id="grant-form">
-            <label>Mã sinh viên / đối tượng <input name="external_code" required /></label>
-            <label>Họ tên <input name="full_name" /></label>
-            <label>Email tài khoản SA247 <input name="email" type="email" placeholder="Để trống nếu chưa có tài khoản" /></label>
-            <label>User ID (nếu biết) <input name="user_id" /></label>
-            <label>Khoa <input name="faculty" /></label>
-            <label>Ngành <input name="major" /></label>
-            <label>Khóa (năm) <input name="cohort" /></label>
-            <button type="submit" class="adm-btn adm-btn--primary">Gán vào chương trình</button>
-          </form>
-
-          <h3>Import danh sách (Cách 2)</h3>
-          <p class="meta">Dán CSV: <code>mã SV, họ tên, email, khoa, ngành, khóa</code> — một dòng một người.</p>
-          <textarea id="import-text" rows="6" style="width:100%;font:inherit" placeholder="221001,Nguyễn A,a@truong.edu.vn,Cơ khí,Cơ khí,2022"></textarea>
-          <p><button type="button" class="adm-btn adm-btn--primary" id="btn-import">Nhập danh sách</button></p>
-          <p class="adm-msg" id="import-msg"></p>
-
-          <h3>Thành viên</h3>
-          <div class="adm-table-wrap">
-            <table class="adm-table">
-              <thead><tr><th>Mã</th><th>Họ tên</th><th>Email</th><th>Khoa / ngành</th><th>Trạng thái</th><th>Tài khoản</th></tr></thead>
-              <tbody id="member-rows"></tbody>
-            </table>
+            <div data-mem-panel="add" hidden>
+              <form class="adm-form" id="member-add-form">
+                <label>Email * <input name="email" type="email" required /></label>
+                <label>Mã SV / NV <input name="external_code" /></label>
+                <label>Họ tên <input name="full_name" /></label>
+                <label>Khoa / phòng ban <input name="faculty" /></label>
+                <label>Ngành <input name="major" /></label>
+                <label>Khóa (năm) <input name="cohort" /></label>
+                <label>Lớp <input name="class_name" /></label>
+                <button type="submit" class="adm-btn adm-btn--primary">Thêm vào chương trình</button>
+              </form>
+              <p class="cp-note">Email đã có tài khoản xác minh → liên kết ngay; chưa có → vào danh sách "Chờ đăng ký".</p>
+            </div>
           </div>
-
         </section>
 
-        <section class="adm-card" id="leads" style="margin-top:1rem">
-          <h2>Đề xuất từ sinh viên / trường</h2>
-          <p class="meta">Gửi từ form “Trường tôi chưa có chương trình” trên trang /campus/. Cập nhật trạng thái khi liên hệ nhà trường.</p>
-          <label>Lọc trạng thái
-            <select id="lead-filter">
-              <option value="">Tất cả</option>
-              <option value="moi">Mới</option>
-              <option value="dang_lien_he">Đang liên hệ</option>
-              <option value="da_hop_tac">Đã hợp tác</option>
-              <option value="khong_phu_hop">Không phù hợp</option>
-            </select>
-          </label>
-          <p class="adm-msg" id="lead-msg"></p>
-          <div class="adm-table-wrap" style="margin-top:.75rem">
-            <table class="adm-table">
-              <thead>
-                <tr>
-                  <th>Ngày</th><th>Trường / khoa</th><th>Người gửi</th><th>Liên hệ</th>
-                  <th>SV dự kiến</th><th>Ghi chú</th><th>Trạng thái</th><th>Ghi chú nội bộ</th><th></th>
-                </tr>
-              </thead>
-              <tbody id="lead-rows"></tbody>
-            </table>
+        <!-- ================= ĐỀ XUẤT HỢP TÁC ================= -->
+        <section data-area-panel="leads" hidden>
+          <div class="adm-card">
+            <p class="cp-note">Gửi từ form "Trường tôi chưa có chương trình" trên trang /campus/.</p>
+            <div class="adm-toolbar">
+              <select id="lead-filter">
+                <option value="">Mọi trạng thái</option>
+                <option value="moi">Mới</option>
+                <option value="dang_lien_he">Đang liên hệ</option>
+                <option value="da_hop_tac">Đã hợp tác</option>
+                <option value="khong_phu_hop">Không phù hợp</option>
+              </select>
+            </div>
+            <p class="adm-msg" id="lead-msg"></p>
+            <div class="adm-table-wrap">
+              <table class="adm-table">
+                <thead>
+                  <tr>
+                    <th>Ngày</th><th>Trường / đơn vị</th><th>Người gửi</th><th>Liên hệ</th>
+                    <th>Năm học · SV dự kiến</th><th>Nội dung</th><th>Trạng thái</th><th>Ghi chú nội bộ</th><th></th>
+                  </tr>
+                </thead>
+                <tbody id="lead-rows"></tbody>
+              </table>
+            </div>
           </div>
         </section>
       </main>

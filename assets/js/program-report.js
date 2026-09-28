@@ -343,19 +343,25 @@
       ["Tỷ lệ hoàn thành", fmtPct(t.completion_rate)],
       ["Tỷ lệ đạt", fmtPct(t.pass_rate)],
     ]);
+    const canExport = o.canExport !== false;
+    const canMembers = o.canMembers !== false;
     el.innerHTML = `
       ${header}
       ${cardHtml}
-      <div class="rp-tools">
+      ${canExport ? `<div class="rp-tools">
         <button type="button" class="rp-btn" data-act="csv">Xuất Excel (CSV)</button>
         <button type="button" class="rp-btn rp-btn--line" data-act="print">In / Lưu PDF</button>
         <span class="rp-note">File CSV mở trực tiếp bằng Excel, giữ nguyên tiếng Việt.</span>
-      </div>
+      </div>` : ""}
       <h3 style="margin:1rem 0 .3rem">Kết quả theo khóa học</h3>
       ${funnelTable(cols, { program: true })}
-      <h3 style="margin:1rem 0 .3rem">Danh sách chi tiết</h3>
-      <div data-students></div>`;
-    const st = studentTable(el.querySelector("[data-students]"), rows, { program: true, onStudent: o.onStudent });
+      ${canMembers ? `<h3 style="margin:1rem 0 .3rem">Danh sách chi tiết</h3>
+      <div data-students></div>` : '<p class="rp-note">Tài khoản của bạn chưa được cấp quyền xem danh sách thành viên.</p>'}`;
+    if (!canMembers && !canExport) return;
+    const st = canMembers
+      ? studentTable(el.querySelector("[data-students]"), rows, { program: true, onStudent: o.onStudent })
+      : { filtered: () => [] };
+    if (!canExport) return;
     const ctx = { programName: report.name };
     const base = slug(report.program + "-" + (report.name || ""));
     el.querySelector('[data-act="csv"]').addEventListener("click", () => {

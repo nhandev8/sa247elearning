@@ -7,16 +7,16 @@
   <meta name="description" content="SA247 Campus — sinh viên thuộc chương trình đối tác học miễn phí ATNM-01, ATXD-01, làm bài kiểm tra và nhận chứng nhận khi đạt yêu cầu. Nhà trường triển khai theo khoa, theo đợt và theo dõi kết quả." />
   <link rel="canonical" href="https://sa247.vn/campus/" />
   <meta property="og:title" content="SA247 Campus · Học HSE hôm nay. Sẵn sàng cho công việc ngày mai." />
-  <meta property="og:description" content="Học miễn phí · Kiểm tra năng lực · Chứng nhận miễn phí cho sinh viên thuộc chương trình đối tác." />
+  <meta property="og:description" content="Học miễn phí · Kiểm tra năng lực · Giấy chứng nhận theo quyền lợi chương trình cho sinh viên thuộc chương trình đối tác." />
   <meta property="og:url" content="https://sa247.vn/campus/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=202609282330" />
-  <script src="../assets/supabase-config.js?v=202609282330"></script>
-  <script src="../assets/js/supabase-client.js?v=202609282330" defer></script>
+  <link rel="stylesheet" href="../assets/site.css?v=202609282340" />
+  <script src="../assets/supabase-config.js?v=202609282340"></script>
+  <script src="../assets/js/supabase-client.js?v=202609282340" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Sinh viên có phải trả phí không?","acceptedAnswer":{"@type":"Answer","text":"Không. Sinh viên thuộc chương trình đối tác được học miễn phí các khóa trong chương trình và nhận chứng nhận PDF miễn phí khi đạt yêu cầu."}},
+    {"@type":"Question","name":"Sinh viên có phải trả phí không?","acceptedAnswer":{"@type":"Answer","text":"Không phải trả học phí. Sinh viên thuộc chương trình đối tác được học miễn phí các khóa trong chương trình. Giấy chứng nhận được cấp theo quyền lợi của từng chương trình (miễn phí hoặc người học tự đăng ký nhận) và chỉ cấp sau khi hoàn thành khóa học và đạt yêu cầu kiểm tra."}},
     {"@type":"Question","name":"Lấy mã chương trình ở đâu?","acceptedAnswer":{"@type":"Answer","text":"Mã chương trình do nhà trường hoặc đầu mối khoa cung cấp. Nếu trường bạn chưa tham gia, bạn có thể đề xuất SA247 Campus với nhà trường ngay trên trang này."}},
     {"@type":"Question","name":"Chứng nhận có xác minh được không?","acceptedAnswer":{"@type":"Answer","text":"Có. Mỗi chứng nhận có mã riêng và có thể tra cứu công khai tại trang Xác minh chứng nhận của SA247."}}
   ]}</script>
@@ -155,7 +155,7 @@
         <div class="benefit-row">
           <div class="benefit"><span class="ico" aria-hidden="true">🎓</span><div><strong>Học miễn phí</strong><span>Toàn bộ bài học của các khóa trong chương trình đối tác.</span></div></div>
           <div class="benefit"><span class="ico" aria-hidden="true">📝</span><div><strong>Kiểm tra năng lực</strong><span>Bài kiểm tra trên hệ thống để tự đánh giá mức độ nắm kiến thức.</span></div></div>
-          <div class="benefit"><span class="ico" aria-hidden="true">🏆</span><div><strong>Chứng nhận miễn phí</strong><span>Chứng nhận PDF có mã xác minh khi đạt yêu cầu.</span></div></div>
+          <div class="benefit"><span class="ico" aria-hidden="true">🏆</span><div><strong>Giấy chứng nhận</strong><span>Theo quyền lợi chương trình, có mã xác minh — chỉ cấp khi hoàn thành khóa học và đạt yêu cầu kiểm tra.</span></div></div>
         </div>
         <div class="zero-box">
           <div class="zero">0đ<small>dành cho sinh viên thuộc chương trình đối tác</small></div>
@@ -370,31 +370,33 @@
             </ol>
           </div>
           <form class="panel-box" id="lead-form" novalidate>
-            <h3>Thông tin đề xuất</h3>
-            <label for="ld-school">Tên trường *</label>
+            <h3>Đề xuất hợp tác</h3>
+            <label for="ld-school">Tên trường / đơn vị *</label>
             <input id="ld-school" name="school" required maxlength="200" placeholder="VD: Trường Đại học Bách khoa" />
-            <label for="ld-fac">Khoa</label>
+            <label for="ld-fac">Khoa / đơn vị</label>
             <input id="ld-fac" name="faculty" maxlength="200" placeholder="VD: Khoa Cơ khí" />
             <div class="grid2">
-              <div><label for="ld-name">Họ tên *</label><input id="ld-name" name="full_name" required maxlength="120" autocomplete="name" /></div>
+              <div><label for="ld-name">Họ tên người gửi *</label><input id="ld-name" name="full_name" required maxlength="120" autocomplete="name" /></div>
               <div>
-                <label for="ld-role">Bạn là</label>
+                <label for="ld-role">Vai trò</label>
                 <select id="ld-role" name="role">
                   <option value="sinh_vien">Sinh viên</option>
                   <option value="giang_vien">Giảng viên</option>
-                  <option value="can_bo_truong">Cán bộ nhà trường</option>
+                  <option value="can_bo_truong">Cán bộ nhà trường / doanh nghiệp</option>
                   <option value="khac">Khác</option>
                 </select>
               </div>
             </div>
             <div class="grid2">
               <div><label for="ld-email">Email *</label><input id="ld-email" name="email" type="email" required maxlength="200" autocomplete="email" /></div>
-              <div><label for="ld-phone">Số điện thoại</label><input id="ld-phone" name="phone" type="tel" maxlength="30" autocomplete="tel" /></div>
+              <div><label for="ld-phone">Số điện thoại *</label><input id="ld-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" /></div>
             </div>
-            <label for="ld-count">Số lượng sinh viên dự kiến</label>
-            <input id="ld-count" name="expected" type="number" min="1" max="100000" inputmode="numeric" placeholder="VD: 120" />
-            <label for="ld-note">Ghi chú</label>
-            <textarea id="ld-note" name="note" maxlength="2000" placeholder="Ngành học, thời điểm đi thực tập, đầu mối liên hệ…"></textarea>
+            <div class="grid2">
+              <div><label for="ld-count">Số sinh viên dự kiến</label><input id="ld-count" name="expected" type="number" min="1" max="100000" inputmode="numeric" placeholder="VD: 120" /></div>
+              <div><label for="ld-year">Năm học</label><input id="ld-year" name="academic_year" maxlength="20" placeholder="VD: 2026–2027" /></div>
+            </div>
+            <label for="ld-note">Nội dung đề xuất</label>
+            <textarea id="ld-note" name="note" maxlength="2000" placeholder="Ngành học, thời điểm đi thực tập, khóa học mong muốn, đầu mối liên hệ…"></textarea>
             <button type="submit" class="btn btn--amber" id="lead-btn">Gửi đề xuất →</button>
             <p class="campus-msg" id="lead-msg" aria-live="polite"></p>
           </form>
@@ -424,7 +426,7 @@
       <div class="wrap">
         <p class="eyebrow">Hỏi đáp</p>
         <h2>Câu hỏi thường gặp</h2>
-        <details><summary>Sinh viên có phải trả phí không?</summary><p>Không. Sinh viên thuộc chương trình đối tác được học miễn phí các khóa trong chương trình và nhận chứng nhận PDF miễn phí khi đạt yêu cầu.</p></details>
+        <details><summary>Sinh viên có phải trả phí không?</summary><p>Không phải trả học phí. Sinh viên thuộc chương trình đối tác được học miễn phí các khóa trong chương trình. Giấy chứng nhận được cấp theo quyền lợi của từng chương trình (miễn phí hoặc người học tự đăng ký nhận) và chỉ cấp sau khi hoàn thành khóa học và đạt yêu cầu kiểm tra.</p></details>
         <details><summary>Lấy mã chương trình ở đâu?</summary><p>Mã chương trình do nhà trường hoặc đầu mối khoa cung cấp. Nếu trường bạn chưa tham gia, hãy <a href="#de-xuat">đề xuất SA247 Campus với nhà trường</a>.</p></details>
         <details><summary>Tôi chưa có tài khoản SA247 thì sao?</summary><p>Bạn nhập mã để xem trước chương trình, sau đó tạo tài khoản bằng email hoặc Google. Mã được giữ lại để bạn kích hoạt ngay sau khi đăng nhập.</p></details>
         <details><summary>Vì sao hệ thống hỏi mã sinh viên?</summary><p>Một số trường chỉ cấp quyền cho sinh viên có trong danh sách đã gửi SA247. Khi đó bạn cần nhập đúng mã sinh viên; khoa và ngành được lấy theo danh sách của nhà trường.</p></details>
@@ -465,6 +467,8 @@
         school_required: "Vui lòng nhập tên trường.",
         name_required: "Vui lòng nhập họ tên.",
         email_invalid: "Email chưa đúng định dạng.",
+        phone_required: "Vui lòng nhập số điện thoại (ít nhất 8 chữ số).",
+        activation_disabled: "Chương trình này không dùng mã kích hoạt. Liên hệ khoa / đơn vị để được thêm vào danh sách.",
         too_many_requests: "Bạn đã gửi nhiều đề xuất trong hôm nay. Vui lòng thử lại sau.",
         code_unavailable: "Mã không hợp lệ hoặc chương trình hiện không khả dụng. Kiểm tra lại mã hoặc liên hệ khoa.",
         member_verification_failed: "Không xác minh được thông tin sinh viên. Vui lòng liên hệ khoa hoặc SA247 để được hỗ trợ.",
@@ -511,7 +515,13 @@
           ? courses.map((c) => `<li><strong>${esc(c.code)}</strong> — ${esc(c.title)}</li>`).join("")
           : "<li>Khóa học sẽ được mở theo chương trình của nhà trường.</li>";
         const perks = ["Học miễn phí", "Kiểm tra trên hệ thống"];
-        if (data.cert_free) perks.push("Chứng nhận PDF miễn phí khi đạt");
+        const CERT_PERK = {
+          MIEN_PHI_PDF: "Giấy chứng nhận PDF miễn phí khi đạt",
+          MIEN_PHI_BAN_CUNG: "Giấy chứng nhận bản cứng miễn phí khi đạt",
+          TU_DANG_KY: "Đăng ký nhận giấy chứng nhận sau khi đạt",
+        };
+        const certPerk = CERT_PERK[data.certificate_benefit] || (data.cert_free ? CERT_PERK.MIEN_PHI_PDF : "");
+        if (certPerk) perks.push(certPerk);
         $("pv-perks").innerHTML = perks.map((p) => `<span>${esc(p)}</span>`).join("");
 
         const next = PAGE + "?ma=" + encodeURIComponent(code) + "#kich-hoat";
@@ -598,6 +608,7 @@
         if (!val("school")) return setMsg(msg, esc(ERR.school_required), "err");
         if (!val("full_name")) return setMsg(msg, esc(ERR.name_required), "err");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email"))) return setMsg(msg, esc(ERR.email_invalid), "err");
+        if (val("phone").replace(/\D/g, "").length < 8) return setMsg(msg, esc(ERR.phone_required), "err");
         const expected = parseInt(val("expected"), 10);
         setMsg(msg, "Đang gửi…");
         $("lead-btn").disabled = true;
@@ -607,11 +618,12 @@
             p_school_name: val("school"),
             p_full_name: val("full_name"),
             p_email: val("email"),
-            p_phone: val("phone") || null,
+            p_phone: val("phone"),
             p_faculty: val("faculty") || null,
             p_role: val("role") || "sinh_vien",
             p_expected_students: Number.isFinite(expected) ? expected : null,
             p_note: val("note") || null,
+            p_academic_year: val("academic_year") || null,
           });
           if (error) throw error;
           f.reset();
