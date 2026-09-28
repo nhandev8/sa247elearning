@@ -198,6 +198,113 @@
     });
   }
 
+  function wizard(cardId, opts) {
+    const card = document.getElementById(cardId);
+    const form = card.querySelector("form");
+    const steps = [...form.querySelectorAll(".cp-step")];
+    const stepper = card.querySelector("[data-stepper]");
+    const btnPrev = form.querySelector("[data-wiz-prev]");
+    const btnNext = form.querySelector("[data-wiz-next]");
+    const btnSubmit = form.querySelector("[data-wiz-submit]");
+    const msg = document.createElement("p");
+    msg.className = "adm-msg adm-msg--err";
+    msg.hidden = true;
+    form.querySelector(".cp-wiz-nav").before(msg);
+    let cur = 0;
+    let free = false;
+
+    stepper.innerHTML = steps
+      .map((s, i) => `<li><button type="button" data-go="${i}"><span>${i + 1}</span>${esc(s.dataset.title)}</button></li>`)
+      .join("");
+
+    function showErr(text) {
+      msg.textContent = text || "";
+      msg.hidden = !text;
+    }
+    function checkStep(i, report) {
+      const bad = [...steps[i].querySelectorAll("input,select,textarea")].find((el) => !el.disabled && !el.checkValidity());
+      const custom = !bad && opts.validate ? opts.validate(i) : "";
+      if (!bad && !custom) return true;
+      if (report) {
+        go(i, true);
+        if (custom) showErr(custom);
+        else if (bad.type === "radio" || bad.type === "checkbox") showErr("Vui lòng chọn một lựa chọn ở bước này.");
+        else {
+          showErr("");
+          bad.reportValidity();
+          bad.focus();
+        }
+      }
+      return false;
+    }
+    function render() {
+      steps.forEach((s, i) => (s.hidden = i !== cur));
+      stepper.querySelectorAll("li").forEach((li, i) => {
+        li.classList.toggle("is-current", i === cur);
+        li.classList.toggle("is-done", i !== cur && (free || i < cur));
+      });
+      const last = cur === steps.length - 1;
+      btnPrev.hidden = cur === 0;
+      btnNext.hidden = last;
+      btnSubmit.hidden = !(last || free);
+      btnNext.classList.toggle("adm-btn--primary", !free);
+      btnNext.classList.toggle("adm-btn--line", free);
+    }
+    function go(i, skipCheck) {
+      i = Math.max(0, Math.min(steps.length - 1, i));
+      if (!skipCheck && !free && i > cur) {
+        for (let k = cur; k < i; k++) if (!checkStep(k, true)) return;
+      }
+      showErr("");
+      cur = i;
+      render();
+      if (opts.onChange) opts.onChange();
+    }
+
+    stepper.addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-go]");
+      if (b) go(Number(b.dataset.go));
+    });
+    btnPrev.addEventListener("click", () => go(cur - 1));
+    btnNext.addEventListener("click", () => go(cur + 1));
+    form.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter" || ev.target.tagName === "TEXTAREA" || ev.target.tagName === "BUTTON") return;
+      ev.preventDefault();
+      if (cur < steps.length - 1) go(cur + 1);
+      else form.requestSubmit();
+    });
+    ["input", "change"].forEach((t) =>
+      form.addEventListener(t, () => {
+        if (!msg.hidden) showErr("");
+        if (opts.onChange) opts.onChange();
+      })
+    );
+
+    return {
+      go,
+      reset(freeMode) {
+        free = !!freeMode;
+        cur = 0;
+        showErr("");
+        render();
+        if (opts.onChange) opts.onChange();
+      },
+      validateAll() {
+        for (let i = 0; i < steps.length; i++) if (!checkStep(i, true)) return false;
+        return true;
+      },
+    };
+  }
+  function summaryHtml(title, rows) {
+    return `<h4>${esc(title)}</h4><dl>${rows
+      .map(([k, v, raw]) =>
+        v ? `<div><dt>${esc(k)}</dt><dd>${raw ? v : esc(v)}</dd></div>` : `<div><dt>${esc(k)}</dt><dd class="is-empty">Chưa nhập</dd></div>`
+      )
+      .join("")}</dl>`;
+  }
+  let partnerWiz;
+  let programWiz;
+
   /* ================= ĐỐI TÁC ================= */
   async function loadPartners() {
     partners = (await rpc("admin_list_partners")) || [];
@@ -250,6 +357,7 @@
       const out = document.getElementById("partner-code-preview");
       if (!type || name.length < 3) {
         out.textContent = "—";
+        updatePartnerSummary();
         return;
       }
       try {
@@ -263,13 +371,27 @@
       } catch (e) {
         out.textContent = errText(e);
       }
+      updatePartnerSummary();
     }, 300);
+  }
+  function updatePartnerSummary() {
+    const f = document.getElementById("partner-new-form");
+    const type = f.querySelector('[name="partner_type"]:checked')?.value;
+    const code = document.getElementById("partner-code-preview").textContent.trim();
+    const contact = [f.elements.c_full_name.value.trim(), f.elements.c_position.value.trim()].filter(Boolean).join(" · ");
+    document.getElementById("partner-summary").innerHTML = summaryHtml("Tóm tắt đối tác", [
+      ["Loại đối tác", TYPE_VI[type] || ""],
+      ["Tên đối tác", f.elements.name.value.trim()],
+      ["Mã dự kiến", code && code !== "—" ? `<div class="cp-code-box">${esc(code)}</div>` : "", true],
+      ["Người liên hệ", contact],
+      ["Email", f.elements.c_email.value.trim()],
+      ["Điện thoại", f.elements.c_phone.value.trim()],
+    ]);
   }
   function openNewPartner(prefill) {
     const f = document.getElementById("partner-new-form");
     f.reset();
     delete f.elements.abbr.dataset.touched;
-    document.getElementById("partner-step2").disabled = true;
     document.getElementById("partner-code-preview").textContent = "—";
     const leadNote = document.getElementById("partner-new-lead");
     leadNote.hidden = true;
@@ -278,7 +400,6 @@
       f.elements.lead_id.value = prefill.lead_id || "";
       const r = f.querySelector(`[name="partner_type"][value="${prefill.partner_type || "university"}"]`);
       if (r) r.checked = true;
-      document.getElementById("partner-step2").disabled = false;
       f.elements.name.value = prefill.name || "";
       f.elements.c_full_name.value = prefill.contact_name || "";
       f.elements.c_position.value = prefill.contact_position || "";
@@ -287,6 +408,10 @@
       f.elements.note.value = prefill.note || "";
       leadNote.textContent = "Tạo từ đề xuất hợp tác — kiểm tra lại thông tin trước khi lưu. Đề xuất sẽ chuyển sang “Đã hợp tác”.";
       leadNote.hidden = false;
+    }
+    partnerWiz.reset(false);
+    if (prefill) {
+      partnerWiz.go(1);
       refreshCodeSuggestion();
     }
     showArea("partners");
@@ -423,10 +548,34 @@
     box.innerHTML = courses.length
       ? courses
           .map(
-            (c) => `<label class="cp-check"><input type="checkbox" name="course" value="${esc(c.code)}"${selected.includes(c.code) ? " checked" : ""} /> <span><code>${esc(c.code)}</code> ${esc(c.title)}</span></label>`
+            (c) => `<label class="cp-choice cp-choice--check cp-choice--row"><input type="checkbox" name="course" value="${esc(c.code)}"${selected.includes(c.code) ? " checked" : ""} /><code>${esc(c.code)}</code><strong>${esc(c.title)}</strong></label>`
           )
           .join("")
       : '<p class="cp-note">Chưa có khóa học đang mở.</p>';
+  }
+  function updateProgramSummary() {
+    const f = document.getElementById("program-form");
+    const psel = f.elements.partner_code;
+    const partner = psel.value ? psel.options[psel.selectedIndex]?.textContent || psel.value : "";
+    const picked = [...f.querySelectorAll('[name="course"]:checked')].map((x) => x.value);
+    const s = f.elements.starts_at.value;
+    const e = f.elements.ends_at.value;
+    const dates = s || e ? `${s ? fmtDate(localToIso(s)) : "…"} → ${e ? fmtDate(localToIso(e)) : "không giới hạn"}` : "";
+    const cert = f.querySelector('[name="certificate_benefit"]:checked')?.value;
+    const act = f.elements.activation_enabled.checked
+      ? "Bật" + (f.elements.max_uses.value ? ` · tối đa ${f.elements.max_uses.value} lượt` : " · không giới hạn lượt")
+      : "Tắt";
+    document.getElementById("program-maxuses-wrap").hidden = !f.elements.activation_enabled.checked;
+    document.getElementById("program-summary").innerHTML = summaryHtml("Tóm tắt chương trình", [
+      ["Đối tác", partner],
+      ["Tên chương trình", f.elements.name.value.trim()],
+      ["Đối tượng", AUD_VI[f.elements.audience_type.value] || ""],
+      ["Thời gian", dates],
+      ["Khóa học", picked.length ? picked.map((c) => `<code class="cp-course">${esc(c)}</code>`).join(" ") : "", true],
+      ["Học phí", "Miễn phí theo chương trình"],
+      ["Giấy chứng nhận", CERT_VI[cert] || ""],
+      ["Mã kích hoạt", act],
+    ]);
   }
   async function loadPrograms() {
     programs = (await rpc("admin_list_programs")) || [];
@@ -499,6 +648,8 @@
       psel.value = partnerCode || "";
       renderCourseChecks([]);
     }
+    programWiz.reset(!!prog);
+    if (!prog && partnerCode && psel.value) programWiz.go(1);
     showArea("programs");
     showProgramView("form");
   }
@@ -723,10 +874,11 @@
       showPartnerView("list");
     });
     const npf = document.getElementById("partner-new-form");
+    partnerWiz = wizard("partner-new-card", { onChange: updatePartnerSummary });
     npf.querySelectorAll('[name="partner_type"]').forEach((r) =>
       r.addEventListener("change", () => {
-        document.getElementById("partner-step2").disabled = false;
         refreshCodeSuggestion();
+        partnerWiz.go(1);
       })
     );
     npf.elements.name.addEventListener("input", refreshCodeSuggestion);
@@ -738,6 +890,7 @@
     npf.addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const f = ev.target;
+      if (!partnerWiz.validateAll()) return;
       try {
         const r = await rpc("admin_create_partner", {
           p_partner_type: f.querySelector('[name="partner_type"]:checked')?.value || null,
@@ -906,9 +1059,15 @@
       const b = ev.target.closest("[data-open-program]");
       if (b) openProgram(b.dataset.openProgram).catch(fail("adm-status"));
     });
+    programWiz = wizard("program-form-card", {
+      onChange: updateProgramSummary,
+      validate: (i) =>
+        i === 2 && !document.querySelector('#program-form [name="course"]:checked') ? "Chọn ít nhất 1 khóa học." : "",
+    });
     document.getElementById("program-form").addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const f = ev.target;
+      if (!programWiz.validateAll()) return;
       const code = f.elements.program_code.value;
       const common = {
         p_name: f.elements.name.value.trim(),
