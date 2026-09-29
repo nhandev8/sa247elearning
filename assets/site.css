@@ -2010,26 +2010,46 @@
     z-index: 35;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    background: #fff;
+    padding: 0.35rem 0.4rem calc(0.35rem + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    backdrop-filter: saturate(1.6) blur(14px);
     border-top: 1px solid var(--line);
-    padding-bottom: env(safe-area-inset-bottom);
-    box-shadow: 0 -6px 18px rgba(7,20,38,0.06);
+    box-shadow: 0 -8px 24px rgba(7, 20, 38, 0.07);
   }
   .app-tabbar a {
-    display: grid;
-    justify-items: center;
-    gap: 0.15rem;
-    padding: 0.5rem 0.1rem 0.55rem;
-    font-size: 0.66rem;
-    font-weight: 700;
-    white-space: nowrap;
-    letter-spacing: -0.01em;
-    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.1rem;
+    border-radius: 12px;
+    color: #7b8a96;
     text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.2s ease;
   }
-  .app-tabbar a span { font-size: 1.05rem; line-height: 1; }
+  .app-tabbar__ic {
+    display: grid;
+    place-items: center;
+    width: 3.1rem;
+    height: 1.85rem;
+    border-radius: 999px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  .app-tabbar__ic svg { display: block; }
+  .app-tabbar__lb {
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.1;
+    white-space: nowrap;
+    letter-spacing: -0.005em;
+  }
+  .app-tabbar a:active .app-tabbar__ic { transform: scale(0.92); }
   .app-tabbar a.is-active { color: var(--navy); }
-  .app-tabbar a.is-active span { color: var(--amber-hot, var(--amber)); }
+  .app-tabbar a.is-active .app-tabbar__ic { background: rgba(212, 167, 44, 0.2); color: #9a7414; }
+  .app-tabbar a.is-active .app-tabbar__lb { font-weight: 700; }
+  .app-tabbar a:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; }
   body.has-tabbar .app-main { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
   body.has-tabbar .sa247-fb-fab { bottom: calc(4.4rem + env(safe-area-inset-bottom)) !important; }
 }

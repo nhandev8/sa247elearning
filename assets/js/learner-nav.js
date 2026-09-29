@@ -33,6 +33,16 @@
     "cai-dat": "ho-so",
   };
 
+  const svg = (d) =>
+    `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICONS = {
+    "hoc-tap": svg('<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/>'),
+    "khoa-cua-toi": svg('<path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H9a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5h-5A1.5 1.5 0 0 1 3 16z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H15a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5h5a1.5 1.5 0 0 0 1.5-1.5z"/>'),
+    "kiem-tra": svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="m9 13 2 2 4-4"/>'),
+    "chung-nhan": svg('<circle cx="12" cy="9" r="5.5"/><path d="m8.8 13.4-1.3 7.1L12 18l4.5 2.5-1.3-7.1"/>'),
+    "ho-so": svg('<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>'),
+  };
+
   function activeKeyFromPath() {
     const p = location.pathname.replace(/\\/g, "/").toLowerCase();
     if (p.includes("/khoa-cua-toi")) return "khoa-cua-toi";
@@ -80,7 +90,9 @@
     bar.innerHTML = ITEMS.filter((it) => it.tab)
       .map(
         (it) =>
-          `<a href="${it.href}"${it.key === onTab ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">${it.icon}</span>${it.tab}</a>`
+          `<a href="${it.href}"${it.key === onTab ? ' class="is-active" aria-current="page"' : ""}><span class="app-tabbar__ic" aria-hidden="true">${
+            ICONS[it.key] || ""
+          }</span><span class="app-tabbar__lb">${it.tab}</span></a>`
       )
       .join("");
   }
