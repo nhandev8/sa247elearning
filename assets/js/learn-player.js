@@ -298,7 +298,7 @@
       const i = flat.findIndex((l) => l.id === lesson.id);
       const prev = i > 0 ? flat[i - 1] : null;
       const next = i >= 0 ? flat[i + 1] : null;
-      const nextLocked = next && isSeqLocked(next) && !progressMap[lesson.id]?.completed;
+      const nextLocked = next && !progressMap[lesson.id]?.completed;
       const allDone = flat.every((l) => progressMap[l.id]?.completed);
       const nextBtn = next
         ? `<button type="button" class="btn btn--amber btn--small" data-next-lesson="${esc(next.id)}"${
