@@ -1,13 +1,13 @@
 /* SA247 · Nav học viên theo IA Platform (docs/SA247-PLATFORM-IA.md) */
 (function () {
   const ITEMS = [
-    { key: "hoc-tap", href: "../dashboard/", label: "Học tập", group: "learn", tab: "Học", icon: "▶" },
-    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi", group: "learn", tab: "Khóa", icon: "▦" },
-    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả", group: "learn", tab: "Kết quả", icon: "✎" },
-    { key: "chung-nhan", href: "../chung-nhan/", label: "Giấy chứng nhận", group: "learn" },
+    { key: "hoc-tap", href: "../dashboard/", label: "Học tập", group: "learn", tab: "Học tập", icon: "▶" },
+    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi", group: "learn", tab: "Khóa học", icon: "▦" },
+    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả", group: "learn", tab: "Kiểm tra", icon: "✎" },
+    { key: "chung-nhan", href: "../chung-nhan/", label: "Giấy chứng nhận", group: "learn", tab: "Chứng nhận", icon: "★" },
     { key: "tien-do", href: "../tien-do/", label: "Tiến độ", group: "track" },
     { key: "lo-trinh", href: "../lo-trinh/", label: "Lộ trình của tôi", group: "track" },
-    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ", group: "account", tab: "Tôi", icon: "●" },
+    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ", group: "account", tab: "Tài khoản", icon: "●" },
     { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán", group: "account" },
     { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ", group: "account" },
     { key: "cai-dat", href: "../cai-dat/", label: "Cài đặt", group: "account" },
@@ -26,7 +26,7 @@
     "lo-trinh": "hoc-tap",
     "khoa-cua-toi": "khoa-cua-toi",
     "kiem-tra": "kiem-tra",
-    "chung-nhan": "kiem-tra",
+    "chung-nhan": "chung-nhan",
     "ho-so": "ho-so",
     "don-hang": "ho-so",
     "phan-hoi": "ho-so",
@@ -44,13 +44,16 @@
     if (p.includes("/phan-hoi")) return "phan-hoi";
     if (p.includes("/ho-so")) return "ho-so";
     if (p.includes("/cai-dat") || p.includes("/doi-mat-khau")) return "cai-dat";
-    if (p.includes("/dashboard") || p.includes("/hoc-tap")) return "hoc-tap";
+    if (p.includes("/dashboard") || p.includes("/hoc-tap") || p.includes("/hoc/")) return "hoc-tap";
     return "";
   }
 
   function paintNav(activeKey) {
     const nav = document.querySelector(".app-side__nav[data-learner-nav]");
-    if (!nav) return;
+    if (!nav) {
+      paintTabbar(activeKey || activeKeyFromPath());
+      return;
+    }
     const active = activeKey || nav.getAttribute("data-active") || activeKeyFromPath();
     nav.innerHTML = GROUPS.map(([g, title]) => {
       const links = ITEMS.filter((it) => it.group === g)
@@ -61,9 +64,10 @@
     paintTabbar(active);
   }
 
-  /* Mobile: 4 tab cố định — Học · Khóa · Kết quả · Tôi */
+  /* Mobile: 5 tab cố định — Học tập · Khóa học · Kiểm tra · Chứng nhận · Tài khoản */
   function paintTabbar(active) {
-    if (!document.body.classList.contains("app-body")) return;
+    const b = document.body.classList;
+    if (!b.contains("app-body") && !b.contains("lx-body")) return;
     let bar = document.querySelector(".app-tabbar");
     if (!bar) {
       bar = document.createElement("nav");
