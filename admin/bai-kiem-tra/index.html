@@ -6,12 +6,12 @@
   <title>Bài kiểm tra · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609290010" />
-  <script src="../../assets/supabase-config.js?v=202609290010"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-bai-kiem-tra.js?v=202609290010" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202609300100" />
+  <script src="../../assets/supabase-config.js?v=202609300100"></script>
+  <script src="../../assets/js/supabase-client.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-bai-kiem-tra.js?v=202609300100" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -26,50 +26,83 @@
     <div class="adm-main">
       <header class="adm-top">
         <button type="button" class="adm-menu-btn" id="adm-menu-toggle">☰</button>
-        <h1>Bài kiểm tra</h1>
+        <h1>Bài kiểm tra cuối khóa</h1>
       </header>
       <main class="adm-content">
+        <p class="adm-lead">Mỗi khóa có <strong>một</strong> bài kiểm tra cuối khóa. Hệ thống rút ngẫu nhiên câu hỏi theo phân bổ bên dưới cho từng lượt làm. Không giới hạn thời gian, không thời gian chờ giữa hai lượt, chỉ mở khi học viên hoàn thành 100% bài học. Kiểm tra cuối chương đã ngừng dùng.</p>
         <p class="adm-msg" id="adm-status"></p>
-        <section class="adm-card" style="margin-bottom:1rem">
-          <h2>Tạo bài kiểm tra</h2>
-          <form class="adm-form" id="add-form">
-            <label>Khóa học <select name="course_id" id="form-course" required></select></label>
-            <label>Scope
-              <select name="scope" id="form-scope">
-                <option value="chuong" selected>Cuối chương</option>
-                <option value="khoa">Cuối khóa</option>
-              </select>
-            </label>
-            <label id="form-module-wrap">Chương <select name="module_code" id="form-module"></select></label>
-            <label>Tiêu đề <input name="title" required placeholder="Kiểm tra cuối chương M01" /></label>
-            <label>Điểm đạt (%) <input name="pass_percent" type="number" value="70" min="0" max="100" /></label>
-            <label>Số lần làm tối đa <input name="max_attempts" type="number" value="3" min="1" /></label>
-            <label>Giãn cách (phút) <input name="cooldown_minutes" id="form-cooldown" type="number" value="10" min="0" /></label>
-            <label>Tiến độ tối thiểu (%) <input name="min_progress_percent" type="number" value="0" min="0" max="100" /></label>
-            <label><input type="checkbox" id="form-published" checked /> Xuất bản ngay</label>
-            <div><strong>Chọn câu hỏi từ ngân hàng</strong> (lọc theo scope/chương)</div>
-            <div id="q-pick" class="adm-form"></div>
-            <button type="submit" class="adm-btn adm-btn--primary">Tạo bài kiểm tra</button>
-          </form>
-          <p class="adm-msg" id="form-msg"></p>
-        </section>
-        <div class="adm-table-wrap">
+
+        <div class="adm-table-wrap" style="margin-bottom:1rem">
           <table class="adm-table">
             <thead>
               <tr>
-                <th>Tiêu đề</th>
                 <th>Khóa</th>
+                <th>Số câu / đề</th>
                 <th>Điểm đạt</th>
-                <th>Lần / CD</th>
-                <th>Số câu</th>
+                <th>Số lượt</th>
+                <th>Ngân hàng chính thức</th>
                 <th>Trạng thái</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
+
+        <section class="adm-card" id="cfg-card" hidden>
+          <h2 id="cfg-title">Cấu hình</h2>
+          <form class="adm-form" id="cfg-form" autocomplete="off">
+            <label>Tiêu đề <input name="title" id="f-title" maxlength="160" placeholder="Kiểm tra cuối khóa" /></label>
+            <div class="bq-row">
+              <label>Số câu mỗi đề (tối đa 20) <input name="question_count" id="f-count" type="number" min="1" max="20" required /></label>
+              <label>Điểm đạt (%) <input name="pass_percent" id="f-pass" type="number" min="50" max="100" required /></label>
+              <label>Số lượt làm (tối đa 6) <input name="max_attempts" id="f-attempts" type="number" min="1" max="6" required /></label>
+            </div>
+            <label><input type="checkbox" id="f-published" /> Mở cho học viên</label>
+
+            <h3 style="margin:1rem 0 .25rem">Phân bổ câu hỏi theo chương</h3>
+            <p class="adm-muted" style="margin:0 0 .5rem">Mỗi nhóm cần ít nhất gấp 3 lần số câu rút để các lượt làm lại không trùng đề. Cột ngân hàng: Nhớ–hiểu / Áp dụng / Phân tích.</p>
+            <div class="adm-table-wrap">
+              <table class="adm-table bq-table">
+                <thead>
+                  <tr><th>Nhóm</th><th>Ngân hàng</th><th>Số câu rút</th><th>Đánh giá</th></tr>
+                </thead>
+                <tbody id="bp-rows"></tbody>
+                <tfoot>
+                  <tr><th colspan="2">Tổng</th><th id="bp-sum">0</th><th id="bp-sum-note"></th></tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <h3 style="margin:1rem 0 .25rem">Tỷ lệ mức độ nhận thức (%)</h3>
+            <div class="bq-row">
+              <label>Nhớ – hiểu <input id="f-l1" type="number" min="0" max="100" /></label>
+              <label>Áp dụng <input id="f-l2" type="number" min="0" max="100" /></label>
+              <label>Phân tích <input id="f-l3" type="number" min="0" max="100" /></label>
+            </div>
+            <p class="adm-muted" id="lvl-note" style="margin:.25rem 0 0"></p>
+
+            <div id="chk-box" class="bq-check" aria-live="polite"></div>
+
+            <div class="adm-actions">
+              <button type="button" class="adm-btn adm-btn--line" id="btn-default">Dùng phân bổ đề xuất</button>
+              <button type="submit" class="adm-btn adm-btn--primary" id="btn-save">Lưu cấu hình</button>
+            </div>
+          </form>
+          <p class="adm-msg" id="form-msg"></p>
+        </section>
       </main>
     </div>
   </div>
+  <style>
+    .bq-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .75rem; }
+    .bq-table input { width: 5rem; }
+    .bq-table td small { color: #64748b; }
+    .bq-check { margin-top: 1rem; padding: .75rem 1rem; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .bq-check.is-ok { background: #f0fdf4; border-color: #bbf7d0; }
+    .bq-check.is-err { background: #fef2f2; border-color: #fecaca; }
+    .bq-check ul { margin: .35rem 0 0 1.1rem; padding: 0; }
+    #rows tr.is-on { background: #fffbeb; }
+  </style>
 </body>
 </html>

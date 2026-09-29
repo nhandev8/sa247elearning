@@ -108,8 +108,17 @@
             return { state: "signed-in-locked", priceLabel, course };
           }
 
-          // Đã có quyền học → ẩn khối thanh toán / mở khóa
-          document.getElementById("dang-ky")?.setAttribute("hidden", "");
+          // Đã có quyền học → sang trang học (?info=1 để xem trang giới thiệu)
+          const qs = new URLSearchParams(location.search);
+          if (window.SA247_FLAGS?.learnRedirect !== false && !qs.has("info")) {
+            const lesson = qs.get("lesson");
+            location.replace(
+              `../hoc/?course=${encodeURIComponent(course?.code || boot.code)}${
+                lesson ? `&lesson=${encodeURIComponent(lesson)}` : ""
+              }`
+            );
+            return { state: "redirect", priceLabel, course };
+          }
           document.getElementById("dang-ky")?.setAttribute("hidden", "");
           document.documentElement.classList.add("sa247-enrolled");
 
@@ -132,8 +141,8 @@
           }
           if (certStatus === "eligible") {
             applyCta({
-              label: "Đủ điều kiện cấp GCN",
-              text: "Nhận chứng nhận",
+              label: "🎓 Bạn đã đủ điều kiện nhận giấy chứng nhận",
+              text: "Đăng ký nhận giấy chứng nhận",
               href:
                 "../chung-nhan/mua.html?course=" +
                 encodeURIComponent(boot.code || ""),
@@ -158,9 +167,9 @@
             window.__sa247Progress = { percent: snap.pct, snapshot: snap };
             if (snap.state === "completed") {
               applyCta({
-                label: "Đã hoàn thành khóa — xem lại hoặc làm kiểm tra",
-                text: "Xem lại khóa học",
-                href: `../${courseSlug}/#learner-root`,
+                label: "Đã hoàn thành bài học — làm bài kiểm tra cuối khóa",
+                text: "Kiểm tra cuối khóa",
+                href: `../quiz/?course=${encodeURIComponent(course?.code || boot.code)}`,
               });
               return { state: "completed", priceLabel, course, snap };
             }
@@ -186,7 +195,7 @@
           applyCta({
             label: "Bạn đã có quyền học — tiếp tục học",
             text: "Tiếp tục học",
-            href: "#learner-root",
+            href: `../hoc/?course=${encodeURIComponent(course?.code || boot.code)}`,
           });
           return { state: "enrolled", priceLabel, course };
         }

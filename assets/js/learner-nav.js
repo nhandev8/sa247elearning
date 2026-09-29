@@ -1,23 +1,37 @@
 /* SA247 · Nav học viên theo IA Platform (docs/SA247-PLATFORM-IA.md) */
 (function () {
   const ITEMS = [
-    { key: "hoc-tap", href: "../dashboard/", label: "Học tập", group: "learn", tab: "Học tập", icon: "▶" },
-    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi", group: "learn", tab: "Khóa học", icon: "▦" },
-    { key: "lo-trinh", href: "../lo-trinh/", label: "Lộ trình của tôi", group: "learn" },
-    { key: "tien-do", href: "../tien-do/", label: "Tiến độ", group: "learn" },
-    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả", group: "learn", tab: "Kiểm tra", icon: "✎" },
-    { key: "chung-nhan", href: "../chung-nhan/", label: "Chứng nhận", group: "learn", tab: "Chứng nhận", icon: "★" },
-    { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán", group: "customer" },
-    { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ", group: "customer" },
-    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ", group: "account" },
+    { key: "hoc-tap", href: "../dashboard/", label: "Học tập", group: "learn", tab: "Học", icon: "▶" },
+    { key: "khoa-cua-toi", href: "../khoa-cua-toi/", label: "Khóa học của tôi", group: "learn", tab: "Khóa", icon: "▦" },
+    { key: "kiem-tra", href: "../kiem-tra/", label: "Kiểm tra & kết quả", group: "learn", tab: "Kết quả", icon: "✎" },
+    { key: "chung-nhan", href: "../chung-nhan/", label: "Giấy chứng nhận", group: "learn" },
+    { key: "tien-do", href: "../tien-do/", label: "Tiến độ", group: "track" },
+    { key: "lo-trinh", href: "../lo-trinh/", label: "Lộ trình của tôi", group: "track" },
+    { key: "ho-so", href: "../ho-so/", label: "Hồ sơ", group: "account", tab: "Tôi", icon: "●" },
+    { key: "don-hang", href: "../don-hang/", label: "Đơn hàng & thanh toán", group: "account" },
+    { key: "phan-hoi", href: "../phan-hoi/", label: "Phản hồi & Hỗ trợ", group: "account" },
     { key: "cai-dat", href: "../cai-dat/", label: "Cài đặt", group: "account" },
   ];
 
   const GROUPS = [
     ["learn", "Học tập"],
-    ["customer", "Đơn hàng & hỗ trợ"],
+    ["track", "Theo dõi"],
     ["account", "Tài khoản"],
   ];
+
+  /* Tab mobile đang sáng cho từng trang */
+  const TAB_OF = {
+    "hoc-tap": "hoc-tap",
+    "tien-do": "hoc-tap",
+    "lo-trinh": "hoc-tap",
+    "khoa-cua-toi": "khoa-cua-toi",
+    "kiem-tra": "kiem-tra",
+    "chung-nhan": "kiem-tra",
+    "ho-so": "ho-so",
+    "don-hang": "ho-so",
+    "phan-hoi": "ho-so",
+    "cai-dat": "ho-so",
+  };
 
   function activeKeyFromPath() {
     const p = location.pathname.replace(/\\/g, "/").toLowerCase();
@@ -47,7 +61,7 @@
     paintTabbar(active);
   }
 
-  /* Mobile: "Tôi đang học đến đâu và tiếp tục ở đâu?" — 5 tab cố định dưới màn hình */
+  /* Mobile: 4 tab cố định — Học · Khóa · Kết quả · Tôi */
   function paintTabbar(active) {
     if (!document.body.classList.contains("app-body")) return;
     let bar = document.querySelector(".app-tabbar");
@@ -58,17 +72,13 @@
       document.body.appendChild(bar);
       document.body.classList.add("has-tabbar");
     }
-    const accountKeys = ["ho-so", "cai-dat", "don-hang", "phan-hoi"];
-    const html = ITEMS.filter((it) => it.tab)
-      .map((it) => {
-        const on = it.key === active || (it.key === "hoc-tap" && (active === "tien-do" || active === "lo-trinh"));
-        return `<a href="${it.href}"${on ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">${it.icon}</span>${it.tab}</a>`;
-      })
+    const onTab = TAB_OF[active] || "";
+    bar.innerHTML = ITEMS.filter((it) => it.tab)
+      .map(
+        (it) =>
+          `<a href="${it.href}"${it.key === onTab ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">${it.icon}</span>${it.tab}</a>`
+      )
       .join("");
-    const accOn = accountKeys.includes(active);
-    bar.innerHTML =
-      html +
-      `<a href="../ho-so/"${accOn ? ' class="is-active" aria-current="page"' : ""}><span aria-hidden="true">●</span>Tài khoản</a>`;
   }
 
   window.sa247LearnerNav = { ITEMS, paintNav, activeKeyFromPath };

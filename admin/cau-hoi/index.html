@@ -6,12 +6,12 @@
   <title>Ngân hàng câu hỏi · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609290010" />
-  <script src="../../assets/supabase-config.js?v=202609290010"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609290010" defer></script>
-  <script src="../../assets/js/admin-cau-hoi.js?v=202609290010" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202609300100" />
+  <script src="../../assets/supabase-config.js?v=202609300100"></script>
+  <script src="../../assets/js/supabase-client.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202609300100" defer></script>
+  <script src="../../assets/js/admin-cau-hoi.js?v=202609300100" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -37,6 +37,11 @@
             <option value="khoa">Khóa</option>
           </select>
           <select id="filter-module"><option value="">Tất cả chương</option></select>
+          <select id="filter-purpose">
+            <option value="">Mọi mục đích</option>
+            <option value="chinh_thuc">Kiểm tra cuối khóa</option>
+            <option value="tu_kiem_tra">Tự kiểm tra trong bài</option>
+          </select>
         </div>
         <p class="adm-msg" id="adm-status"></p>
 
@@ -54,6 +59,12 @@
               </select>
             </label>
             <label>Chương mặc định <select id="import-module"></select></label>
+            <label>Mục đích
+              <select id="import-purpose">
+                <option value="chinh_thuc">Kiểm tra cuối khóa (chính thức)</option>
+                <option value="tu_kiem_tra">Tự kiểm tra trong bài (không tính điểm)</option>
+              </select>
+            </label>
             <label>JSON<textarea id="import-json" rows="8" placeholder='{ "course_code":"AL-01", "scope":"chuong", "module_code":"M01", "questions":[…] }'></textarea></label>
             <label><input type="checkbox" id="import-dry" /> Dry-run (không ghi DB)</label>
             <button type="submit" class="adm-btn adm-btn--primary">Import</button>
@@ -72,6 +83,13 @@
               </select>
             </label>
             <label id="form-module-wrap">Chương <select name="module_code" id="form-module"></select></label>
+            <label>Mục đích
+              <select name="purpose" id="form-purpose">
+                <option value="chinh_thuc">Kiểm tra cuối khóa (chính thức)</option>
+                <option value="tu_kiem_tra">Tự kiểm tra trong bài (không tính điểm)</option>
+              </select>
+            </label>
+            <label>Mã bài (cho tự kiểm tra, tuỳ chọn) <input name="lesson_code" placeholder="ATNM01-M01-B01" /></label>
             <label>Mã câu (external_code) <input name="external_code" placeholder="AL01-M01-Q01" /></label>
             <label>source_ref <input name="source_ref" placeholder="AL-01-M01-B01/V01-S02" /></label>
             <label>Mức
@@ -105,7 +123,7 @@
             <thead>
               <tr>
                 <th>Khóa</th>
-                <th>Scope</th>
+                <th>Scope · mục đích</th>
                 <th>Mức</th>
                 <th>Câu hỏi</th>
                 <th>Đáp án</th>

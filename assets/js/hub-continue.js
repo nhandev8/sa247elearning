@@ -30,11 +30,12 @@
         return;
       }
       const c = primary.course;
-      const labels = sa247Continue.ctaLabels(primary.state);
+      const labels =
+        primary.state === "completed" ? { text: "Kiểm tra cuối khóa" } : sa247Continue.ctaLabels(primary.state);
       const href =
         primary.state === "completed"
-          ? `${c.slug}/#learner-root`
-          : sa247Continue.learnHref(c.slug, primary.lesson).replace(/^\.\.\//, "");
+          ? `quiz/?course=${encodeURIComponent(c.code)}`
+          : sa247Continue.learnHref(c.slug, primary.lesson, c.code).replace(/^\.\.\//, "");
       const lessonBits = primary.lesson
         ? `${sa247Continue.esc(primary.lesson.moduleCode || "")}${
             primary.lesson.lesson_code
@@ -42,7 +43,7 @@
               : ""
           } — ${sa247Continue.esc(primary.lesson.title)}`
         : primary.state === "completed"
-          ? "Đã hoàn thành khóa — làm kiểm tra hoặc xem lại"
+          ? "Đã học xong tất cả bài — bước tiếp theo: kiểm tra cuối khóa"
           : "";
       const when = sa247Continue.fmtRelative(primary.lastAt);
       host.hidden = false;

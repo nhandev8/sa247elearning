@@ -236,16 +236,89 @@
 
   function renderClassroom(host, ctx) {
     const { course, modules, flat, progressMap, enrolled, loginHref, freeCount, sb } = ctx;
+    const learnMode = ctx.mode === "learn";
     const done = flat.filter((l) => progressMap[l.id]?.completed).length;
     const total = flat.length || 1;
     const pct = Math.round((done / total) * 100);
     const target = queryLessonTarget();
     const resume = pickResume(flat, progressMap, target);
     const openN = freeCount ?? flat.filter((l) => l.is_free).length;
+    const quizHref = `../quiz/?course=${encodeURIComponent(course.code)}`;
+    let assess = ctx.assess || null;
 
     let ytPlayer = null;
     let watchTimer = null;
     let currentLesson = null;
+
+    function finalRowHtml() {
+      if (!enrolled) return "";
+      const doneN = flat.filter((l) => progressMap[l.id]?.completed).length;
+      const a = assess?.assessment || null;
+      let status;
+      let action = "";
+      if (a && a.passed) {
+        status = `✓ Đạt ${a.best_score ?? ""}/100`;
+        action = `<a class="btn btn--amber btn--small" href="../chung-nhan/">Giấy chứng nhận</a>`;
+      } else if (doneN < flat.length) {
+        status = `🔒 Hoàn thành ${doneN}/${flat.length} bài để mở`;
+      } else if (a && a.attempts_used >= a.attempts_max && !a.has_open_session) {
+        status = `Đã dùng ${a.attempts_used}/${a.attempts_max} lần`;
+        action = `<a class="btn btn--line btn--small" href="../phan-hoi/">Liên hệ hỗ trợ</a>`;
+      } else {
+        status = a && a.attempts_used > 0 ? `Chưa đạt · còn ${a.attempts_left}/${a.attempts_max} lần` : "✓ Sẵn sàng";
+        action = `<a class="btn btn--amber btn--small" href="${quizHref}">${
+          a?.has_open_session ? "Tiếp tục kiểm tra" : a?.attempts_used > 0 ? "Làm lại" : "Bắt đầu kiểm tra"
+        }</a>`;
+      }
+      return `<div class="classroom__final">
+        <p class="classroom__final-title">Kiểm tra cuối khóa</p>
+        <p class="meta">${esc(status)}</p>
+        ${action}
+      </div>`;
+    }
+
+    function paintFinalRow() {
+      const box = host.querySelector("[data-final-row]");
+      if (box) box.innerHTML = finalRowHtml();
+    }
+
+    async function refreshAssess() {
+      if (!enrolled || !sb) return;
+      try {
+        const { data } = await sb.rpc("get_my_course_state", { p_course_code: course.code });
+        if (data) {
+          assess = data;
+          window.dispatchEvent(new CustomEvent("sa247:course-state", { detail: data }));
+        }
+      } catch (_) {}
+      paintFinalRow();
+    }
+
+    function pagerHtml(lesson) {
+      const i = flat.findIndex((l) => l.id === lesson.id);
+      const prev = i > 0 ? flat[i - 1] : null;
+      const next = i >= 0 ? flat[i + 1] : null;
+      const nextLocked = next && isSeqLocked(next) && !progressMap[lesson.id]?.completed;
+      const allDone = flat.every((l) => progressMap[l.id]?.completed);
+      const nextBtn = next
+        ? `<button type="button" class="btn btn--amber btn--small" data-next-lesson="${esc(next.id)}"${
+            nextLocked ? ' disabled title="Xem hết bài này để mở bài tiếp theo"' : ""
+          }>Bài tiếp theo →</button>`
+        : allDone
+          ? `<a class="btn btn--amber btn--small" href="${quizHref}">Kiểm tra cuối khóa →</a>`
+          : "";
+      return `${prev ? `<button type="button" class="btn btn--line btn--small" data-next-lesson="${esc(prev.id)}">← Bài trước</button>` : "<span></span>"}
+        <span class="classroom__pos">Bài ${i + 1}/${flat.length}</span>
+        ${nextBtn || "<span></span>"}`;
+    }
+
+    function paintPager(lesson) {
+      const bar = host.querySelector("[data-pager]");
+      if (bar && lesson && enrolled) {
+        bar.innerHTML = pagerHtml(lesson);
+        bar.hidden = false;
+      }
+    }
 
     let flushOnLeave = null;
     window.addEventListener("pagehide", () => flushOnLeave && flushOnLeave());
@@ -288,57 +361,49 @@
         <p class="meta">Tiến độ khóa: <strong>${pctN}%</strong> · ${doneN}/${flat.length} bài</p>
         ${sa247Continue ? sa247Continue.progressBarHtml(pctN) : ""}
       </div>`;
-      const modCode = (lesson.moduleCode || "").toString().toUpperCase();
-      const nextSameMod =
-        next &&
-        String(next.moduleCode || "").toUpperCase() === modCode;
-      const chapterQuizHref = modCode
-        ? `../quiz/?course=${encodeURIComponent(course.code)}&module=${encodeURIComponent(modCode)}`
-        : `../kiem-tra/?course=${encodeURIComponent(course.code)}`;
-      const assessHref = `../kiem-tra/?course=${encodeURIComponent(course.code)}`;
-
-      if (next && nextSameMod) {
+      const pending = flat.find((l) => !progressMap[l.id]?.completed && l.id !== lesson.id);
+      if (next) {
+        const newChapter = String(next.moduleCode || "") !== String(lesson.moduleCode || "");
         meta.innerHTML = `<div class="lesson-next">
-          <p class="kicker">Bài tiếp theo</p>
-          <h4>${esc(next.moduleCode || next.moduleTitle || "")}${next.lesson_code ? " · " + esc(next.lesson_code) : ""}</h4>
+          <p class="kicker">${newChapter ? "Chương tiếp theo" : "Bài tiếp theo"}</p>
+          <h4>${esc(next.moduleTitle || next.moduleCode || "")}</h4>
           <p>${esc(next.title)}</p>
           <div class="lesson-next__actions">
             <button type="button" class="btn btn--amber" data-next-lesson="${esc(next.id)}">Học bài tiếp theo →</button>
-            <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
           </div>
         </div>`;
-      } else if (next && !nextSameMod) {
+      } else if (pending) {
         meta.innerHTML = `<div class="lesson-next">
-          <p class="lead"><strong>Bạn đã học xong chương ${esc(modCode || "")}.</strong></p>
-          <p class="meta">Nên làm bài kiểm tra cuối chương trước khi sang chương tiếp theo.</p>
+          <p class="lead"><strong>Còn ${flat.length - doneN} bài chưa hoàn thành.</strong></p>
+          <p class="meta">Hoàn thành tất cả bài học để mở bài kiểm tra cuối khóa.</p>
           <div class="lesson-next__actions">
-            <a class="btn btn--amber" href="${chapterQuizHref}">Kiểm tra cuối chương ${esc(modCode)}</a>
-            <button type="button" class="btn btn--line" data-next-lesson="${esc(next.id)}">Sang chương tiếp →</button>
-            <a class="btn btn--line" href="${assessHref}">Kiểm tra &amp; kết quả</a>
+            <button type="button" class="btn btn--amber" data-next-lesson="${esc(pending.id)}">Học bài còn thiếu →</button>
           </div>
         </div>`;
       } else {
         meta.innerHTML = `<div class="lesson-next">
-          <p class="lead"><strong>Bạn đã hoàn thành toàn bộ video khóa học.</strong></p>
-          <p class="meta">Đạt hết quiz chương rồi làm đề cuối khóa để đủ điều kiện chứng nhận.</p>
+          <p class="lead"><strong>🎉 Bạn đã hoàn thành tất cả bài học của khóa.</strong></p>
+          <p class="meta">Bước tiếp theo: bài kiểm tra cuối khóa — không giới hạn thời gian, tối đa 6 lần.</p>
           <div class="lesson-next__actions">
-            <a class="btn btn--amber" href="${assessHref}">Xem kiểm tra chương &amp; cuối khóa</a>
-            <a class="btn btn--line" href="../quiz/?course=${encodeURIComponent(course.code)}">Thi cuối khóa</a>
-            <a class="btn btn--line" href="../dashboard/">Về Học tập</a>
+            <a class="btn btn--amber" href="${quizHref}">Bắt đầu kiểm tra cuối khóa</a>
           </div>
         </div>`;
       }
+      refreshAssess();
       host.querySelector(".classroom__head .progress-bar > span")?.style.setProperty("width", pctN + "%");
       const headMeta = host.querySelector(".classroom__head .meta strong");
       if (headMeta) headMeta.textContent = `${doneN}/${flat.length}`;
     }
 
     host.innerHTML = `
-      <div class="classroom" data-enrolled="${enrolled ? "1" : "0"}">
-        <div class="classroom__head">
+      <div class="classroom${learnMode ? " classroom--learn" : ""}" data-enrolled="${enrolled ? "1" : "0"}">
+        ${
+          learnMode
+            ? ""
+            : `<div class="classroom__head">
           <div>
             <h3>Lớp học · ${esc(course.code)}</h3>
-            <p class="meta">Tiến độ: <strong>${done}/${flat.length}</strong> video (${pct}%)</p>
+            <p class="meta">Tiến độ: <strong>${done}/${flat.length}</strong> bài (${pct}%)</p>
             <p class="meta">${
               enrolled
                 ? "Xem hết từng video (tốc độ 1×) để mở bài tiếp theo."
@@ -349,27 +414,32 @@
           <div class="classroom__actions">
             ${
               enrolled
-                ? `<button type="button" class="btn btn--amber btn--small" data-resume>Tiếp tục học</button>
-                   <a class="btn btn--line btn--small" href="../dashboard/">Học tập</a>
-                   <a class="btn btn--line btn--small" href="../kiem-tra/?course=${encodeURIComponent(course.code)}">Kiểm tra</a>`
+                ? `<a class="btn btn--amber btn--small" href="../hoc/?course=${encodeURIComponent(course.code)}">Vào trang học</a>`
                 : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa khóa học</a>
                    <a class="btn btn--line btn--small" href="${esc(loginHref)}">Đăng nhập</a>`
             }
             <button type="button" class="btn btn--line btn--small classroom__toggle" data-toggle-side>Mục lục</button>
           </div>
-        </div>
+        </div>`
+        }
         <div class="classroom__body">
-          <aside class="classroom__side" id="classroom-side">
-            <p class="classroom__side-label">Mô-đun &amp; video</p>
+          <aside class="classroom__side" id="classroom-side" aria-label="Mục lục khóa học">
+            <div class="classroom__side-top">
+              <p class="classroom__side-label">Mục lục · ${done}/${flat.length} bài</p>
+              <button type="button" class="classroom__side-close" data-toggle-side aria-label="Đóng mục lục">×</button>
+            </div>
             <div class="classroom__mods"></div>
+            <div data-final-row></div>
           </aside>
           <div class="classroom__main">
             <div class="classroom__player" id="classroom-player">
               <p class="lead">Chọn một video trong mục lục để xem.</p>
             </div>
+            <div class="classroom__pager" data-pager hidden></div>
             <div class="classroom__meta" id="classroom-meta"></div>
           </div>
         </div>
+        <div class="classroom__scrim" data-toggle-side></div>
       </div>`;
 
     const modsEl = $(".classroom__mods", host);
@@ -420,6 +490,7 @@
       details.appendChild(ul);
       modsEl.appendChild(details);
     });
+    paintFinalRow();
     }
     renderSide();
 
@@ -429,6 +500,11 @@
       host.querySelector(".classroom__head .progress-bar > span")?.style.setProperty("width", pctN + "%");
       const headMeta = host.querySelector(".classroom__head .meta strong");
       if (headMeta) headMeta.textContent = `${doneN}/${flat.length}`;
+      const sideLabel = host.querySelector(".classroom__side-label");
+      if (sideLabel) sideLabel.textContent = `Mục lục · ${doneN}/${flat.length} bài`;
+      window.dispatchEvent(
+        new CustomEvent("sa247:course-progress", { detail: { done: doneN, total: flat.length, percent: pctN } })
+      );
     }
 
     async function refreshLocks() {
@@ -463,10 +539,121 @@
     const player = $("#classroom-player", host);
     const meta = $("#classroom-meta", host);
 
+    /* Chế độ tập trung: khi video đang phát, làm mờ mục lục và thu gọn thanh trên */
+    let focusTimer = null;
+    function setFocus(on) {
+      clearTimeout(focusTimer);
+      const apply = () => {
+        host.querySelector(".classroom")?.classList.toggle("is-focus", on);
+        document.body.classList.toggle("lx-focus", on);
+      };
+      if (on) focusTimer = setTimeout(apply, 1500);
+      else apply();
+    }
+
+    const RES_KIND = { tai_lieu: "Tài liệu", bieu_mau: "Biểu mẫu", checklist: "Checklist", lien_ket: "Liên kết" };
+
+    async function paintResources(lesson, box) {
+      if (!box || !enrolled) return;
+      try {
+        const { data, error } = await sb.rpc("get_lesson_resources", { p_lesson_id: lesson.id });
+        if (error || !data?.allowed || !data.items?.length || currentLesson?.id !== lesson.id) return;
+        box.className = "lesson-res";
+        box.innerHTML = `<h5>Tài liệu bài học</h5><ul>${data.items
+          .map(
+            (r) => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">
+              <span class="lesson-res__kind">${esc(RES_KIND[r.kind] || "Tài liệu")}</span>${esc(r.title)}</a>${
+              r.note ? `<small>${esc(r.note)}</small>` : ""
+            }</li>`
+          )
+          .join("")}</ul>`;
+        box.hidden = false;
+      } catch (e) {
+        console.warn("[learn-player] resources", e);
+      }
+    }
+
+    async function paintSelfCheck(lesson, box) {
+      if (!box) return;
+      let qs = [];
+      try {
+        const { data, error } = await sb.rpc("get_lesson_self_check", { p_lesson_id: lesson.id });
+        if (error || !data?.allowed) return;
+        qs = data.questions || [];
+      } catch {
+        return;
+      }
+      if (!qs.length || currentLesson?.id !== lesson.id) return;
+      box.className = "self-check";
+      box.innerHTML = `<details>
+          <summary>Tự kiểm tra nhanh · ${qs.length} câu <small>không tính điểm</small></summary>
+          <form data-sc-form>
+            ${qs
+              .map(
+                (q, i) => `<fieldset class="self-check__q" data-qid="${esc(q.id)}">
+                  <legend>${i + 1}. ${esc(q.stem)}</legend>
+                  ${(q.choices || [])
+                    .map(
+                      (c) => `<label><input type="radio" name="sc-${esc(q.id)}" value="${esc(c.key)}" /> <span>${esc(c.text)}</span></label>`
+                    )
+                    .join("")}
+                  <p class="self-check__why" hidden></p>
+                </fieldset>`
+              )
+              .join("")}
+            <div class="self-check__actions">
+              <button type="submit" class="btn btn--amber btn--small">Xem đáp án</button>
+              <span class="meta" data-sc-score></span>
+            </div>
+            <p class="meta">Phần này giúp bạn tự ôn — không ảnh hưởng tiến độ hay bài kiểm tra cuối khóa.</p>
+          </form>
+        </details>`;
+      box.hidden = false;
+      const form = $("[data-sc-form]", box);
+      form.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const answers = {};
+        form.querySelectorAll("fieldset[data-qid]").forEach((fs) => {
+          const v = fs.querySelector("input:checked")?.value;
+          if (v != null) answers[fs.dataset.qid] = v;
+        });
+        const score = $("[data-sc-score]", form);
+        if (!Object.keys(answers).length) {
+          score.textContent = "Chọn ít nhất một đáp án.";
+          return;
+        }
+        const { data, error } = await sb.rpc("check_lesson_self_check", { p_lesson_id: lesson.id, p_answers: answers });
+        if (error) {
+          score.textContent = "Chưa kiểm tra được — thử lại sau.";
+          return;
+        }
+        (data.items || []).forEach((it) => {
+          const fs = form.querySelector(`fieldset[data-qid="${it.id}"]`);
+          if (!fs) return;
+          fs.classList.toggle("is-right", it.correct);
+          fs.classList.toggle("is-wrong", !it.correct);
+          fs.querySelectorAll("label").forEach((lb) => {
+            lb.classList.toggle("is-key", lb.querySelector("input")?.value === it.correct_key);
+          });
+          const why = $(".self-check__why", fs);
+          why.textContent = (it.correct ? "Đúng. " : "Chưa đúng. ") + (it.explanation || "");
+          why.hidden = false;
+        });
+        score.textContent = `Đúng ${data.correct}/${data.total} câu.`;
+      });
+    }
+
     async function playLesson(lesson) {
       if (!lesson) return;
       currentLesson = lesson;
       stopWatch();
+      setFocus(false);
+      paintPager(lesson);
+      if (learnMode && lesson.lesson_code) {
+        const u = new URL(location.href);
+        u.searchParams.set("lesson", lesson.lesson_code);
+        history.replaceState({}, "", u);
+      }
       host.querySelectorAll(".classroom__lesson").forEach((btn) => {
         btn.classList.toggle("is-active", btn.getAttribute("data-lesson") === lesson.id);
       });
@@ -554,6 +741,8 @@
               : `<a class="btn btn--amber btn--small" href="#dang-ky">Mở khóa để lưu tiến độ</a>`
         }
         ${descHtml}
+        <div data-lesson-res hidden></div>
+        <div data-self-check hidden></div>
         <p class="classroom__fb">
           <button type="button" class="btn btn--line btn--small" data-lesson-fb>💬 Có vấn đề với bài học này?</button>
         </p>
@@ -578,7 +767,12 @@
       let lastPos = seek;
       let rateNote = "";
       let showDoneOnEnd = false;
+      const needPct = Number(lesson.complete_percent) >= 50 ? Number(lesson.complete_percent) : 100;
       const statusEl = $("[data-watch-status]", meta);
+      if (sb && !String(lesson.id).startsWith("static:")) {
+        paintResources(lesson, $("[data-lesson-res]", meta));
+        paintSelfCheck(lesson, $("[data-self-check]", meta));
+      }
 
       function paintStatus() {
         if (!statusEl) return;
@@ -588,7 +782,10 @@
         $("[data-watch-pct]", statusEl).textContent = label;
         $("[data-watch-note]", statusEl).textContent = done
           ? "Bài học đã được ghi nhận hoàn thành."
-          : rateNote || "Xem hết video (tốc độ 1×) để hoàn thành bài — tua qua không được tính.";
+          : rateNote ||
+            (needPct < 100
+              ? `Xem ít nhất ${needPct}% video (tốc độ 1×) để hoàn thành bài — tua qua không được tính.`
+              : "Xem hết video (tốc độ 1×) để hoàn thành bài — tua qua không được tính.");
         $("[data-watch-bar]", statusEl).style.width = pctNow + "%";
         statusEl.classList.toggle("is-done", done);
         if (statusEl.getAttribute("data-label") !== label) {
@@ -638,14 +835,15 @@
         updateHead();
         const nextEl = $("[data-watch-next]", meta);
         const next = nextAfter();
-        if (nextEl) {
-          const modCode = String(lesson.moduleCode || "").toUpperCase();
-          const sameMod = next && String(next.moduleCode || "").toUpperCase() === modCode;
-          nextEl.innerHTML = sameMod
+        const allDone = flat.every((l) => progressMap[l.id]?.completed);
+        if (nextEl && (next || allDone)) {
+          nextEl.innerHTML = next
             ? `<button type="button" class="btn btn--amber btn--small" data-next-lesson="${esc(next.id)}">Bài tiếp theo →</button>`
-            : `<a class="btn btn--amber btn--small" href="../quiz/?course=${encodeURIComponent(course.code)}&module=${encodeURIComponent(modCode)}">Kiểm tra cuối chương ${esc(modCode)}</a>`;
+            : `<a class="btn btn--amber btn--small" href="${quizHref}">Bắt đầu kiểm tra cuối khóa</a>`;
           nextEl.hidden = false;
         }
+        paintPager(lesson);
+        refreshAssess();
         paintStatus();
         const st = ytPlayer?.getPlayerState?.();
         if (window.YT && st === YT.PlayerState.ENDED) showCompleteScreen(lesson);
@@ -749,6 +947,7 @@
               }
             },
             onStateChange: (ev) => {
+              if (learnMode) setFocus(ev.data === YT.PlayerState.PLAYING);
               if (!track) return;
               const t = ytPlayer?.getCurrentTime?.() || 0;
               if (ev.data === YT.PlayerState.PAUSED) {
@@ -849,13 +1048,20 @@
     });
 
     playLesson(resume || flat.find((l) => l.is_free) || flat[0]);
+    if (enrolled && !assess) refreshAssess();
   }
 
   async function main() {
     const host = document.getElementById("learner-root");
     if (!host) return;
-    const code = host.getAttribute("data-course-code");
-    if (!code) return;
+    const learnMode = host.getAttribute("data-mode") === "learn";
+    const code = learnMode
+      ? (new URLSearchParams(location.search).get("course") || "").trim().toUpperCase()
+      : host.getAttribute("data-course-code");
+    if (!code) {
+      if (learnMode) location.replace("../khoa-cua-toi/");
+      return;
+    }
 
     const loginHref =
       host.getAttribute("data-login-href") ||
@@ -884,9 +1090,13 @@
       try {
         sb = await sa247Auth.ensureClient();
         session = await sa247Auth.getSession();
+        if (learnMode && !session) {
+          location.replace(`../auth/login.html?next=${encodeURIComponent(location.pathname + location.search)}`);
+          return;
+        }
         const { data } = await sb
           .from("courses")
-          .select("id,code,title,status,duration_label")
+          .select("id,code,title,slug,status")
           .eq("code", code)
           .maybeSingle();
         if (data) {
@@ -908,6 +1118,19 @@
       }
     }
 
+    if (learnMode) {
+      window.dispatchEvent(new CustomEvent("sa247:course", { detail: courseRow }));
+      if (!enrolled) {
+        const slug = courseRow.slug || code.toLowerCase();
+        host.innerHTML = `<div class="learn-gate">
+          <p class="lead">Bạn chưa có quyền học khóa <strong>${esc(code)}</strong>.</p>
+          <p><a class="btn btn--amber" href="../${esc(slug)}/">Xem thông tin khóa học</a>
+          <a class="btn btn--line" href="../khoa-cua-toi/">Khóa học của tôi</a></p>
+        </div>`;
+        return;
+      }
+    }
+
     let modules = [];
     let freeCount = 0;
 
@@ -920,36 +1143,14 @@
         if (oErr) throw oErr;
         modules = sanitizeModules(outline?.modules || []);
         freeCount = applyFreeQuota(modules);
-        // Merge descriptions from static curriculum
-        try {
-          const cur = await loadStaticCurriculum(host, code);
-          const byCode = Object.create(null);
-          (cur.modules || []).forEach((m) => {
-            (m.lessons || []).forEach((l) => {
-              if (l.lesson_code) {
-                byCode[l.lesson_code] = {
-                  description: l.description || l.youtube_description || "",
-                  description_short: l.description_short || "",
-                };
-              }
-            });
-          });
-          modules.forEach((m) => {
-            (m.lessons || []).forEach((l) => {
-              const hit = byCode[l.lesson_code];
-              if (!hit) return;
-              if (!l.description && hit.description) l.description = hit.description;
-              if (!l.description_short && hit.description_short) {
-                l.description_short = hit.description_short;
-              }
-            });
-          });
-        } catch {
-          /* ignore */
-        }
       } catch (e) {
         console.warn("[learn-player] outline", e);
       }
+    }
+
+    if (!modules.length && learnMode) {
+      host.innerHTML = `<p class="lead">Không tải được mục lục khóa học. Vui lòng tải lại trang.</p>`;
+      return;
     }
 
     if (!modules.length) {
@@ -1002,6 +1203,7 @@
     }
 
     renderClassroom(host, {
+      mode: learnMode ? "learn" : "course",
       sb,
       course: courseRow,
       modules,

@@ -256,6 +256,111 @@
     };
   }
 
+  const GRANT_ERR = {
+    not_authorized: "Tài khoản chưa có quyền (cần nhân sự SA247 và xác thực 2 lớp).",
+    extra_range: "Số lượt cấp thêm phải từ 1 đến 6.",
+    reason_required: "Cần nhập lý do (ít nhất 5 ký tự).",
+    not_enrolled: "Người học không còn quyền học khóa này.",
+    already_passed: "Người học đã đạt — không cần cấp thêm lượt.",
+    course_not_found: "Không tìm thấy khóa học.",
+  };
+
+  async function paintAssess(sb, uid, reload) {
+    const box = document.getElementById("assess-box");
+    if (!box) return;
+    const { data, error } = await sb.rpc("admin_get_learner_assessments", { p_user_id: uid });
+    if (error) {
+      box.innerHTML = `<p class="adm-msg adm-msg--err">${esc(GRANT_ERR[error.message] || error.message)}</p>`;
+      return;
+    }
+    if (!data?.length) {
+      box.innerHTML = '<p class="adm-muted">Chưa có khóa học nào.</p>';
+      return;
+    }
+    box.innerHTML = data
+      .map((c) => {
+        const s = c.stats || {};
+        const pr = c.progress || {};
+        const badge = !s.configured
+          ? '<span class="adm-badge adm-badge--draft">Chưa có bài kiểm tra</span>'
+          : s.passed
+            ? '<span class="adm-badge adm-badge--ok">Đạt</span>'
+            : s.left <= 0 && s.used > 0
+              ? '<span class="adm-badge adm-badge--danger">Hết lượt</span>'
+              : (pr.percent || 0) < (s.min_progress_percent ?? 100)
+                ? '<span class="adm-badge adm-badge--draft">Chưa mở</span>'
+                : s.used > 0
+                  ? '<span class="adm-badge adm-badge--warn">Chưa đạt</span>'
+                  : '<span class="adm-badge">Sẵn sàng</span>';
+        const hist = (c.attempts || [])
+          .map(
+            (a) => `<tr><td>Lượt ${a.attempt_no}</td><td><strong>${a.score_percent}%</strong></td>
+              <td>${a.passed ? "Đạt" : "Chưa đạt"}</td><td>${esc(new Date(a.created_at).toLocaleString("vi-VN"))}</td></tr>`
+          )
+          .join("");
+        const grants = (c.grants || [])
+          .map(
+            (g) => `<li>+${g.extra_attempts} lượt · ${esc(g.reason)} <span class="adm-muted">— ${esc(g.granted_by || "")}, ${esc(
+              new Date(g.created_at).toLocaleString("vi-VN")
+            )}</span></li>`
+          )
+          .join("");
+        const canGrant = s.configured && !s.passed;
+        return `<article class="adm-card" style="margin:.75rem 0;box-shadow:none">
+          <div class="prf-inline" style="justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+            <div><strong>${esc(c.course_code)}</strong> · ${esc(c.course_title || "")} ${badge}</div>
+            ${
+              canGrant
+                ? `<button type="button" class="adm-btn adm-btn--line adm-btn--small" data-grant-attempt="${esc(c.course_code)}">+ Cấp thêm lượt</button>`
+                : ""
+            }
+          </div>
+          <p class="adm-msg" style="margin:.35rem 0">Bài học: ${pr.done ?? 0}/${pr.total ?? 0} (${pr.percent ?? 0}%) ·
+            Lượt đã dùng: <strong>${s.used ?? 0}/${s.max ?? 0}</strong>${s.granted ? ` (gồm ${s.granted} lượt cấp thêm)` : ""} ·
+            Điểm cao nhất: ${s.best_score != null ? s.best_score + "%" : "—"} · Điểm đạt: ${s.pass_percent ?? "—"}%</p>
+          ${
+            hist
+              ? `<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>Lượt</th><th>Điểm</th><th>Kết quả</th><th>Thời gian</th></tr></thead><tbody>${hist}</tbody></table></div>`
+              : '<p class="adm-muted" style="margin:0">Chưa làm bài kiểm tra cuối khóa.</p>'
+          }
+          ${grants ? `<p class="adm-msg" style="margin:.5rem 0 0">Lượt đã cấp thêm:</p><ul class="adm-todo">${grants}</ul>` : ""}
+        </article>`;
+      })
+      .join("");
+
+    box.querySelectorAll("[data-grant-attempt]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const code = btn.getAttribute("data-grant-attempt");
+        const nRaw = prompt(`Cấp thêm lượt kiểm tra cuối khóa ${code}.\n\nSố lượt (1–6):`, "1");
+        if (nRaw == null) return;
+        const n = Math.floor(Number(nRaw));
+        if (!(n >= 1 && n <= 6)) {
+          alert(GRANT_ERR.extra_range);
+          return;
+        }
+        const reason = prompt("Lý do cấp thêm (bắt buộc, ít nhất 5 ký tự — lưu vào nhật ký):");
+        if (reason == null) return;
+        if (reason.trim().length < 5) {
+          alert(GRANT_ERR.reason_required);
+          return;
+        }
+        btn.disabled = true;
+        const { error: gErr } = await sb.rpc("admin_grant_assessment_attempts", {
+          p_user_id: uid,
+          p_course_code: code,
+          p_extra: n,
+          p_reason: reason.trim(),
+        });
+        btn.disabled = false;
+        if (gErr) {
+          alert(GRANT_ERR[gErr.message] || gErr.message);
+          return;
+        }
+        await reload();
+      });
+    });
+  }
+
   async function loadDossier(ctx, uid, host, statusEl) {
     const { sb } = ctx;
     const role = ctx.profile.role;
@@ -421,8 +526,12 @@
         </section>
 
         <section class="adm-card" id="sec-quiz">
-          <h2>Kiểm tra</h2>
-          ${table(["Thời gian", "Khóa", "Bài kiểm tra", "Điểm", "Kết quả"], quizRows, "Chưa làm bài kiểm tra nào.")}
+          <h2>Kiểm tra cuối khóa</h2>
+          <div id="assess-box"><p class="adm-msg">Đang tải…</p></div>
+          <details style="margin-top:.75rem">
+            <summary>Tất cả lượt làm (kể cả kiểm tra chương cũ)</summary>
+            ${table(["Thời gian", "Khóa", "Bài kiểm tra", "Điểm", "Kết quả"], quizRows, "Chưa làm bài kiểm tra nào.")}
+          </details>
         </section>
 
         <section class="adm-card" id="sec-cert">
@@ -493,6 +602,7 @@
     const reload = () => loadDossier(ctx, uid, host, statusEl);
 
     if (isAdmin) paintAccount(sb, uid, reload);
+    paintAssess(sb, uid, reload);
 
     document.getElementById("copy-uid")?.addEventListener("click", async (ev) => {
       try {

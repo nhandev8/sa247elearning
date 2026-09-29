@@ -49,34 +49,64 @@
         return;
       }
       if (status) status.textContent = `${snapshots.length} khóa đang có trong tài khoản.`;
+      const groupOf = (s) => (s.state === "completed" ? "done" : s.state === "in_progress" ? "doing" : "new");
+      const counts = { all: snapshots.length, doing: 0, new: 0, done: 0 };
+      snapshots.forEach((s) => counts[groupOf(s)]++);
+      const filters = [
+        ["all", "Tất cả"],
+        ["doing", "Đang học"],
+        ["new", "Chưa bắt đầu"],
+        ["done", "Đã hoàn thành"],
+      ];
+      let bar = document.getElementById(hostId + "-filters");
+      if (!bar) {
+        bar = document.createElement("div");
+        bar.id = hostId + "-filters";
+        bar.className = "course-filters";
+        bar.setAttribute("role", "tablist");
+        box.parentNode.insertBefore(bar, box);
+      }
+      bar.innerHTML = filters
+        .map(
+          ([k, label], i) =>
+            `<button type="button" role="tab" class="course-filters__btn${i === 0 ? " is-on" : ""}" data-filter="${k}"${
+              counts[k] || k === "all" ? "" : " disabled"
+            }>${label} <span>${counts[k]}</span></button>`
+        )
+        .join("");
+      bar.onclick = (e) => {
+        const b = e.target.closest("[data-filter]");
+        if (!b) return;
+        bar.querySelectorAll("[data-filter]").forEach((x) => x.classList.toggle("is-on", x === b));
+        box.querySelectorAll("[data-group]").forEach((card) => {
+          card.hidden = b.dataset.filter !== "all" && card.dataset.group !== b.dataset.filter;
+        });
+      };
       box.innerHTML = snapshots
         .map((s) => {
           const c = s.course || {};
           const labels = C().ctaLabels(s.state);
-          const href =
-            s.state === "completed"
-              ? `../${esc(c.slug)}/#learner-root`
-              : C().learnHref(c.slug, s.lesson);
-          const st =
-            s.state === "completed"
-              ? "Hoàn thành"
-              : s.state === "in_progress"
-                ? "Đang học"
-                : "Chưa bắt đầu";
+          const done = s.state === "completed";
+          const href = done ? `../quiz/?course=${encodeURIComponent(c.code || "")}` : C().learnHref(c.slug, s.lesson, c.code);
+          const st = done ? "Đã hoàn thành bài học" : s.state === "in_progress" ? "Đang học" : "Chưa bắt đầu";
           const nextLine = s.lesson
             ? `<p class="continue-next"><span>Bài gần nhất</span><strong>${esc(s.lesson.title)}</strong></p>`
-            : s.state === "completed"
-              ? `<p class="continue-next is-done"><strong>Đã hoàn thành khóa này.</strong></p>`
+            : done
+              ? `<p class="continue-next is-done"><strong>Bạn đã học xong tất cả bài học.</strong></p>`
               : "";
-          return `<article class="program-card program-card--progress">
+          return `<article class="program-card program-card--progress" data-group="${groupOf(s)}">
             <span class="code">${esc(c.code || "")}</span>
             <h3>${esc(c.title || "Khóa học")}</h3>
             <p class="meta progress-meta">${st} · <strong>${s.pct}%</strong> · ${s.done}/${s.total} bài</p>
             ${C().progressBarHtml(s.pct)}
             ${nextLine}
             <div class="continue-hero__actions">
-              <a class="btn btn--amber btn--small" href="${href}">${esc(labels.text)}</a>
-              <a class="btn btn--line btn--small" href="../kiem-tra/?course=${encodeURIComponent(c.code || "")}">Kiểm tra</a>
+              <a class="btn btn--amber btn--small" href="${href}">${done ? "Kiểm tra cuối khóa" : esc(labels.text)}</a>
+              ${
+                done
+                  ? `<a class="btn btn--line btn--small" href="${C().learnHref(c.slug, null, c.code)}">Xem lại khóa học</a>`
+                  : `<a class="btn btn--line btn--small" href="../kiem-tra/?course=${encodeURIComponent(c.code || "")}">Kiểm tra &amp; kết quả</a>`
+              }
             </div>
           </article>`;
         })
@@ -112,10 +142,7 @@
               : s.pct >= 100
                 ? "Hoàn thành"
                 : "—";
-            const href =
-              s.state === "completed"
-                ? `../${esc(c.slug)}/#learner-root`
-                : C().learnHref(c.slug, s.lesson);
+            const href = C().learnHref(c.slug, s.state === "completed" ? null : s.lesson, c.code);
             return `<tr>
               <td data-label="Khóa"><strong>${esc(c.code || "")}</strong><div class="meta">${esc(c.title || "")}</div></td>
               <td data-label="Tiến độ"><strong>${s.pct}%</strong><div class="meta">${s.done}/${s.total} bài</div>${C().progressBarHtml(s.pct)}</td>
@@ -176,7 +203,7 @@
             <span>${esc(title)}</span>
             ${bar}
             ${tipWhy ? `<p class="meta">${esc(tipWhy)}</p>` : ""}
-            <a class="btn btn--line btn--small" href="../${esc(slug)}/">${
+            <a class="btn btn--line btn--small" href="${ownedHere ? C().learnHref(slug, null, code) : `../${esc(slug)}/`}">${
               ownedHere ? (done ? "Xem lại" : "Tiếp tục") : "Xem khóa"
             }</a>
           </li>`;
@@ -234,8 +261,8 @@
               ${
                 paid
                   ? courseLines.length > 1
-                    ? `<a class="btn btn--line btn--small" href="../hoc-tap/">Vào học</a>`
-                    : `<a class="btn btn--line btn--small" href="../${esc(c.slug)}/#learner-root">Vào học</a>`
+                    ? `<a class="btn btn--line btn--small" href="../khoa-cua-toi/">Vào học</a>`
+                    : `<a class="btn btn--line btn--small" href="${C().learnHref(c.slug, null, c.code)}">Vào học</a>`
                   : open
                     ? `<a class="btn btn--amber btn--small" href="${payHref}">${o.status === "draft" ? "Xem & xác nhận đơn" : "Thanh toán / QR"}</a>`
                     : ""

@@ -25,15 +25,16 @@
     }
 
     const c = primary.course;
-    const labels = C().ctaLabels(primary.state);
+    const labels =
+      primary.state === "completed" ? { text: "Kiểm tra cuối khóa" } : C().ctaLabels(primary.state);
     const href =
       primary.state === "completed"
-        ? `../${esc(c.slug)}/#learner-root`
-        : C().learnHref(c.slug, primary.lesson);
+        ? `../quiz/?course=${encodeURIComponent(c.code)}`
+        : C().learnHref(c.slug, primary.lesson, c.code);
 
     let lessonLine = "";
     if (primary.state === "completed") {
-      lessonLine = `<p class="continue-hero__lesson">Bạn đã hoàn thành khóa học. Có thể xem lại hoặc làm kiểm tra.</p>`;
+      lessonLine = `<p class="continue-hero__lesson">Bạn đã hoàn thành tất cả bài học. Bước tiếp theo: bài kiểm tra cuối khóa.</p>`;
     } else if (primary.lesson) {
       const mod = primary.lesson.moduleCode || primary.lesson.moduleTitle || "";
       const code = primary.lesson.lesson_code || "";
@@ -48,8 +49,8 @@
 
     const secondary =
       primary.state === "completed"
-        ? `<a class="btn btn--line" href="../kiem-tra/?course=${encodeURIComponent(c.code)}">Làm bài kiểm tra</a>`
-        : `<a class="btn btn--line" href="../${esc(c.slug)}/">Về trang khóa</a>`;
+        ? `<a class="btn btn--line" href="${C().learnHref(c.slug, null, c.code)}">Xem lại khóa học</a>`
+        : `<a class="btn btn--line" href="../kiem-tra/?course=${encodeURIComponent(c.code)}">Kiểm tra &amp; kết quả</a>`;
 
     host.hidden = false;
     host.innerHTML = `
@@ -97,8 +98,8 @@
       if (!c.code) return;
       if (s.state === "completed") {
         items.push({
-          html: `<strong>${esc(c.code)}</strong> — Làm bài kiểm tra cuối khóa hoặc đăng ký chứng nhận.`,
-          href: `../kiem-tra/?course=${encodeURIComponent(c.code)}`,
+          html: `<strong>${esc(c.code)}</strong> — Làm bài kiểm tra cuối khóa (đạt rồi có thể đăng ký nhận giấy chứng nhận).`,
+          href: `../quiz/?course=${encodeURIComponent(c.code)}`,
           cta: "Kiểm tra",
         });
       } else if (s.lesson) {
@@ -106,7 +107,7 @@
         items.push({
           html: `<strong>${esc(c.code)}</strong> — ${esc(s.lesson.title)}
             <span class="meta">(${left} bài còn lại · ${s.pct}%)</span>`,
-          href: C().learnHref(c.slug, s.lesson),
+          href: C().learnHref(c.slug, s.lesson, c.code),
           cta: "Tiếp tục học",
         });
       }

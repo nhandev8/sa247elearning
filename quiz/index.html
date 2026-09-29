@@ -4,64 +4,71 @@
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bài kiểm tra · SA247</title>
-  <meta name="description" content="Làm bài kiểm tra cuối chương hoặc cuối khóa SA247 — chấm trên máy chủ." />
+  <title>Kiểm tra cuối khóa · SA247</title>
+  <meta name="description" content="Bài kiểm tra cuối khóa SA247 — không giới hạn thời gian, chấm trên máy chủ." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=202609290010" />
-  <script src="../assets/supabase-config.js?v=202609290010"></script>
-  <script src="../assets/js/supabase-client.js?v=202609290010" defer></script>
-  <script src="../assets/js/learner-nav.js?v=202609290010" defer></script>
-  <script src="../assets/js/learner-boot.js?v=202609290010" defer></script>
-  <script src="../assets/js/quiz.js?v=202609290010" defer></script>
+  <link rel="stylesheet" href="../assets/site.css?v=202609300100" />
+  <script src="../assets/supabase-config.js?v=202609300100"></script>
+  <script src="../assets/js/supabase-client.js?v=202609300100" defer></script>
+  <script src="../assets/js/quiz.js?v=202609300100" defer></script>
 </head>
-<body class="app-body">
-  <div class="app-shell">
-    <aside class="app-side" aria-label="Menu học viên">
-      <a class="app-side__brand" href="../index.html">SA247 <em>Learn</em></a>
-      <nav class="app-side__nav" data-learner-nav data-active="kiem-tra"></nav>
-      <div class="app-side__foot">
-        <p class="app-side__user" id="user-label">…</p>
-        <button type="button" class="btn btn--line btn--small" id="logout">Đăng xuất</button>
-      </div>
-    </aside>
-    <div class="app-main">
-      <header class="app-top">
-        <button type="button" class="app-menu-btn" id="menu-toggle" aria-label="Mở menu">☰</button>
-        <h1>Bài kiểm tra</h1>
-      </header>
-      <main class="app-content">
-        <div id="quiz-course-wrap" class="quiz-course-wrap" hidden>
-          <label>
-            Chọn khóa đã mở khóa
-            <select id="quiz-course"></select>
-          </label>
-          <label id="quiz-module-wrap" hidden>
-            Phạm vi kiểm tra
-            <select id="quiz-module"></select>
-          </label>
-        </div>
-        <p class="lead" id="quiz-status">Đang tải…</p>
-        <form id="quiz-form" class="quiz-form" hidden>
-          <fieldset class="quiz-cert-name" id="quiz-cert-block" hidden>
-            <legend>Kiểm tra thông tin trên chứng nhận</legend>
-            <label class="quiz-name">
-              Họ và tên
-              <input type="text" name="full_name" id="quiz-full-name" maxlength="120" placeholder="VD: Nguyễn Văn A" />
-            </label>
-            <label class="quiz-confirm checkout-terms">
-              <input type="checkbox" name="confirm_cert_name" id="confirm-cert-name" />
-              <span>Tôi xác nhận thông tin trên là chính xác để in trên giấy chứng nhận.</span>
-            </label>
-            <p class="meta" id="quiz-cert-lock-note" hidden>Bạn đã có GCN phát hành — tên trên chứng nhận đã khóa theo hồ sơ.</p>
-          </fieldset>
-          <div id="quiz-questions"></div>
-          <button type="submit" class="btn btn--amber">Nộp bài</button>
-        </form>
-        <div id="quiz-result" class="quiz-result" hidden></div>
-      </main>
+<body class="qf-body">
+  <header class="qf-top">
+    <a class="qf-top__back" id="qf-back" href="../kiem-tra/" aria-label="Thoát bài kiểm tra">←</a>
+    <div class="qf-top__title">
+      <strong id="qf-title">Kiểm tra cuối khóa</strong>
+      <span id="qf-course"></span>
     </div>
-  </div>
+    <span class="qf-top__meta" id="qf-meta"></span>
+  </header>
+
+  <main class="qf-main">
+    <p class="qf-status" id="qf-status">Đang tải…</p>
+
+    <section class="qf-panel" id="qf-intro" hidden></section>
+
+    <section class="qf-run" id="qf-run" hidden>
+      <div class="qf-progress">
+        <span id="qf-pos">Câu 1/20</span>
+        <span id="qf-answered">Đã trả lời 0/20</span>
+        <div class="qf-progress__bar" aria-hidden="true"><i id="qf-bar"></i></div>
+      </div>
+      <article class="qf-card" id="qf-card" aria-live="polite"></article>
+      <nav class="qf-nav" aria-label="Chuyển câu">
+        <button type="button" class="btn btn--line" id="qf-prev">← Câu trước</button>
+        <button type="button" class="btn btn--line" id="qf-next">Câu tiếp →</button>
+      </nav>
+      <div class="qf-grid" id="qf-grid" role="navigation" aria-label="Bảng câu hỏi"></div>
+      <div class="qf-submit">
+        <p class="meta" id="qf-draft-note">Đáp án được lưu tự động. Thoát ra vẫn làm tiếp được — lần làm chỉ tính khi bấm Nộp bài.</p>
+        <button type="button" class="btn btn--amber" id="qf-submit">Nộp bài</button>
+      </div>
+    </section>
+
+    <section class="qf-panel qf-result" id="qf-result" hidden></section>
+  </main>
+
+  <dialog class="qf-dialog" id="qf-confirm" aria-labelledby="qf-confirm-title">
+    <form method="dialog" id="qf-confirm-form">
+      <h2 id="qf-confirm-title">Nộp bài kiểm tra?</h2>
+      <p id="qf-confirm-summary"></p>
+      <fieldset class="qf-certname" id="qf-certname">
+        <legend>Họ tên in trên giấy chứng nhận (nếu đạt)</legend>
+        <input type="text" id="qf-full-name" maxlength="120" placeholder="VD: Nguyễn Văn A" autocomplete="name" />
+        <label class="checkout-terms">
+          <input type="checkbox" id="qf-name-ok" />
+          <span>Tôi xác nhận họ tên trên là chính xác.</span>
+        </label>
+        <p class="meta" id="qf-name-locked" hidden>Bạn đã có giấy chứng nhận phát hành — họ tên theo hồ sơ đã khóa.</p>
+      </fieldset>
+      <p class="form-msg is-err" id="qf-confirm-err" hidden></p>
+      <div class="qf-dialog__actions">
+        <button type="button" class="btn btn--line" id="qf-confirm-back">Quay lại kiểm tra</button>
+        <button type="button" class="btn btn--amber" id="qf-confirm-go">Nộp bài</button>
+      </div>
+    </form>
+  </dialog>
 </body>
 </html>

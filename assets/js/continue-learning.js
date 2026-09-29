@@ -132,13 +132,12 @@
     return flat[i + 1] || null;
   }
 
-  function learnHref(slug, lesson) {
-    const base = "../" + encodeURIComponent(slug || "") + "/#learner-root";
-    if (!lesson?.id && !lesson?.lesson_code) return base;
-    const q = lesson.lesson_code
-      ? "lesson=" + encodeURIComponent(lesson.lesson_code)
-      : "lesson_id=" + encodeURIComponent(lesson.id);
-    return base.split("#")[0] + "?" + q + "#learner-root";
+  /* Trang học: /hoc/?course=MÃ[&lesson=MÃ_BÀI]. Slug khóa = mã khóa viết thường. */
+  function learnHref(slug, lesson, code) {
+    let href = "../hoc/?course=" + encodeURIComponent(code || String(slug || "").toUpperCase());
+    if (lesson?.lesson_code) href += "&lesson=" + encodeURIComponent(lesson.lesson_code);
+    else if (lesson?.id) href += "&lesson_id=" + encodeURIComponent(lesson.id);
+    return href;
   }
 
   function progressBarHtml(pct) {
@@ -230,7 +229,7 @@
       not_started: { text: "Bắt đầu học", verb: "bắt đầu" },
       in_progress: { text: "Tiếp tục học", verb: "tiếp tục" },
       completed: { text: "Xem lại khóa học", verb: "xem lại" },
-      empty: { text: "Vào lớp học", verb: "vào học" },
+      empty: { text: "Vào học", verb: "vào học" },
     };
     return map[state] || map.not_started;
   }

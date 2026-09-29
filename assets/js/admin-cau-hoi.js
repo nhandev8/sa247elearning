@@ -31,7 +31,9 @@
     const cid = document.getElementById("filter-course").value;
     const scope = document.getElementById("filter-scope").value;
     const mod = document.getElementById("filter-module").value;
+    const purpose = document.getElementById("filter-purpose")?.value || "";
     const list = cache.filter((q) => {
+      if (purpose && (q.purpose || "chinh_thuc") !== purpose) return false;
       if (cid && q.course_id !== cid) return false;
       if (scope && (q.scope || "khoa") !== scope) return false;
       if (mod && (q.module_code || "") !== mod) return false;
@@ -42,7 +44,8 @@
         const c = courses.find((x) => x.id === q.course_id);
         return `<tr>
           <td>${esc(c?.code || "—")}</td>
-          <td>${esc(q.scope || "khoa")}${q.module_code ? " · " + esc(q.module_code) : ""}</td>
+          <td>${esc(q.scope || "khoa")}${q.module_code ? " · " + esc(q.module_code) : ""}${q.lesson_code ? " · " + esc(q.lesson_code) : ""}
+            ${q.purpose === "tu_kiem_tra" ? '<div><span class="adm-badge adm-badge--warn">Tự kiểm tra</span></div>' : ""}</td>
           <td>${esc(LEVEL_LABEL[q.level] || q.level || sa247Admin.difficultyVi(q.difficulty))}</td>
           <td title="${esc(q.external_code || "")}">${esc(stemPreview(q.stem))}</td>
           <td>${(q.choices || []).length} LC · #${(q.correct_index || 0) + 1}</td>
@@ -89,6 +92,7 @@
           course_code: data.course_code,
           scope: data.scope,
           module_code: data.module_code,
+          purpose: data.purpose,
         },
       };
     }
@@ -108,7 +112,7 @@
           sb
             .from("question_bank")
             .select(
-              "id,course_id,topic,difficulty,stem,choices,correct_index,explanation,scope,module_code,lesson_code,source_ref,level,external_code,is_published,created_at"
+              "id,course_id,topic,difficulty,stem,choices,correct_index,explanation,scope,module_code,lesson_code,source_ref,level,external_code,is_published,purpose,created_at"
             )
             .order("created_at", { ascending: false }),
         ]);
@@ -141,6 +145,7 @@
       });
       document.getElementById("filter-scope").addEventListener("change", paint);
       document.getElementById("filter-module").addEventListener("change", paint);
+      document.getElementById("filter-purpose")?.addEventListener("change", paint);
 
       document.getElementById("form-course").addEventListener("change", (ev) => {
         fillModuleSelect(document.getElementById("form-module"), ev.target.value, "", true);
@@ -182,6 +187,8 @@
           source_ref: (fd.get("source_ref") || "").toString().trim() || null,
           level: level || null,
           external_code: (fd.get("external_code") || "").toString().trim() || null,
+          purpose: fd.get("purpose") === "tu_kiem_tra" ? "tu_kiem_tra" : "chinh_thuc",
+          lesson_code: (fd.get("lesson_code") || "").toString().trim().toUpperCase() || null,
           is_published: true,
         };
         const { data, error } = await sb.from("question_bank").insert(row).select().maybeSingle();
@@ -235,6 +242,8 @@
           return;
         }
 
+        const purposeRaw = parsed.meta.purpose || document.getElementById("import-purpose")?.value;
+        const purpose = purposeRaw === "tu_kiem_tra" ? "tu_kiem_tra" : "chinh_thuc";
         const rows = [];
         for (const q of parsed.questions) {
           if (!q.stem || !Array.isArray(q.choices) || q.choices.length !== 4) continue;
@@ -253,6 +262,8 @@
             external_code: q.code || q.external_code || null,
             difficulty: LEVEL_TO_DIFF[q.level] || "co_ban",
             topic: moduleCode || scope,
+            purpose,
+            lesson_code: q.lesson_code ? String(q.lesson_code).trim().toUpperCase() : null,
             is_published: true,
           });
         }
@@ -307,7 +318,11 @@
             console.error(e);
           }
         }
-        msg.textContent = `Import xong: ${ok} câu OK${fail ? `, ${fail} lỗi` : ""}. Gắn vào bài kiểm tra ở trang Bài kiểm tra hoặc chạy seed_quiz_bank.py.`;
+        msg.textContent = `Import xong: ${ok} câu OK${fail ? `, ${fail} lỗi` : ""}. ${
+          purpose === "tu_kiem_tra"
+            ? "Câu tự kiểm tra hiện ngay dưới bài học tương ứng."
+            : "Đề cuối khóa tự rút từ ngân hàng — kiểm tra phân bổ ở trang Bài kiểm tra."
+        }`;
         paint();
       });
 

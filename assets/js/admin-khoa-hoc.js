@@ -12,6 +12,60 @@
     ["da_dong", "Đã đóng"],
   ];
 
+  function esc(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  const RES_KIND = [
+    ["tai_lieu", "Tài liệu"],
+    ["bieu_mau", "Biểu mẫu"],
+    ["checklist", "Checklist"],
+    ["lien_ket", "Liên kết"],
+  ];
+
+  function lessonContentHtml(l) {
+    const res = (l.lesson_resources || []).slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    const kindLabel = Object.fromEntries(RES_KIND);
+    return `<details class="adm-lesson-more" style="margin-top:.5rem">
+      <summary>Nội dung, ngưỡng hoàn thành &amp; tài liệu (${res.length})</summary>
+      <form class="adm-form" data-lesson-content="${l.id}" style="margin-top:.5rem">
+        <label>Mô tả ngắn (hiện dưới video) <textarea name="description_short" rows="3">${esc(l.description_short)}</textarea></label>
+        <label>Mô tả đầy đủ (mục “Xem đầy đủ”) <textarea name="description" rows="5">${esc(l.description)}</textarea></label>
+        <label>Ngưỡng hoàn thành (% video, 50–100; để trống = xem hết)
+          <input name="complete_percent" type="number" min="50" max="100" value="${l.complete_percent ?? ""}" /></label>
+        <button type="submit" class="adm-btn adm-btn--primary adm-btn--small">Lưu nội dung bài</button>
+      </form>
+      <div style="margin-top:.75rem">
+        <strong>Tài liệu bài học</strong> <span class="adm-muted">— chỉ học viên có quyền học khóa mới thấy</span>
+        <ul class="adm-todo">${
+          res
+            .map(
+              (r) => `<li>${esc(kindLabel[r.kind] || r.kind)} · <a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>${
+                r.is_published ? "" : ' <span class="adm-badge adm-badge--draft">Ẩn</span>'
+              }
+              <button type="button" class="adm-btn adm-btn--line adm-btn--small" data-res-toggle="${r.id}" data-on="${r.is_published ? "1" : "0"}">${
+                r.is_published ? "Ẩn" : "Hiện"
+              }</button>
+              <button type="button" class="adm-btn adm-btn--danger adm-btn--small" data-res-del="${r.id}">Xóa</button></li>`
+            )
+            .join("") || '<li class="adm-muted">Chưa có tài liệu.</li>'
+        }</ul>
+        <form class="adm-form" data-res-add="${l.id}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
+            <label>Loại <select name="kind">${RES_KIND.map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+            <label>Tiêu đề <input name="title" required minlength="2" maxlength="200" /></label>
+            <label>Đường dẫn (https://) <input name="url" type="url" required pattern="https://.+" /></label>
+            <label>Ghi chú <input name="note" maxlength="300" /></label>
+          </div>
+          <button type="submit" class="adm-btn adm-btn--line adm-btn--small">+ Thêm tài liệu</button>
+        </form>
+      </div>
+    </details>`;
+  }
+
   function badge(c) {
     const s = c.status || (c.is_published ? "dang_mo" : "ban_nhap");
     const cls = s === "dang_mo" ? "adm-badge" : "adm-badge adm-badge--draft";
@@ -98,7 +152,7 @@
     const { data: modules, error } = await sb
       .from("modules")
       .select(
-        "id,title,sort_order,lessons(id,title,sort_order,is_free,is_published,youtube_video_id,lesson_code)"
+        "id,title,sort_order,lessons(id,title,sort_order,is_free,is_published,youtube_video_id,lesson_code,description,description_short,complete_percent,lesson_resources(id,title,kind,url,note,sort_order,is_published))"
       )
       .eq("course_id", courseId)
       .order("sort_order");
@@ -123,6 +177,7 @@
                   <input type="text" class="adm-yt-input" data-yt="${l.id}" value="${yt}" placeholder="YouTube video ID" />
                   <button type="button" class="adm-btn adm-btn--line adm-btn--small" data-save-yt="${l.id}">Lưu ID</button>
                 </div>
+                ${lessonContentHtml(l)}
               </div>
               <div>
                 <button type="button" class="adm-btn adm-btn--line adm-btn--small" data-free="${l.id}" data-isfree="${l.is_free ? "1" : "0"}">
@@ -246,7 +301,22 @@
         const btn = ev.target.closest("[data-free]");
         const saveYt = ev.target.closest("[data-save-yt]");
         const delBtn = ev.target.closest("[data-del-lesson]");
+        const resToggle = ev.target.closest("[data-res-toggle]");
+        const resDel = ev.target.closest("[data-res-del]");
         const msg = document.getElementById("detail-msg");
+        if (resToggle || resDel) {
+          const q = resDel
+            ? (confirm("Xóa tài liệu này?") ? sb.from("lesson_resources").delete().eq("id", resDel.dataset.resDel) : null)
+            : sb
+                .from("lesson_resources")
+                .update({ is_published: resToggle.dataset.on !== "1", updated_at: new Date().toISOString() })
+                .eq("id", resToggle.dataset.resToggle);
+          if (!q) return;
+          const { error: rErr } = await q;
+          if (rErr) return alert(rErr.message);
+          if (openCourseId) await showDetail(sb, openCourseId);
+          return;
+        }
         if (btn) {
           const { error: upErr } = await sb
             .from("lessons")
@@ -285,6 +355,58 @@
       document.getElementById("detail").addEventListener("submit", async (ev) => {
         ev.preventDefault();
         const msg = document.getElementById("detail-msg");
+        const contentForm = ev.target.closest("[data-lesson-content]");
+        if (contentForm) {
+          const fd = new FormData(contentForm);
+          const cpRaw = (fd.get("complete_percent") || "").toString().trim();
+          const cp = cpRaw === "" ? null : Math.round(Number(cpRaw));
+          if (cp != null && !(cp >= 50 && cp <= 100)) {
+            msg.innerHTML = '<span class="adm-msg--err">Ngưỡng hoàn thành phải từ 50 đến 100%.</span>';
+            return;
+          }
+          const { error } = await sb
+            .from("lessons")
+            .update({
+              description_short: (fd.get("description_short") || "").toString().trim() || null,
+              description: (fd.get("description") || "").toString().trim() || null,
+              complete_percent: cp,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", contentForm.dataset.lessonContent);
+          msg.innerHTML = error
+            ? `<span class="adm-msg--err">${esc(error.message)}</span>`
+            : '<span class="adm-msg--ok">Đã lưu nội dung bài.</span>';
+          return;
+        }
+        const resForm = ev.target.closest("[data-res-add]");
+        if (resForm) {
+          const fd = new FormData(resForm);
+          const url = (fd.get("url") || "").toString().trim();
+          if (!/^https:\/\/\S+$/.test(url)) {
+            msg.innerHTML = '<span class="adm-msg--err">Đường dẫn phải bắt đầu bằng https://</span>';
+            return;
+          }
+          const { data: last } = await sb
+            .from("lesson_resources")
+            .select("sort_order")
+            .eq("lesson_id", resForm.dataset.resAdd)
+            .order("sort_order", { ascending: false })
+            .limit(1);
+          const { error } = await sb.from("lesson_resources").insert({
+            lesson_id: resForm.dataset.resAdd,
+            kind: fd.get("kind"),
+            title: (fd.get("title") || "").toString().trim(),
+            url,
+            note: (fd.get("note") || "").toString().trim() || null,
+            sort_order: ((last && last[0]?.sort_order) || 0) + 1,
+          });
+          if (error) {
+            msg.innerHTML = `<span class="adm-msg--err">${esc(error.message)}</span>`;
+            return;
+          }
+          if (openCourseId) await showDetail(sb, openCourseId);
+          return;
+        }
         if (ev.target.id === "add-module-form") {
           const title = new FormData(ev.target).get("title")?.toString().trim();
           if (!title || !openCourseId) return;

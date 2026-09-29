@@ -150,11 +150,7 @@
               ${item(!missing.includes("enrollment"), "Quyền học hợp lệ")}
               ${item(
                 !missing.includes("progress"),
-                `Hoàn thành bài học: <strong>${esc(r.progress_percent ?? 0)}%</strong> / yêu cầu ${esc(r.progress_required ?? 0)}%`
-              )}
-              ${item(
-                !missing.includes("module_quizzes"),
-                `Bài kiểm tra cuối chương: <strong>${esc(r.module_quizzes_passed ?? 0)}/${esc(r.module_quizzes_total ?? 0)}</strong> đã đạt`
+                `Hoàn thành bài học: <strong>${esc(r.progress_percent ?? 0)}%</strong> / yêu cầu ${esc(r.progress_required ?? 100)}%`
               )}
               ${item(
                 !missing.includes("final_quiz") && !missing.includes("final_quiz_not_configured"),
@@ -164,8 +160,8 @@
               )}
             </ul>
             <p class="meta">${esc(regVi)}</p>
-            <p class="cert-mine-actions"><a class="btn btn--line" href="../hoc-tap/">Tiếp tục học</a>
-              <a class="btn btn--line" href="../kiem-tra/">Bài kiểm tra</a></p>`
+            <p class="cert-mine-actions"><a class="btn btn--line" href="../hoc/?course=${encodeURIComponent(r.course_code)}">Tiếp tục học</a>
+              <a class="btn btn--line" href="../kiem-tra/?course=${encodeURIComponent(r.course_code)}">Kiểm tra cuối khóa</a></p>`
           }
         </article>`;
       })

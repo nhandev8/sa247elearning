@@ -3,6 +3,9 @@
  *   <span data-sa247-price="course_default">99.000đ</span>
  *   <span data-sa247-course-count>9</span>
  */
+/* Công tắc giao diện: learnRedirect — người có quyền học mở /<slug>/ được chuyển sang /hoc/. */
+window.SA247_FLAGS = Object.assign({ learnRedirect: true }, window.SA247_FLAGS || {});
+
 (function () {
   if (window.sa247PublicConfig) return;
   const CACHE_KEY = "sa247.publicConfig.v1";

@@ -186,7 +186,7 @@
   function paintTrialLabels() {
     const isIn = enrolled();
     const hero = document.querySelector('#top a[href="#noi-dung-khoa"]');
-    if (hero) hero.textContent = isIn ? hero.dataset.cmOrig || "Vào lớp học" : "▶ Học thử miễn phí";
+    if (hero) hero.textContent = isIn ? hero.dataset.cmOrig || "Xem nội dung khóa" : "▶ Học thử miễn phí";
     document.querySelectorAll("[data-cm-trial]").forEach((b) => {
       b.hidden = isIn;
     });
