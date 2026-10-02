@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202610022128" />
-  <script src="../../assets/supabase-config.js?v=202610022128"></script>
-  <script src="../../assets/js/supabase-client.js?v=202610022128" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202610022128" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202610022128" defer></script>
-  <script src="../../assets/js/program-report.js?v=202610022128" defer></script>
-  <script src="../../assets/js/admin-doi-tac.js?v=202610022128" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202610022150" />
+  <script src="../../assets/supabase-config.js?v=202610022150"></script>
+  <script src="../../assets/js/supabase-client.js?v=202610022150" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202610022150" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202610022150" defer></script>
+  <script src="../../assets/js/program-report.js?v=202610022150" defer></script>
+  <script src="../../assets/js/admin-doi-tac.js?v=202610022150" defer></script>
   <style>
     .cp-tabs { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; border-bottom: 1px solid var(--adm-line); }
     .cp-tabs button { font: inherit; font-weight: 700; border: 0; background: none; padding: .6rem .9rem; cursor: pointer; color: var(--adm-muted); border-bottom: 3px solid transparent; }
@@ -225,6 +225,7 @@
               <button type="button" data-pp-tab="programs" aria-selected="false">Chương trình</button>
               <button type="button" data-pp-tab="access" aria-selected="false">Người được cấp quyền xem báo cáo</button>
               <button type="button" data-pp-tab="members" aria-selected="false">Thành viên</button>
+              <button type="button" data-pp-tab="org" aria-selected="false">Thương hiệu & dữ liệu</button>
               <button type="button" data-pp-tab="activity" aria-selected="false">Hoạt động</button>
             </nav>
 
@@ -271,10 +272,19 @@
             </div>
 
             <div data-pp-panel="access" hidden>
-              <p class="cp-note">Cán bộ nhà trường / doanh nghiệp đăng nhập tại <a href="../../doi-tac/" target="_blank" rel="noopener">sa247.vn/doi-tac/</a> để xem báo cáo các chương trình của đối tác mình. Chỉ cấp cho tài khoản SA247 đã xác minh email.</p>
+              <p class="cp-note">Cán bộ đơn vị đăng nhập tại <a href="../../don-vi/" target="_blank" rel="noopener">sa247.vn/don-vi/</a> (cổng đơn vị) để quản lý thành viên, báo cáo, khóa riêng theo vai trò. Chỉ cấp cho tài khoản SA247 đã xác minh email.</p>
               <form class="adm-form" id="pp-access-form">
                 <label>Email tài khoản SA247 * <input name="email" type="email" required placeholder="canbo@truong.edu.vn" /></label>
-                <div>
+                <label>Vai trò trong đơn vị
+                  <select name="org_role">
+                    <option value="quan_tri_don_vi">Quản trị đơn vị (toàn quyền trong đơn vị)</option>
+                    <option value="quan_ly_dao_tao">Quản lý đào tạo</option>
+                    <option value="giang_vien">Giảng viên (theo lớp)</option>
+                    <option value="xem_bao_cao" selected>Chỉ xem báo cáo (chọn quyền bên dưới)</option>
+                  </select>
+                </label>
+                <label data-role-class hidden>Lớp phụ trách (cách nhau bởi dấu phẩy, để trống = mọi lớp) <input name="class_scope" /></label>
+                <div data-role-perms>
                   <strong>Quyền được cấp</strong>
                   <label class="cp-check"><input type="checkbox" name="perm" value="XEM_BAO_CAO" checked /> Xem báo cáo tổng hợp</label>
                   <label class="cp-check"><input type="checkbox" name="perm" value="XUAT_BAO_CAO" /> Xuất báo cáo (CSV)</label>
@@ -290,7 +300,7 @@
               </div>
               <div class="adm-table-wrap" style="margin-top:.75rem">
                 <table class="adm-table">
-                  <thead><tr><th>Người được cấp quyền</th><th>Quyền</th><th>Trạng thái</th><th>Thời điểm</th><th></th></tr></thead>
+                  <thead><tr><th>Người được cấp quyền</th><th>Vai trò · quyền</th><th>Trạng thái</th><th>Thời điểm</th><th></th></tr></thead>
                   <tbody id="pp-access"></tbody>
                 </table>
               </div>
@@ -305,6 +315,29 @@
                   <tbody id="pp-members"></tbody>
                 </table>
               </div>
+            </div>
+
+            <div data-pp-panel="org" hidden>
+              <h3>Thương hiệu riêng (white-label)</h3>
+              <p class="cp-note">Chỉ bật khi hợp đồng mô hình C có điều khoản thương hiệu riêng. Đơn vị tự cập nhật tên, logo, màu trong cổng đơn vị; GCN ghi "Cấp bởi đơn vị · Vận hành trên nền tảng SA247".</p>
+              <p><span id="pp-wl-state"></span> <button type="button" class="adm-btn adm-btn--line adm-btn--small" id="pp-wl-toggle"></button></p>
+              <h3 style="margin-top:1.25rem">Số chỗ theo hợp đồng</h3>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Chương trình</th><th>Đang dùng</th><th>Giới hạn</th><th></th></tr></thead>
+                  <tbody id="pp-seats"></tbody>
+                </table>
+              </div>
+              <h3 style="margin-top:1.25rem">Yêu cầu dữ liệu của đơn vị</h3>
+              <div class="adm-table-wrap">
+                <table class="adm-table">
+                  <thead><tr><th>Ngày</th><th>Loại</th><th>Trạng thái</th><th>Ghi chú SA247</th><th></th></tr></thead>
+                  <tbody id="pp-requests"></tbody>
+                </table>
+              </div>
+              <h3 style="margin-top:1.25rem">Kết thúc hợp tác</h3>
+              <p class="cp-note">Ẩn danh hóa hồ sơ thành viên, kết thúc mọi chương trình, thu hồi nhân sự đơn vị, đóng khóa riêng, ngừng đối tác. Giấy chứng nhận đã cấp và tài khoản cá nhân của học viên được giữ nguyên. Hãy xuất gói dữ liệu bàn giao trước.</p>
+              <button type="button" class="adm-btn adm-btn--line" id="pp-offboard" style="color:#b91c1c;border-color:#b91c1c">Kết thúc hợp tác…</button>
             </div>
 
             <div data-pp-panel="activity" hidden>

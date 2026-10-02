@@ -658,11 +658,7 @@
     $("f-save").addEventListener("click", async () => {
       const n = Number($("f-n").value);
       try {
-        let bp = q.blueprint;
-        if (!bp || n !== (q.question_count || 20)) {
-          const fresh = await rpc("admin_final_quiz_config", { p_course_code: code });
-          bp = n === (q.question_count || 20) ? fresh.default_blueprint : null;
-        }
+        const bp = q.blueprint && n === (q.question_count || 20) ? q.blueprint : null;
         await rpc("admin_save_final_quiz_config", {
           p_course_code: code, p_title: q.title || null, p_question_count: n,
           p_pass_percent: Number($("f-pass").value), p_max_attempts: Number($("f-max").value),

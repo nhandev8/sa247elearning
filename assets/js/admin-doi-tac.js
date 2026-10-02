@@ -485,6 +485,7 @@
 
     renderAccess(d.access || []);
     document.getElementById("pp-access-missing").hidden = true;
+    renderOrgPanel(d).catch(fail("adm-status"));
 
     document.getElementById("pp-members-total").textContent =
       `Tổng ${d.members_total || 0} thành viên trên ${(d.programs || []).length} chương trình.`;
@@ -520,7 +521,9 @@
             const active = a.status === "active";
             return `<tr>
         <td><strong>${esc(a.full_name || "—")}</strong><br /><span class="adm-muted">${esc(a.email || "")}</span></td>
-        <td>${(a.permissions || []).map((p) => `<span class="adm-badge adm-badge--draft">${esc(PERM_VI[p] || p)}</span>`).join(" ")}</td>
+        <td>${a.org_role && a.org_role !== "xem_bao_cao"
+          ? `<strong>${esc(ORG_ROLE_VI[a.org_role] || a.org_role)}</strong>${a.class_scope?.length ? `<br /><span class="adm-muted">Lớp: ${esc(a.class_scope.join(", "))}</span>` : ""}`
+          : (a.permissions || []).map((p) => `<span class="adm-badge adm-badge--draft">${esc(PERM_VI[p] || p)}</span>`).join(" ")}</td>
         <td>${active ? '<span class="adm-badge adm-badge--ok">Đang có quyền</span>' : `<span class="adm-badge adm-badge--danger">Đã thu hồi</span>${a.revoke_reason ? `<br /><span class="adm-muted">${esc(a.revoke_reason)}</span>` : ""}`}</td>
         <td>${esc(fmtDate(active ? a.granted_at : a.revoked_at, true))}</td>
         <td>${active ? `<button type="button" class="adm-btn adm-btn--line adm-btn--small" data-revoke-access="${esc(a.user_id)}">Thu hồi</button>` : ""}</td>
@@ -528,6 +531,50 @@
           })
           .join("")
       : '<tr><td colspan="5">Chưa cấp quyền cho ai.</td></tr>';
+  }
+  const ORG_ROLE_VI = {
+    quan_tri_don_vi: "Quản trị đơn vị",
+    quan_ly_dao_tao: "Quản lý đào tạo",
+    giang_vien: "Giảng viên",
+    xem_bao_cao: "Xem báo cáo",
+  };
+  const REQ_KIND_VI = {
+    xuat_du_lieu: "Xuất toàn bộ dữ liệu",
+    ban_giao_ket_thuc: "Bàn giao & kết thúc hợp tác",
+    xoa_du_lieu: "Xóa dữ liệu cá nhân học viên",
+  };
+  const REQ_ST_VI = { moi: "Mới", dang_xu_ly: "Đang xử lý", hoan_tat: "Hoàn tất", tu_choi: "Từ chối" };
+  async function renderOrgPanel(d) {
+    const wl = !!d.partner.white_label;
+    document.getElementById("pp-wl-state").innerHTML = wl
+      ? '<span class="adm-badge adm-badge--ok">Đang bật</span>'
+      : '<span class="adm-badge adm-badge--draft">Chưa bật</span>';
+    const tg = document.getElementById("pp-wl-toggle");
+    tg.textContent = wl ? "Tắt thương hiệu riêng" : "Bật thương hiệu riêng";
+    tg.dataset.on = wl ? "1" : "";
+    document.getElementById("pp-seats").innerHTML = (d.programs || []).length
+      ? d.programs
+          .map(
+            (r) => `<tr><td><code>${esc(r.code)}</code> ${esc(r.name)}</td><td>${r.members || 0}</td>
+          <td>${r.seat_limit ? esc(String(r.seat_limit)) : "Không giới hạn"}</td>
+          <td><button type="button" class="adm-btn adm-btn--line adm-btn--small" data-seat="${esc(r.code)}" data-cur="${r.seat_limit || ""}">Đặt số chỗ</button></td></tr>`
+          )
+          .join("")
+      : '<tr><td colspan="4">Chưa có chương trình.</td></tr>';
+    const all = (await rpc("admin_list_data_requests", { p_status: null })) || [];
+    const list = all.filter((r) => r.partner_code === d.partner.code);
+    document.getElementById("pp-requests").innerHTML = list.length
+      ? list
+          .map(
+            (r) => `<tr><td>${esc(fmtDate(r.created_at, true))}</td>
+          <td>${esc(REQ_KIND_VI[r.kind] || r.kind)}${r.note ? `<br /><span class="adm-muted">${esc(r.note)}</span>` : ""}</td>
+          <td>${esc(REQ_ST_VI[r.status] || r.status)}</td><td>${esc(r.admin_note || "")}</td>
+          <td>${["moi", "dang_xu_ly"].includes(r.status)
+            ? `<select data-req="${esc(r.id)}"><option value="">Cập nhật…</option><option value="dang_xu_ly">Đang xử lý</option><option value="hoan_tat">Hoàn tất</option><option value="tu_choi">Từ chối</option></select>`
+            : ""}</td></tr>`
+          )
+          .join("")
+      : '<tr><td colspan="5">Chưa có yêu cầu.</td></tr>';
   }
   function resetContactForm() {
     const f = document.getElementById("pp-contact-form");
@@ -1011,13 +1058,24 @@
       const f = ev.target;
       const email = f.elements.email.value.trim();
       const perms = [...f.querySelectorAll('[name="perm"]:checked')].map((x) => x.value);
+      const role = f.elements.org_role.value;
+      const scope = f.elements.class_scope.value.split(",").map((x) => x.trim()).filter(Boolean);
       document.getElementById("pp-access-missing").hidden = true;
       try {
-        await rpc("admin_grant_partner_access", {
-          p_partner_code: currentPartner.partner.code,
-          p_email: email,
-          p_permissions: perms,
-        });
+        if (role === "xem_bao_cao") {
+          await rpc("admin_grant_partner_access", {
+            p_partner_code: currentPartner.partner.code,
+            p_email: email,
+            p_permissions: perms,
+          });
+        } else {
+          await rpc("org_save_staff", {
+            p_partner_code: currentPartner.partner.code,
+            p_email: email,
+            p_role: role,
+            p_class_scope: role === "giang_vien" && scope.length ? scope : null,
+          });
+        }
         status("adm-status", `Đã cấp quyền cho ${email}.`);
         f.elements.email.value = "";
         await openPartner(currentPartner.partner.code, "access");
@@ -1052,6 +1110,69 @@
         await openPartner(currentPartner.partner.code, "access");
       } catch (e) {
         status("adm-status", errText(e), false);
+      }
+    });
+    const accessForm = document.getElementById("pp-access-form");
+    const syncRole = () => {
+      const r = accessForm.elements.org_role.value;
+      accessForm.querySelector("[data-role-class]").hidden = r !== "giang_vien";
+      accessForm.querySelector("[data-role-perms]").hidden = r !== "xem_bao_cao";
+    };
+    accessForm.elements.org_role.addEventListener("change", syncRole);
+    syncRole();
+    document.getElementById("pp-wl-toggle").addEventListener("click", async (ev) => {
+      const on = !ev.currentTarget.dataset.on;
+      if (!confirm(on ? "Bật thương hiệu riêng cho đối tác này (theo hợp đồng mô hình C)?" : "Tắt thương hiệu riêng?")) return;
+      try {
+        await rpc("admin_set_white_label", { p_partner_code: currentPartner.partner.code, p_enabled: on });
+        status("adm-status", on ? "Đã bật thương hiệu riêng." : "Đã tắt thương hiệu riêng.");
+        await openPartner(currentPartner.partner.code, "org");
+      } catch (e) {
+        status("adm-status", errText(e), false);
+      }
+    });
+    document.getElementById("pp-seats").addEventListener("click", async (ev) => {
+      const b = ev.target.closest("[data-seat]");
+      if (!b) return;
+      const v = prompt("Số chỗ tối đa theo hợp đồng (để trống = không giới hạn):", b.dataset.cur || "");
+      if (v === null) return;
+      try {
+        await rpc("admin_set_program_seat_limit", { p_program_code: b.dataset.seat, p_seat_limit: v.trim() ? Number(v) : null });
+        status("adm-status", "Đã cập nhật số chỗ.");
+        await openPartner(currentPartner.partner.code, "org");
+      } catch (e) {
+        const m = String(e.message || e);
+        status("adm-status", m.startsWith("seat_limit_below_used")
+          ? "Số chỗ nhỏ hơn số thành viên đang có (" + m.split(":")[1] + ")."
+          : m === "seat_limit_range" ? "Số chỗ từ 1 đến 1.000.000." : errText(e), false);
+      }
+    });
+    document.getElementById("pp-requests").addEventListener("change", async (ev) => {
+      const s = ev.target.closest("[data-req]");
+      if (!s || !s.value) return;
+      const note = prompt("Ghi chú gửi đơn vị (tùy chọn):", "") ?? "";
+      try {
+        await rpc("admin_update_data_request", { p_id: s.dataset.req, p_status: s.value, p_admin_note: note });
+        status("adm-status", "Đã cập nhật yêu cầu dữ liệu.");
+        await openPartner(currentPartner.partner.code, "org");
+      } catch (e) {
+        status("adm-status", errText(e), false);
+      }
+    });
+    document.getElementById("pp-offboard").addEventListener("click", async () => {
+      const code = currentPartner.partner.code;
+      const typed = prompt(`Kết thúc hợp tác KHÔNG hoàn tác được.\nGõ mã đối tác (${code}) để xác nhận:`, "");
+      if (typed === null) return;
+      const reason = askReason("Lý do kết thúc hợp tác?");
+      if (!reason) return;
+      try {
+        const r = await rpc("admin_offboard_partner", { p_partner_code: code, p_confirm: typed, p_reason: reason });
+        status("adm-status", `Đã kết thúc hợp tác: ${r.programs_ended || 0} chương trình, ${r.members_anonymized || 0} hồ sơ thành viên đã ẩn danh.`);
+        await loadPartners();
+        await openPartner(code, "org");
+      } catch (e) {
+        const m = String(e.message || e);
+        status("adm-status", m === "confirm_mismatch" ? "Mã xác nhận không khớp." : errText(e), false);
       }
     });
     document.getElementById("partner-profile").addEventListener("click", (ev) => {
