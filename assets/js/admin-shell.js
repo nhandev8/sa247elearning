@@ -5,8 +5,8 @@
     const idx = path.lastIndexOf("/admin/");
     if (idx < 0) return 0;
     const rest = path.slice(idx + "/admin/".length);
-    if (!rest || rest === "index.html") return 0;
-    return rest.split("/").filter((p) => p && p !== "index.html").length;
+    // Chỉ đếm thư mục: phần cuối (tên file hoặc rỗng sau "/") không làm tăng độ sâu.
+    return rest.split("/").slice(0, -1).filter(Boolean).length;
   }
 
   function hrefFor(target, opts) {
