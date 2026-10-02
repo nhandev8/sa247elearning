@@ -1,4 +1,0 @@
-Audited publish tree: D:\OneDrive - nhandev\Youtube\Safety and You 247\SA247\_publish_sa247elearning
-Critical fails: 0
-Warnings: 0
-RESULT: PASS
