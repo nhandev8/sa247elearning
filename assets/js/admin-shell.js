@@ -31,7 +31,7 @@
 
   // `can` phải khớp đúng điều kiện server (is_staff / can_manage_content / can_manage_commerce /
   // is_admin / is_owner): mục nào server từ chối thì không được hiện trên menu.
-  // Chứng nhận, Nhật ký hoạt động, Nhật ký bảo mật: server chỉ cho is_admin.
+  // Chứng nhận, Nhật ký hoạt động: server chỉ cho is_admin. Nhật ký bảo mật: chỉ is_owner.
   const STAFF = (c) => c.staff;
   const CONTENT = (c) => c.content;
   const COMMERCE = (c) => c.commerce;
@@ -106,7 +106,7 @@
         { target: "tai-khoan/", label: "Tài khoản", key: "tai-khoan", can: ADMIN },
         { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen", can: ADMIN },
         { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky", can: ADMIN },
-        { target: "bao-mat/", label: "Nhật ký bảo mật", key: "bao-mat", can: ADMIN },
+        { target: "bao-mat/", label: "Nhật ký bảo mật", key: "bao-mat", can: (c) => c.owner },
         {
           target: "auth/doi-mat-khau.html",
           label: "Đổi mật khẩu",
