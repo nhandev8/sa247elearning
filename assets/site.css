@@ -5052,3 +5052,38 @@ body.lx-focus .lx-top:hover, body.lx-focus .lx-top:focus-within { opacity: 1; }
 .expert__fields strong{color:var(--navy)}
 
 #qf-meta.is-low{color:#b91c1c;font-weight:700}
+
+/* ---- Hub: sản phẩm SA247 – HSE Compliance ---- */
+.hub-software{padding:4rem 0;background:linear-gradient(180deg,#fff 0%,var(--mist) 100%);border-top:1px solid var(--line)}
+.hub-software__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:2.5rem;align-items:center}
+.hub-software__brand{display:inline-block;margin:0 0 .5rem;padding:.2rem .65rem;border-radius:999px;background:var(--navy);color:#fff;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+.hub-software .title{margin-top:0}
+.hub-software__tagline{margin:.25rem 0 .75rem;color:var(--navy);font-weight:700;font-size:1.1rem}
+.hub-software__points{list-style:none;margin:1.1rem 0 0;padding:0;display:grid;gap:.6rem}
+.hub-software__points li{position:relative;padding-left:1.4rem;color:var(--text-secondary);line-height:1.55}
+.hub-software__points li::before{content:"";position:absolute;left:0;top:.55em;width:.6rem;height:.6rem;border-radius:2px;background:var(--amber)}
+.hub-software__points strong{color:var(--navy)}
+.hub-software__actions{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.4rem 0 0}
+.hub-software__note{margin:.9rem 0 0;font-size:.86rem;color:var(--text-muted)}
+.hub-software__shot{margin:0}
+.hub-software__shot a{display:block;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:#fff}
+.hub-software__shot img{display:block;width:100%;height:auto}
+.hub-software__shot figcaption{margin-top:.5rem;font-size:.82rem;color:var(--text-muted)}
+@media (max-width:900px){
+  .hub-software{padding:3rem 0}
+  .hub-software__grid{grid-template-columns:minmax(0,1fr);gap:1.75rem}
+}
+@media (max-width:560px){
+  .hub-software__actions .btn{flex:1 1 100%;text-align:center}
+}
+
+/* ---- Thẻ sản phẩm liên quan (sách, kiến thức) ---- */
+.sw-related{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.25rem;margin:2.25rem 0 0;padding:1.1rem 1.25rem;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow)}
+.sw-related__img{flex:0 0 9.5rem;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.sw-related__img img{display:block;width:100%;height:auto}
+.sw-related__body{flex:1 1 16rem;min-width:0}
+.sw-related__kicker{margin:0 0 .2rem;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--amber)}
+.sw-related__title{margin:0 0 .3rem;color:var(--navy);font-size:1.05rem;font-weight:800}
+.sw-related__text{margin:0 0 .65rem;color:var(--text-secondary);line-height:1.55}
+.sw-related__actions{display:flex;flex-wrap:wrap;gap:.5rem}
+@media (max-width:560px){.sw-related__img{flex-basis:100%}}

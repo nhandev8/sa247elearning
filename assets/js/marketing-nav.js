@@ -153,7 +153,7 @@
         ["sach/hse-digital-transformation/", "Framework", null],
         ["kien-thuc/#checklist", "Biểu mẫu", null],
         ["campus/", "SA247 Campus (sinh viên)", null],
-        ["sach/hse-digital-transformation/", "Công cụ HSE", null],
+        ["phan-mem/hse-compliance/", "Phần mềm HSE Compliance", null],
       ], r),
       h("div", { className: "mega__foot" }, [
         h("a", { href: r + "kien-thuc/", className: "mega__all", text: "→ Xem toàn bộ kiến thức" }),
@@ -171,7 +171,7 @@
         h("li", null, [h("a", { href: r + "ve-sa247/#chuyen-gia", text: "Chuyên gia SA247" })]),
         h("li", null, [h("a", { href: r + "hop-tac/", text: "Hợp tác doanh nghiệp & tổ chức" })]),
         h("li", null, [h("a", { href: r + "cam-ket-du-lieu/", text: "Cam kết dữ liệu" })]),
-        h("li", null, [h("a", { href: r + "phan-mem/", text: "Phần mềm" })]),
+        h("li", null, [h("a", { href: r + "phan-mem/", text: "Phần mềm HSE Compliance" })]),
         h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", text: "HSE Digital Transformation" })]),
         h("li", null, [h("a", { href: r + "ve-sa247/#faq", text: "Câu hỏi thường gặp" })]),
         h("li", null, [h("a", { href: r + "index.html#tu-van", text: "Liên hệ" })]),
@@ -299,6 +299,8 @@
       ]),
       h("p", { className: "nav-drawer__minor" }, [
         h("a", { href: r + "sach/hse-digital-transformation/", text: "Sách HSE miễn phí" }),
+        " · ",
+        h("a", { href: r + "phan-mem/", text: "Phần mềm" }),
         " · ",
         h("a", { href: r + "ve-sa247/", text: "Về SA247" }),
       ]),
