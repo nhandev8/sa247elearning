@@ -5088,4 +5088,7 @@ body.lx-focus .lx-top:hover, body.lx-focus .lx-top:focus-within { opacity: 1; }
 .sw-related__title{margin:0 0 .3rem;color:var(--navy);font-size:1.05rem;font-weight:800}
 .sw-related__text{margin:0 0 .65rem;color:var(--text-secondary);line-height:1.55}
 .sw-related__actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.sw-related p.sw-related__kicker{margin:0 0 .2rem;font-size:.78rem;line-height:1.4;color:var(--amber)}
+.sw-related p.sw-related__title{margin:0 0 .3rem;font-size:1.05rem;line-height:1.35;color:var(--navy)}
+.sw-related p.sw-related__text{margin:0 0 .65rem;font-size:.95rem;line-height:1.55;color:var(--text-secondary)}
 @media (max-width:560px){.sw-related__img{flex-basis:100%}}
