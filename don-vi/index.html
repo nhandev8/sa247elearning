@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cổng đơn vị · SA247</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site.css?v=202610022128" />
+  <script src="../assets/supabase-config.js?v=202610022128"></script>
+  <script src="../assets/js/supabase-client.js?v=202610022128" defer></script>
+  <script src="../assets/js/program-report.js?v=202610022128" defer></script>
+  <script src="../assets/js/org-portal.js?v=202610022128" defer></script>
+  <style>
+    body{background:#f8fafc}
+    [hidden]{display:none !important}
+    .ov-top{background:var(--ov-c1,#0b1f3a);color:#fff}
+    .ov-top .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.8rem 0;flex-wrap:wrap}
+    .ov-brand{display:flex;align-items:center;gap:.6rem;color:#fff;font-weight:800;text-decoration:none;font-size:1.05rem}
+    .ov-brand img{height:32px;width:auto;border-radius:6px;background:#fff;padding:2px}
+    .ov-brand em{color:var(--ov-c2,#fbbf24);font-style:normal}
+    .ov-who{font-size:.88rem;color:#cbd5e1;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+    .ov-who select,.ov-who button{font:inherit;font-size:.85rem;background:transparent;border:1px solid #64748b;color:#fff;border-radius:8px;padding:.3rem .6rem;cursor:pointer}
+    .ov-who select option{color:#0f172a}
+    .ov-main{padding:1.4rem 0 3rem}
+    .ov-main h1{font-size:clamp(1.25rem,3vw,1.7rem);margin:0 0 .2rem}
+    .ov-sub{color:#475569;margin:0 0 1rem}
+    .ov-tabs{display:flex;gap:.3rem;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;margin-bottom:1rem}
+    .ov-tabs button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;padding:.55rem .8rem;cursor:pointer;color:#475569}
+    .ov-tabs button.is-on{color:#0b1f3a;border-color:var(--ov-c2,#d4a72c)}
+    .ov-box{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+    .ov-box h2{font-size:1.1rem;margin:0 0 .6rem}
+    .ov-box h3{font-size:1rem;margin:1rem 0 .4rem}
+    .ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.8rem}
+    .ov-card{border:1px solid #e2e8f0;border-radius:12px;padding:.9rem;background:#fff}
+    .ov-card strong{display:block}
+    .ov-muted{color:#64748b;font-size:.88rem}
+    .ov-kpis{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:.5rem;font-size:.88rem}
+    .ov-kpis b{font-size:1.05rem;color:#0b1f3a}
+    .ov-table{width:100%;border-collapse:collapse;font-size:.9rem}
+    .ov-table th,.ov-table td{border-bottom:1px solid #e2e8f0;padding:.45rem .5rem;text-align:left;vertical-align:top}
+    .ov-table th{background:#f8fafc;font-weight:600}
+    .ov-wrap{overflow-x:auto}
+    .ov-form{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));align-items:end}
+    .ov-form label{display:grid;gap:.25rem;font-size:.85rem;font-weight:600;color:#334155}
+    .ov-form input,.ov-form select,.ov-form textarea,.ov-box textarea{font:inherit;font-weight:400;border:1px solid #cbd5e1;border-radius:8px;padding:.45rem .55rem;width:100%;box-sizing:border-box}
+    .ov-form .ov-span{grid-column:1/-1}
+    .ov-btn{font:inherit;font-weight:600;border:0;border-radius:8px;padding:.5rem .9rem;background:#0b1f3a;color:#fff;cursor:pointer}
+    .ov-btn--line{background:#fff;color:#0b1f3a;border:1px solid #94a3b8}
+    .ov-btn--warn{background:#b91c1c}
+    .ov-btn--sm{padding:.28rem .6rem;font-size:.82rem}
+    .ov-actions{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.6rem}
+    .ov-pill{display:inline-block;border-radius:999px;padding:.1rem .55rem;font-size:.78rem;font-weight:600;background:#f1f5f9;color:#334155}
+    .ov-pill--ok{background:#dcfce7;color:#166534}
+    .ov-pill--warn{background:#fef3c7;color:#92400e}
+    .ov-pill--off{background:#fee2e2;color:#991b1b}
+    .ov-msg{margin:.5rem 0 0;font-size:.9rem}
+    .ov-msg.is-err{color:#b91c1c;font-weight:600}
+    .ov-msg.is-ok{color:#166534;font-weight:600}
+    .ov-tree details{border:1px solid #e2e8f0;border-radius:10px;padding:.5rem .8rem;margin:.5rem 0;background:#fcfdff}
+    .ov-tree summary{cursor:pointer;font-weight:600}
+    .ov-lesson{border-top:1px dashed #e2e8f0;padding:.5rem 0}
+    dialog.ov-dlg{border:0;border-radius:14px;padding:1.2rem;max-width:34rem;width:92vw}
+    dialog.ov-dlg::backdrop{background:rgba(15,23,42,.45)}
+  </style>
+</head>
+<body>
+  <header class="ov-top">
+    <div class="wrap">
+      <a class="ov-brand" href="./" id="ov-brand"><span>SA247 <em>Đơn vị</em></span></a>
+      <div class="ov-who" id="ov-who" hidden>
+        <select id="ov-unit" aria-label="Chọn đơn vị"></select>
+        <span id="ov-email"></span>
+        <button type="button" id="ov-logout">Đăng xuất</button>
+      </div>
+    </div>
+  </header>
+  <main class="ov-main">
+    <div class="wrap">
+      <div class="ov-box" id="ov-guest" hidden>
+        <h1>Cổng đơn vị</h1>
+        <p class="ov-sub">Dành cho quản trị đơn vị, quản lý đào tạo và giảng viên của doanh nghiệp, trường học, trung tâm đào tạo đã hợp tác với SA247.</p>
+        <a class="btn btn--amber" href="../auth/login.html?next=../don-vi/">Đăng nhập</a>
+      </div>
+      <div class="ov-box" id="ov-none" hidden>
+        <h1>Chưa có quyền đơn vị</h1>
+        <p class="ov-sub">Tài khoản này chưa được gán vai trò trong đơn vị nào. Quản trị đơn vị của bạn có thể thêm bạn ở mục Nhân sự, hoặc liên hệ <a href="mailto:support@sa247.vn">SA247 Support (support@sa247.vn)</a>.</p>
+        <p class="ov-sub">Muốn triển khai đào tạo cho đơn vị? Xem <a href="../hop-tac/">mô hình hợp tác</a>.</p>
+      </div>
+      <section id="ov-app" hidden>
+        <h1 id="ov-title"></h1>
+        <p class="ov-sub" id="ov-role"></p>
+        <nav class="ov-tabs" id="ov-tabs" aria-label="Chức năng đơn vị"></nav>
+        <div id="ov-view"></div>
+      </section>
+      <p class="ov-msg is-err" id="ov-err"></p>
+    </div>
+  </main>
+  <dialog class="ov-dlg" id="ov-dlg"><div id="ov-dlg-body"></div></dialog>
+</body>
+</html>

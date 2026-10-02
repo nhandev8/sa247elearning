@@ -71,6 +71,7 @@
         .join("");
       return `<p class="app-side__group">${title}</p>${links}`;
     }).join("");
+    paintOrgLink(orgUnits);
     paintTabbar(active);
   }
 
@@ -97,7 +98,72 @@
       .join("");
   }
 
+  /* Đơn vị white-label: tên/logo/màu cạnh thương hiệu; nhân sự đơn vị: lối vào cổng đơn vị */
+  let orgUnits = [];
+
+  async function paintOrg() {
+    const auth = window.sa247Auth;
+    if (!auth?.ready) return;
+    try {
+      if (!(await auth.getSession())) return;
+      const sb = await auth.ensureClient();
+      const [brandRes, unitsRes] = await Promise.all([sb.rpc("my_branding"), sb.rpc("org_my_units")]);
+      paintOrgBrand(brandRes?.data);
+      orgUnits = Array.isArray(unitsRes?.data) ? unitsRes.data : [];
+      paintOrgLink(orgUnits);
+    } catch (_) {
+      /* branding là phụ — không chặn trang học */
+    }
+  }
+
+  function paintOrgBrand(b) {
+    if (!b || !b.white_label || !b.display_name) return;
+    const root = document.documentElement.style;
+    if (b.primary_color) root.setProperty("--org-c1", b.primary_color);
+    if (b.accent_color) root.setProperty("--org-c2", b.accent_color);
+    const side = document.querySelector(".app-side__brand");
+    if (!side || document.querySelector(".app-side__org")) return;
+    const box = document.createElement("div");
+    box.className = "app-side__org";
+    box.style.cssText =
+      "display:flex;flex-direction:column;gap:.2rem;margin:.4rem 0 .8rem;padding:.55rem .7rem;border-radius:10px;" +
+      "border-left:4px solid var(--org-c2, #c9a227);background:rgba(255,255,255,.06);font-size:.85rem;line-height:1.3";
+    if (b.logo_url && /^https:\/\//.test(b.logo_url)) {
+      const img = document.createElement("img");
+      img.src = b.logo_url;
+      img.alt = "";
+      img.referrerPolicy = "no-referrer";
+      img.style.cssText = "max-height:36px;max-width:140px;object-fit:contain;align-self:flex-start";
+      box.appendChild(img);
+    }
+    const t = document.createElement("span");
+    t.textContent = b.display_name;
+    t.style.fontWeight = "700";
+    box.appendChild(t);
+    const note = document.createElement("small");
+    note.style.opacity = ".7";
+    note.textContent = "Vận hành trên nền tảng SA247";
+    box.appendChild(note);
+    side.after(box);
+  }
+
+  function paintOrgLink(units) {
+    const nav = document.querySelector(".app-side__nav[data-learner-nav]");
+    if (!units.length || !nav || nav.querySelector("[data-org-link]")) return;
+    const g = document.createElement("p");
+    g.className = "app-side__group";
+    g.textContent = "Đơn vị";
+    const a = document.createElement("a");
+    a.href = "../don-vi/";
+    a.dataset.orgLink = "1";
+    a.textContent = units.length === 1 ? "Cổng đơn vị · " + units[0].name : "Cổng đơn vị";
+    nav.append(g, a);
+  }
+
   window.sa247LearnerNav = { ITEMS, paintNav, activeKeyFromPath };
 
-  document.addEventListener("DOMContentLoaded", () => paintNav());
+  document.addEventListener("DOMContentLoaded", () => {
+    paintNav();
+    paintOrg();
+  });
 })();

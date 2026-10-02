@@ -80,6 +80,7 @@
     answers: {},
     certOpts: { locked: false, name: "" },
     serverTimer: null,
+    clock: null,
     submitting: false,
   };
 
@@ -108,8 +109,13 @@
         <li><strong>${f.n_questions || 20}</strong><span>câu hỏi</span></li>
         <li><strong>${f.pass_percent || 70}%</strong><span>điểm đạt</span></li>
         <li><strong>${used}/${max}</strong><span>lần đã làm</span></li>
-        <li><strong>Không</strong><span>giới hạn thời gian</span></li>
+        ${f.time_limit_minutes
+          ? `<li><strong>${f.time_limit_minutes} phút</strong><span>thời gian làm bài</span></li>`
+          : "<li><strong>Không</strong><span>giới hạn thời gian</span></li>"}
       </ul>`;
+    const timeRule = f.time_limit_minutes
+      ? `<li>Thời gian làm bài <strong>${f.time_limit_minutes} phút</strong>, tính từ lúc bắt đầu. Hết giờ, bài được chấm theo đáp án đã lưu và lần làm được tính.</li>`
+      : "<li>Không đếm giờ, không tự nộp. Thoát ra giữa chừng vẫn làm tiếp được — đáp án được lưu tự động.</li>";
 
     if (!f.quiz_configured) {
       box.innerHTML = `<h1>Kiểm tra cuối khóa</h1><p>Khóa học chưa cấu hình bài kiểm tra cuối khóa.</p>
@@ -155,8 +161,8 @@
       ${facts}
       <ul class="qf-rules">
         <li>Làm lần lượt từng câu; đi tới, lui và đổi đáp án tự do trước khi nộp.</li>
-        <li>Không đếm giờ, không tự nộp. Thoát ra giữa chừng vẫn làm tiếp được — đáp án được lưu tự động.</li>
-        <li>Lần làm chỉ được tính khi bạn bấm <strong>Nộp bài</strong>. Mỗi lần làm là một đề khác nhau.</li>
+        ${timeRule}
+        <li>Lần làm được tính khi bạn bấm <strong>Nộp bài</strong>${f.time_limit_minutes ? " hoặc khi hết giờ" : ""}. Mỗi lần làm là một đề khác nhau.</li>
         <li>Kết quả chỉ hiện điểm tổng, không hiện đáp án từng câu.</li>
       </ul>
       <p class="qf-actions">
@@ -200,6 +206,49 @@
     show("qf-run");
     renderGrid();
     renderQuestion();
+    startCountdown(data);
+  }
+
+  function startCountdown(data) {
+    clearInterval(st.clock);
+    if (!data.expires_at) return;
+    const skew = data.server_now ? Date.now() - new Date(data.server_now).getTime() : 0;
+    const end = new Date(data.expires_at).getTime() + skew;
+    const meta = `Lần ${data.attempt_no}/${data.attempts_max}`;
+    const tick = () => {
+      const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+      const mm = String(Math.floor(left / 60)).padStart(2, "0");
+      const ss = String(left % 60).padStart(2, "0");
+      $("qf-meta").textContent = `${meta} · ⏱ ${mm}:${ss}`;
+      $("qf-meta").classList.toggle("is-low", left <= 60);
+      if (left === 0) {
+        clearInterval(st.clock);
+        autoSubmit();
+      }
+    };
+    tick();
+    st.clock = setInterval(tick, 1000);
+  }
+
+  async function autoSubmit() {
+    if (st.submitting || !st.quiz) return;
+    st.submitting = true;
+    clearTimeout(st.serverTimer);
+    try { $("qf-confirm").close(); } catch (_) {}
+    setStatus('<span class="form-msg">Hết giờ — đang chấm bài theo đáp án đã chọn…</span>');
+    const { data, error } = await st.sb.rpc("submit_quiz_attempt", {
+      p_session_id: st.quiz.session_id,
+      p_answers: st.answers,
+      p_full_name: st.certOpts.name || null,
+    });
+    st.submitting = false;
+    if (error) {
+      setStatus(`<span class="form-msg is-err">${esc(friendlyError(error.message))}</span>`);
+      return;
+    }
+    clearLocalDraft(st.quiz.session_id);
+    document.body.classList.remove("qf-body--running");
+    await renderResult(data);
   }
 
   function renderQuestion() {
@@ -317,6 +366,7 @@
       return;
     }
     clearLocalDraft(st.quiz.session_id);
+    clearInterval(st.clock);
     $("qf-confirm").close();
     document.body.classList.remove("qf-body--running");
     await renderResult(data);
@@ -337,7 +387,8 @@
 
   async function renderResult(d) {
     const box = $("qf-result");
-    const head = `${d.correct}/${d.total} câu đúng · ${d.score_percent}/100 · Lần ${d.attempt_no}/${d.attempts_max}`;
+    const head = `${d.correct}/${d.total} câu đúng · ${d.score_percent}/100 · Lần ${d.attempt_no}/${d.attempts_max}${d.expired ? " · hết giờ" : ""}`;
+    clearInterval(st.clock);
     $("qf-meta").textContent = "";
     if (d.passed) {
       const status = d.cert_status || "";

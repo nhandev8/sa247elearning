@@ -95,10 +95,14 @@
     const programLine = data.program_name
       ? `<p>thuộc <strong>${esc(data.program_name)}</strong>${data.member_code ? " · Mã sinh viên / đối tượng: " + esc(data.member_code) : ""}</p>`
       : `<p class="meta">Chứng nhận hoàn thành khóa học Academy</p>`;
+    const issuerLine = data.issuer && data.issuer.display_name
+      ? `<p>Đơn vị cấp: <strong>${esc(data.issuer.display_name)}</strong> · <span class="meta">${esc(data.issuer.platform_note || "Vận hành trên nền tảng SA247")}</span></p>`
+      : "";
     card.innerHTML = `<p class="kicker">${esc(statusVi(data.status || "valid"))}</p>
       <h2>${esc(data.full_name || "—")}</h2>
       <p><strong>${esc(data.course_code)}</strong> · ${esc(data.course_title)}</p>
       ${programLine}
+      ${issuerLine}
       <p>Ngày cấp: ${esc(fmtDate(data.issued_at))}</p>
       <p class="meta">Mã: ${esc(data.cert_code)} · Trạng thái: ${esc(statusVi(data.status || "valid"))}</p>
       ${disclaimerHtml(data)}

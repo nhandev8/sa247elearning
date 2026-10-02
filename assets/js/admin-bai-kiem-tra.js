@@ -45,6 +45,7 @@
         low_variety: `Nhóm ${groupLabel(a)} có ít câu — các lượt làm lại dễ trùng đề.`,
         max_attempts_range: "Số lượt làm phải từ 1 đến 6.",
         pass_percent_range: "Điểm đạt phải từ 50% đến 100%.",
+        time_limit_range: "Thời gian làm bài phải từ 10 đến 180 phút, hoặc để trống.",
         not_authorized: "Tài khoản chưa có quyền quản lý nội dung (cần xác thực 2 lớp).",
         course_not_found: "Không tìm thấy khóa học.",
       }[k] || code
@@ -208,6 +209,7 @@
     $("f-count").value = q?.question_count ?? 20;
     $("f-pass").value = q?.pass_percent ?? 70;
     $("f-attempts").value = q?.max_attempts ?? 6;
+    $("f-time").value = q?.time_limit_minutes ?? "";
     $("f-published").checked = q ? !!q.is_published : true;
     paintBlueprint(q?.blueprint || data.default_blueprint);
     paintList();
@@ -245,6 +247,7 @@
       p_max_attempts: Number($("f-attempts").value),
       p_blueprint: readBlueprint(),
       p_is_published: $("f-published").checked,
+      p_time_limit_minutes: $("f-time").value === "" ? null : Number($("f-time").value),
     });
     $("btn-save").disabled = false;
     if (error) {

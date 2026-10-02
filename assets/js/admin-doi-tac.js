@@ -61,6 +61,19 @@
     da_hop_tac: "Đã hợp tác",
     khong_phu_hop: "Không phù hợp",
   };
+  const LEAD_TYPE_VI = {
+    truong_hoc: "Trường học",
+    doanh_nghiep: "Doanh nghiệp",
+    trung_tam: "Trung tâm đào tạo",
+    doi_tac: "Đối tác đào tạo",
+    khac: "Khác",
+  };
+  const LEAD_MODEL_VI = {
+    A: "Mô hình A · khóa có sẵn",
+    B: "Mô hình B · nội dung riêng",
+    C: "Mô hình C · nền tảng riêng",
+    chua_ro: "Chưa rõ mô hình",
+  };
   const LEAD_ROLE_VI = {
     sinh_vien: "Sinh viên",
     giang_vien: "Giảng viên",
@@ -817,11 +830,13 @@
           .map(
             (l) => `<tr data-lead="${esc(l.id)}">
         <td>${esc(fmtDate(l.created_at, true))}</td>
-        <td><strong>${esc(l.school_name)}</strong>${l.faculty ? "<br />" + esc(l.faculty) : ""}</td>
-        <td>${esc(l.full_name)}<br /><span class="adm-muted">${esc(LEAD_ROLE_VI[l.role] || l.role || "")}</span></td>
+        <td><span class="adm-badge">${esc(LEAD_TYPE_VI[l.lead_type] || "Trường học")}</span><br /><strong>${esc(l.school_name)}</strong>${l.faculty ? "<br />" + esc(l.faculty) : ""}</td>
+        <td>${esc(l.full_name)}<br /><span class="adm-muted">${esc(l.contact_position || LEAD_ROLE_VI[l.role] || l.role || "")}</span></td>
         <td><a href="mailto:${esc(l.email)}">${esc(l.email)}</a>${l.phone ? "<br />" + esc(l.phone) : ""}</td>
-        <td>${esc(l.academic_year || "—")}<br /><span class="adm-muted">${l.expected_students ? l.expected_students + " SV" : ""}</span></td>
-        <td>${esc(l.note || "")}</td>
+        <td>${l.lead_type && l.lead_type !== "truong_hoc"
+          ? `${esc(LEAD_MODEL_VI[l.interest_model] || "—")}<br /><span class="adm-muted">${l.expected_students ? l.expected_students + " người học" : ""}</span>`
+          : `${esc(l.academic_year || "—")}<br /><span class="adm-muted">${l.expected_students ? l.expected_students + " SV" : ""}</span>`}</td>
+        <td>${l.preferred_time ? `<strong>Hẹn khảo sát:</strong> ${esc(l.preferred_time)}<br />` : ""}${esc(l.note || "")}</td>
         <td><select data-lead-status>${opts(l.status)}</select></td>
         <td><input data-lead-note value="${esc(l.admin_note || "")}" placeholder="Ghi chú nội bộ" /></td>
         <td class="adm-actions">

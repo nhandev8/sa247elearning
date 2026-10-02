@@ -219,6 +219,41 @@ html, body {
   display: none !important;
 }
 
+/* Giấy dựng HTML — khóa riêng của đơn vị (không có phôi thiết kế) */
+.cert-sheet--generic {
+  --cg-c1: #0a2744;
+  --cg-c2: #c9a227;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3.2% 6% 2.6%;
+  box-sizing: border-box;
+  border: 10px solid var(--cg-c1);
+  outline: 2px solid var(--cg-c2);
+  outline-offset: -18px;
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  color: var(--cg-c1);
+  text-align: center;
+}
+.cert-sheet--generic .cg-head { display: flex; align-items: center; gap: 0.8rem; justify-content: center; }
+.cert-sheet--generic .cg-logo { max-height: 56px; max-width: 160px; object-fit: contain; }
+.cert-sheet--generic .cg-org { font-weight: 700; font-size: clamp(0.8rem, 1.5vw, 1.15rem); text-transform: uppercase; letter-spacing: 0.04em; }
+.cert-sheet--generic .cg-title { margin: 0; font-size: clamp(1.4rem, 4vw, 3rem); font-weight: 800; letter-spacing: 0.08em; }
+.cert-sheet--generic .cg-sub { margin: 0; color: var(--cg-c2); font-weight: 700; font-size: clamp(0.8rem, 1.6vw, 1.2rem); text-transform: uppercase; }
+.cert-sheet--generic .cg-lead { margin: 0; font-size: clamp(0.7rem, 1.2vw, 0.95rem); }
+.cert-sheet--generic .cg-name { font-size: clamp(1.2rem, 3vw, 2.3rem); font-weight: 700; font-style: italic; }
+.cert-sheet--generic .cg-course { font-size: clamp(0.9rem, 1.9vw, 1.45rem); font-weight: 700; max-width: 85%; }
+.cert-sheet--generic .cg-meta { margin: 0; font-size: clamp(0.65rem, 1vw, 0.85rem); }
+.cert-sheet--generic .cg-foot { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; }
+.cert-sheet--generic .cg-verify { text-align: left; font-size: clamp(0.55rem, 0.9vw, 0.78rem); font-weight: 600; }
+.cert-sheet--generic .cg-qr { width: clamp(64px, 9vw, 108px); aspect-ratio: 1; margin-bottom: 0.3rem; }
+.cert-sheet--generic .cg-qr img, .cert-sheet--generic .cg-qr canvas { width: 100%; height: 100%; display: block; }
+.cert-sheet--generic .cg-sign { min-width: 30%; }
+.cert-sheet--generic .cg-sign-title { font-size: clamp(0.65rem, 1vw, 0.85rem); }
+.cert-sheet--generic .cg-sign-name { margin-top: 2.2rem; font-weight: 700; font-size: clamp(0.8rem, 1.3vw, 1.05rem); }
+.cert-sheet--generic .cg-platform { margin: 0; font-size: clamp(0.55rem, 0.85vw, 0.72rem); opacity: 0.75; }
+
 @media print {
   @page { size: A4 landscape; margin: 0; }
   html, body { background: #fff; }

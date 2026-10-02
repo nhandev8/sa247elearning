@@ -5005,3 +5005,50 @@ body.lx-focus .lx-top:hover, body.lx-focus .lx-top:focus-within { opacity: 1; }
   body.lx-body.has-tabbar .classroom--learn .classroom__main { padding-bottom: 7.8rem; }
   body.lx-body.has-tabbar .sa247-fb-fab { bottom: calc(8.2rem + env(safe-area-inset-bottom)) !important; }
 }
+
+/* ─── Hợp tác / Chuyên gia / Cam kết dữ liệu ─────────────────────────── */
+.partner-page main{padding-top:0}
+.partner-page main > .about-section:first-child{padding-top:6rem}
+.pt-grid{display:grid;gap:1rem;margin:1.5rem 0}
+.pt-grid--3{grid-template-columns:repeat(auto-fit,minmax(17rem,1fr))}
+.pt-grid--5{grid-template-columns:repeat(auto-fit,minmax(12rem,1fr))}
+.pt-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem 1.25rem;box-shadow:var(--shadow);color:var(--text-primary)}
+.pt-card h3{margin:.2rem 0 .6rem;font-size:1.05rem;color:var(--navy)}
+.pt-card ul{margin:0;padding-left:1.1rem;color:var(--text-secondary);line-height:1.6}
+.pt-card p{color:var(--text-secondary);line-height:1.6}
+.pt-card .meta{font-size:.9rem;color:var(--text-muted)}
+.pt-card--model{border-top:4px solid var(--amber)}
+.pt-model{display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:50%;background:var(--navy);color:#fff !important;font-weight:800;margin:0}
+.pt-status{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:.15rem .6rem;margin:0;letter-spacing:.02em;vertical-align:middle}
+.pt-status--on{background:#dcfce7;color:#166534}
+.pt-status--dev{background:#fef3c7;color:#92400e}
+.pt-table-wrap{overflow-x:auto;margin:1.25rem 0;border-radius:var(--radius);border:1px solid var(--line);background:#fff}
+.pt-table{width:100%;border-collapse:collapse;font-size:.95rem;color:var(--text-primary)}
+.pt-table th,.pt-table td{padding:.7rem .9rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.pt-table thead th{background:var(--navy);color:#fff;font-weight:700}
+.pt-table--compare td:not(:first-child),.pt-table--compare th:not(:first-child){text-align:center}
+.pt-steps{list-style:none;margin:1.5rem 0;padding:0;display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))}
+.pt-steps li,.pt-commit li{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.35rem;color:var(--text-secondary);line-height:1.55}
+.pt-steps strong,.pt-commit strong{color:var(--navy)}
+.pt-commit{margin:1.5rem 0;padding-left:1.4rem;display:grid;gap:.75rem}
+.pt-commit li::marker{font-weight:800;color:var(--amber)}
+.pt-form{display:grid;gap:.85rem;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);margin:1.25rem 0}
+.pt-form__row{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.pt-form label{display:flex;flex-direction:column;gap:.3rem;font-weight:600;font-size:.92rem;color:var(--text-primary)}
+.pt-form input,.pt-form select,.pt-form textarea{font:inherit;font-weight:400;padding:.6rem .7rem;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:var(--text-primary)}
+.pt-form__actions{margin:0}
+.expert{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));margin:1.5rem 0}
+.expert__card,.expert__side{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow);color:var(--text-secondary)}
+.expert__card h3{margin:0;color:var(--navy);font-size:1.3rem}
+.expert__side h3{color:var(--navy);font-size:1.05rem;margin:.2rem 0 .6rem}
+.expert__role{margin:.2rem 0 1rem;color:var(--text-muted);font-weight:600}
+.expert__stats{list-style:none;display:flex;gap:1rem;padding:0;margin:0 0 1rem;flex-wrap:wrap}
+.expert__stats li{flex:1;min-width:6rem;background:var(--mist);border-radius:10px;padding:.7rem;text-align:center}
+.expert__stats strong{display:block;font-size:1.6rem;color:var(--amber);line-height:1.1}
+.expert__stats span{font-size:.82rem}
+.expert__list{padding-left:1.1rem;line-height:1.65;margin:0}
+.expert__fields{list-style:none;padding:0;margin:0;display:grid;gap:.6rem}
+.expert__fields li{display:flex;flex-direction:column;border-left:3px solid var(--amber);padding-left:.7rem}
+.expert__fields strong{color:var(--navy)}
+
+#qf-meta.is-low{color:#b91c1c;font-weight:700}

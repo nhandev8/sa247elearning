@@ -159,13 +159,15 @@
       progLine.className = "cert-disclaimer";
       el("cert-stage")?.after(progLine);
     }
-    if (data.program_name) {
+    const issuer = data.issuer && data.issuer.display_name ? data.issuer : null;
+    if (data.program_name || issuer) {
       progLine.hidden = false;
       progLine.textContent =
-        "Thuộc " +
-        data.program_name +
+        (data.program_name ? "Thuộc " + data.program_name : "Đơn vị: " + issuer.display_name) +
         (data.member_code ? " · Mã sinh viên / đối tượng: " + data.member_code : "") +
-        " · do SA247 E-Learning tổ chức.";
+        (issuer
+          ? " · Cấp cho học viên của " + issuer.display_name + " · " + (issuer.platform_note || "Vận hành trên nền tảng SA247") + "."
+          : " · do SA247 E-Learning tổ chức.");
     } else {
       progLine.hidden = true;
       progLine.textContent = "";
@@ -183,6 +185,62 @@
         "Giấy chứng nhận này không thay thế văn bằng, chứng chỉ, giấy phép hoặc giấy chứng nhận bắt buộc theo quy định pháp luật, nếu có.";
     }
     await renderQr(el("cert-qr"), verifyPageUrl(code));
+  }
+
+  /** Khóa riêng của đơn vị — không có phôi thiết kế: dựng giấy bằng HTML từ dữ liệu hệ thống. */
+  async function renderGeneric(data, map) {
+    const code = data.cert_code;
+    const issuer = data.issuer && data.issuer.display_name ? data.issuer : null;
+    const sheet = el("certificate");
+    sheet.classList.add("cert-sheet--generic");
+    if (issuer?.primary_color) sheet.style.setProperty("--cg-c1", issuer.primary_color);
+    if (issuer?.accent_color) sheet.style.setProperty("--cg-c2", issuer.accent_color);
+    sheet.innerHTML = "";
+    const add = (tag, cls, text, parent) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      (parent || sheet).appendChild(n);
+      return n;
+    };
+    const head = add("div", "cg-head");
+    if (issuer?.logo_url) {
+      const img = add("img", "cg-logo", null, head);
+      img.src = issuer.logo_url;
+      img.alt = issuer.display_name;
+      img.referrerPolicy = "no-referrer";
+    }
+    add("div", "cg-org", issuer ? issuer.display_name : map.academy || "Safety and You 247 Academy", head);
+    add("h1", "cg-title", "GIẤY CHỨNG NHẬN");
+    add("p", "cg-sub", "Hoàn thành khóa học");
+    add("p", "cg-lead", "Chứng nhận học viên");
+    add("div", "cg-name", data.full_name || "—");
+    add("p", "cg-lead", "đã hoàn thành và đạt yêu cầu kiểm tra khóa học");
+    add("div", "cg-course", data.course_title || data.course_code);
+    if (data.program_name) add("p", "cg-meta", "Thuộc " + data.program_name + (data.member_code ? " · Mã: " + data.member_code : ""));
+    const foot = add("div", "cg-foot");
+    const left = add("div", "cg-verify", null, foot);
+    const qr = add("div", "cg-qr", null, left);
+    add("div", "cg-code", "Mã: " + code, left);
+    add("div", "cg-date", "Ngày cấp: " + fmtDate(data.issued_at), left);
+    const sign = add("div", "cg-sign", null, foot);
+    add("div", "cg-sign-title", issuer?.cert_signer_title || (issuer ? "Đại diện " + issuer.display_name : map.issuer_title || ""), sign);
+    add("div", "cg-sign-name", issuer?.cert_signer_name || (issuer ? "" : map.issuer_name || ""), sign);
+    add("p", "cg-platform", issuer ? issuer.platform_note || "Vận hành trên nền tảng SA247" : "SA247 E-Learning · sa247.vn");
+
+    el("toolbar-code").textContent = code;
+    el("btn-verify").href = `./?code=${encodeURIComponent(code)}`;
+    el("btn-print").hidden = false;
+    el("showcase-stage").hidden = true;
+    el("cert-stage").hidden = false;
+    const disc = el("cert-disclaimer");
+    if (disc) {
+      disc.hidden = false;
+      disc.textContent =
+        data.legal_disclaimer ||
+        "Giấy chứng nhận này không thay thế văn bằng, chứng chỉ, giấy phép hoặc giấy chứng nhận bắt buộc theo quy định pháp luật, nếu có.";
+    }
+    await renderQr(qr, verifyPageUrl(code));
   }
 
   async function loadLive(code, map) {
@@ -208,10 +266,12 @@
       );
     }
     const prog = findProgram(map, data.course_code);
-    if (!prog) throw new Error(`Chưa có phôi thiết kế cho khóa ${data.course_code}.`);
-    await renderIssued(data, prog);
+    if (prog) await renderIssued(data, prog);
+    else await renderGeneric(data, map);
     el("cert-status").textContent =
-      "Giấy chứng nhận hoàn thành khóa học · Safety and You 247 Academy — dữ liệu từ hồ sơ. Có thể in hoặc lưu PDF.";
+      "Giấy chứng nhận hoàn thành khóa học · " +
+      (data.issuer?.display_name || "Safety and You 247 Academy") +
+      " — dữ liệu từ hồ sơ. Có thể in hoặc lưu PDF.";
   }
 
   function loadFormSample(courseCode, map) {

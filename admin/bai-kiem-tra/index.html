@@ -6,12 +6,12 @@
   <title>Bài kiểm tra · SA247 Quản trị</title>
   <meta name="robots" content="noindex, nofollow" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../assets/admin.css?v=202609300220" />
-  <script src="../../assets/supabase-config.js?v=202609300220"></script>
-  <script src="../../assets/js/supabase-client.js?v=202609300220" defer></script>
-  <script src="../../assets/js/admin-api.js?v=202609300220" defer></script>
-  <script src="../../assets/js/admin-shell.js?v=202609300220" defer></script>
-  <script src="../../assets/js/admin-bai-kiem-tra.js?v=202609300220" defer></script>
+  <link rel="stylesheet" href="../../assets/admin.css?v=202610022128" />
+  <script src="../../assets/supabase-config.js?v=202610022128"></script>
+  <script src="../../assets/js/supabase-client.js?v=202610022128" defer></script>
+  <script src="../../assets/js/admin-api.js?v=202610022128" defer></script>
+  <script src="../../assets/js/admin-shell.js?v=202610022128" defer></script>
+  <script src="../../assets/js/admin-bai-kiem-tra.js?v=202610022128" defer></script>
 </head>
 <body class="adm-body">
   <div class="adm-shell">
@@ -57,7 +57,9 @@
               <label>Số câu mỗi đề (tối đa 20) <input name="question_count" id="f-count" type="number" min="1" max="20" required /></label>
               <label>Điểm đạt (%) <input name="pass_percent" id="f-pass" type="number" min="50" max="100" required /></label>
               <label>Số lượt làm (tối đa 6) <input name="max_attempts" id="f-attempts" type="number" min="1" max="6" required /></label>
+              <label>Thời gian làm bài (phút) <input name="time_limit" id="f-time" type="number" min="10" max="180" placeholder="Không giới hạn" /></label>
             </div>
+            <p class="adm-muted" style="margin:0">Để trống = không giới hạn thời gian (mặc định). Nếu đặt 10–180 phút: hết giờ, bài được chấm theo đáp án đã lưu và lần làm được tính.</p>
             <label><input type="checkbox" id="f-published" /> Mở cho học viên</label>
 
             <h3 style="margin:1rem 0 .25rem">Phân bổ câu hỏi theo chương</h3>
