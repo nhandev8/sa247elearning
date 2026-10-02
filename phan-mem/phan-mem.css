@@ -259,3 +259,5 @@
   .sw-feature, .sw-download, .sw-list-card { grid-template-columns: 1fr; }
   .sw-hero { padding-top: 6rem; }
 }
+.sw-list-card--text { grid-template-columns: 1fr; max-width: 52rem; }
+.sw-list-card + .sw-list-card { margin-top: 1.5rem; }

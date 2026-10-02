@@ -1,5 +1,5 @@
 /**
- * SA247 marketing navigation — 5 content items + CTA + account.
+ * SA247 marketing navigation — 5 trụ cột (Học · Tri thức · Giải pháp · Đối tác · Về SA247) + CTA + account.
  * Mounts into #nav. Public: no Xác minh / Học tập / Quản trị / Đăng ký.
  * Mobile drawer: visitor menu vs learner menu, switched by html.sa247-signed-in (app-shell.js).
  */
@@ -32,151 +32,90 @@
     return el;
   }
 
-  function megaCol(title, links, r) {
-    return h("div", { className: "mega__col" }, [
-      h("p", { className: "mega__label", text: title }),
-      h(
-        "ul",
-        { className: "mega__list" },
-        links.map(([href, label, sub]) =>
-          h("li", null, [
-            h("a", { href: r + href }, [
-              h("strong", { text: label }),
-              sub ? h("span", { text: sub }) : null,
-            ]),
-          ])
-        )
-      ),
-    ]);
-  }
+  /*
+   * Public navigation v3 — 5 trụ cột (docs/SA247-PLATFORM-IA.md).
+   * Chỉ hiện mục có trang thật; mục dài hạn chưa có trang thì không đưa vào đây.
+   * Mỗi trụ: nhãn, href trigger, mục chính [href, tên, mô tả], mục phụ [href, tên]
+   */
+  const PILLARS = [
+    {
+      label: "Học",
+      href: "index.html#chuong-trinh",
+      items: [
+        ["index.html#career-map", "Lộ trình HSE", "Chọn hướng phát triển phù hợp"],
+        ["index.html#chuong-trinh", "Khóa học", "Học theo nhu cầu và công việc"],
+      ],
+      minor: [["khoa-sap-mo/", "Khóa sắp mở"]],
+    },
+    {
+      label: "Tri thức",
+      href: "kien-thuc/",
+      items: [
+        ["kien-thuc/", "Kiến thức HSE", "Kiến thức thực tế và chuyên môn"],
+        ["sach/hse-digital-transformation/", "Sách HSE", "HSE Digital Transformation"],
+      ],
+      minor: [["sach/hse-digital-transformation/muc-luc.html", "Mục lục sách"]],
+    },
+    {
+      label: "Giải pháp",
+      href: "phan-mem/",
+      items: [
+        ["phan-mem/hse-compliance/", "HSE Compliance", "HSE Compliance – Vietnam Law Checker"],
+        ["hop-tac/#mo-hinh", "Nền tảng E-Learning", "Đào tạo và quản trị học tập trực tuyến cho tổ chức"],
+      ],
+      minor: [["phan-mem/", "Tất cả giải pháp"]],
+    },
+    {
+      label: "Đối tác",
+      href: "hop-tac/",
+      items: [
+        ["campus/", "Trường học", "SA247 Campus"],
+        ["hop-tac/#mo-hinh-a", "Doanh nghiệp", "Đào tạo HSE cho doanh nghiệp"],
+        ["hop-tac/#mo-hinh-b", "Đơn vị đào tạo", "Nền tảng và chương trình đào tạo"],
+        ["hop-tac/#khao-sat", "Hợp tác cùng SA247", "Đặt lịch khảo sát nhu cầu"],
+      ],
+      minor: [
+        ["cam-ket-du-lieu/", "Cam kết dữ liệu"],
+        ["don-vi/", "Cổng đơn vị"],
+      ],
+    },
+    {
+      label: "Về SA247",
+      href: "ve-sa247/",
+      items: [
+        ["ve-sa247/", "Giới thiệu", "SA247 là ai, triết lý đào tạo"],
+        ["ve-sa247/#su-menh", "Tầm nhìn & sứ mệnh", "Điều SA247 theo đuổi"],
+        ["ve-sa247/#tu-van", "Liên hệ", "Điện thoại, email, Zalo"],
+      ],
+      minor: [
+        ["ve-sa247/#faq", "Câu hỏi thường gặp"],
+        ["xac-minh/", "Xác minh chứng nhận"],
+      ],
+    },
+  ];
 
-  function buildMegaCourses(r) {
-    return h("div", { className: "mega mega--wide", role: "region", "aria-label": "Khóa học" }, [
-      megaCol("ATVSLĐ", [
-        ["atnm-01/", "ATNM-01", "Sống sót 6 tháng đầu nghề ATVSLĐ nhà máy"],
-        ["atnm-02/", "ATNM-02", "Quản lý ATVSLĐ nhà máy"],
-      ], r),
-      megaCol("An toàn xây dựng", [
-        ["atxd-01/", "ATXD-01", "Sống sót 6 tháng đầu nghề ATVSLĐ công trường"],
-        ["atxd-02/", "ATXD-02", "Quản lý ATVSLĐ công trường xây dựng"],
-      ], r),
-      megaCol("Kỹ thuật & nghiệp vụ", [
-        ["ktn-01/", "KTN-01", "Thiết bị nâng"],
-        ["cvnh-01/", "CVNH-01", "Công việc nguy hiểm"],
-        ["al-01/", "AL-01", "Thiết bị áp lực"],
-      ], r),
-      megaCol("Hệ thống quản lý", [
-        ["iso45001/", "ISO 45001", "Hệ thống quản lý OHS"],
-        ["iso9001/", "ISO 9001", "Hệ thống quản lý QMS"],
-      ], r),
-      h("div", { className: "mega__foot mega__foot--cta" }, [
-        h("p", {
-          className: "mega__prompt",
-          html: '<span data-sa247-course-count>9</span> khóa học · Từ <span data-sa247-price="course_default">99.000đ</span>',
-        }),
-        h("a", { href: r + "index.html#chuong-trinh", className: "btn btn--amber mega__cta-btn", text: "Xem tất cả khóa học" }),
-      ]),
-    ]);
-  }
-
-  function buildMegaPath(r) {
-    return h("div", { className: "mega", role: "region", "aria-label": "Lộ trình HSE" }, [
-      megaCol("Bắt đầu nghề", [
-        ["index.html#career-map", "Mới vào nghề HSE", null],
-        ["atnm-02/", "HSE nhà máy", null],
-      ], r),
-      megaCol("An toàn xây dựng", [
-        ["atxd-01/", "HSE công trường", null],
-        ["atxd-02/", "Trưởng / phụ trách HSE", null],
-      ], r),
-      megaCol("Kỹ thuật", [
-        ["ktn-01/", "Thiết bị nâng", null],
-        ["al-01/", "Thiết bị áp lực", null],
-        ["cvnh-01/", "Công việc nguy hiểm", null],
-      ], r),
-      megaCol("Hệ thống", [
-        ["iso45001/", "ISO 45001", null],
-        ["iso9001/", "ISO 9001", null],
-      ], r),
-      h("div", { className: "mega__foot mega__foot--cta" }, [
-        h("p", { className: "mega__prompt", text: "Bạn đang ở đâu trong nghề HSE?" }),
-        h("a", { href: r + "tim-khoa/", className: "btn btn--amber mega__cta-btn", text: "Tìm lộ trình cho tôi" }),
-      ]),
-    ]);
-  }
-
-  function buildMegaBook(r) {
-    return h("div", { className: "mega", role: "region", "aria-label": "Sách HSE" }, [
-      h("div", { className: "mega__col mega__col--hero" }, [
-        h("p", { className: "mega__label", text: "HSE Digital Transformation" }),
-        h("p", { className: "mega__prompt", style: "margin:0 0 .65rem", text: "Đọc miễn phí toàn bộ" }),
-        h("ul", { className: "mega__list" }, [
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", html: "<strong>Trang sách</strong>" })]),
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/bia.html", html: "<strong>Trang bìa</strong>" })]),
-          h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/muc-luc.html", html: "<strong>Mục lục</strong>" })]),
-        ]),
-      ]),
-      megaCol("Đọc sách", [
-        ["sach/hse-digital-transformation/loi-cam-on.html", "Lời cảm ơn", null],
-        ["sach/hse-digital-transformation/loi-noi-dau.html", "Lời nói đầu", null],
-        ["sach/hse-digital-transformation/mo-dau.html", "Mở đầu sách", null],
-        ["sach/hse-digital-transformation/chuong-01.html", "Chương 01", null],
-      ], r),
-      megaCol("Khám phá", [
-        ["sach/hse-digital-transformation/muc-luc.html", "Toàn bộ mục lục", null],
-        ["sach/hse-digital-transformation/chuong-05.html", "Framework / dữ liệu", null],
-        ["tim-khoa/", "Tìm khóa phù hợp", null],
-      ], r),
-      h("div", { className: "mega__foot mega__foot--cta" }, [
-        h("p", { className: "mega__prompt", text: "Từ trang bìa đến 23 chương — đọc online" }),
-        h("a", { href: r + "sach/hse-digital-transformation/bia.html", className: "btn btn--amber mega__cta-btn", text: "Bắt đầu đọc" }),
-      ]),
-    ]);
-  }
-
-  function buildMegaKnowledge(r) {
-    return h("div", { className: "mega", role: "region", "aria-label": "Kiến thức" }, [
-      megaCol("Kiến thức miễn phí", [
-        ["kien-thuc/", "Bài viết HSE", null],
-        ["kien-thuc/#tinh-huong", "Tình huống thực tế", null],
-        ["kien-thuc/#checklist", "Checklist", null],
-        ["kien-thuc/", "Hướng dẫn nghiệp vụ", null],
-      ], r),
-      megaCol("Theo công việc", [
-        ["kien-thuc/?q=nha-may", "HSE nhà máy", null],
-        ["kien-thuc/?q=cong-truong", "HSE công trường", null],
-        ["kien-thuc/?q=thiet-bi", "Thiết bị", null],
-        ["kien-thuc/?q=nguy-hiem", "Công việc nguy hiểm", null],
-        ["kien-thuc/?q=iso", "ISO", null],
-      ], r),
-      megaCol("Tài nguyên", [
-        ["sach/hse-digital-transformation/", "Framework", null],
-        ["kien-thuc/#checklist", "Biểu mẫu", null],
-        ["campus/", "SA247 Campus (sinh viên)", null],
-        ["phan-mem/hse-compliance/", "Phần mềm HSE Compliance", null],
-      ], r),
-      h("div", { className: "mega__foot" }, [
-        h("a", { href: r + "kien-thuc/", className: "mega__all", text: "→ Xem toàn bộ kiến thức" }),
-      ]),
-    ]);
-  }
-
-  function buildMegaAbout(r) {
-    return h("div", { className: "mega mega--slim", role: "region", "aria-label": "Về SA247" }, [
-      h("ul", { className: "mega__list mega__list--flat" }, [
-        h("li", null, [h("a", { href: r + "ve-sa247/#sa247-la-ai", text: "SA247 là gì?" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#su-menh", text: "Sứ mệnh" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#triet-ly", text: "Triết lý đào tạo" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#cam-ket", text: "Phương pháp học" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#chuyen-gia", text: "Chuyên gia SA247" })]),
-        h("li", null, [h("a", { href: r + "hop-tac/", text: "Hợp tác doanh nghiệp & tổ chức" })]),
-        h("li", null, [h("a", { href: r + "cam-ket-du-lieu/", text: "Cam kết dữ liệu" })]),
-        h("li", null, [h("a", { href: r + "phan-mem/", text: "Phần mềm HSE Compliance" })]),
-        h("li", null, [h("a", { href: r + "sach/hse-digital-transformation/", text: "HSE Digital Transformation" })]),
-        h("li", null, [h("a", { href: r + "ve-sa247/#faq", text: "Câu hỏi thường gặp" })]),
-        h("li", null, [h("a", { href: r + "index.html#tu-van", text: "Liên hệ" })]),
-      ]),
-    ]);
+  function pillarPanel(p) {
+    return (r) =>
+      h("div", { className: "mega mega--pillar", role: "region", "aria-label": p.label }, [
+        h(
+          "ul",
+          { className: "mega__list" },
+          p.items.map(([href, label, sub]) =>
+            h("li", null, [
+              h("a", { href: r + href }, [h("strong", { text: label }), sub ? h("span", { text: sub }) : null]),
+            ])
+          )
+        ),
+        p.minor
+          ? h("div", { className: "mega__foot mega__foot--pillar" }, [
+              h(
+                "p",
+                { className: "mega__minor" },
+                p.minor.flatMap(([href, label], i) => [i ? " · " : null, h("a", { href: r + href, text: label })])
+              ),
+            ])
+          : null,
+      ]);
   }
 
   function closeAllMegas(except) {
@@ -230,7 +169,13 @@
     };
     wrap.addEventListener("mouseenter", open);
     wrap.addEventListener("mouseleave", close);
-    wrap.addEventListener("focusin", open);
+    wrap.addEventListener("focusin", () => {
+      if (wrap.dataset.escClosed === "1") {
+        delete wrap.dataset.escClosed;
+        return;
+      }
+      open();
+    });
     wrap.addEventListener("focusout", (e) => {
       if (!wrap.contains(e.relatedTarget)) close();
     });
@@ -281,28 +226,33 @@
     );
   }
 
-  /* Visitor: "SA247 có khóa gì phù hợp với tôi?" */
+  /* Visitor: cùng 5 trụ cột như desktop, dạng accordion */
   function buildGuestDrawer(r) {
+    const groups = PILLARS.map((p) =>
+      h("details", { className: "nav-drawer__group" }, [
+        h("summary", { className: "nav-drawer__link nav-drawer__summary", text: p.label }),
+        h(
+          "div",
+          { className: "nav-drawer__sub" },
+          p.items
+            .map(([href, label]) => h("a", { href: r + href, text: label }))
+            .concat((p.minor || []).map(([href, label]) => h("a", { href: r + href, className: "is-minor", text: label })))
+        ),
+      ])
+    );
+    groups.forEach((d) =>
+      d.addEventListener("toggle", () => {
+        if (d.open) groups.forEach((o) => o !== d && (o.open = false));
+      })
+    );
     return h("div", { className: "nav-drawer__guest" }, [
-      drawerLinks([
-        ["Trang chủ", "index.html"],
-        ["Khóa học", "index.html#chuong-trinh"],
-        ["Lộ trình HSE", "index.html#career-map"],
-        ["Kiến thức", "kien-thuc/"],
-        ["Chứng nhận", "xac-minh/"],
-        ["Nhà trường", "campus/"],
-        ["Hỗ trợ", "ve-sa247/#faq"],
-      ], r, "Khám phá SA247"),
-      h("div", { className: "nav-drawer__actions" }, [
-        h("a", { href: r + "index.html#chuong-trinh", className: "nav-drawer__cta", text: "Xem khóa học" }),
-        h("a", { href: r + "auth/login.html", className: "nav-drawer__cta nav-drawer__cta--line", "data-nav-login-mobile": "", text: "Đăng nhập" }),
+      h("nav", { className: "nav-drawer__nav", "aria-label": "Khám phá SA247" }, [
+        h("a", { href: r + "index.html", className: "nav-drawer__link", text: "Trang chủ" }),
+        ...groups,
       ]),
-      h("p", { className: "nav-drawer__minor" }, [
-        h("a", { href: r + "sach/hse-digital-transformation/", text: "Sách HSE miễn phí" }),
-        " · ",
-        h("a", { href: r + "phan-mem/", text: "Phần mềm" }),
-        " · ",
-        h("a", { href: r + "ve-sa247/", text: "Về SA247" }),
+      h("div", { className: "nav-drawer__actions" }, [
+        h("a", { href: r + "tim-khoa/", className: "nav-drawer__cta", text: "Tìm khóa phù hợp" }),
+        h("a", { href: r + "auth/login.html", className: "nav-drawer__cta nav-drawer__cta--line", "data-nav-login-mobile": "", text: "Đăng nhập" }),
       ]),
     ]);
   }
@@ -433,14 +383,11 @@
       text: "☰",
     });
 
-    const menu = h("div", { className: "nav__menu", "aria-label": "Điều hướng chính" }, [
-      item("Lộ trình HSE", "index.html#career-map", buildMegaPath, r),
-      item("Khóa học", "index.html#chuong-trinh", buildMegaCourses, r),
-      item("Sách HSE", "sach/hse-digital-transformation/", buildMegaBook, r),
-      item("Kiến thức", "kien-thuc/", buildMegaKnowledge, r),
-      item("Campus", "campus/", null, r),
-      item("Về SA247", "ve-sa247/", buildMegaAbout, r),
-    ]);
+    const menu = h(
+      "div",
+      { className: "nav__menu", "aria-label": "Điều hướng chính" },
+      PILLARS.map((p) => item(p.label, p.href, pillarPanel(p), r))
+    );
 
     const actions = h("div", { className: "nav__actions" });
     actions.appendChild(
@@ -501,6 +448,24 @@
 
     wireDrawer(nav, r);
     wireAccountMenus(nav);
+    wireMegaDismiss(nav);
+  }
+
+  function wireMegaDismiss(nav) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const openItem = nav.querySelector(".nav-item.is-open");
+      if (!openItem) return;
+      closeAllMegas();
+      const trigger = openItem.querySelector(".nav-item__trigger");
+      if (trigger && document.activeElement !== trigger) {
+        openItem.dataset.escClosed = "1";
+        trigger.focus();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest || !e.target.closest(".nav-item")) closeAllMegas();
+    });
   }
 
   function wireDrawer(nav, r) {
@@ -559,34 +524,11 @@
     });
   }
 
-  const COURSE_GROUP_ORDER = ["ATVSLĐ", "An toàn xây dựng", "Kỹ thuật & nghiệp vụ", "Hệ thống quản lý"];
-
-  async function refreshCourseMenu() {
-    const list = await window.sa247PublicConfig?.courses?.();
-    const current = document.querySelector('#nav .mega[aria-label="Khóa học"]');
-    if (!current || !list?.length) return;
-    const groups = new Map();
-    list.forEach((c) => {
-      const g = c.category || "Khóa học khác";
-      if (!groups.has(g)) groups.set(g, []);
-      groups.get(g).push([`${c.slug}/`, c.code, c.title]);
-    });
-    const rank = (g) => (COURSE_GROUP_ORDER.indexOf(g) + 1) || 99;
-    const r = rootPrefix();
-    const foot = current.querySelector(".mega__foot");
-    current.querySelectorAll(".mega__col").forEach((col) => col.remove());
-    [...groups.keys()]
-      .sort((a, b) => rank(a) - rank(b))
-      .forEach((g) => current.insertBefore(megaCol(g, groups.get(g), r), foot));
-  }
-
   function loadPublicConfig() {
     if (window.sa247PublicConfig) {
       window.sa247PublicConfig.hydrate();
-      refreshCourseMenu();
       return;
     }
-    document.addEventListener("sa247:public-config-ready", refreshCourseMenu, { once: true });
     if (document.querySelector("script[data-sa247-public-config]")) return;
     const self = document.querySelector('script[src*="marketing-nav.js"]');
     const s = document.createElement("script");

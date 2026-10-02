@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/site.css?v=202610022255" />
+  <link rel="stylesheet" href="../assets/site.css?v=202610022313" />
   <link rel="canonical" href="https://sa247.vn/hop-tac/" />
 </head>
 <body class="about-page partner-page">
@@ -111,7 +111,7 @@
         <p class="kicker reveal">04 · Ba mô hình hợp tác</p>
         <h2 class="title reveal">Chọn cách triển khai phù hợp</h2>
         <div class="pt-grid pt-grid--3">
-          <article class="pt-card pt-card--model reveal">
+          <article id="mo-hinh-a" class="pt-card pt-card--model reveal">
             <p class="pt-model">A</p>
             <h3>Dùng nền tảng và khóa học có sẵn của SA247</h3>
             <p>Phù hợp với doanh nghiệp, trường học muốn triển khai đào tạo nhanh mà chưa cần xây dựng nội dung E-Learning riêng.</p>
@@ -119,14 +119,14 @@
             <p><strong>Khách hàng quản lý:</strong> danh sách người học, nhóm người học, chương trình áp dụng, theo dõi kết quả.</p>
             <p class="meta">Ví dụ: đào tạo định hướng cho nhân viên HSE mới vào nhà máy (ATNM-01); bồi dưỡng giám sát công trường về kiểm soát theo giai đoạn thi công (ATXD-02); bổ trợ kiến thức thiết bị nâng, công việc nguy hiểm cho tổ đội.</p>
           </article>
-          <article class="pt-card pt-card--model reveal">
+          <article id="mo-hinh-b" class="pt-card pt-card--model reveal">
             <p class="pt-model">B</p>
             <h3>Dùng nền tảng SA247 với nội dung riêng của khách hàng</h3>
             <p>Phù hợp với doanh nghiệp, tổ chức đã có nội dung đào tạo riêng: quy trình nội bộ, nội quy, quy định HSE của doanh nghiệp, quy trình ứng phó khẩn cấp, quy trình nghiệp vụ, đào tạo nhân viên mới, nhà thầu vào công trường.</p>
             <p>Khách hàng không cần xây dựng hệ thống LMS riêng. SA247 cung cấp hạ tầng và công cụ quản trị; doanh nghiệp chủ động sử dụng nội dung chuyên môn của mình. SA247 có thể hỗ trợ chuyển tài liệu sẵn có thành bài học và bộ câu hỏi kiểm tra.</p>
             <p class="meta">Nội dung của khách hàng chỉ dùng trong không gian của khách hàng. Xem <a href="../cam-ket-du-lieu/">cam kết dữ liệu</a>.</p>
           </article>
-          <article class="pt-card pt-card--model reveal">
+          <article id="mo-hinh-c" class="pt-card pt-card--model reveal">
             <p class="pt-model">C</p>
             <h3>Xây dựng nền tảng E-Learning riêng trên hạ tầng SA247</h3>
             <p>Dành cho doanh nghiệp, tổ chức muốn có hệ thống E-Learning mang thương hiệu riêng mà không phải tự đầu tư toàn bộ hạ tầng công nghệ từ đầu.</p>
@@ -231,21 +231,22 @@
     <div class="wrap footer-brand">
       <strong>© Safety and You 247 Academy · SA247</strong>
       <p>Học an toàn. Làm việc chuyên nghiệp.</p>
-      <span>
-        <a href="../privacy.html">Bảo mật</a> ·
-        <a href="../terms.html">Điều khoản</a> ·
-        <a href="../ve-sa247/">Về SA247</a> ·
-        <a href="../cam-ket-du-lieu/">Cam kết dữ liệu</a> ·
-        <a href="../xac-minh/">Xác minh chứng chỉ</a>
-      </span>
+      <nav class="footer-pillars" aria-label="Liên kết SA247">
+        <div class="footer-pillars__col"><strong>Học</strong><a href="../index.html#career-map">Lộ trình HSE</a><a href="../index.html#chuong-trinh">Khóa học</a><a href="../khoa-sap-mo/">Khóa sắp mở</a></div>
+        <div class="footer-pillars__col"><strong>Tri thức</strong><a href="../kien-thuc/">Kiến thức HSE</a><a href="../sach/hse-digital-transformation/">Sách HSE</a></div>
+        <div class="footer-pillars__col"><strong>Giải pháp</strong><a href="../phan-mem/hse-compliance/">HSE Compliance</a><a href="../hop-tac/#mo-hinh">Nền tảng E-Learning</a></div>
+        <div class="footer-pillars__col"><strong>Đối tác</strong><a href="../campus/">Trường học</a><a href="../hop-tac/#mo-hinh-a">Doanh nghiệp</a><a href="../hop-tac/#khao-sat">Hợp tác cùng SA247</a><a href="../cam-ket-du-lieu/">Cam kết dữ liệu</a></div>
+        <div class="footer-pillars__col"><strong>Về SA247</strong><a href="../ve-sa247/">Giới thiệu</a><a href="../ve-sa247/#tu-van">Liên hệ</a><a href="../ve-sa247/#faq">Câu hỏi thường gặp</a><a href="../xac-minh/">Xác minh chứng nhận</a></div>
+      </nav>
+      <p class="footer-legal"><a href="../privacy.html">Chính sách bảo mật</a> · <a href="../terms.html">Điều khoản</a> · SA247 Support: <a href="mailto:support@sa247.vn">support@sa247.vn</a> · <a href="tel:+84877787988">08 77 78 79 88</a></p>
     </div>
   </footer>
-  <script src="../assets/supabase-config.js?v=202610022255"></script>
-  <script src="../assets/js/supabase-client.js?v=202610022255" defer></script>
-  <script src="../assets/js/marketing-nav.js?v=202610022255"></script>
-  <script src="../assets/js/app-shell.js?v=202610022255" defer></script>
-  <script src="../assets/js/partner-lead.js?v=202610022255" defer></script>
-  <script src="../assets/js/sa247-track.js?v=202610022255" defer></script>
-  <script src="../assets/site.js?v=202610022255" defer></script>
+  <script src="../assets/supabase-config.js?v=202610022313"></script>
+  <script src="../assets/js/supabase-client.js?v=202610022313" defer></script>
+  <script src="../assets/js/marketing-nav.js?v=202610022313"></script>
+  <script src="../assets/js/app-shell.js?v=202610022313" defer></script>
+  <script src="../assets/js/partner-lead.js?v=202610022313" defer></script>
+  <script src="../assets/js/sa247-track.js?v=202610022313" defer></script>
+  <script src="../assets/site.js?v=202610022313" defer></script>
 </body>
 </html>
