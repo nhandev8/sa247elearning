@@ -31,6 +31,7 @@
 
   // `can` phải khớp đúng điều kiện server (is_staff / can_manage_content / can_manage_commerce /
   // is_admin / is_owner): mục nào server từ chối thì không được hiện trên menu.
+  // Chứng nhận, Nhật ký hoạt động, Nhật ký bảo mật: server chỉ cho is_admin.
   const STAFF = (c) => c.staff;
   const CONTENT = (c) => c.content;
   const COMMERCE = (c) => c.commerce;
@@ -73,7 +74,7 @@
     },
     {
       group: "Chứng nhận",
-      items: [{ target: "chung-nhan/", label: "Tất cả chứng nhận", key: "chung-nhan", can: STAFF }],
+      items: [{ target: "chung-nhan/", label: "Tất cả chứng nhận", key: "chung-nhan", can: ADMIN }],
     },
     {
       group: "Kinh doanh",
