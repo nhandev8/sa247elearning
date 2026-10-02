@@ -5064,6 +5064,8 @@ body.lx-focus .lx-top:hover, body.lx-focus .lx-top:focus-within { opacity: 1; }
 .hub-software__points li::before{content:"";position:absolute;left:0;top:.55em;width:.6rem;height:.6rem;border-radius:2px;background:var(--amber)}
 .hub-software__points strong{color:var(--navy)}
 .hub-software__actions{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.4rem 0 0}
+.hub-software .btn--line,.sw-related .btn--line{color:var(--deep);border-color:rgba(15,28,23,.3)}
+.hub-software .btn--line:hover,.sw-related .btn--line:hover{border-color:var(--amber);background:rgba(212,167,44,.08)}
 .hub-software__note{margin:.9rem 0 0;font-size:.86rem;color:var(--text-muted)}
 .hub-software__shot{margin:0}
 .hub-software__shot a{display:block;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:#fff}
