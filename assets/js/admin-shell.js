@@ -29,93 +29,91 @@
     return (q.get("id") || q.get("user") || "").trim();
   }
 
+  // `can` phải khớp đúng điều kiện server (is_staff / can_manage_content / can_manage_commerce /
+  // is_admin / is_owner): mục nào server từ chối thì không được hiện trên menu.
+  const STAFF = (c) => c.staff;
+  const CONTENT = (c) => c.content;
+  const COMMERCE = (c) => c.commerce;
+  const ADMIN = (c) => c.admin;
+  const ANY = () => true;
+
   // Đào tạo · Người học (vòng đời học tập) tách khỏi Hệ thống · Tài khoản (danh tính & vai trò).
   const MENU = [
     {
       group: "Tổng quan",
-      items: [{ target: "", label: "Trung tâm điều hành", key: "home" }],
-      scope: "full",
+      items: [{ target: "", label: "Trung tâm điều hành", key: "home", can: STAFF }],
     },
     {
       group: "Học viện",
-      items: [{ target: "khoa-hoc/", label: "Khóa học", key: "khoa-hoc" }],
-      scope: "content",
+      items: [{ target: "khoa-hoc/", label: "Khóa học", key: "khoa-hoc", can: CONTENT }],
     },
     {
       group: "Đào tạo",
       items: [
-        { target: "nguoi-hoc/", label: "Người học", key: "nguoi-hoc" },
-        { target: "nguoi-hoc/?tab=attention", label: "Cần chú ý", key: "nguoi-hoc-attention" },
+        { target: "nguoi-hoc/", label: "Người học", key: "nguoi-hoc", can: STAFF },
+        { target: "nguoi-hoc/?tab=attention", label: "Cần chú ý", key: "nguoi-hoc-attention", can: STAFF },
         {
           target: "nguoi-hoc/ho-so.html",
           label: "Hồ sơ đang xem",
           key: "ho-so",
           keepUser: true,
           needsUser: true,
+          can: STAFF,
         },
-        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc", keepUser: true },
-        { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do", keepUser: true },
-        { target: "doi-tac/", label: "Nhập danh sách (Campus)", key: "nhap-ds" },
+        { target: "quyen-hoc/", label: "Quyền học", key: "quyen-hoc", keepUser: true, can: STAFF },
+        { target: "tien-do/", label: "Tiến độ học tập", key: "tien-do", keepUser: true, can: STAFF },
       ],
-      scope: "full",
     },
     {
       group: "Đánh giá",
       items: [
-        { target: "cau-hoi/", label: "Ngân hàng câu hỏi", key: "cau-hoi" },
-        { target: "bai-kiem-tra/", label: "Bài kiểm tra", key: "bai-kiem-tra" },
+        { target: "cau-hoi/", label: "Ngân hàng câu hỏi", key: "cau-hoi", can: CONTENT },
+        { target: "bai-kiem-tra/", label: "Bài kiểm tra", key: "bai-kiem-tra", can: CONTENT },
       ],
-      scope: "content",
     },
     {
       group: "Chứng nhận",
-      items: [{ target: "chung-nhan/", label: "Tất cả chứng nhận", key: "chung-nhan" }],
-      scope: "full",
+      items: [{ target: "chung-nhan/", label: "Tất cả chứng nhận", key: "chung-nhan", can: STAFF }],
     },
     {
       group: "Kinh doanh",
       items: [
-        { target: "kinh-doanh/", label: "Hub Kinh doanh", key: "kinh-doanh" },
-        { target: "don-hang/", label: "Đơn hàng", key: "don-hang" },
-        { target: "don-hang/tao.html", label: "Tạo đơn", key: "tao-don" },
-        { target: "don-hang/chinh-sach.html", label: "Ưu đãi số lượng", key: "uu-dai-sl" },
-        { target: "gia-ship/", label: "Giá & ship", key: "gia-ship" },
-        { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao" },
-        { target: "quyen-hoc/", label: "Cấp quyền học", key: "quyen-hoc-commerce" },
-        { target: "doi-tac/", label: "Campus / Đối tác", key: "doi-tac" },
-        { target: "cho-mo-khoa/", label: "Chờ mở khóa", key: "cho-mo-khoa" },
+        { target: "kinh-doanh/", label: "Hub Kinh doanh", key: "kinh-doanh", can: COMMERCE },
+        { target: "don-hang/", label: "Đơn hàng", key: "don-hang", can: COMMERCE },
+        { target: "don-hang/tao.html", label: "Tạo đơn", key: "tao-don", can: (c) => c.admin || c.owner },
+        { target: "don-hang/chinh-sach.html", label: "Ưu đãi số lượng", key: "uu-dai-sl", can: (c) => c.owner },
+        { target: "gia-ship/", label: "Giá & ship", key: "gia-ship", can: ADMIN },
+        { target: "bao-cao-doanh-thu/", label: "Báo cáo doanh thu", key: "bao-cao", can: COMMERCE },
+        { target: "doi-tac/", label: "Campus / Đối tác", key: "doi-tac", can: COMMERCE },
+        { target: "cho-mo-khoa/", label: "Chờ mở khóa", key: "cho-mo-khoa", can: (c) => c.staff && c.commerce },
       ],
-      scope: "commerce",
     },
     {
       group: "Cải tiến",
-      items: [{ target: "phan-hoi/", label: "Phản hồi & Hỗ trợ", key: "phan-hoi" }],
-      scope: "full",
+      items: [{ target: "phan-hoi/", label: "Phản hồi & Hỗ trợ", key: "phan-hoi", can: STAFF }],
     },
     {
       group: "Phân tích",
       items: [
-        { target: "phan-tich/", label: "Phân tích học tập", key: "phan-tich" },
-        { target: "thong-ke/", label: "Thống kê nền tảng", key: "thong-ke" },
+        { target: "phan-tich/", label: "Phân tích học tập", key: "phan-tich", can: ADMIN },
+        { target: "thong-ke/", label: "Thống kê nền tảng", key: "thong-ke", can: ADMIN },
       ],
-      scope: "full",
     },
     {
       group: "Hệ thống",
       items: [
-        { target: "tai-khoan/", label: "Tài khoản", key: "tai-khoan", adminOnly: true },
-        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen", adminOnly: true },
-        { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky" },
-        { target: "bao-mat/", label: "Nhật ký bảo mật", key: "bao-mat", adminOnly: true },
+        { target: "tai-khoan/", label: "Tài khoản", key: "tai-khoan", can: ADMIN },
+        { target: "phan-quyen/", label: "Vai trò & phân quyền", key: "phan-quyen", can: ADMIN },
+        { target: "nhat-ky/", label: "Nhật ký hoạt động", key: "nhat-ky", can: ADMIN },
+        { target: "bao-mat/", label: "Nhật ký bảo mật", key: "bao-mat", can: ADMIN },
         {
           target: "auth/doi-mat-khau.html",
           label: "Đổi mật khẩu",
           key: "doi-mat-khau",
           site: true,
+          can: ANY,
         },
-        { label: "Tích hợp (SePay / YouTube)", soon: true },
       ],
-      scope: "system",
     },
   ];
 
@@ -151,84 +149,45 @@
     return "home";
   }
 
-  function menuForRole(role) {
-    const commerceOnly = window.sa247Admin?.isCommerceOnly?.(role);
-    const canCommerce = window.sa247Admin?.canManageCommerce?.(role);
-    const canContent = window.sa247Admin?.canManageContent?.(role);
-    const fullAdmin = window.sa247Admin?.isFullAdmin?.(role);
-
-    if (commerceOnly) {
-      return MENU.filter((g) => g.scope === "commerce" || g.group === "Hệ thống").map((g) => {
-        if (g.group === "Hệ thống") {
-          return {
-            ...g,
-            items: g.items.filter((it) => it.key === "doi-mat-khau" || it.soon),
-          };
-        }
-        return g;
-      });
-    }
-
-    // Giảng viên / QL nội dung: ẩn Kinh doanh nếu không có quyền commerce
-    return MENU.filter((g) => {
-      if (g.scope === "commerce") return !!canCommerce;
-      if (g.scope === "content") return !!canContent || !!fullAdmin;
-      if (g.scope === "full") {
-        if (g.group === "Đào tạo") return !!fullAdmin || role === "quan_ly_noi_dung" || role === "giang_vien";
-        if (g.group === "Chứng nhận" || g.group === "Phân tích") return !!fullAdmin;
-        return true;
-      }
-      if (g.scope === "system") return true;
-      return true;
-    }).map((g) => {
-      if (g.group === "Đào tạo" && !fullAdmin) {
-        return {
-          ...g,
-          items: g.items.filter((it) => it.key !== "nhap-ds"),
-        };
-      }
-      if (g.group === "Hệ thống" && !fullAdmin) {
-        return {
-          ...g,
-          items: g.items.filter((it) => it.key === "doi-mat-khau" || it.soon),
-        };
-      }
-      return g;
-    });
+  function capsFor(ctx) {
+    const A = window.sa247Admin;
+    const role = ctx.profile.role;
+    return {
+      staff: ["admin", "quan_tri_cao_nhat", "quan_tri", "quan_ly_noi_dung", "giang_vien"].includes(role),
+      content: !!A.canManageContent(role),
+      commerce: !!A.canManageCommerce(role),
+      admin: !!A.isFullAdmin(role),
+      owner: !!A.isOwner(ctx.session),
+    };
   }
 
-  function pageAllowed(role, key) {
-    if (!window.sa247Admin?.isCommerceOnly?.(role)) return true;
-    const allowed = new Set([
-      "kinh-doanh",
-      "don-hang",
-      "gia-ship",
-      "bao-cao",
-      "quyen-hoc",
-      "quyen-hoc-commerce",
-      "doi-tac",
-      "doi-mat-khau",
-      "home",
-    ]);
-    return allowed.has(key);
+  function menuFor(caps) {
+    return MENU.map((g) => ({ ...g, items: g.items.filter((it) => it.can(caps)) })).filter(
+      (g) => g.items.length,
+    );
   }
 
-  function renderNav(role) {
+  function pageAllowed(caps, key) {
+    const items = MENU.flatMap((g) => g.items).filter((it) => it.key === key);
+    return !items.length || items.some((it) => it.can(caps));
+  }
+
+  function firstAllowedHref(caps) {
+    const it = menuFor(caps)
+      .flatMap((g) => g.items)
+      .find((x) => !x.site && !x.needsUser);
+    return it ? hrefFor(it.target) : hrefFor("auth/doi-mat-khau.html", { site: true });
+  }
+
+  function renderNav(caps) {
     const key = activeKey();
     const uid = contextUserId();
-    return menuForRole(role)
+    return menuFor(caps)
       .map((g) => {
         const links = g.items
           .map((it) => {
-            if (it.soon) {
-              return `<a class="is-soon" href="#">${it.label} <small>(sắp có)</small></a>`;
-            }
             if (it.needsUser && !uid) return "";
-            const active =
-              it.key === key ||
-              (it.key === "quyen-hoc-commerce" && key === "quyen-hoc")
-                ? "is-active"
-                : "";
+            const active = it.key === key ? "is-active" : "";
             const href = hrefFor(it.target, {
               site: it.site,
               keepUser: it.keepUser,
@@ -253,17 +212,14 @@
     const ctx = await sa247Admin.requireAdmin();
     if (!ctx) return null;
 
-    if (side) side.innerHTML = renderNav(ctx.profile.role);
-
-    const key = activeKey();
-    if (!pageAllowed(ctx.profile.role, key)) {
-      location.href = hrefFor("kinh-doanh/");
-      return null;
+    const caps = capsFor(ctx);
+    if (side) {
+      side.innerHTML = renderNav(caps);
+      side.querySelector("a.is-active")?.scrollIntoView({ block: "nearest" });
     }
 
-    // Commerce-only: home → hub kinh doanh
-    if (sa247Admin.isCommerceOnly(ctx.profile.role) && key === "home") {
-      location.href = hrefFor("kinh-doanh/");
+    if (!pageAllowed(caps, activeKey())) {
+      location.href = firstAllowedHref(caps);
       return null;
     }
 
