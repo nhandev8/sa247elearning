@@ -83,7 +83,7 @@
 
   <header class="book-open book-hero" id="top">
     <div class="wrap book-open__grid">
-      <a class="cover-link" href="bia.html">
+      <a class="cover-link" href="doc.html?page=1">
         <img class="cover" src="../../assets/books/hse-dt/cover-01.jpg" width="1024" height="1536" alt="Bìa sách HSE Digital Transformation" />
       </a>
       <div>
@@ -92,9 +92,9 @@
         <p class="subtitle">Từ HSE truyền thống đến HSE dựa trên dữ liệu</p>
         <p class="byline">Hồ Hữu Nhàn · Safety and You 247</p>
         <div class="actions">
-          <a class="btn btn--amber" id="book-start" href="bia.html">Bắt đầu đọc</a>
-          <a class="btn btn--line" id="book-continue" href="chuong-01.html" hidden style="border-color:rgba(255,255,255,.4);color:#fff">Đọc tiếp</a>
-          <a class="btn btn--line" href="muc-luc.html" style="border-color:rgba(255,255,255,.4);color:#fff">Mục lục</a>
+          <a class="btn btn--amber" id="book-start" href="doc.html?page=1">Đọc sách</a>
+          <a class="btn btn--line" id="book-continue" href="doc.html?page=1" hidden style="border-color:rgba(255,255,255,.4);color:#fff">Đọc tiếp</a>
+          <a class="btn btn--line" href="doc.html?page=3" style="border-color:rgba(255,255,255,.4);color:#fff">Mục lục</a>
         </div>
       </div>
     </div>
@@ -125,8 +125,8 @@
       <p class="close">Không chỉ số hóa HSE.<br />Mà chuyển đổi cách chúng ta làm HSE.</p>
 
       <div class="start">
-        <a class="btn btn--amber" href="bia.html">Đọc từ trang bìa</a>
-        <a class="btn btn--line" href="loi-cam-on.html">Sang lời cảm ơn</a>
+        <a class="btn btn--amber" href="doc.html?page=1">Đọc từ trang bìa</a>
+        <a class="btn btn--line" href="doc.html?page=2">Sang lời giới thiệu</a>
       </div>
 
       <aside class="sw-related" aria-label="Sản phẩm liên quan">
@@ -166,7 +166,8 @@
   <script>
   (function(){
     try {
-      var last = localStorage.getItem('sa247_book_hse_dt_last');
+      var lastPage = localStorage.getItem('sa247_book_hse_dt_last_page');
+      var last = lastPage ? ('doc.html?page=' + lastPage) : localStorage.getItem('sa247_book_hse_dt_last');
       var btn = document.getElementById('book-continue');
       if (last && btn) { btn.href = last; btn.hidden = false; }
     } catch(e) {}

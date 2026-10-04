@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đọc sách · HSE Digital Transformation | SA247</title>
+  <meta name="description" content="Đọc HSE Digital Transformation v6 bằng SA247 Book Reader, giữ nguyên bố cục PDF gốc với mục lục, chuyển trang, zoom và đọc tiếp." />
+  <link rel="canonical" href="https://sa247.vn/sach/hse-digital-transformation/doc.html" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/site.css?v=202610030025" />
+  <style>
+    :root{--reader-ink:#0b1f3a;--reader-muted:#64748b;--reader-line:#d8dee7;--reader-bg:#eef2f6;--reader-accent:#0f766e}
+    body.book-reader-page{margin:0;background:var(--reader-bg);color:var(--reader-ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .reader{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;background:var(--reader-bg)}
+    .reader-top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--reader-line)}
+    .reader-top__inner{height:56px;display:flex;align-items:center;gap:.65rem;padding:0 1rem}
+    .reader-title{min-width:0;flex:1}
+    .reader-title strong{display:block;font-size:.95rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .reader-title span{display:block;font-size:.75rem;color:var(--reader-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .reader-icon,.reader-btn{height:38px;border:1px solid var(--reader-line);background:#fff;color:var(--reader-ink);border-radius:8px;font:inherit;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;text-decoration:none;cursor:pointer}
+    .reader-icon{width:38px;padding:0}
+    .reader-btn{padding:0 .75rem}
+    .reader-btn:hover,.reader-icon:hover{border-color:#99f6e4;color:var(--reader-accent)}
+    .reader-main{display:grid;grid-template-columns:minmax(0,1fr);min-height:0}
+    .reader-side{display:none;background:#fff;border-right:1px solid var(--reader-line);padding:1rem;overflow:auto}
+    .reader-side h2{margin:0 0 .75rem;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--reader-muted)}
+    .reader-toc{display:grid;gap:.25rem}
+    .reader-toc button{width:100%;border:0;background:transparent;text-align:left;padding:.5rem .55rem;border-radius:8px;color:#334155;font:inherit;font-size:.86rem;line-height:1.35;cursor:pointer}
+    .reader-toc button:hover,.reader-toc button.is-active{background:#ecfdf5;color:var(--reader-accent);font-weight:700}
+    .reader-stage{min-width:0;overflow:auto;padding:1rem 1rem 5.25rem;display:flex;justify-content:center;align-items:flex-start}
+    .reader-canvas-wrap{position:relative;display:grid;place-items:center;min-width:240px;min-height:320px}
+    #pdf-canvas{display:block;max-width:100%;height:auto;background:#fff;box-shadow:0 18px 44px rgba(15,23,42,.2)}
+    .reader-loading{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--reader-muted);font-weight:700;padding:2rem}
+    .reader-bottom{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--reader-line)}
+    .reader-bottom__inner{display:flex;align-items:center;justify-content:center;gap:.45rem;padding:.6rem 1rem}
+    .reader-pagebox{height:38px;min-width:110px;border:1px solid var(--reader-line);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;gap:.3rem;font-weight:800}
+    .reader-pagebox input{width:3.25rem;border:0;text-align:right;font:inherit;font-weight:800;color:var(--reader-ink);background:transparent}
+    .reader-pagebox input:focus{outline:0}
+    .reader-fallback{max-width:42rem;margin:3rem auto;background:#fff;border:1px solid var(--reader-line);border-radius:8px;padding:1.25rem;box-shadow:0 16px 36px rgba(15,23,42,.1)}
+    .reader-fallback p{margin:.5rem 0 1rem;color:#334155;line-height:1.65}
+    @media(min-width:980px){
+      .reader-main{grid-template-columns:280px minmax(0,1fr)}
+      .reader-side{display:block}
+      .reader-stage{padding:1.5rem 1.5rem 5.25rem}
+      .reader-top__inner{padding:0 1.25rem}
+    }
+    @media(max-width:720px){
+      .reader-title span{display:none}
+      .reader-btn.reader-wide{display:none}
+      .reader-stage{padding:.75rem .5rem 5rem}
+      .reader-bottom__inner{gap:.35rem;padding:.55rem .45rem}
+      .reader-icon{width:36px;height:36px}
+      .reader-pagebox{height:36px;min-width:96px}
+    }
+  </style>
+</head>
+<body class="book-reader-page">
+  <div class="reader">
+    <header class="reader-top">
+      <div class="reader-top__inner">
+        <a class="reader-icon" href="./" aria-label="Về trang sách">←</a>
+        <button class="reader-icon" id="toc-toggle" type="button" aria-label="Mở mục lục">☰</button>
+        <div class="reader-title">
+          <strong>HSE Digital Transformation</strong>
+          <span>Từ HSE truyền thống đến HSE dựa trên dữ liệu</span>
+        </div>
+        <a class="reader-btn reader-wide" href="../../assets/books/hse-dt/HSE-DIGITAL-TRANSFORMATION-v6.pdf">PDF</a>
+        <button class="reader-icon" id="fullscreen" type="button" aria-label="Toàn màn hình">⛶</button>
+      </div>
+    </header>
+
+    <main class="reader-main">
+      <aside class="reader-side" id="reader-side" aria-label="Mục lục sách">
+        <h2>Mục lục</h2>
+        <div class="reader-toc" id="reader-toc"></div>
+      </aside>
+      <section class="reader-stage" id="reader-stage" aria-label="Trang sách">
+        <div class="reader-canvas-wrap">
+          <canvas id="pdf-canvas"></canvas>
+          <div class="reader-loading" id="reader-loading">Đang mở sách...</div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="reader-bottom" aria-label="Điều khiển đọc sách">
+      <div class="reader-bottom__inner">
+        <button class="reader-icon" id="prev-page" type="button" aria-label="Trang trước">←</button>
+        <label class="reader-pagebox" aria-label="Số trang">
+          <input id="page-input" inputmode="numeric" value="1" />
+          <span>/ <span id="page-count">291</span></span>
+        </label>
+        <button class="reader-icon" id="next-page" type="button" aria-label="Trang sau">→</button>
+        <button class="reader-icon" id="zoom-out" type="button" aria-label="Thu nhỏ">−</button>
+        <button class="reader-icon" id="zoom-in" type="button" aria-label="Phóng to">+</button>
+      </div>
+    </nav>
+  </div>
+
+  <script type="module">
+    const pdfUrl = "../../assets/books/hse-dt/HSE-DIGITAL-TRANSFORMATION-v6.pdf";
+    const lastPageKey = "sa247_book_hse_dt_last_page";
+    const legacyLastKey = "sa247_book_hse_dt_last";
+    const canvas = document.getElementById("pdf-canvas");
+    const ctx = canvas.getContext("2d");
+    const stage = document.getElementById("reader-stage");
+    const loading = document.getElementById("reader-loading");
+    const pageInput = document.getElementById("page-input");
+    const pageCount = document.getElementById("page-count");
+    const toc = document.getElementById("reader-toc");
+    const side = document.getElementById("reader-side");
+
+    const tocItems = [
+      ["Bìa", 1], ["Lời giới thiệu", 2], ["Mục lục", 3],
+      ["Phần 1: Quản trị HSE, tuân thủ và thiết kế hệ thống", 4],
+      ["Phần 2: Quản trị rủi ro và kiểm soát trọng yếu", 5],
+      ["Phần 3: Công cụ số và vận hành dữ liệu", 6],
+      ["Phần 4: Đào tạo, hành vi và trí tuệ nhân tạo", 7],
+      ["Phần 5: Lộ trình triển khai và mở rộng", 8],
+      ["Chương 01: Vai trò của chuyên gia HSE trong kỷ nguyên số", 9],
+      ["Chương 02: Quản lý pháp lý, tiêu chuẩn và nghĩa vụ tuân thủ", 21],
+      ["Chương 03: Hệ thống quản lý HSE theo ISO 45001 và ISO 14001", 33],
+      ["Chương 04: Chỉ số dẫn dắt, chỉ số kết quả và đo hiệu lực hệ thống", 45],
+      ["Chương 05: Sự tham gia của người lao động và văn hóa báo cáo", 57],
+      ["Chương 06: HIRA, JSA, sổ đăng ký rủi ro", 69],
+      ["Chương 07: Kiểm soát rủi ro và kiểm soát trọng yếu", 81],
+      ["Chương 08: Thiết bị áp lực, năng lượng và cô lập", 93],
+      ["Chương 09: Làm việc trên cao và cứu nạn", 105],
+      ["Chương 10: Không gian hạn chế", 117],
+      ["Chương 11: Thiết bị nâng hạ, cơ khí và người - máy", 129],
+      ["Chương 12: An toàn điện", 141],
+      ["Chương 13: An toàn hóa chất và phơi nhiễm nghề nghiệp", 153],
+      ["Chương 14: Vệ sinh lao động và quan trắc môi trường", 165],
+      ["Chương 15: Checklist thông minh trên thiết bị di động", 177],
+      ["Chương 16: Dashboard HSE, PPE và tài sản trọng yếu", 189],
+      ["Chương 17: Quản lý sự cố và near-miss qua mã QR", 201],
+      ["Chương 18: Dữ liệu, quyền riêng tư và an ninh mạng", 213],
+      ["Chương 19: Đào tạo an toàn trong kỷ nguyên số", 225],
+      ["Chương 20: Trợ lý HSE bằng trí tuệ nhân tạo", 237],
+      ["Chương 21: Tâm lý học hành vi và quản trị thay đổi", 249],
+      ["Chương 22: Lộ trình triển khai chuyển đổi số HSE", 261],
+      ["Chương 23: Bộ công cụ triển khai", 273]
+    ];
+
+    let pdfDoc = null;
+    let pageNum = Number(new URLSearchParams(location.search).get("page")) || Number(localStorage.getItem(lastPageKey)) || 1;
+    let rendering = false;
+    let pendingPage = null;
+    let scale = Number(localStorage.getItem("sa247_book_hse_dt_scale")) || 1;
+
+    function clampPage(n) {
+      return Math.max(1, Math.min(Number(n) || 1, pdfDoc ? pdfDoc.numPages : 291));
+    }
+
+    function updateTocActive() {
+      [...toc.querySelectorAll("button")].forEach((button) => {
+        const start = Number(button.dataset.page);
+        button.classList.toggle("is-active", start <= pageNum && pageNum < Number(button.dataset.next || 9999));
+      });
+    }
+
+    function queueRender(num) {
+      if (rendering) {
+        pendingPage = num;
+        return;
+      }
+      renderPage(num);
+    }
+
+    async function renderPage(num) {
+      rendering = true;
+      loading.hidden = false;
+      const page = await pdfDoc.getPage(num);
+      const base = page.getViewport({ scale: 1 });
+      const fit = Math.max(.55, Math.min(2.2, (stage.clientWidth - 24) / base.width));
+      const viewport = page.getViewport({ scale: fit * scale });
+      const outputScale = window.devicePixelRatio || 1;
+
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = Math.floor(viewport.width) + "px";
+      canvas.style.height = Math.floor(viewport.height) + "px";
+      ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      rendering = false;
+      loading.hidden = true;
+      pageInput.value = String(num);
+      localStorage.setItem(lastPageKey, String(num));
+      localStorage.setItem(legacyLastKey, "doc.html?page=" + num);
+      history.replaceState(null, "", "doc.html?page=" + num);
+      updateTocActive();
+
+      if (pendingPage !== null) {
+        const next = pendingPage;
+        pendingPage = null;
+        renderPage(next);
+      }
+    }
+
+    function goToPage(num) {
+      pageNum = clampPage(num);
+      queueRender(pageNum);
+    }
+
+    function showFallback(error) {
+      document.querySelector(".reader-main").innerHTML = '<div class="reader-fallback"><h1>Không tải được PDF.js</h1><p>Trình đọc cần tải thư viện PDF.js. Bạn vẫn có thể mở trực tiếp bản PDF gốc.</p><a class="reader-btn" href="' + pdfUrl + '">Mở PDF</a></div>';
+      console.error(error);
+    }
+
+    toc.innerHTML = tocItems.map(([label, page], index) => {
+      const next = tocItems[index + 1] ? tocItems[index + 1][1] : 9999;
+      return '<button type="button" data-page="' + page + '" data-next="' + next + '">' + label + '</button>';
+    }).join("");
+    toc.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-page]");
+      if (button) goToPage(button.dataset.page);
+    });
+
+    document.getElementById("prev-page").addEventListener("click", () => goToPage(pageNum - 1));
+    document.getElementById("next-page").addEventListener("click", () => goToPage(pageNum + 1));
+    document.getElementById("zoom-out").addEventListener("click", () => {
+      scale = Math.max(.7, Math.round((scale - .1) * 10) / 10);
+      localStorage.setItem("sa247_book_hse_dt_scale", String(scale));
+      queueRender(pageNum);
+    });
+    document.getElementById("zoom-in").addEventListener("click", () => {
+      scale = Math.min(2, Math.round((scale + .1) * 10) / 10);
+      localStorage.setItem("sa247_book_hse_dt_scale", String(scale));
+      queueRender(pageNum);
+    });
+    pageInput.addEventListener("change", () => goToPage(pageInput.value));
+    document.getElementById("toc-toggle").addEventListener("click", () => {
+      side.style.display = side.style.display === "block" ? "" : "block";
+    });
+    document.getElementById("fullscreen").addEventListener("click", () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+    window.addEventListener("resize", () => queueRender(pageNum));
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") goToPage(pageNum - 1);
+      if (event.key === "ArrowRight") goToPage(pageNum + 1);
+    });
+
+    try {
+      const pdfjsLib = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+      pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
+      pageCount.textContent = String(pdfDoc.numPages);
+      pageNum = clampPage(pageNum);
+      renderPage(pageNum);
+    } catch (error) {
+      showFallback(error);
+    }
+  </script>
+</body>
+</html>
