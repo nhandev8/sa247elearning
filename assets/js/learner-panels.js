@@ -218,7 +218,7 @@
       const { data, error } = await sb
         .from("orders")
         .select(
-          "order_code,status,amount,created_at,paid_at,view_token,course:courses(code,slug,title),items:order_items(product_code,course:courses(code,slug,title))"
+          "order_code,status,amount,created_at,paid_at,payment_flag,view_token,course:courses(code,slug,title),items:order_items(product_code,course:courses(code,slug,title))"
         )
         .order("created_at", { ascending: false })
         .limit(40);
@@ -255,9 +255,26 @@
               <p class="meta"><strong>${esc(orderStatusVi(o.status))}</strong>${
                 o.paid_at ? " · " + fmtTime(o.paid_at) : ""
               }</p>
+              ${
+                o.payment_flag === "amount_mismatch"
+                  ? `<p class="form-msg">Chuyển khoản chưa đúng số tiền — khóa chưa được mở. Liên hệ support@sa247.vn kèm mã đơn ${esc(o.order_code)}.</p>`
+                  : o.payment_flag === "timeout"
+                    ? `<p class="form-msg">Đơn hết hạn chờ thanh toán. Tạo đơn mới nếu vẫn muốn học.</p>`
+                    : ""
+              }
             </div>
             <div class="order-card__right">
-              <span class="order-badge">${paid ? "Đã thanh toán" : o.status === "draft" ? "Chờ xác nhận" : open ? "Chờ CK" : esc(orderStatusVi(o.status))}</span>
+              <span class="order-badge">${
+                paid
+                  ? "Đã thanh toán"
+                  : o.payment_flag === "amount_mismatch"
+                    ? "Sai số tiền"
+                    : o.status === "draft"
+                      ? "Chờ xác nhận"
+                      : open
+                        ? "Chờ CK"
+                        : esc(orderStatusVi(o.status))
+              }</span>
               ${
                 paid
                   ? courseLines.length > 1
