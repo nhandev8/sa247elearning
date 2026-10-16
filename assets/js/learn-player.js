@@ -72,6 +72,15 @@
     return ytApiReady;
   }
 
+  async function touchLearningActivity(sb, lessonId) {
+    if (!sb || !lessonId || String(lessonId).startsWith("static:")) return;
+    try {
+      await sb.rpc("touch_learning_activity", { p_lesson_id: lessonId });
+    } catch (e) {
+      console.warn("[learn-player] touch_learning_activity", e);
+    }
+  }
+
   /* Hoàn thành bài do server quyết định (record_watch): chỉ tính đoạn phát thật ở tốc độ 1×. */
   async function recordWatch(sb, lessonId, segments, position, duration) {
     if (String(lessonId).startsWith("static:")) return null;
@@ -561,13 +570,18 @@
         box.className = "lesson-res";
         box.innerHTML = `<h5>Tài liệu bài học</h5><ul>${data.items
           .map(
-            (r) => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">
+            (r) => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer" data-res-touch="1">
               <span class="lesson-res__kind">${esc(RES_KIND[r.kind] || "Tài liệu")}</span>${esc(r.title)}</a>${
               r.note ? `<small>${esc(r.note)}</small>` : ""
             }</li>`
           )
           .join("")}</ul>`;
         box.hidden = false;
+        box.onclick = (ev) => {
+          if (ev.target.closest("[data-res-touch]") && lesson?.id) {
+            touchLearningActivity(sb, lesson.id);
+          }
+        };
       } catch (e) {
         console.warn("[learn-player] resources", e);
       }
@@ -649,6 +663,9 @@
       stopWatch();
       setFocus(false);
       paintPager(lesson);
+      if (enrolled && lesson.id) {
+        touchLearningActivity(sb, lesson.id);
+      }
       if (learnMode && lesson.lesson_code) {
         const u = new URL(location.href);
         u.searchParams.set("lesson", lesson.lesson_code);
